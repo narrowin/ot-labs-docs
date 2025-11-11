@@ -4,7 +4,7 @@ Track: Workshop 2
 
 Technical Level: Intermediate
 
-Speakers: Martin Scheu (Switch) & Mischa Diehm (https://narrowin)
+Speakers: Martin Scheu (Switch) & Mischa Diehm ([Narrowin](https://narrowin.ch))
 
 ---
 

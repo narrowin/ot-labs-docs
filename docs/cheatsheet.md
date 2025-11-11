@@ -9,7 +9,7 @@ Password: admin
 
 ## Start and Stop Lab
 
-Use the VScode containerlab extension with the Graph TopoViewer. Right click on topo.clab.yml all the way down `Graph Topoviewer` and you're set.
+Use the VS Code Containerlab extension with the Graph TopoViewer. Right click on `ot-sec-segmented.clab.yml` (or `ot-sec-flat.clab.yml`) and select `Graph Topoviewer`.
 
 To start the lab press the play button in the TopoViewer navigation.
 

@@ -16,7 +16,7 @@ The lab runs in a development container with all required tools pre-installed. C
 
 GitHub Codespaces provides a cloud-based environment accessible through your browser. No local installation required.
 
-1. Go to [github.com/martinscheu/ot-lab-plc](https://github.com/martinscheu/ot-lab-plc)
+1. Go to [github.com/narrowin/ot-labs-isc-cph-2025](https://github.com/narrowin/ot-labs-isc-cph-2025)
 2. Click "Code" button, select "Codespaces" tab
 3. Click "Create codespace on main"
 4. Wait 2-3 minutes for the environment to start
@@ -29,7 +29,7 @@ DevPod creates the same environment on your local machine, giving you full contr
 
 ```bash
 # Install DevPod: devpod.sh/docs/getting-started/install
-devpod up github.com/martinscheu/ot-lab-plc
+devpod up github.com/narrowin/ot-labs-isc-cph-2025
 ```
 
 DevPod reads the repository configuration and sets up all dependencies automatically.
