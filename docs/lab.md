@@ -6,6 +6,8 @@ This workshop uses a realistic OT network lab environment built with Containerla
 
 The lab is designed to be vendor-neutral and uses open-source and free tools exclusively. All components run in containers, allowing rapid deployment, experimentation, and reset capabilities during hands-on exercises.
 
+![Codespace Setup Complete](img/codespace-setup-complete.png)
+
 ## Getting Started
 
 ### Starting the Lab Environment
@@ -17,9 +19,25 @@ The lab runs in a development container with all required tools pre-installed. C
 GitHub Codespaces provides a cloud-based environment accessible through your browser. No local installation required.
 
 1. Go to [github.com/narrowin/ot-labs-isc-cph-2025](https://github.com/narrowin/ot-labs-isc-cph-2025)
-2. Click "Code" button, select "Codespaces" tab
-3. Click "Create codespace on main"
-4. Wait 2-3 minutes for the environment to start
+3. Click "Codespaces Open in Codespaces"
+4. Wait 5-10 minutes for the initial setup (first-time only)
+
+**Initial Setup Time:** The first time you create a Codespace, it needs to download and configure all container images. This takes approximately 5-10 minutes. You'll know the setup is complete when you see the docker images list in your terminal:
+
+```text
+❯ docker images
+REPOSITORY                                    TAG       IMAGE ID       CREATED         SIZE
+ghcr.io/narrowin/ot-sec-lab-hmi               latest    96b8774dc7e4   5 days ago      731MB
+ghcr.io/narrowin/ot-sec-lab-plc               latest    9f7db1f2f47d   7 days ago      333MB
+ghcr.io/kaelemc/wireshark-vnc-docker          latest    4cebbe954b93   3 months ago    554MB
+ghcr.io/narrowin/ot-sec-lab-linux             latest    643864c992c6   4 months ago    908MB
+ghcr.io/narrowin/vrnetlab_mikrotik_routeros   7.18      50052d2a79a1   6 months ago    1.01GB
+ghcr.io/siemens/ghostwire                     latest    18664310d22f   15 months ago   36.5MB
+ghcr.io/siemens/packetflix                    latest    6bed7a0d2a95   20 months ago   122MB
+```
+
+
+Subsequent starts will be much faster (under 1 minute).
 
 Documentation: [docs.github.com/codespaces](https://docs.github.com/en/codespaces)
 
@@ -51,13 +69,25 @@ Use management IPs directly; PLC web UIs (if enabled) listen on port 8080 inside
 | schneider-plc4-vlan30 | [http://10.30.0.11:8080](http://10.30.0.11:8080) | PLC web interface |
 
 
-#### GitHub Codespaces Access
+#### Accessing PLC Web Interfaces in Codespaces
 
-When running in GitHub Codespaces, the ABB 800xA HMI interface (10.40.0.11:8080) is exposed via port forwarding:
+When running in GitHub Codespaces, all PLC web interfaces are accessible through the integrated Chromium HMI WebVNC browser:
 
-- Port 8080 is automatically forwarded and accessible through the Ports panel
-- Click the globe icon next to port 8080 in the Ports tab to access the web interface
-- The forwarded port is private by default (GitHub authentication required)
+1. Navigate to the **Ports** panel in VS Code (bottom panel)
+2. Find the **Chromium HMI WebVNC (5800)** port
+3. Right-click and select **Open in Browser**
+4. A browser window opens with a browser inside showing the lab documentation
+5. Click on any PLC link in the documentation to open the web interface directly
+
+This approach allows you to access all PLC web interfaces without individual port forwarding, and the browser runs inside the lab network with direct access to all devices.
+
+**Alternative Direct Port Access:**
+
+Individual ports can also be accessed directly through port forwarding:
+
+- Port 8080 forwards to the ABB 800xA HMI interface (10.40.0.11:8080)
+- Click the globe icon next to any forwarded port in the Ports panel
+- Forwarded ports are private by default (GitHub authentication required)
 
 ### Default Credentials
 
@@ -425,6 +455,67 @@ Throughout the workshop, you will work through progressive hands-on exercises.
    - Track rule creation date and review schedule
 
 2. Implement and test the firewall rules
+
+## Debugging and Verification
+
+### Lab Health Check Script
+
+The lab includes a comprehensive health check script that verifies all components are running correctly.
+
+**When to use:**
+
+- After deploying the lab for the first time
+- When something seems wrong and you need to identify the issue
+- Before starting exercises to ensure everything is ready
+- After making configuration changes
+
+**Run the health check:**
+
+```bash
+./scripts/lab-test.py ot-sec-segmented
+# or for flat topology
+./scripts/lab-test.py ot-sec-flat
+```
+
+**What it checks:**
+
+The script verifies all critical lab components in organized categories:
+
+- **Infrastructure** - Containerlab deployment, all containers running
+- **Network Devices** - MikroTik switches and gateway responsiveness
+- **PLC Runtimes** - CODESYS processes and program execution state
+- **Host Ports** - Exposed services (8080, 5800, 1218) with source containers
+- **Container Ports** - HTTP services on all devices
+- **Connectivity** - Network reachability from jumphost, inter-node communication, gateway access
+- **Storage** - Required bind mounts for PLC configurations
+
+**Understanding results:**
+
+- **PASS** - Component working correctly
+- **FAIL** - Critical issue requiring attention
+- **WARN** - Non-critical issue (no longer shown for optional components)
+
+**Common issues:**
+
+If containers show as not running:
+
+```bash
+clab inspect -t ot-sec-segmented.clab.yml
+docker ps -a | grep clab-ot-sec
+```
+
+If connectivity tests fail, check network device status:
+
+```bash
+ssh admin@192.168.100.11  # gateway
+ssh admin@192.168.100.12  # distribution switch
+```
+
+If PLC runtimes fail, check process status inside container:
+
+```bash
+docker exec clab-ot-sec-segmented-wago-plc2a-vlan10 pgrep -f codesyscontrol
+```
 
 ### Extension Ideas
 

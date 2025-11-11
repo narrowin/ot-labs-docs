@@ -2,7 +2,10 @@
 
 **Workshop**
 
-**Instructors**: Martin Scheu (OT Security Engineer, Switch) & Mischa Diehm (Network Engineer, narrowin)
+**Instructors:**
+
+- [Martin Scheu](mailto:martin.scheu@switch.ch) - OT Security Engineer, [SWITCH](https://switch.ch)
+- [Mischa Diehm](mailto:mischa.diehm@narrowin.ch) - CTO and Network Engineer, [Narrowin](https://narrowin.ch)
 
 ---
 
@@ -78,7 +81,8 @@ No software installation required. The lab runs in the cloud via GitHub Codespac
 
 1. Ensure you have a GitHub account
 2. Review the [Lab Guide](lab.md#getting-started) for environment setup options
-3. Optional: Familiarize yourself with basic Linux command line and networking concepts
+3. **Important:** If possible, start your Codespace before the workshop. Initial setup takes 5-10 minutes to download and configure container images. Subsequent starts are under 1 minute.
+4. Optional: Familiarize yourself with basic Linux command line and networking concepts
 
 ---
 

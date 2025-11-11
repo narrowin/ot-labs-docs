@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.10, <4"
 
 [[package]]
@@ -561,18 +561,14 @@ wheels = [
 name = "naf-workshop-nuts"
 version = "0.1.0"
 source = { editable = "." }
-
-[package.dev-dependencies]
-dev = [
+dependencies = [
     { name = "mkdocs" },
     { name = "mkdocs-material", extra = ["imaging"] },
     { name = "mkdocs-with-pdf" },
 ]
 
 [package.metadata]
-
-[package.metadata.requires-dev]
-dev = [
+requires-dist = [
     { name = "mkdocs", specifier = ">=1.6.0,<2" },
     { name = "mkdocs-material", extras = ["imaging"], specifier = ">=9.5.31,<10" },
     { name = "mkdocs-with-pdf", specifier = ">=0.9.3,<0.10" },

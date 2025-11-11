@@ -3,11 +3,9 @@ name = "naf-workshop-nuts"
 version = "0.1.0"
 description = "OT Attack Mapping & Risk-Based Defense"
 authors = [{ name = "Mischa Diehm", email = "mischa.diehm@narrowin.ch" }]
-requires-python = "~=3.10"
+requires-python = ">=3.10,<4"
 readme = "README.md"
-
-[dependency-groups]
-dev = [
+dependencies = [
     "mkdocs>=1.6.0,<2",
     "mkdocs-material[imaging]>=9.5.31,<10",
     "mkdocs-with-pdf>=0.9.3,<0.10",
