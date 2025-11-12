@@ -54,6 +54,41 @@ DevPod reads the repository configuration and sets up all dependencies automatic
 
 Documentation: [devpod.sh/docs](https://devpod.sh/docs)
 
+### Starting a Lab
+
+Go to the containerlab extension on the left side and right click on one of the two labs and choose "Edit topology (TopoViewer)":
+
+![Deploy Lab from Containerlab Extension](img/clab-start.png)
+
+Click on the play Icon which will init the `deploy` of the lab. This will start the lab and you will have to wait between 3-5 Minutes for the lab to be up and fully functional. Once all nodes are green:
+
+![Running Lab ready](img/clab-up-and-running.png)
+
+run in the terminal: `scripts/lab-test.py ot-sec-flat` or `scripts/lab-test.py ot-sec-segmented` depending on what you started. When all check of the test script are green you are ready to go.
+
+#### Water treatment frontend
+
+Navigate to the ports section in the bottom panel and right click on `HMI WeChromium bVNC` or `ABB 800xA HMI Interface` and select `Open in Browser`.
+![Running Lab ready](img/clab-ports-selection.png)
+
+Start playing with your OT equipment (:
+![Running Lab ready](img/clab-abb-interface.png)
+
+
+
+#### Look at traffic with wireshark
+
+Once the lab is up and running you can easily tap into **ANY** communication with live packet captures. Easiest way to do this is by right click on a link in the TopoViewer and choose which side of the link to capture. This will open a wireshark inside VsCode that lets analyze your traffic.
+
+![Running Lab ready](img/clab-packet-capture.png)
+
+First time you will be asked by VsCode if you want to open with edgeshark: choose yes.
+
+![Start with edgeshark](img/clab-edgeshark-question.png)
+
+On first start it can happen that the new created window starts with an error. Just close it and try again then.
+
+
 ## Quick Reference
 
 ### Important Interfaces
@@ -74,7 +109,7 @@ Use management IPs directly; PLC web UIs (if enabled) listen on port 8080 inside
 When running in GitHub Codespaces, all PLC web interfaces are accessible through the integrated Chromium HMI WebVNC browser:
 
 1. Navigate to the **Ports** panel in VS Code (bottom panel)
-2. Find the **Chromium HMI WebVNC (5800)** port
+2. Find the **HMI WeChromium bVNC (5800)** port
 3. Right-click and select **Open in Browser**
 4. A browser window opens with a browser inside showing the lab documentation
 5. Click on any PLC link in the documentation to open the web interface directly

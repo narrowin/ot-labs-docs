@@ -5,9 +5,11 @@ strict: true
 nav:
   - Overview: "index.md"
   - Agenda: "agenda.md"
+  - Slides: "slides.md"
   - Lab: "lab.md"
   - Cheatsheet: "cheatsheet.md"
   - Container101: "Container101.md"
+  - Feedback: "feedback.md"
 
 
 
