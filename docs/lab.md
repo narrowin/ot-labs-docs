@@ -91,6 +91,51 @@ On first start it can happen that the new created window starts with an error. J
 
 ## Quick Reference
 
+### Understanding the Management Network
+
+The lab has two separate network layers:
+
+#### Management Layer (192.168.100.0/24)
+
+- Created automatically by Containerlab
+- Lets you access containers from your host
+- Use these IPs to SSH or open web interfaces
+- This simulates out-of-band management in real networks
+
+#### Lab Topology Layer (10.0.0.0/8)
+
+- The actual network you are testing
+- How containers communicate with each other
+- Where your network segmentation and security policies apply
+
+```text
+Your Host Machine / Browser
+         |
+         | Exported Ports
+         | :5800 -> HMI WebVNC (chromium browser inside lab)
+         | :8080 -> ABB 800xA HMI (10.40.0.11:8080)
+         | :8000 -> MkDocs Documentation
+         |
+         | Direct access via Docker bridge
+         |
+    +----v---------------------------------------------+
+    |  Management Network: 192.168.100.0/24           |
+    |  (Containerlab creates this automatically)      |
+    |                                                  |
+    |  .11      .12      .13      .52      .53   .57  |
+    |  [gw]    [sw]    [sw]    [jump]   [plc]  [abb]  |
+    +----+------+-------+--------+--------+------+----+
+         |      |       |        |        |      |
+         |      |       |        |        |      |
+    +----+------+-------+--------+--------+------+----+
+    |  Lab Topology Networks                          |
+    |  10.10.0.0/24, 10.20.0.0/24, 10.30.0.0/24, etc. |
+    |  (Your actual network under test)               |
+    +-------------------------------------------------+
+```
+
+When you SSH to a device using 192.168.100.x, you are accessing it through the management layer, not through the lab topology. This mirrors how real industrial networks use separate management networks.
+
 ### Important Interfaces
 
 Use management IPs directly; PLC web UIs (if enabled) listen on port 8080 inside the lab network.
@@ -265,7 +310,7 @@ All network devices run MikroTik RouterOS 7.18 in virtualized containers.
 
 ### Management Network: 192.168.100.0/24
 
-All lab devices are accessible via out-of-band management network.
+All lab devices are accessible via the management network.
 
 #### Network Devices
 
