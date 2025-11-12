@@ -118,10 +118,10 @@ Your Host Machine / Browser
          |
          | Direct access via Docker bridge
          |
-    +----v---------------------------------------------+
+    +----v--------------------------------------------+
     |  Management Network: 192.168.100.0/24           |
     |  (Containerlab creates this automatically)      |
-    |                                                  |
+    |                                                 |
     |  .11      .12      .13      .52      .53   .57  |
     |  [gw]    [sw]    [sw]    [jump]   [plc]  [abb]  |
     +----+------+-------+--------+--------+------+----+
