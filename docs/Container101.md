@@ -28,6 +28,71 @@ We can give you the exact same lab setup as everyone else. No "it works on my ma
 **Lightweight**  
 You can run multiple PLCs, switches, and tools on your laptop without it melting. Containers use much less memory and CPU than traditional virtual machines.
 
+## GitHub Free Plan: What You Get
+
+This workshop leverages GitHub's free plan, which provides powerful tools for learning and development at no cost.
+
+### GitHub Codespaces
+
+**What are Codespaces?**  
+Cloud-based development environments that run in your browser. Think of it as a complete computer with VS Code, Docker, and all workshop tools pre-installed, accessible from anywhere.
+
+**Free Plan Includes:**
+
+- 120 core-hours per month
+- 15 GB storage
+- 4-core machines available
+
+**For this workshop:**  
+A 4-core Codespace runs this entire lab environment. 120 hours means you can run the lab for multiple full days each month at no cost.
+
+### Private Repositories
+
+**What you get for free:**
+
+- Unlimited private repositories
+- Unlimited collaborators
+- Full version control and collaboration features
+
+### GitHub Copilot
+
+**What it is:**  
+AI-powered coding assistant that helps you write code, understand configurations, and troubleshoot issues.
+
+**Free for:**
+
+- Students (verified via GitHub Student Developer Pack)
+- Maintainers of popular open-source projects
+- Free trial available for everyone
+
+**For this workshop:**  
+Copilot can help you understand topology files, write automation scripts, and debug network configurations. Especially useful when extending labs after the workshop.
+
+### Why This Matters for OT Professionals
+
+You get enterprise-grade development tools without cost. No budget approval needed to start learning and experimenting with OT security labs.
+
+Run complete industrial network simulations in the cloud, accessible from any device. Perfect for learning at your own pace, wherever you are.
+
+### Security Notice: Production Data
+
+**Never use production or company data with Codespaces or Copilot.**
+
+GitHub Codespaces runs in the cloud. GitHub Copilot processes code to provide suggestions. While GitHub has security measures in place, your organization's security policies likely prohibit uploading sensitive data to external services.
+
+**Do not use:**
+
+- Real PLC configurations from your plant
+- Actual network diagrams with real IP addresses
+- Production passwords or credentials
+- Company-specific code or configurations
+- Any data covered by NDAs or confidentiality agreements
+
+**This workshop uses only simulated, generic lab data.**  
+Perfect for learning without security concerns.
+
+If you need to work with real company data, use local development environments on company-managed infrastructure, not cloud services.
+
 ## Containers vs Virtual Machines: What You Need to Know
 
 You might be familiar with virtual machines (VMs). Containers are similar but much lighter.
