@@ -14,10 +14,10 @@ theme:
 extra:
   alternate:
     - name: English
-      link: ../en/
+      link: /ot-labs-docs/en/
       lang: en
     - name: Deutsch
-      link: ../de/
+      link: /ot-labs-docs/de/
       lang: de
 
 plugins:
