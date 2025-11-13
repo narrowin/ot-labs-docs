@@ -51,19 +51,7 @@ jobs:
       - name: Create root index redirect to English
         run: |
           cat > site/index.html << 'EOF'
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <script>window.location.replace("en/");</script>
-            <link rel="canonical" href="en/">
-            <title>Redirecting...</title>
-          </head>
-          <body>
-            <p>Redirecting to <a href="en/">English version</a>...</p>
-            <p>Zur <a href="de/">deutschen Version</a>.</p>
-          </body>
-          </html>
+          <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><script>location="en/"</script><noscript><meta http-equiv="refresh" content="0;url=en/"></noscript></head><body></body></html>
           EOF
 
       - name: Deploy to GitHub Pages
