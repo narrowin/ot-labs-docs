@@ -55,18 +55,20 @@ jobs:
           <html lang="en">
           <head>
             <meta charset="utf-8">
-            <meta http-equiv="refresh" content="0;url=en/">
-            <link rel="canonical" href="en/">
+            <meta http-equiv="refresh" content="0;url=ot-labs-docs/en/">
+            <link rel="canonical" href="ot-labs-docs/en/">
             <title>Redirecting...</title>
           </head>
           <body>
-            <p>Redirecting to <a href="en/">English version</a>...</p>
-            <p>Zur <a href="de/">deutschen Version</a>.</p>
+            <p>Redirecting to <a href="ot-labs-docs/en/">English version</a>...</p>
+            <p>Zur <a href="ot-labs-docs/de/">deutschen Version</a>.</p>
           </body>
           </html>
           EOF
 
       - name: Deploy to GitHub Pages
-        run: |
-          source .venv/bin/activate
-          mkdocs gh-deploy --force --config-file mkdocs.en.yml --site-dir site
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          force_orphan: true
