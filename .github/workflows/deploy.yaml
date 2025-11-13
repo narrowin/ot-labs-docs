@@ -1,13 +1,14 @@
-name: Deploy MkDocs to GitHub Pages
-
+---
+name: Deploy Multilingual MkDocs
 on:
   push:
     branches:
       - main
     paths:
       - "docs/**"
-      - "mkdocs.yml"
+      - "mkdocs*.yml"
       - ".github/workflows/deploy.yaml"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -22,10 +23,54 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.10"
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Create virtual environment
+        run: uv venv
+
+      - name: Cache uv virtualenv
+        uses: actions/cache@v4
+        id: cached-uv-dependencies
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/pyproject.toml') }}
 
       - name: Install dependencies
-        run: pip install mkdocs-material
+        if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
+        run: uv pip sync
+
+      - name: Build English documentation
+        run: |
+          source .venv/bin/activate
+          mkdocs build -f mkdocs.en.yml
+
+      - name: Build German documentation
+        run: |
+          source .venv/bin/activate
+          mkdocs build -f mkdocs.de.yml
+
+      - name: Create root index redirect to English
+        run: |
+          cat > site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta http-equiv="refresh" content="0;url=en/">
+            <link rel="canonical" href="en/">
+            <title>Redirecting...</title>
+          </head>
+          <body>
+            <p>Redirecting to <a href="en/">English version</a>...</p>
+            <p>Zur <a href="de/">deutschen Version</a>.</p>
+          </body>
+          </html>
+          EOF
 
       - name: Deploy to GitHub Pages
-        run: mkdocs gh-deploy --force
+        run: |
+          source .venv/bin/activate
+          mkdocs gh-deploy --force --config-file mkdocs.en.yml --site-dir site
