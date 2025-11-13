@@ -4,7 +4,7 @@
 
 This workshop uses a realistic OT network lab environment built with Containerlab. The lab simulates a typical industrial facility with multiple security zones, PLCs, network segmentation, and monitoring points that can mirror real-world deployments.
 
-The lab is designed to be vendor-neutral and uses open-source and free tools exclusively. All components run in containers, allowing rapid deployment, experimentation, and reset capabilities during hands-on exercises.
+This lab is vendor-neutral and uses only open-source and free tools. All components run in containers, allowing for rapid deployment, experimentation, and reset capabilities during hands-on exercises.
 
 ![Codespace Setup Complete](img/codespace-setup-complete.png)
 
@@ -56,33 +56,33 @@ Documentation: [devpod.sh/docs](https://devpod.sh/docs)
 
 ### Starting a Lab
 
-Go to the containerlab extension on the left side and right click on one of the two labs and choose "Edit topology (TopoViewer)":
+Navigate to the Containerlab extension on the left, right-click on one of the two labs and select "Edit topology (TopoViewer)":
 
 ![Deploy Lab from Containerlab Extension](img/clab-start.png)
 
-Click on the play Icon which will init the `deploy` of the lab. This will start the lab and you will have to wait between 3-5 Minutes for the lab to be up and fully functional. Once all nodes are green:
+Click the play button to initiate the `deploy` of the lab. This starts the lab and you need to wait 3-5 minutes for the lab to be fully operational. Once all nodes are green:
 
 ![Running Lab ready](img/clab-up-and-running.png)
 
 run in the terminal: `scripts/lab-test.py ot-sec-flat` or `scripts/lab-test.py ot-sec-segmented` depending on what you started. When all check of the test script are green you are ready to go.
 
-#### Water treatment frontend
+#### Water Treatment Frontend
 
-Navigate to the ports section in the bottom panel and right click on `HMI WeChromium bVNC` or `ABB 800xA HMI Interface` and select `Open in Browser`.
+Navigate to the Ports section in the lower panel, right-click `HMI WeChromium bVNC` or `ABB 800xA HMI Interface` and select `Open in Browser`.
 ![Running Lab ready](img/clab-ports-selection.png)
 
-Start playing with your OT equipment (:
+Start experimenting with your OT equipment (:
 ![Running Lab ready](img/clab-abb-interface.png)
 
 
 
-#### Look at traffic with wireshark
+#### Viewing Traffic with Wireshark
 
-Once the lab is up and running you can easily tap into **ANY** communication with live packet captures. Easiest way to do this is by right click on a link in the TopoViewer and choose which side of the link to capture. This will open a wireshark inside VsCode that lets analyze your traffic.
+Once the lab is running, you can effortlessly monitor **ANY** communication with live packet captures. The easiest is to right-click on a link in the TopoViewer and select on which side of the link you want to capture. This opens a Wireshark inside VS Code, allowing you to analyze your traffic.
 
 ![Running Lab ready](img/clab-packet-capture.png)
 
-First time you will be asked by VsCode if you want to open with edgeshark: choose yes.
+The first time you will be asked by VS Code if you want to open with Edgeshark: select yes.
 
 ![Start with edgeshark](img/clab-edgeshark-question.png)
 

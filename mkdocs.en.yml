@@ -1,0 +1,37 @@
+---
+# English language configuration
+INHERIT: mkdocs.yml
+
+site_name: "Understanding OT networks & unfold the OT network jungle"
+site_description: Understanding OT networks & unfold the OT network jungle
+site_url: https://narrowin.github.io/ot-labs-docs/en/
+docs_dir: docs/en
+site_dir: site/en
+
+theme:
+  language: en
+
+extra:
+  alternate:
+    - name: English
+      link: /ot-labs-docs/en/
+      lang: en
+    - name: Deutsch
+      link: /ot-labs-docs/de/
+      lang: de
+
+plugins:
+  - search:
+      lang: en
+  - offline:
+      enabled: true
+
+nav:
+  - Overview: "index.md"
+  - Agenda: "agenda.md"
+  - Lab: "lab.md"
+  - Cheatsheet: "cheatsheet.md"
+  - Container101: "Container101.md"
+  - Automation: "automation.md"
+  - Feedback: "feedback.md"
+  - Slides: "slides.md"

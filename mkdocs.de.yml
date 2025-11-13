@@ -1,0 +1,37 @@
+---
+# German language configuration
+INHERIT: mkdocs.yml
+
+site_name: "OT-Netzwerke verstehen & den OT-Netzwerkdschungel lichten"
+site_description: OT-Netzwerke verstehen & den OT-Netzwerkdschungel lichten
+site_url: https://narrowin.github.io/ot-labs-docs/de/
+docs_dir: docs/de
+site_dir: site/de
+
+theme:
+  language: de
+
+extra:
+  alternate:
+    - name: English
+      link: /ot-labs-docs/en/
+      lang: en
+    - name: Deutsch
+      link: /ot-labs-docs/de/
+      lang: de
+
+plugins:
+  - search:
+      lang: de
+  - offline:
+      enabled: true
+
+nav:
+  - Übersicht: "index.md"
+  - Agenda: "agenda.md"
+  - Labor: "lab.md"
+  - Cheatsheet: "cheatsheet.md"
+  - Container-Grundlagen: "Container101.md"
+  - Automatisierung: "automation.md"
+  - Feedback: "feedback.md"
+  - Folien: "slides.md"

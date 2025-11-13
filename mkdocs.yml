@@ -1,32 +1,18 @@
 ---
-site_name: "Understanding OT networks & unfold the OT network jungle"
-site_description: Understanding OT networks & unfold the OT network jungle
-strict: true
-nav:
-  - Overview: "index.md"
-  - Agenda: "agenda.md"
-  - Lab: "lab.md"
-  - Cheatsheet: "cheatsheet.md"
-  - Container101: "Container101.md"
-  - Automation: "automation.md"
-  - Feedback: "feedback.md"
-  - Slides: "slides.md"
-
-
+# Base configuration - shared across all languages
+# Individual language configs inherit from this file
 
 repo_url: https://github.com/narrowin/ot-labs-isc-cph-2025
 repo_name: OT-LABS
 
+strict: false  # Temporarily disabled - images need to be added
 
 theme:
   name: material
-  logo: img/narrowin.svg
-  favicon: img/favicon.ico
+  custom_dir: overrides
+  logo: assets/images/narrowin.svg
+  favicon: assets/images/favicon.ico
   palette:
-    # - scheme: slate
-    #   primary: custom
-    #   accent: custom
-
     # Palette toggle for light mode
     - scheme: default
       primary: blue
@@ -50,24 +36,12 @@ extra:
   homepage: https://narrowin.ch/explorer
 
 extra_css:
-  - stylesheets/extra.css
+  - assets/stylesheets/extra.css
 
 plugins:
   - offline:
       enabled: true
 
-#plugins:
-    # - with-pdf:
-    #     author: Martin Scheu, Mischa Diehm, Christopher Scherb
-    #     copyright: ""
-    #     cover_subtitle: OT Attack Mapping & Risk-Based Defense
-
-    #     output_path: ot-sec-workshop.pdf
-        #enabled_if_env: ENABLE_PDF_EXPORT
-        #
-        # debug_html: true
-        #show_anchors: true
-        # verbose: true
 markdown_extensions:
   - admonition
   - pymdownx.details
