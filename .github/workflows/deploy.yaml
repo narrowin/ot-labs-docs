@@ -36,7 +36,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
-        run: uv pip sync
+        run: uv pip install -e .
 
       - name: Build English documentation
         run: |
