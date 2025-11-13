@@ -55,7 +55,7 @@ jobs:
           <html lang="en">
           <head>
             <meta charset="utf-8">
-            <meta http-equiv="refresh" content="0;url=en/">
+            <script>window.location.replace("en/");</script>
             <link rel="canonical" href="en/">
             <title>Redirecting...</title>
           </head>
