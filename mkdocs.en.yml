@@ -4,7 +4,7 @@ INHERIT: mkdocs.yml
 
 site_name: "Understanding OT networks & unfold the OT network jungle"
 site_description: Understanding OT networks & unfold the OT network jungle
-site_url: https://narrowin.github.io/ot-labs-docs/en/
+site_url: https://narrowin.github.io/en/
 docs_dir: docs/en
 site_dir: site/en
 
@@ -14,10 +14,10 @@ theme:
 extra:
   alternate:
     - name: English
-      link: /ot-labs-docs/en/
+      link: /en/
       lang: en
     - name: Deutsch
-      link: /ot-labs-docs/de/
+      link: /de/
       lang: de
 
 plugins:

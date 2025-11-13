@@ -4,7 +4,7 @@ INHERIT: mkdocs.yml
 
 site_name: "OT-Netzwerke verstehen & den OT-Netzwerkdschungel lichten"
 site_description: OT-Netzwerke verstehen & den OT-Netzwerkdschungel lichten
-site_url: https://narrowin.github.io/ot-labs-docs/de/
+site_url: https://narrowin.github.io/de/
 docs_dir: docs/de
 site_dir: site/de
 
@@ -14,10 +14,10 @@ theme:
 extra:
   alternate:
     - name: English
-      link: /ot-labs-docs/en/
+      link: /en/
       lang: en
     - name: Deutsch
-      link: /ot-labs-docs/de/
+      link: /de/
       lang: de
 
 plugins:
