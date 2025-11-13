@@ -67,18 +67,6 @@ Das Labor läuft in vorkonfigurierten Cloud- oder lokalen Umgebungen. Siehe die 
 
 ---
 
-## Heutige Zeitfenster (Mittwoch)
-
-Details zur Agenda und Raumlogistik finden Sie auf der Agenda-Seite.
-
-- 11:10–11:50 — Teil 1: OT-Netzwerke verstehen & den OT-Netzwerkdschungel lichten
-- 12:50–13:30 — Teil 2: OT-Netzwerk-Sicherheitsüberwachung
-- 13:55–14:30 — Teil 3: Einstieg in die OT-Netzwerk-Sicherheitsüberwachung
-
-Siehe [Agenda](agenda.md) für Details und Links zu den Labor-Abschnitten für jeden Teil.
-
----
-
 ## Vorbereitung vor dem Workshop
 
 Keine Softwareinstallation erforderlich. Das Labor läuft in der Cloud über GitHub Codespaces oder lokal über DevPod.

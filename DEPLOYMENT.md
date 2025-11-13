@@ -78,16 +78,16 @@ After deployment, documentation is available at:
 
 ## Language Switcher
 
-Each page includes a language switcher in the header that allows users to switch between English and German versions. The switcher uses absolute paths that work both locally and on GitHub Pages:
+Each page includes a language switcher in the header that allows users to switch between English and German versions. The switcher uses relative paths that work both locally and on GitHub Pages:
 
 ```yaml
 extra:
   alternate:
     - name: English
-      link: /ot-labs-docs/en/
+      link: ../en/
       lang: en
     - name: Deutsch
-      link: /ot-labs-docs/de/
+      link: ../de/
       lang: de
 ```
 

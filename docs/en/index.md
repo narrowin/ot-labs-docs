@@ -67,18 +67,6 @@ The lab runs in pre-configured cloud or local environments. See the [Lab Guide](
 
 ---
 
-## Today's Slots (Wednesday)
-
-Refer to the Agenda page for full context and room logistics.
-
-- 11:10–11:50 — Part 1: Understanding OT Networks & Unfold the OT Network Jungle
-- 12:50–13:30 — Part 2: OT Network Security Monitoring
-- 13:55–14:30 — Part 3: Getting started with OT Network Security Monitoring
-
-See the [Agenda](agenda.md) for details and links to the lab sections for each part.
-
----
-
 ## Pre-Workshop Preparation
 
 No software installation required. The lab runs in the cloud via GitHub Codespaces or locally via DevPod.

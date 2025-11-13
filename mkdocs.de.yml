@@ -14,10 +14,10 @@ theme:
 extra:
   alternate:
     - name: English
-      link: /ot-labs-docs/en/
+      link: ../en/
       lang: en
     - name: Deutsch
-      link: /ot-labs-docs/de/
+      link: ../de/
       lang: de
 
 plugins:
@@ -28,7 +28,6 @@ plugins:
 
 nav:
   - Übersicht: "index.md"
-  - Agenda: "agenda.md"
   - Labor: "lab.md"
   - Cheatsheet: "cheatsheet.md"
   - Container-Grundlagen: "Container101.md"
