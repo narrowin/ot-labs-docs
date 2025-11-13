@@ -256,10 +256,9 @@ Each PLC in the lab runs CODESYS runtime and simulates a real industrial control
 
 All PLCs are containerized Ubuntu systems with:
 
-- CODESYS Control runtime (IEC 61131-3 programming)
-- Modbus TCP protocol support
-- Vendor-specific protocol implementations
-- Web-based management interface (port 8080)
+- CODESYS Control Linux SL (IEC 61131-3-compliant SoftPLC with soft real-time properties)
+- Modbus TCP, PROFINET, EtherNET/IP and OPC-UA support
+- Web-based HMI (port 8080)
 - SSH access for configuration
 - Simulated I/O and process data
 
