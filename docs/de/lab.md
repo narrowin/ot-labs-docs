@@ -4,7 +4,7 @@
 
 Dieser Workshop nutzt eine realistische OT-Netzwerk-Laborumgebung, die mit Containerlab aufgebaut wurde. Das Labor simuliert eine typische Industrieanlage mit mehreren Sicherheitszonen, SPSen, Netzwerksegmentierung und Überwachungspunkten, die reale Deployments widerspiegeln können.
 
-Das Labor ist herstellerneutral konzipiert und verwendet ausschliesslich Open-Source- und kostenfreie Werkzeuge. Alle Komponenten laufen in Containern, was schnelle Bereitstellung, Experimente und Zurücksetzungsmöglichkeiten während praktischer Übungen ermöglicht.
+Das Labor ist herstellerneutral und verwendet ausschliesslich Open-Source- und kostenfreie Werkzeuge. Alle Komponenten laufen in Containern, was schnelle Bereitstellung, Experimente und Zurücksetzen während praktischer Übungen ermöglicht.
 
 ![Codespace Setup abgeschlossen](img/codespace-setup-complete.png)
 
@@ -22,7 +22,7 @@ GitHub Codespaces bietet eine cloudbasierte Umgebung, die über Ihren Browser zu
 3. Klicken Sie auf "Codespaces Open in Codespaces"
 4. Warten Sie 5-10 Minuten für die initiale Einrichtung (nur beim ersten Mal)
 
-**Initiale Einrichtungszeit:** Beim ersten Erstellen eines Codespace müssen alle Container-Images heruntergeladen und konfiguriert werden. Dies dauert etwa 5-10 Minuten. Die Einrichtung ist abgeschlossen, wenn Sie die Docker-Images-Liste in Ihrem Terminal sehen:
+**Initiale Einrichtungszeit:** Beim ersten Erstellen eines Codespace werden alle Container-Images heruntergeladen und konfiguriert. Dies dauert etwa 5-10 Minuten. Die Einrichtung ist abgeschlossen, wenn Sie die Docker-Images-Liste im Terminal sehen:
 
 ```text
 ❯ docker images
@@ -55,11 +55,11 @@ Dokumentation: [devpod.sh/docs](https://devpod.sh/docs)
 
 ### Ein Labor starten
 
-Gehen Sie zur Containerlab-Erweiterung auf der linken Seite, klicken Sie mit der rechten Maustaste auf eines der beiden Labore und wählen Sie "Edit topology (TopoViewer)":
+Öffnen Sie die Containerlab-Erweiterung, klicken Sie mit der rechten Maustaste auf eines der beiden Labore und wählen Sie "Edit topology (TopoViewer)":
 
 ![Labor aus Containerlab-Erweiterung bereitstellen](img/clab-start.png)
 
-Klicken Sie auf das Play-Symbol, um das `deploy` des Labors zu initiieren. Dies startet das Labor und Sie müssen 3-5 Minuten warten, bis das Labor vollständig funktionsfähig ist. Sobald alle Knoten grün sind:
+Klicken Sie auf das Play-Symbol, um das Labor zu deployen. Dies startet das Labor. Warten Sie 3-5 Minuten, bis das Labor vollständig funktionsfähig ist. Sobald alle Knoten grün sind:
 
 ![Laufendes Labor bereit](img/clab-up-and-running.png)
 
@@ -67,23 +67,23 @@ führen Sie im Terminal aus: `scripts/lab-test.py ot-sec-flat` oder `scripts/lab
 
 #### Wasseraufbereitungs-Frontend
 
-Navigieren Sie zum Ports-Bereich im unteren Panel, klicken Sie mit der rechten Maustaste auf `HMI WeChromium bVNC` oder `ABB 800xA HMI Interface` und wählen Sie `Open in Browser`.
+Öffnen Sie den Ports-Bereich im unteren Panel, klicken Sie mit der rechten Maustaste auf `HMI WeChromium bVNC` oder `ABB 800xA HMI Interface` und wählen Sie `Open in Browser`.
 ![Laufendes Labor bereit](img/clab-ports-selection.png)
 
-Beginnen Sie mit Ihrer OT-Ausrüstung zu experimentieren (:
+Experimentieren Sie mit der OT-Ausrüstung:
 ![Laufendes Labor bereit](img/clab-abb-interface.png)
 
 #### Datenverkehr mit Wireshark betrachten
 
-Sobald das Labor läuft, können Sie problemlos **JEDE** Kommunikation mit Live-Paketmitschnitten überwachen. Am einfachsten ist dies, indem Sie mit der rechten Maustaste auf einen Link im TopoViewer klicken und auswählen, auf welcher Seite des Links Sie mitschneiden möchten. Dies öffnet ein Wireshark innerhalb von VS Code, das Ihren Datenverkehr analysieren lässt.
+Sobald das Labor läuft, können Sie **jede** Kommunikation mit Live-Paketmitschnitten überwachen. Klicken Sie mit der rechten Maustaste auf einen Link im TopoViewer und wählen Sie, auf welcher Seite des Links Sie mitschneiden möchten. Dies öffnet Wireshark innerhalb von VS Code zur Analyse des Datenverkehrs.
 
 ![Laufendes Labor bereit](img/clab-packet-capture.png)
 
-Beim ersten Mal werden Sie von VS Code gefragt, ob Sie mit Edgeshark öffnen möchten: wählen Sie ja.
+Beim ersten Mal fragt VS Code, ob Sie mit Edgeshark öffnen möchten: wählen Sie ja.
 
 ![Mit Edgeshark starten](img/clab-edgeshark-question.png)
 
-Beim ersten Start kann es vorkommen, dass das neu erstellte Fenster mit einem Fehler startet. Schliessen Sie es einfach und versuchen Sie es erneut.
+Beim ersten Start kann das neu erstellte Fenster mit einem Fehler starten. Schliessen Sie es und versuchen Sie es erneut.
 
 ## Kurzreferenz
 
@@ -94,15 +94,15 @@ Das Labor hat zwei separate Netzwerkebenen:
 #### Management-Ebene (192.168.100.0/24)
 
 - Automatisch von Containerlab erstellt
-- Ermöglicht Zugriff auf Container von Ihrem Host
-- Verwenden Sie diese IPs für SSH oder zum Öffnen von Weboberflächen
+- Ermöglicht Zugriff auf Container vom Host
+- Verwenden Sie diese IPs für SSH oder Weboberflächen
 - Simuliert Out-of-Band-Management in realen Netzwerken
 
 #### Labor-Topologie-Ebene (10.0.0.0/8)
 
-- Das tatsächliche Netzwerk, das Sie testen
-- Wie Container miteinander kommunizieren
-- Wo Ihre Netzwerksegmentierung und Sicherheitsrichtlinien angewendet werden
+- Das Netzwerk für Ihre Tests
+- Container-Kommunikation untereinander
+- Anwendung von Netzwerksegmentierung und Sicherheitsrichtlinien
 
 ```text
 Ihr Host-Rechner / Browser
@@ -130,7 +130,7 @@ Ihr Host-Rechner / Browser
     +-------------------------------------------------+
 ```
 
-Wenn Sie per SSH auf ein Gerät über 192.168.100.x zugreifen, erfolgt dies über die Management-Ebene, nicht über die Labor-Topologie. Dies spiegelt wider, wie reale Industrienetzwerke separate Management-Netzwerke verwenden.
+Wenn Sie per SSH auf ein Gerät über 192.168.100.x zugreifen, erfolgt dies über die Management-Ebene, nicht über die Labor-Topologie. Dies entspricht realen Industrienetzwerken mit separaten Management-Netzwerken.
 
 ### Wichtige Schnittstellen
 
@@ -146,15 +146,15 @@ Verwenden Sie Management-IPs direkt; SPS-Weboberflächen (falls aktiviert) lausc
 
 #### SPS-Weboberflächen in Codespaces aufrufen
 
-Bei der Ausführung in GitHub Codespaces sind alle SPS-Weboberflächen über den integrierten Chromium HMI WebVNC-Browser zugänglich:
+In GitHub Codespaces sind alle SPS-Weboberflächen über den integrierten Chromium HMI WebVNC-Browser zugänglich:
 
-1. Navigieren Sie zum **Ports**-Panel in VS Code (unteres Panel)
-2. Finden Sie den **HMI WeChromium bVNC (5800)**-Port
-3. Rechtsklick und wählen Sie **Open in Browser**
-4. Ein Browserfenster öffnet sich mit einem Browser, der die Labordokumentation zeigt
-5. Klicken Sie auf einen beliebigen SPS-Link in der Dokumentation, um die Weboberfläche direkt zu öffnen
+1. Öffnen Sie das **Ports**-Panel in VS Code (unteres Panel)
+2. Suchen Sie den **HMI WeChromium bVNC (5800)**-Port
+3. Rechtsklick und **Open in Browser** wählen
+4. Ein Browserfenster öffnet sich mit der Labordokumentation
+5. Klicken Sie auf einen SPS-Link in der Dokumentation, um die Weboberfläche zu öffnen
 
-Dieser Ansatz ermöglicht den Zugriff auf alle SPS-Weboberflächen ohne individuelles Port-Forwarding, und der Browser läuft innerhalb des Labornetzwerks mit direktem Zugriff auf alle Geräte.
+Dieser Ansatz ermöglicht Zugriff auf alle SPS-Weboberflächen ohne individuelles Port-Forwarding. Der Browser läuft innerhalb des Labornetzwerks mit direktem Zugriff auf alle Geräte.
 
 **Alternativer direkter Port-Zugriff:**
 
@@ -177,9 +177,9 @@ Passwort: admin
 
 1. SSH zum Jumphost: `ssh admin@192.168.100.52`
 2. Ping zu einer SPS (VLAN 10): `ping 10.10.0.11`
-3. Bereitgestelltes Labor inspizieren: `sudo containerlab inspect -t ot-sec-segmented.clab.yml`
-4. Optional: Eine SPS-Weboberfläche öffnen: `http://10.10.0.11:8080` (falls aktiviert)
-5. Bestätigen, dass Sie per SSH zu einer SPS können: `ssh admin@192.168.100.53`
+3. Labor inspizieren: `clab inspect -t ot-sec-segmented.clab.yml`
+4. Optional: SPS-Weboberfläche öffnen: `http://10.10.0.11:8080` (falls aktiviert)
+5. SSH-Zugriff zur SPS testen: `ssh admin@192.168.100.53`
 
 ## Laborarchitektur
 
@@ -221,7 +221,7 @@ Das Labor implementiert IEC 62443-basierte Sicherheitszonen mit definierten Secu
 
 | Zone | Funktion | Typische Assets | SL | Begründung |
 |------|----------|----------------|-------|-----------|
-| **OT-DMZ** | Demilitarisierte Zone zwischen IT und OT | Jumphosts, Patch-Server, Update-Proxies, Historians, Fernzugriffs-Gateways | 2 | Schützt vor absichtlichem Missbrauch; verbindet SL 1 (IT) und SL 3 (OT-Kern) |
+| **OT-DMZ** | Demilitarisierte Zone zwischen IT und OT | Jumphosts, Patch-Server, Update-Proxies, Historians, Fernzugriffs-Gateways | 2 | Schutz vor absichtlichem Missbrauch; verbindet SL 1 (IT) und SL 3 (OT-Kern) |
 | **OT-Operations: Hygiene** | Sanitär- und Hilfssysteme | SPSen, Ventile, Sensoren (VLAN 10) | 3 | Sicherheits- oder Compliance-relevant; erfordert höhere Absicherung |
 | **OT-Operations: Prozess** | Kernproduktionssteuerung | Haupt-SPSen, Sensoren, Aktoren (VLAN 20) | 2 | Kernprozesssteuerung; Schutz gegen qualifizierte Angreifer |
 | **OT-Engineering: Netzwerkmanagement** | Infrastrukturmanagement | Managementserver, SNMP, Backup-Systeme | 3 | Sensible Infrastruktur; starke Authentifizierung erforderlich |
@@ -536,9 +536,9 @@ Das Labor beinhaltet ein umfassendes Gesundheitscheck-Skript, das verifiziert, d
 
 **Wann zu verwenden:**
 
-- Nach dem erstmaligen Bereitstellen des Labors
-- Wenn etwas nicht stimmt und Sie das Problem identifizieren müssen
-- Vor Beginn der Übungen, um sicherzustellen, dass alles bereit ist
+- Nach der ersten Bereitstellung des Labors
+- Bei Problemen zur Identifikation der Ursache
+- Vor Übungsbeginn zur Sicherstellung der Betriebsbereitschaft
 - Nach Konfigurationsänderungen
 
 **Gesundheitscheck ausführen:**
@@ -569,21 +569,21 @@ Das Skript verifiziert alle kritischen Laborkomponenten in organisierten Kategor
 
 **Häufige Probleme:**
 
-Falls Container als nicht laufend angezeigt werden:
+Container laufen nicht:
 
 ```bash
 clab inspect -t ot-sec-segmented.clab.yml
 docker ps -a | grep clab-ot-sec
 ```
 
-Falls Konnektivitätstests fehlschlagen, Netzwerkgerätestatus prüfen:
+Konnektivitätstests schlagen fehl - Netzwerkgerätestatus prüfen:
 
 ```bash
 ssh admin@192.168.100.11  # Gateway
 ssh admin@192.168.100.12  # Distribution-Switch
 ```
 
-Falls SPS-Laufzeiten fehlschlagen, Prozessstatus im Container prüfen:
+SPS-Laufzeiten schlagen fehl - Prozessstatus im Container prüfen:
 
 ```bash
 docker exec clab-ot-sec-segmented-wago-plc2a-vlan10 pgrep -f codesyscontrol

@@ -2,7 +2,7 @@
 
 Vielen Dank für Ihre Teilnahme am OT Network Security Monitoring Workshop an der ISC CPH 2025.
 
-Ihr Feedback hilft uns, zukünftige Workshops zu verbessern. Dauert 2 Minuten.
+Ihr Feedback hilft uns, zukünftige Workshops zu verbessern.
 
 ## Feedback senden
 
@@ -33,7 +33,7 @@ Optional:
 
 ## Vielen Dank
 
-Ihr Feedback hat direkten Einfluss darauf, wie wir OT-Security-Schulungen entwickeln und durchführen.
+Ihr Feedback beeinflusst direkt, wie wir OT-Security-Schulungen entwickeln und durchführen.
 
 Fragen? Kontakt:
 

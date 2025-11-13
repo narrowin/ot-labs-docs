@@ -8,25 +8,25 @@ Diese Seite erklärt, was Container sind, warum sie perfekt für unseren OT-Sich
 
 ## Die einfache Wahrheit über Container
 
-**Container sind einfach eine Möglichkeit, Software zu verpacken und auszuführen, die es leicht macht, dieselbe Einrichtung jedes Mal zu starten, zu stoppen und zu wiederholen.**
+**Container sind eine Möglichkeit, Software zu verpacken und auszuführen, die es leicht macht, dieselbe Einrichtung jedes Mal zu starten, zu stoppen und zu wiederholen.**
 
-Das ist alles. Keine Magie. Keine versteckte Komplexität. Alles, was die Software benötigt, ist zusammen verpackt, und sie läuft auf jedem System gleich. Als hätte man ein einsatzbereites Gerät, anstatt jedes Mal Komponenten zusammenzubauen.
+Das ist alles. Keine Magie. Keine versteckte Komplexität. Alles, was die Software benötigt, ist zusammen verpackt und läuft auf jedem System gleich. Ein einsatzbereites Gerät, statt jedes Mal Komponenten zusammenzubauen.
 
 ## Warum Container für diesen Workshop wichtig sind
 
 Wir bauen Netzwerksicherheitslabore mit SPSen, HMIs, Switches und Sicherheitsüberwachungswerkzeugen auf. Das geben uns Container:
 
 **Schnell und wiederholbar**  
-Anstatt Software manuell auf jeder Maschine zu installieren, können wir ein komplettes Labor in Sekunden starten. Neustart nötig? Es dauert Sekunden, nicht Minuten oder Stunden.
+Statt Software manuell auf jeder Maschine zu installieren, starten wir ein komplettes Labor in Sekunden. Neustart dauert Sekunden, nicht Minuten oder Stunden.
 
 **Sauber und isoliert**  
-Jede Komponente (SPS-Simulator, HMI, Netzwerkwerkzeug) läuft separat. Wenn etwas kaputt geht, starten Sie einfach dieses eine Teil neu.
+Jede Komponente (SPS-Simulator, HMI, Netzwerkwerkzeug) läuft separat. Bei Problemen wird nur dieses eine Teil neu gestartet.
 
 **Einfach zu teilen**  
-Wir können Ihnen genau dasselbe Labor-Setup wie allen anderen geben. Keine "funktioniert auf meiner Maschine"-Probleme.
+Alle erhalten genau dasselbe Labor-Setup. Keine "funktioniert auf meiner Maschine"-Probleme.
 
 **Leichtgewichtig**  
-Sie können mehrere SPSen, Switches und Werkzeuge auf Ihrem Laptop ausführen, ohne dass er schmilzt. Container verwenden viel weniger Speicher und CPU als traditionelle virtuelle Maschinen.
+Mehrere SPSen, Switches und Werkzeuge laufen auf Ihrem Laptop. Container verwenden viel weniger Speicher und CPU als virtuelle Maschinen.
 
 ## GitHub Free Plan: Was Sie bekommen
 
@@ -70,9 +70,9 @@ Copilot kann Ihnen helfen, Topologie-Dateien zu verstehen, Automatisierungsskrip
 
 ### Warum das für OT-Fachleute wichtig ist
 
-Sie erhalten Entwicklungswerkzeuge auf Unternehmensniveau ohne Kosten. Keine Budgetgenehmigung nötig, um mit OT-Sicherheitslaboren zu lernen und zu experimentieren.
+Entwicklungswerkzeuge auf Unternehmensniveau ohne Kosten. Keine Budgetgenehmigung nötig, um mit OT-Sicherheitslaboren zu lernen und zu experimentieren.
 
-Führen Sie komplette industrielle Netzwerksimulationen in der Cloud aus, zugänglich von jedem Gerät. Perfekt zum Lernen in Ihrem eigenen Tempo, wo auch immer Sie sind.
+Komplette industrielle Netzwerksimulationen in der Cloud, zugänglich von jedem Gerät. Perfekt zum Lernen in Ihrem eigenen Tempo.
 
 ### Sicherheitshinweis: Produktionsdaten
 
@@ -91,7 +91,7 @@ GitHub Codespaces läuft in der Cloud. GitHub Copilot verarbeitet Code, um Vorsc
 **Dieser Workshop verwendet nur simulierte, generische Labordaten.**  
 Perfekt zum Lernen ohne Sicherheitsbedenken.
 
-Wenn Sie mit echten Firmendaten arbeiten müssen, verwenden Sie lokale Entwicklungsumgebungen auf firmengeführter Infrastruktur, nicht Cloud-Dienste.
+Für echte Firmendaten verwenden Sie lokale Entwicklungsumgebungen auf firmengeführter Infrastruktur, nicht Cloud-Dienste.
 
 ## Container vs. Virtuelle Maschinen: Was Sie wissen müssen
 
@@ -111,7 +111,7 @@ Sie kennen vielleicht virtuelle Maschinen (VMs). Container sind ähnlich, aber v
 - Verwenden viel weniger Speicher und Festplatte
 - Leicht, aber trotzdem ausreichend isoliert für Labore
 
-**Für diesen Workshop:** Denken Sie an Container als "leichtgewichtige VMs, die sofort starten." Das ist nahe genug dran.
+**Für diesen Workshop:** Container sind leichtgewichtige VMs, die sofort starten.
 
 ### Einfache Vergleichstabelle
 
@@ -128,12 +128,12 @@ Sie werden Containerlab über eine VS Code-Erweiterung verwenden. Keine komplexe
 
 ### Was Sie tatsächlich tun werden
 
-1. **Eine Topologie-Datei öffnen** - Eine einfache Textdatei, die Ihr Labornetzwerk beschreibt (welche SPSen, Switches, HMIs Sie möchten)
-2. **"Deploy" in VS Code klicken** - Die Erweiterung startet Ihr gesamtes Labor
-3. **Ihr Labor verwenden** - Mit Geräten verbinden, Sicherheitstests durchführen, Datenverkehr erfassen
-4. **"Destroy" klicken, wenn fertig** - Alles wird sauber entfernt
+1. **Topologie-Datei öffnen** - Textdatei, die Ihr Labornetzwerk beschreibt (SPSen, Switches, HMIs)
+2. **"Deploy" in VS Code klicken** - Die Erweiterung startet Ihr Labor
+3. **Labor verwenden** - Geräte verbinden, Sicherheitstests durchführen, Datenverkehr erfassen
+4. **"Destroy" klicken** - Alles wird sauber entfernt
 
-Das ist der komplette Arbeitsablauf. Vier Schritte. Einfach.
+Vier Schritte. Einfach.
 
 ### Was hinter den Kulissen passiert (aber Sie müssen sich nicht darum kümmern)
 
@@ -153,22 +153,22 @@ Wenn Sie fertig sind und "Destroy" klicken, wird alles sauber entfernt. Keine ü
 Ja. Container bieten gute Isolation für Training und Tests. Sie werden von Millionen von Entwicklern und Unternehmen weltweit verwendet. Für unseren Workshop sind sie mehr als ausreichend.
 
 **F: Muss ich Docker-Befehle lernen?**  
-Nein. Wir verwenden die Containerlab VS Code-Erweiterung, die Ihnen Buttons zum Klicken statt Befehle zum Tippen gibt.
+Nein. Die Containerlab VS Code-Erweiterung bietet Buttons statt Befehle.
 
 **F: Können Container industrielle Protokolle wie Modbus, S7 oder PROFINET handhaben?**  
-Ja. Container können jede Software ausführen, einschliesslich industrieller Protokollstacks und Simulatoren. Der Netzwerkverkehr funktioniert genau wie Sie es erwarten.
+Ja. Container führen jede Software aus, einschliesslich industrieller Protokollstacks und Simulatoren. Der Netzwerkverkehr funktioniert wie erwartet.
 
-**F: Was ist, wenn etwas abstürzt?**  
-Stellen Sie einfach diese Komponente neu bereit. Es ist schnell und bringt Sie sofort zurück in einen sauberen Zustand.
+**F: Was passiert bei einem Absturz?**  
+Komponente neu bereitstellen. Schnell und sauber.
 
-**F: Ist das wie die "Cloud"?**  
-Nein. Alles läuft lokal auf Ihrem Laptop. Kein Internet erforderlich (nach der anfänglichen Einrichtung). Sie haben volle Kontrolle.
+**F: Ist das die "Cloud"?**  
+Nein. Alles läuft lokal auf Ihrem Laptop. Kein Internet erforderlich (nach initialer Einrichtung). Volle Kontrolle.
 
-**F: Kann ich das nach dem Workshop für meine eigenen Tests verwenden?**  
-Absolut. Das ist eines der Ziele - Ihnen ein Werkzeug zu geben, das Sie verwenden können, um Ihre eigenen OT-Sicherheits- und Netzwerk-Testlabore aufzubauen.
+**F: Kann ich das nach dem Workshop für eigene Tests verwenden?**  
+Ja. Genau dafür ist es gedacht - für eigene OT-Sicherheits- und Netzwerk-Testlabore.
 
 **F: Wird das meinen Computer durcheinanderbringen?**  
-Nein. Container sind isoliert. Wenn Sie sie entfernen, sind sie vollständig weg. Nichts bleibt auf Ihrem System zurück.
+Nein. Container sind isoliert. Beim Entfernen verschwinden sie vollständig. Nichts bleibt zurück.
 
 ## Warum speziell Containerlab?
 
@@ -176,11 +176,11 @@ Containerlab wurde von Netzwerkingenieuren für Netzwerkingenieure entwickelt. E
 
 **Warum es perfekt für OT-Arbeit ist:**
 
-- Definieren Sie Ihre gesamte Netzwerktopologie in einer einfachen Textdatei
-- Unterstützt sowohl Netzwerkgeräte (Switches, Router) als auch Endgeräte (SPSen, HMIs)
+- Gesamte Netzwerktopologie in einer Textdatei definieren
+- Unterstützt Netzwerkgeräte (Switches, Router) und Endgeräte (SPSen, HMIs)
 - Bereitstellung in Sekunden, genauso schnell wieder abbauen
-- Funktioniert nahtlos mit VS Code
-- Labore einfach teilen - senden Sie einfach die Topologie-Datei an Kollegen
+- Nahtlose VS Code Integration
+- Einfaches Teilen von Laboren - Topologie-Datei an Kollegen senden
 - Kostenlos und Open Source
 
 Netzwerkingenieure bei grossen Herstellern wie Nokia, Cisco und Juniper verwenden Containerlab täglich. Es ist kampferprobt und zuverlässig.
@@ -188,13 +188,13 @@ Netzwerkingenieure bei grossen Herstellern wie Nokia, Cisco und Juniper verwende
 ## Reale Perspektive: Alter Weg vs. Neuer Weg
 
 **Traditioneller Ansatz:**  
-Physisches Labor aufbauen oder mehrere VMs konfigurieren. Dauert Stunden oder Tage. Bricht leicht. Schwer zu teilen. Schmerzhaft zurückzusetzen.
+Physisches Labor aufbauen oder mehrere VMs konfigurieren. Dauert Stunden oder Tage. Bricht leicht. Schwer zu teilen. Schmerzhaftes Zurücksetzen.
 
 **Container-Ansatz:**  
-Schreiben Sie eine Textdatei, die Ihr Netzwerk beschreibt. Klicken Sie auf Deploy. Labor bereit in 30 Sekunden. Etwas kaputt? Erneut bereitstellen in 30 Sekunden. Teilen Sie die Datei mit Kollegen, die sofort die identische Einrichtung erhalten.
+Textdatei schreiben, die Ihr Netzwerk beschreibt. Deploy klicken. Labor bereit in 30 Sekunden. Etwas kaputt? Erneut bereitstellen in 30 Sekunden. Datei mit Kollegen teilen, die sofort die identische Einrichtung erhalten.
 
 **Der Unterschied:**  
-Sie verbringen Zeit mit dem Lernen von OT-Sicherheit und -Netzwerken, anstatt mit der Infrastruktur zu kämpfen.
+Zeit für OT-Sicherheit und -Netzwerke lernen, statt mit Infrastruktur kämpfen.
 
 ## Die Wahrheit über Lernkurven
 
@@ -215,33 +215,33 @@ Das ist alles. Die Containerlab VS Code-Erweiterung übernimmt alles andere.
 Container zeichnen sich durch das Simulieren von OT-Umgebungen aus:
 
 **Netzwerkverhalten ist realistisch**  
-Virtuelle Netzwerkverbindungen verhalten sich genau wie echte Ethernet-Kabel. Industrielle Protokolle funktionieren identisch. Netzwerkverkehr sieht für Ihre Überwachungswerkzeuge gleich aus.
+Virtuelle Netzwerkverbindungen verhalten sich wie echte Ethernet-Kabel. Industrielle Protokolle funktionieren identisch. Netzwerkverkehr sieht für Überwachungswerkzeuge gleich aus.
 
 **Leistung ist ausreichend**  
-Ein moderner Laptop führt bequem 10-20 containerisierte Geräte aus. Das reicht für realistische OT-Netzwerktopologien mit mehreren Zonen.
+Ein moderner Laptop führt bequem 10-20 containerisierte Geräte aus. Ausreichend für realistische OT-Netzwerktopologien mit mehreren Zonen.
 
 **Zustand kann bewahrt werden**  
-Behalten Sie Ihre SPS-Konfiguration zwischen Sitzungen bei oder starten Sie jedes Mal frisch. Ihre Wahl.
+SPS-Konfiguration zwischen Sitzungen beibehalten oder jedes Mal frisch starten. Ihre Wahl.
 
 **Timing ist vorhersehbar**  
-Nicht geeignet für harte Echtzeit-Steuerung, aber perfekt zum Testen von Netzwerkprotokollen, Sicherheitsüberwachung und Angriffsszenarien.
+Nicht für harte Echtzeit-Steuerung geeignet, aber perfekt zum Testen von Netzwerkprotokollen, Sicherheitsüberwachung und Angriffsszenarien.
 
 ## Wichtige Einschränkungen (ehrlich sein)
 
 Seien wir klar darüber, was dies ist und was nicht:
 
 **Nicht für Produktion**  
-Dies sind Simulationen und Testumgebungen. Setzen Sie dies niemals in Ihr tatsächliches Anlagennetzwerk ein.
+Dies sind Simulationen und Testumgebungen. Niemals in tatsächliche Anlagennetzwerke einsetzen.
 
 **Keine Echtzeit-Steuerung**  
-Perfekt zum Testen von Protokollen und Sicherheit. Nicht geeignet für sicherheitskritische Steuerungssysteme, die harte Echtzeit-Garantien erfordern.
+Perfekt zum Testen von Protokollen und Sicherheit. Nicht für sicherheitskritische Steuerungssysteme mit harten Echtzeit-Garantien geeignet.
 
 **Nicht identisch mit echten Geräten**  
-Wir verwenden Simulatoren, die sich wie Ihre SPSen und HMIs verhalten, aber sie führen nicht Ihre genaue Produktions-Firmware aus.
+Simulatoren verhalten sich wie SPSen und HMIs, führen aber nicht Ihre genaue Produktions-Firmware aus.
 
 **Fazit:**  
 Für Training und Tests - perfekt.  
-Für Produktionssteuerung - verwenden Sie echte, zertifizierte Hardware.
+Für Produktionssteuerung - echte, zertifizierte Hardware verwenden.
 
 ## Ihr Workshop-Lernpfad
 

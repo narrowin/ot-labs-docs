@@ -19,22 +19,22 @@
 
 ### Über diesen Workshop
 
-Operational-Technology-Netzwerke (OT) unterscheiden sich grundlegend von herkömmlichen IT-Netzwerken. Sie verbinden industrielle Steuerungssysteme, SPSen, HMIs und Feldgeräte, die kritische Infrastrukturen und Fertigungsprozesse steuern. Dennoch haben viele Organisationen Schwierigkeiten, Transparenz über diese Umgebungen zu gewinnen, was sie anfällig für Sicherheitsbedrohungen macht und Compliance-Lücken hinterlässt.
+Operational-Technology-Netzwerke (OT) unterscheiden sich grundlegend von IT-Netzwerken. Sie verbinden industrielle Steuerungssysteme, SPSen, HMIs und Feldgeräte für kritische Infrastrukturen und Fertigungsprozesse. Viele Organisationen haben Schwierigkeiten, Transparenz über diese Umgebungen zu gewinnen, was sie anfällig für Sicherheitsbedrohungen macht und Compliance-Lücken hinterlässt.
 
-Dieser praxisorientierte Workshop adressiert die Herausforderung, OT-Netzwerke mit praktischen Open-Source-Tools zu verstehen und abzusichern. Sie lernen, wie Sie die Komplexität von OT-Protokollen bewältigen, Geräte und Datenflüsse identifizieren, blinde Flecken aufdecken und eine effektive Netzwerk-Sicherheitsüberwachung für industrielle Umgebungen implementieren.
+Dieser Workshop vermittelt, wie Sie OT-Netzwerke mit praktischen Open-Source-Tools verstehen und absichern. Sie lernen, OT-Protokolle zu bewältigen, Geräte und Datenflüsse zu identifizieren, blinde Flecken aufzudecken und effektive Netzwerk-Sicherheitsüberwachung für industrielle Umgebungen zu implementieren.
 
-Im Gegensatz zu herstellerzentrierten Ansätzen betont dieser Workshop pragmatische Lösungen, die sofort in realen OT-Umgebungen eingesetzt werden können.
+Der Workshop fokussiert auf pragmatische Lösungen, die sofort in realen OT-Umgebungen einsetzbar sind.
 
 ### Was macht OT anders?
 
 OT-Netzwerke stellen einzigartige Herausforderungen dar:
 
-* Veraltete Protokolle, die ohne Sicherheit im Hinterkopf entwickelt wurden (Modbus, S7, CIP, BACnet)
-* Lange Lebenszyklen mit Geräten, die nicht einfach gepatcht oder ersetzt werden können
-* Echtzeitanforderungen, bei denen Verfügbarkeit Vorrang vor Vertraulichkeit hat
+* Veraltete Protokolle ohne Sicherheitskonzept (Modbus, S7, CIP, BACnet)
+* Lange Lebenszyklen, Geräte können nicht einfach gepatcht oder ersetzt werden
+* Echtzeitanforderungen, Verfügbarkeit hat Vorrang vor Vertraulichkeit
 * Eingeschränkte Netzwerktransparenz durch flache Architekturen und unverwaltete Switches
 * Heterogene Umgebungen mit mehreren Herstellern und Protokollen
-* IT/OT-Konvergenz, die neue Angriffsflächen schafft
+* IT/OT-Konvergenz schafft neue Angriffsflächen
 
 Das Verständnis dieser Unterschiede ist entscheidend für effektive Netzwerksegmentierung und Sicherheitsüberwachung.
 
@@ -73,10 +73,10 @@ Keine Softwareinstallation erforderlich. Das Labor läuft in der Cloud über Git
 
 **Vor dem Workshop:**
 
-1. Stellen Sie sicher, dass Sie ein GitHub-Konto haben
-2. Lesen Sie die [Laboranleitung](lab.md#erste-schritte) für Umgebungs-Setup-Optionen
-3. **Wichtig:** Starten Sie Ihren Codespace möglichst vor dem Workshop. Der erste Setup dauert 5-10 Minuten zum Herunterladen und Konfigurieren der Container-Images. Nachfolgende Starts dauern unter 1 Minute.
-4. Optional: Machen Sie sich mit grundlegenden Linux-Kommandozeilen- und Netzwerkkonzepten vertraut
+1. GitHub-Konto erstellen
+2. [Laboranleitung](lab.md#erste-schritte) für Setup-Optionen lesen
+3. **Wichtig:** Codespace vor dem Workshop starten. Der erste Start dauert 5-10 Minuten für Download und Konfiguration der Container-Images. Nachfolgende Starts dauern unter 1 Minute.
+4. Optional: Grundkenntnisse in Linux-Kommandozeile und Netzwerkkonzepten auffrischen
 
 ---
 
@@ -92,9 +92,7 @@ Keine Softwareinstallation erforderlich. Das Labor läuft in der Cloud über Git
 
 ## Fragen?
 
-Bei technischen Fragen oder besonderen Anforderungen kontaktieren Sie die Referenten vor dem Workshop:
+Bei technischen Fragen oder besonderen Anforderungen kontaktieren Sie die Referenten:
 
 * Martin Scheu: martin.scheu@switch.ch
 * Mischa Diehm: mischa.diehm@narrowin.com
-
-Wir freuen uns auf die Zusammenarbeit mit Ihnen im Workshop.

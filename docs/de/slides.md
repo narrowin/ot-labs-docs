@@ -9,11 +9,11 @@ Laden Sie die Präsentationsfolien für diesen Workshop herunter:
 **Copenhagen 2025: Unfold the OT Network Jungle**  
 Präsentiert von Mischa Diehm und Martin Scheu
 
-Diese Präsentation behandelt:
+Inhalt:
 
 - Einführung in OT-Netzwerke
 - Grundlagen des Network Security Monitoring
-- Übersicht über das praktische Labor
+- Praktisches Labor - Übersicht
 - Containerlab und Netzwerksimulation
 - Best Practices und wichtigste Erkenntnisse
 
@@ -23,7 +23,7 @@ Für zusätzlichen Kontext zum Containerlab-Ansatz und Digital-Twin-Konzepten:
 
 <a href="slides/digital-twin-containerlab-talk-202505.pdf" class="md-button">Referenz herunterladen: Digital Twin mit Containerlab (PDF)</a>
 
-Diese Referenzpräsentation bietet tiefere Einblicke in:
+Diese Referenzpräsentation bietet tiefere Einblicke:
 
 - Aufbau von Netzwerk-Digital-Twins mit Containerlab
 - Laborumgebungsarchitektur

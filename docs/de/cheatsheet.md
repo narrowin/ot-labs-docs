@@ -2,16 +2,16 @@
 
 ## Zugangsdaten
 
-```
+```text
 Benutzername: admin
 Passwort: admin
 ```
 
 ## Labor starten und stoppen
 
-Verwenden Sie die VS Code Containerlab-Erweiterung mit dem Graph TopoViewer. Rechtsklick auf `ot-sec-segmented.clab.yml` (oder `ot-sec-flat.clab.yml`) und wählen Sie `Graph Topoviewer`.
+Verwenden Sie die VS Code Containerlab-Erweiterung mit dem Graph TopoViewer. Rechtsklick auf `ot-sec-segmented.clab.yml` (oder `ot-sec-flat.clab.yml`) und `Graph Topoviewer` wählen.
 
-Um das Labor zu starten, drücken Sie den Play-Button in der TopoViewer-Navigation.
+Labor starten: Play-Button in der TopoViewer-Navigation drücken.
 
 ## Mit Geräten verbinden
 
