@@ -2,8 +2,8 @@
 # English language configuration
 INHERIT: mkdocs.yml
 
-site_name: "Understanding OT networks & unfold the OT network jungle"
-site_description: Understanding OT networks & unfold the OT network jungle
+site_name: "OT Lab Twins – Network & PLCs"
+site_description: OT Lab Twins – Network & PLCs
 site_url: https://narrowin.github.io/ot-labs-docs/en/
 docs_dir: docs/en
 site_dir: site/en

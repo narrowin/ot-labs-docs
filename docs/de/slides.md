@@ -4,7 +4,7 @@
 
 Laden Sie die Präsentationsfolien für diesen Workshop herunter:
 
-<a href="slides/CPH2025%20-%20Unfold%20the%20OT%20Network%20Jungle%20-%20Diehm%20-%20Scheu%20.pdf" class="md-button md-button--primary">Workshop-Folien herunterladen (PDF)</a>
+<a href="slides/CPH2025%20-%20Unfold%20the%20OT%20Network%20Jungle%20-%20Diehm%20-%20Scheu.pdf" class="md-button md-button--primary">Workshop-Folien herunterladen (PDF)</a>
 
 **Copenhagen 2025: Unfold the OT Network Jungle**  
 Präsentiert von Mischa Diehm und Martin Scheu
