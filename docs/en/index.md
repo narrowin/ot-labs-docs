@@ -11,7 +11,7 @@
 
 ## Workshop Materials
 
-<a href="slides/CPH2025%20-%20Unfold%20the%20OT%20Network%20Jungle%20-%20Diehm%20-%20Scheu%20.pdf" class="md-button md-button--primary">Download Workshop Slides (PDF)</a>
+<a href="slides/CPH2025%20-%20Unfold%20the%20OT%20Network%20Jungle%20-%20Diehm%20-%20Scheu.pdf" class="md-button md-button--primary">Download Workshop Slides (PDF)</a>
 
 ---
 
