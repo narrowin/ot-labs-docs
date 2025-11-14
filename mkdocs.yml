@@ -2,7 +2,7 @@
 # Base configuration - shared across all languages
 # Individual language configs inherit from this file
 
-repo_url: https://github.com/narrowin/ot-labs-isc-cph-2025
+repo_url: https://github.com/narrowin/ot-labs-docs
 repo_name: OT-LABS
 
 strict: false  # Temporarily disabled - images need to be added

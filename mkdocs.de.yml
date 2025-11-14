@@ -2,8 +2,8 @@
 # German language configuration
 INHERIT: mkdocs.yml
 
-site_name: "OT Lab Twins – Network & PLCs"
-site_description: OT Lab Twins – Network & PLCs
+site_name: "OT Netzwerke : Design & Defend"
+site_description: "OT Netzwerke : Design & Defend"
 site_url: https://narrowin.github.io/ot-labs-docs/de/
 docs_dir: docs/de
 site_dir: site/de
