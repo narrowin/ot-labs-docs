@@ -17,6 +17,12 @@
 
 ## Overview
 
+### Lab Access and Training Opportunities
+
+The actual labs are unfortunately not publicly published. If you are interested in accessing the labs, please contact us and lets have a chat.
+
+We also offer this lab as a two-day on-site training course. For more details, please visit [https://www.narrowin.ch/en/courses.html](https://www.narrowin.ch/en/courses.html). While currently delivered on-site, we are evaluating virtual training options. If you are interested, please send us a brief email.
+
 ### About This Workshop
 
 Operational Technology (OT) networks are fundamentally different from traditional IT networks. They connect industrial control systems, PLCs, HMIs, and field devices that control critical infrastructure and manufacturing processes. Yet many organizations struggle to gain visibility into these environments, leaving them vulnerable to security threats and compliance gaps.

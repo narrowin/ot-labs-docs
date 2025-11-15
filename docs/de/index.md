@@ -17,6 +17,12 @@
 
 ## Überblick
 
+### Zugang zu den Labs und Schulungsangebote
+
+Die Labs sind leider nicht öffentlich verfügbar. Falls Sie Interesse am Zugang zu den Labs haben, nehmen Sie bitte Kontakt mit uns auf.
+
+Wir bieten dieses Lab auch als zweitägige Vor-Ort-Schulung an. Für weitere Details besuchen Sie bitte [https://www.narrowin.ch/de/courses.html](https://www.narrowin.ch/de/courses.html). Derzeit wird die Schulung vor Ort durchgeführt, wir evaluieren jedoch auch virtuelle Schulungsoptionen. Bei Interesse senden Sie uns bitte eine kurze E-Mail.
+
 ### Über diesen Workshop
 
 Operational-Technology-Netzwerke (OT) unterscheiden sich grundlegend von IT-Netzwerken. Sie verbinden industrielle Steuerungssysteme, SPSen, HMIs und Feldgeräte für kritische Infrastrukturen und Fertigungsprozesse. Viele Organisationen haben Schwierigkeiten, Transparenz über diese Umgebungen zu gewinnen, was sie anfällig für Sicherheitsbedrohungen macht und Compliance-Lücken hinterlässt.
