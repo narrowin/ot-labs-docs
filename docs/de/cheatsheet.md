@@ -43,6 +43,18 @@ ABB-System:
 
 <http://192.168.100.57:8080>
 
+## SPS-Weboberflächen
+
+Management-IPs direkt verwenden; SPS-Weboberflächen (falls aktiviert) lauschen auf Port 8080 im Labornetzwerk.
+
+| Gerät | URL (falls aktiviert) | Zweck |
+|--------|-------------------|---------|
+| abb-800xa-vlan40 | [http://10.40.0.11:8080](http://10.40.0.11:8080) | HMI/Steuerungsschnittstellenübersicht |
+| wago-plc2a-vlan10 | [http://10.10.0.11:8080](http://10.10.0.11:8080) | SPS-Weboberfläche |
+| wago-plc2b-vlan10 | [http://10.10.0.12:8080](http://10.10.0.12:8080) | SPS-Weboberfläche |
+| ctrlx-plc3-vlan20 | [http://10.20.0.11:8080](http://10.20.0.11:8080) | SPS-Weboberfläche |
+| schneider-plc4-vlan30 | [http://10.30.0.11:8080](http://10.30.0.11:8080) | SPS-Weboberfläche |
+
 ## Befehle auf der SPS
 
 Prüfen, ob die SPS-Runtime läuft:

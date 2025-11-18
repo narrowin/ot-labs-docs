@@ -130,19 +130,11 @@ Ihr Host-Rechner / Browser
     +-------------------------------------------------+
 ```
 
-Wenn Sie per SSH auf ein Gerät über 192.168.100.x zugreifen, erfolgt dies über die Management-Ebene, nicht über die Labor-Topologie. Dies entspricht realen Industrienetzwerken mit separaten Management-Netzwerken.
+When you SSH to a device using 192.168.100.x, you are accessing it through the management layer, not through the lab topology. This mirrors how real industrial networks use separate management networks.
 
-### Wichtige Schnittstellen
+### SPS-Weboberflächen
 
-Verwenden Sie Management-IPs direkt; SPS-Weboberflächen (falls aktiviert) lauschen auf Port 8080 im Labornetzwerk.
-
-| Gerät | URL (falls aktiviert) | Zweck |
-|--------|-------------------|---------|
-| abb-800xa-vlan40 | [http://10.40.0.11:8080](http://10.40.0.11:8080) | HMI/Steuerungsschnittstellenübersicht |
-| wago-plc2a-vlan10 | [http://10.10.0.11:8080](http://10.10.0.11:8080) | SPS-Weboberfläche |
-| wago-plc2b-vlan10 | [http://10.10.0.12:8080](http://10.10.0.12:8080) | SPS-Weboberfläche |
-| ctrlx-plc3-vlan20 | [http://10.20.0.11:8080](http://10.20.0.11:8080) | SPS-Weboberfläche |
-| schneider-plc4-vlan30 | [http://10.30.0.11:8080](http://10.30.0.11:8080) | SPS-Weboberfläche |
+Eine vollständige Liste der SPS-Weboberflächen und deren URLs finden Sie im [Spickzettel](cheatsheet.md#sps-weboberflachen).
 
 #### SPS-Weboberflächen in Codespaces aufrufen
 

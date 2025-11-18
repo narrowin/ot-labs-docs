@@ -136,18 +136,9 @@ Your Host Machine / Browser
 
 When you SSH to a device using 192.168.100.x, you are accessing it through the management layer, not through the lab topology. This mirrors how real industrial networks use separate management networks.
 
-### Important Interfaces
+### PLC Web Interfaces
 
-Use management IPs directly; PLC web UIs (if enabled) listen on port 8080 inside the lab network.
-
-| Device | URL (if enabled) | Purpose |
-|--------|-------------------|---------|
-| abb-800xa-vlan40 | [http://10.40.0.11:8080](http://10.40.0.11:8080) | HMI/control interface overview |
-| wago-plc2a-vlan10 | [http://10.10.0.11:8080](http://10.10.0.11:8080) | PLC web interface |
-| wago-plc2b-vlan10 | [http://10.10.0.12:8080](http://10.10.0.12:8080) | PLC web interface |
-| ctrlx-plc3-vlan20 | [http://10.20.0.11:8080](http://10.20.0.11:8080) | PLC web interface |
-| schneider-plc4-vlan30 | [http://10.30.0.11:8080](http://10.30.0.11:8080) | PLC web interface |
-
+For a complete list of PLC web interfaces and their URLs, see the [Cheatsheet](cheatsheet.md#plc-web-interfaces).
 
 #### Accessing PLC Web Interfaces in Codespaces
 

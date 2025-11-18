@@ -558,7 +558,7 @@ wheels = [
 ]
 
 [[package]]
-name = "naf-workshop-nuts"
+name = "ot-lab-202511-docs"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

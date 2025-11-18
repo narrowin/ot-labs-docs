@@ -2,6 +2,10 @@
 # Base configuration - shared across all languages
 # Individual language configs inherit from this file
 
+site_name: "OT Networks: Design & Defend"
+site_description: "OT Networks: Design & Defend"
+site_url: https://narrowin.github.io/ot-labs-docs/
+
 repo_url: https://github.com/narrowin/ot-labs-docs
 repo_name: OT-LABS
 
