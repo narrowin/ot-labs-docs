@@ -13,6 +13,13 @@ Use the VS Code Containerlab extension with the Graph TopoViewer. Right click on
 
 To start the lab press the play button in the TopoViewer navigation.
 
+Or use the command line:
+
+```bash
+clab deploy --topo ot-sec-segmented.clab.yml
+clab destroy --topo ot-sec-segmented.clab.yml
+```
+
 
 ## Connect to Devices
 

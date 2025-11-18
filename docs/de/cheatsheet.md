@@ -13,6 +13,13 @@ Verwenden Sie die VS Code Containerlab-Erweiterung mit dem Graph TopoViewer. Rec
 
 Labor starten: Play-Button in der TopoViewer-Navigation drücken.
 
+Oder über die Kommandozeile:
+
+```bash
+clab deploy --topo ot-sec-segmented.clab.yml
+clab destroy --topo ot-sec-segmented.clab.yml
+```
+
 ## Mit Geräten verbinden
 
 Schneller SSH-Zugriff (Gerätenamen verwenden):
