@@ -18,7 +18,7 @@ Das Labor läuft in einem Entwicklungscontainer mit allen erforderlichen Werkzeu
 
 GitHub Codespaces bietet eine cloudbasierte Umgebung, die über Ihren Browser zugänglich ist. Keine lokale Installation erforderlich.
 
-1. Gehen Sie zu [github.com/narrowin/ot-labs-isc-cph-2025](https://github.com/narrowin/ot-labs-isc-cph-2025)
+1. Gehen Sie zu [github.com/narrowin-labs/ot-lab](https://github.com/narrowin-labs/ot-lab)
 3. Klicken Sie auf "Codespaces Open in Codespaces"
 4. Warten Sie 5-10 Minuten für die initiale Einrichtung (nur beim ersten Mal)
 
@@ -46,7 +46,7 @@ DevPod erstellt dieselbe Umgebung auf Ihrer lokalen Maschine und gibt Ihnen voll
 
 ```bash
 # DevPod installieren: devpod.sh/docs/getting-started/install
-devpod up github.com/narrowin/ot-labs-isc-cph-2025
+devpod up github.com/narrowin-labs/ot-lab
 ```
 
 DevPod liest die Repository-Konfiguration und richtet alle Abhängigkeiten automatisch ein.

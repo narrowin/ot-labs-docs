@@ -18,7 +18,7 @@ The lab runs in a development container with all required tools pre-installed. C
 
 GitHub Codespaces provides a cloud-based environment accessible through your browser. No local installation required.
 
-1. Go to [github.com/narrowin/ot-labs-isc-cph-2025](https://github.com/narrowin/ot-labs-isc-cph-2025)
+1. Go to [github.com/narrowin-labs/ot-lab](https://github.com/narrowin-labs/ot-lab)
 3. Click "Codespaces Open in Codespaces"
 4. Wait 5-10 minutes for the initial setup (first-time only)
 
@@ -47,7 +47,7 @@ DevPod creates the same environment on your local machine, giving you full contr
 
 ```bash
 # Install DevPod: devpod.sh/docs/getting-started/install
-devpod up github.com/narrowin/ot-labs-isc-cph-2025
+devpod up github.com/narrowin-labs/ot-lab
 ```
 
 DevPod reads the repository configuration and sets up all dependencies automatically.
@@ -426,105 +426,19 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 
 ## Workshop Lab Exercises
 
-Throughout the workshop, you will work through progressive hands-on exercises.
+The hands-on exercises have been moved to a dedicated section.
 
-### Part 1: Understanding OT Networks
+[Go to Exercises :material-arrow-right:](exercises/index.md){ .md-button .md-button--primary }
 
-**Objectives:**
-- Discover OT protocols in use (Modbus TCP, proprietary protocols)
-- Identify communication patterns between PLCs and systems
-- Test open-source monitoring tools against live traffic
-- Analyze protocol characteristics and security implications
+The exercises cover:
 
-#### Exercise 1.1: Lab Introduction
-
-**Suggested approach:**
-
-1. Start the lab environment
-2. Open the topology viewer
-3. Login to various systems (gw-firewall, panasonic-toughbook-internet, proxmox-jumphost)
-4. Test connectivity with ping to different zones
-
-#### Exercise 1.2: VLAN Discovery
-
-**Suggested approach:**
-
-1. Use Wireshark on a link between two switches
-   - Which VLANs do you see?
-2. Capture traffic from ctrlx-plc3-vlan20 to its switch
-   - Which VLANs are visible?
-   - What's the difference between trunk and access ports?
-
-### Part 2: OT Network Security Monitoring
-
-**Objectives:**
-- Deploy monitoring at strategic points (gateway, inter-zone, edge)
-- Configure traffic collection and forwarding
-- Validate visibility across zones
-- Test monitoring effectiveness and identify blind spots
-
-#### Exercise 2.1: Remote Access Analysis
-
-**Suggested approach:**
-
-1. SSH to the jumphost
-2. Explore: What can you reach in the lab?
-   - Use `nmap` to scan the firewall
-   - What open ports do you discover?
-   - What services are exposed?
-
-**Advanced:**
-
-1. Configure initial firewall rules on gw-firewall to restrict jumphost access
-2. Question: What protection mechanisms for remote access would be more effective than static firewall rules?
-
-#### Exercise 2.2: Micro-segmentation
-
-**Suggested approach:**
-
-1. Investigate how micro-segmentation works for `wago-plc2a-vlan10`
-2. Design firewall rules needed to make `wago-plc2a-vlan10` accessible from outside while limiting exposure
-
-**Advanced:**
-
-1. Implement switch port ACLs on the port connected to wago-plc2b-vlan10
-2. Questions:
-   - What are the characteristics of switch ACLs?
-   - Do they provide the same protection as stateful packet filters?
-   - When would you use ACLs vs firewall rules?
-
-### Part 3: Getting Started with Monitoring
-
-**Objectives:**
-- Define monitoring use cases for detected threats
-- Configure detection rules for anomalies
-- Set up alerting for security events
-- Create response playbooks
-- Tune detection to reduce false positives
-
-#### Exercise 3.1: Firewall Rule Design
-
-**Suggested approach:**
-
-1. Design a security concept for the lab (theoretical first):
-   - Create a communication matrix
-   - Define concrete firewall ruleset
-   - Document rule purposes and owners
-
-2. Consider: What additional value would a next-generation firewall provide?
-
-3. Plan IDS placement and functionality
-
-**Advanced:**
-
-1. Design and implement a simple firewall rule management tool
-   - How can rules be easily revalidated after one year?
-   - Who is responsible for each rule?
-   - What is the purpose of each rule?
-   - Link rules to tickets/change requests
-   - Track rule creation date and review schedule
-
-2. Implement and test the firewall rules
+1. VLAN Discovery
+2. ARP Spoofing
+3. Spanning Tree Analysis
+4. Link Aggregation
+5. Network Reconnaissance
+6. OT Protocol Discovery
+7. Network Segmentation and Firewall Design
 
 ## Debugging and Verification
 

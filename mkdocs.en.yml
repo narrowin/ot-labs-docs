@@ -29,6 +29,16 @@ plugins:
 nav:
   - Overview: "index.md"
   - Lab: "lab.md"
+  - Exercises:
+    - Overview: "exercises/index.md"
+    - "1. VLAN Discovery": "exercises/ex1-vlan-discovery.md"
+    - "2. ARP Spoofing": "exercises/ex2-arp-spoofing.md"
+    - "3. Spanning Tree": "exercises/ex3-spanning-tree.md"
+    - "4. Link Aggregation": "exercises/ex4-link-aggregation.md"
+    - "5. Reconnaissance": "exercises/ex5-reconnaissance.md"
+    - "6. Protocol Discovery": "exercises/ex6-protocol-discovery.md"
+    - "7. Segmentation & Firewall": "exercises/ex7-segmentation-firewall.md"
+    - Appendix: "exercises/appendix.md"
   - Cheatsheet: "cheatsheet.md"
   - Container101: "Container101.md"
   - Automation: "automation.md"

@@ -4,16 +4,22 @@ This document explains how the multilingual documentation is deployed to GitHub 
 
 ## Architecture
 
-The project uses a two-repository setup:
+The project uses a multi-repository setup:
 
-1. **Main Repository** (`narrowin/ot-labs-isc-cph-2025`)
-   - Development and content creation happens here
+1. **Main Repository** (`narrowin-labs/ot-lab`)
+   - Main development and build repository
    - Contains all lab materials and documentation source
+   - Single source of truth for all content
 
-2. **Docs Repository** (`narrowin/ot-labs-docs`)
+2. **Course Repositories** (e.g., `narrowin-labs/nw-ot-labs-net101`)
+   - Course-specific repositories synced from main repository
+   - Repository names dynamically replaced during sync
+   - Each course gets its own deployable instance
+
+3. **Docs Repository** (`narrowin/ot-labs-docs`)
    - Public repository dedicated to documentation
    - Hosts GitHub Pages deployment
-   - Receives synced content from main repo
+   - Receives synced content from course repositories
 
 ## Deployment Workflow
 
