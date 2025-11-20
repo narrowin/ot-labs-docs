@@ -104,26 +104,41 @@ ip neighbor
 ### Task 4: Capture cleartext credentials
 
 1. Stop the ARP spoofing script (Ctrl+C on attacker)
-2. On victim, start netcat connection:
+2. Open new terminal and SSH into internet node `panasonic-toughbook-internet`:
 
-```bash
-echo "username:admin password:secretpass123" | nc 1.1.1.1 22
-```
+    ```bash
+    ssh admin@192.168.100.51
+    ```
 
-3. On attacker, restart ARP spoofing:
+3. On internet node, start netcat listener on port 2323:
 
-```bash
-sudo /home/admin/arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
-```
+    ```bash
+    nc -l -k 2323
+    ```
 
-4. From victim, send credentials again:
+    Leave this running to receive incoming connections.
 
-```bash
-echo "username:admin password:secretpass123" | nc 1.1.1.1 22
-```
+4. On victim (`wago-plc2b-vlan10`), send test credentials:
 
-5. In Wireshark, remove ICMP filter and look for TCP traffic
-6. Follow TCP stream to see cleartext data
+    ```bash
+    echo "username:admin password:secretpass123" | nc 1.1.1.1 2323
+    ```
+
+5. On attacker, restart ARP spoofing:
+
+    ```bash
+    sudo /home/admin/arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
+    ```
+
+6. From victim, send credentials again:
+
+    ```bash
+    echo "username:admin password:secretpass123" | nc 1.1.1.1 2323
+    ```
+
+7. In Wireshark, remove ICMP filter and look for TCP traffic to port 2323
+8. Follow TCP stream to see cleartext data
+9. Check the netcat listener on internet node - it should display the received credentials
 
 ## Verification
 

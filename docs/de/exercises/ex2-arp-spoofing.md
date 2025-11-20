@@ -104,26 +104,41 @@ ip neighbor
 ### Aufgabe 4: Klartext-Anmeldedaten erfassen
 
 1. ARP-Spoofing-Skript stoppen (Ctrl+C auf Angreifer)
-2. Beim Opfer netcat-Verbindung starten:
+2. Neues Terminal öffnen und SSH-Verbindung zum Internet-Knoten `panasonic-toughbook-internet` herstellen:
 
-```bash
-echo "username:admin password:secretpass123" | nc 1.1.1.1 22
-```
+    ```bash
+    ssh admin@192.168.100.51
+    ```
 
-3. Auf dem Angreifer ARP-Spoofing neu starten:
+3. Auf dem Internet-Knoten netcat-Listener auf Port 2323 starten:
 
-```bash
-sudo /home/admin/arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
-```
+    ```bash
+    nc -l -k 2323
+    ```
 
-4. Vom Opfer Anmeldedaten erneut senden:
+    Lassen Sie dies laufen, um eingehende Verbindungen zu empfangen.
 
-```bash
-echo "username:admin password:secretpass123" | nc 1.1.1.1 22
-```
+4. Beim Opfer (`wago-plc2b-vlan10`) Test-Anmeldedaten senden:
 
-5. In Wireshark ICMP-Filter entfernen und nach TCP-Datenverkehr suchen
-6. TCP-Stream folgen, um Klartext-Daten zu sehen
+    ```bash
+    echo "username:admin password:secretpass123" | nc 1.1.1.1 2323
+    ```
+
+5. Auf dem Angreifer ARP-Spoofing neu starten:
+
+    ```bash
+    sudo /home/admin/arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
+    ```
+
+6. Vom Opfer Anmeldedaten erneut senden:
+
+    ```bash
+    echo "username:admin password:secretpass123" | nc 1.1.1.1 2323
+    ```
+
+7. In Wireshark ICMP-Filter entfernen und nach TCP-Datenverkehr auf Port 2323 suchen
+8. TCP-Stream folgen, um Klartext-Daten zu sehen
+9. Netcat-Listener auf Internet-Knoten prüfen - er sollte die empfangenen Anmeldedaten anzeigen
 
 ## Überprüfung
 
