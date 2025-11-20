@@ -33,7 +33,7 @@ Before starting, ensure you can:
 These exercises use two lab topologies:
 
 - `ot-sec-flat.clab.yml` - Flat network with VLANs but minimal segmentation
-- `ot-sec-segmented.clab.yml` - Segmented network with firewall and bonding
+- `ot-sec-segmented.clab.yml` - Segmented network with firewall rules
 
 Each exercise specifies which topology to use.
 
