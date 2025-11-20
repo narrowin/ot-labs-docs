@@ -56,7 +56,7 @@ ABB System:
 Use management IPs directly; PLC web UIs (if enabled) listen on port 8080 inside the lab network.
 
 | Device | URL (if enabled) | Purpose |
-|--------|-------------------|---------||
+|--------|-------------------|---------|
 | abb-800xa-vlan40 | [http://10.40.0.11:8080](http://10.40.0.11:8080) | HMI/control interface overview |
 | wago-plc2a-vlan10 | [http://10.10.0.11:8080](http://10.10.0.11:8080) | PLC web interface |
 | wago-plc2b-vlan10 | [http://10.10.0.12:8080](http://10.10.0.12:8080) | PLC web interface (not yet working) |
@@ -65,7 +65,19 @@ Use management IPs directly; PLC web UIs (if enabled) listen on port 8080 inside
 
 ## Commands on PLC
 
-Check if PLC runtime is running:
+Check if CODESYS runtime is running:
+
+```bash
+pgrep -f codesyscontrol.bin
+# or
+sudo /etc/init.d/codesyscontrol status
+```
+
+Restart the runtime:
+
+```bash
+sudo /etc/init.d/codesyscontrol restart
+```
 
 Ping test:
 

@@ -55,7 +55,7 @@ ABB-System:
 Management-IPs direkt verwenden; SPS-Weboberflächen (falls aktiviert) lauschen auf Port 8080 im Labornetzwerk.
 
 | Gerät | URL (falls aktiviert) | Zweck |
-|--------|-------------------|---------||
+|--------|-------------------|---------|
 | abb-800xa-vlan40 | [http://10.40.0.11:8080](http://10.40.0.11:8080) | HMI/Steuerungsschnittstellenübersicht |
 | wago-plc2a-vlan10 | [http://10.10.0.11:8080](http://10.10.0.11:8080) | SPS-Weboberfläche |
 | wago-plc2b-vlan10 | [http://10.10.0.12:8080](http://10.10.0.12:8080) | SPS-Weboberfläche (noch nicht funktionsfähig) |
@@ -64,10 +64,18 @@ Management-IPs direkt verwenden; SPS-Weboberflächen (falls aktiviert) lauschen 
 
 ## Befehle auf der SPS
 
-Prüfen, ob die SPS-Runtime läuft:
+Prüfen, ob die CODESYS-Runtime läuft:
 
 ```bash
-sudo systemctl status wago-plclinux-rt
+pgrep -f codesyscontrol.bin
+# oder
+sudo /etc/init.d/codesyscontrol status
+```
+
+Runtime neu starten:
+
+```bash
+sudo /etc/init.d/codesyscontrol restart
 ```
 
 Ping-Test:

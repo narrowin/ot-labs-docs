@@ -38,7 +38,7 @@ ssh admin@192.168.100.54
 2. Aktuelle ARP-Tabelle anzeigen:
 
 ```bash
-arp -n
+ip neighbor
 ```
 
 3. Notieren Sie die MAC-Adresse für Gateway `10.10.0.1`
@@ -96,7 +96,7 @@ Parameter:
 3. Beim Opfer ARP-Tabelle erneut überprüfen:
 
 ```bash
-arp -n
+ip neighbor
 ```
 
 **Frage**: Hat sich die MAC-Adresse für `10.10.0.1` geändert? Vergleichen Sie mit dem Original.
@@ -107,7 +107,7 @@ arp -n
 2. Beim Opfer netcat-Verbindung starten:
 
 ```bash
-echo "username:admin password:secretpass123" | nc 10.20.0.11 1234
+echo "username:admin password:secretpass123" | nc 1.1.1.1 22
 ```
 
 3. Auf dem Angreifer ARP-Spoofing neu starten:
@@ -119,7 +119,7 @@ sudo /home/admin/arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
 4. Vom Opfer Anmeldedaten erneut senden:
 
 ```bash
-echo "username:admin password:secretpass123" | nc 10.20.0.11 1234
+echo "username:admin password:secretpass123" | nc 1.1.1.1 22
 ```
 
 5. In Wireshark ICMP-Filter entfernen und nach TCP-Datenverkehr suchen
@@ -149,9 +149,6 @@ Erfolgsindikatoren:
 - **Problem**: Kein Datenverkehr in Wireshark während des Angriffs sichtbar
   - **Lösung**: Überprüfen Sie, ob IP-Forwarding aktiviert ist (Skript macht dies automatisch)
 
-- **Problem**: Angriff funktioniert nicht in segmentierter Topologie
-  - **Lösung**: Firewall-Regeln können Inter-VLAN-Verkehr blockieren. Verwenden Sie flache Topologie für einfacheres Testen.
-
 ## Erweiterte Herausforderung
 
 Verwenden Sie das `dsniff`-Tool zur automatischen Erfassung von Anmeldedaten:
@@ -172,14 +169,13 @@ Während der Ausführung HTTP- oder FTP-Datenverkehr generieren und automatische
     ARP-Tabelle des Opfers vor dem Angriff:
 
     ```bash
-    arp -n
+    ip neighbor
     ```
 
     Ausgabe zeigt:
 
     ```text
-    Address          HWtype  HWaddress           Flags Mask   Iface
-    10.10.0.1        ether   02:42:ac:14:00:0b   C            eth1
+    10.10.0.1 dev eth1 lladdr 02:42:ac:14:00:0b REACHABLE
     ```
 
     Notieren Sie diese MAC-Adresse.
@@ -207,7 +203,7 @@ Während der Ausführung HTTP- oder FTP-Datenverkehr generieren und automatische
     Beim Opfer ARP erneut prüfen:
 
     ```bash
-    arp -n
+    ip neighbor
     ```
 
     MAC für `10.10.0.1` zeigt jetzt die MAC des Angreifers anstelle der echten Gateway-MAC.

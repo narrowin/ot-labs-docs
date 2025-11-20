@@ -38,7 +38,7 @@ ssh admin@192.168.100.54
 2. View current ARP table:
 
 ```bash
-arp -n
+ip neighbor
 ```
 
 3. Note the MAC address for gateway `10.10.0.1`
@@ -96,7 +96,7 @@ Parameters:
 3. On victim, check ARP table again:
 
 ```bash
-arp -n
+ip neighbor
 ```
 
 **Question**: Has the MAC address for `10.10.0.1` changed? Compare to original.
@@ -107,7 +107,7 @@ arp -n
 2. On victim, start netcat connection:
 
 ```bash
-echo "username:admin password:secretpass123" | nc 10.20.0.11 1234
+echo "username:admin password:secretpass123" | nc 1.1.1.1 22
 ```
 
 3. On attacker, restart ARP spoofing:
@@ -119,7 +119,7 @@ sudo /home/admin/arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
 4. From victim, send credentials again:
 
 ```bash
-echo "username:admin password:secretpass123" | nc 10.20.0.11 1234
+echo "username:admin password:secretpass123" | nc 1.1.1.1 22
 ```
 
 5. In Wireshark, remove ICMP filter and look for TCP traffic
@@ -149,9 +149,6 @@ Success indicators:
 - **Issue**: No traffic visible in Wireshark during attack
   - **Solution**: Check IP forwarding is enabled (script does this automatically)
 
-- **Issue**: Attack does not work in segmented topology
-  - **Solution**: Firewall rules may block inter-VLAN traffic. Use flat topology for easier testing.
-
 ## Advanced Challenge
 
 Use `dsniff` tool to automatically capture credentials:
@@ -172,14 +169,13 @@ While running, generate HTTP or FTP traffic and observe automatic credential ext
     Victim's ARP table before attack:
 
     ```bash
-    arp -n
+    ip neighbor
     ```
 
     Output shows:
 
     ```text
-    Address          HWtype  HWaddress           Flags Mask   Iface
-    10.10.0.1        ether   02:42:ac:14:00:0b   C            eth1
+    10.10.0.1 dev eth1 lladdr 02:42:ac:14:00:0b REACHABLE
     ```
 
     Note this MAC address.
@@ -207,7 +203,7 @@ While running, generate HTTP or FTP traffic and observe automatic credential ext
     On victim, check ARP again:
 
     ```bash
-    arp -n
+    ip neighbor
     ```
 
     MAC for `10.10.0.1` now shows attacker's MAC instead of real gateway MAC.
