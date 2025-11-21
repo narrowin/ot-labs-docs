@@ -28,13 +28,9 @@ In einer OT-Umgebung ist Sichtbarkeit der Schlüssel. Im Gegensatz zu IT-Netzwer
 
 Um Verkehr zu analysieren, müssen wir ihn zuerst generieren. Wir verwenden das HMI zur Interaktion mit der Web-Visualisierung einer SPS.
 
-1.  Öffnen Sie den **HMI Desktop** in Ihrem Browser:
-    *   URL: `http://localhost:5800`
-    *   Dies verbindet Sie über VNC mit dem `pilz-hmi01-vlan40`-Desktop.
+1.  Öffnen Sie unter Ports: **Chromium HMI WebVNC**
 
-2.  Öffnen Sie auf dem HMI-Desktop den **Chromium**-Webbrowser.
-
-3.  Navigieren Sie zur WebVisu von `wago-plc2a-vlan10`:
+3.  Navigieren Sie zum Cheat Sheet:
     *   URL: `http://10.10.0.11:8080/webvisu.htm`
     *   (Falls das nicht lädt, versuchen Sie `http://10.10.0.11:8080`)
 
@@ -121,9 +117,9 @@ Wir müssen OPC-UA-Verkehr generieren, um ihn zu analysieren. Der einfachste Ans
 
 **Verkehr vom HMI generieren**
 
-1. Öffnen Sie den HMI-Desktop in Ihrem Browser: `http://localhost:5800`
+1. Öffnen Sie unter Ports: HMI-Chromium-Browser
 
-2. Öffnen Sie im HMI-Chromium-Browser einen neuen Tab
+2. Gehen sie zum Cheat Sheet
 
 3. Navigieren Sie zu: `http://10.20.0.11:8080/webvisu.htm`
    - Die WebVisu kann im Hintergrund über OPC UA mit der SPS kommunizieren
@@ -407,11 +403,6 @@ Die heute analysierten Protokolle repräsentieren 80% dessen, was Sie in realen 
 
 ??? success "Zum Anzeigen der Lösung klicken"
     ### Aufgabe 1: OT-Verkehr generieren
-
-    HMI-Desktop öffnen im Browser:
-    ```
-    http://localhost:5800
-    ```
 
     Im HMI-Desktop Chromium öffnen und zur WebVisu navigieren:
     ```
