@@ -61,22 +61,10 @@ ssh admin@192.168.100.12
 /interface bridge port print
 ```
 
-2. **Nur bei segmentierter Topologie**: Bonding-Konfiguration überprüfen:
+**Erwartete Ausgabe**:
 
-```routeros
-/interface bonding print detail
-```
-
-**Erwartet in segmentiert**:
-
-- Bond-Name: `bond-sw-acc1`
-- Modus: `802.3ad` (LACP)
-- Slaves: `ether9`, `ether10`
-
-**Erwartet in flat**:
-
-- Keine Bonding-Interfaces
-- Einzelne Verbindung: ether10 verbindet sich mit sw-acc1
+- **Flache Topologie**: ether10, ether12, ether8, ether2 als Bridge-Mitglieder
+- **Segmentierte Topologie**: ether12, ether10, ether8, ether2 als Bridge-Mitglieder
 
 **Fragen**:
 
@@ -212,38 +200,10 @@ Erfolgsindikatoren:
 
     **Flache Topologie** zeigt ether10, ether12, ether8, ether2 als Bridge-Mitglieder mit VLAN-Einstellungen.
     
-    **Segmentierte Topologie** zeigt ether12, bond-sw-acc1, ether8, ether2 als Bridge-Mitglieder mit VLAN-Einstellungen.
+    **Segmentierte Topologie** zeigt ether12, ether10, ether8, ether2 als Bridge-Mitglieder mit VLAN-Einstellungen.
 
-    ### Bonding-Überprüfung (Nur segmentierte Topologie)
-
-    ```
-    /interface bonding print detail
-    ```
-
-    Ausgabe zeigt:
-
-    ```text
-    0   name="bond-sw-acc1" mtu=auto mode=802.3ad primary=none 
-        slaves=ether9,ether10 link-monitoring=mii arp-interval=100ms 
-        lacp-rate=30secs transmit-hash-policy=layer-2-and-3
-    ```
-
-    Status überwachen:
-
-    ```
-    /interface bonding monitor bond-sw-acc1 once
-    ```
-
-    Ausgabe:
-
-    ```text
-                  mode: 802.3ad
-                active: yes
-          active-ports: ether9 ether10
-       lacp-negotiated: yes
-    ```
-
-    In flacher Topologie wird Bonding nicht verwendet - jeder Switch verbindet sich über ein einzelnes physisches Interface.
+    !!! info "Bonding nicht konfiguriert"
+        Link-Aggregation (Bonding) ist derzeit in keiner Lab-Topologie konfiguriert. In beiden Topologien verbindet sich jeder Switch über einzelne physische Interfaces.
 
     ### Root-Bridge-Identifikation
 

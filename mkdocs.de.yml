@@ -35,7 +35,7 @@ nav:
     - "2. ARP-Spoofing": "exercises/ex2-arp-spoofing.md"
     - "3. Spanning Tree": "exercises/ex3-spanning-tree.md"
     - "4. Link-Aggregation": "exercises/ex4-link-aggregation.md"
-    - "5. Reconnaissance": "exercises/ex5-reconnaissance.md"
+    - "5. Fernzugriff": "exercises/ex5-reconnaissance.md"
     - "6. Protokoll-Erkennung": "exercises/ex6-protocol-discovery.md"
     - "7. Segmentierung & Firewall": "exercises/ex7-segmentation-firewall.md"
     - Anhang: "exercises/appendix.md"

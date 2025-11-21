@@ -61,22 +61,10 @@ ssh admin@192.168.100.12
 /interface bridge port print
 ```
 
-2. **Segmented topology only**: Check bonding configuration:
+**Expected output**:
 
-```routeros
-/interface bonding print detail
-```
-
-**Expected in segmented**:
-
-- Bond name: `bond-sw-acc1`
-- Mode: `802.3ad` (LACP)
-- Slaves: `ether9`, `ether10`
-
-**Expected in flat**:
-
-- No bonding interfaces
-- Single link: ether10 connects to sw-acc1
+- **Flat topology**: ether10, ether12, ether8, ether2 as bridge members
+- **Segmented topology**: ether12, ether10, ether8, ether2 as bridge members
 
 **Questions**:
 
@@ -212,38 +200,10 @@ Success indicators:
 
     **Flat topology** shows ether10, ether12, ether8, ether2 as bridge members with VLAN settings.
     
-    **Segmented topology** shows ether12, bond-sw-acc1, ether8, ether2 as bridge members with VLAN settings.
+    **Segmented topology** shows ether12, ether10, ether8, ether2 as bridge members with VLAN settings.
 
-    ### Bonding verification (Segmented topology only)
-
-    ```
-    /interface bonding print detail
-    ```
-
-    Output shows:
-
-    ```text
-    0   name="bond-sw-acc1" mtu=auto mode=802.3ad primary=none 
-        slaves=ether9,ether10 link-monitoring=mii arp-interval=100ms 
-        lacp-rate=30secs transmit-hash-policy=layer-2-and-3
-    ```
-
-    Monitor status:
-
-    ```
-    /interface bonding monitor bond-sw-acc1 once
-    ```
-
-    Output:
-
-    ```text
-                  mode: 802.3ad
-                active: yes
-          active-ports: ether9 ether10
-       lacp-negotiated: yes
-    ```
-
-    In flat topology, bonding is not used - each switch connects via a single physical interface.
+    !!! info "Bonding not configured"
+        Link aggregation (bonding) is currently not configured in any lab topology. In both topologies, each switch connects via individual physical interfaces.
 
     ### Root bridge identification
 

@@ -1,4 +1,4 @@
-# Übung 5: Netzwerk-Reconnaissance und Sicherheitsbewertung
+# Übung 5: Fernzugriff und Sicherheitsbewertung
 
 **Zeitschätzung**: 35-45 Minuten  
 **Lab-Topologie**: `ot-sec-flat` (einfacher) oder `ot-sec-segmented` (realistisch)  
@@ -6,7 +6,7 @@
 
 ## Lernziele
 
-- Netzwerk-Reconnaissance vom DMZ-Jumphost durchführen
+- Fernzugriff-Tests vom DMZ-Jumphost durchführen
 - Exponierte Dienste mittels Port-Scanning identifizieren
 - Potenzielle Sicherheitsschwachstellen entdecken
 - Professionelle Sicherheitsbewertungsmethodik praktizieren
@@ -24,7 +24,7 @@ Ein Sicherheitsbewerter hat Remote-Zugriff auf den Jumphost in der DMZ. Das Ziel
 
 ## Aufgaben
 
-### Aufgabe 1: Erste Reconnaissance vom Jumphost
+### Aufgabe 1: Erster Fernzugriff vom Jumphost
 
 1. SSH zum Jumphost:
 
@@ -198,7 +198,7 @@ Erfolgsindikatoren:
 1. Welche Dienste sollten niemals direkt von der DMZ aus erreichbar sein?
 2. Wie würden Sie den Jumphost-Zugriff in der Produktion einschränken?
 3. Welche zusätzlichen Sicherheitskontrollen würden diese Architektur verbessern?
-4. Wie könnten diese Reconnaissance-Aktivitäten erkannt werden?
+4. Wie könnten diese Fernzugriff-Aktivitäten erkannt werden?
 
 ## Häufige Probleme
 

@@ -45,7 +45,7 @@ Each exercise specifies which topology to use.
 | 2 | ARP Spoofing Attack | 30-40 min | Both (flat easier) | Intermediate |
 | 3 | Spanning Tree Analysis | 25-35 min | Both | Intermediate |
 | 4 | Link Aggregation | 20-30 min | Segmented only | Intermediate |
-| 5 | Network Reconnaissance | 35-45 min | Both | Intermediate |
+| 5 | Remote Access Assessment | 35-45 min | Both | Intermediate |
 
 ---
 
@@ -934,7 +934,7 @@ Success indicators:
 
 ---
 
-## Exercise 5: Network Reconnaissance and Security Assessment
+## Exercise 5: Remote Access and Security Assessment
 
 **Time Estimate**: 35-45 minutes
 
@@ -944,7 +944,7 @@ Success indicators:
 
 ### Learning Objectives
 
-- Conduct network reconnaissance from DMZ jumphost
+- Conduct remote access testing from DMZ jumphost
 - Identify exposed services using port scanning
 - Discover potential security vulnerabilities
 - Practice professional security assessment methodology
@@ -962,7 +962,7 @@ A security assessor has remote access to the jumphost in the DMZ. The objective 
 
 ### Tasks
 
-#### Task 1: Initial reconnaissance from jumphost
+#### Task 1: Initial remote access from jumphost
 
 1. SSH to jumphost:
 
@@ -1135,7 +1135,7 @@ Success indicators:
 1. What services should never be directly accessible from DMZ?
 2. How would you restrict jumphost access in production?
 3. What additional security controls would improve this architecture?
-4. How could these reconnaissance activities be detected?
+4. How could these remote access activities be detected?
 
 ### Common Issues
 
@@ -1155,7 +1155,7 @@ Success indicators:
 3. Test for default credentials on discovered services
 4. Create network diagram based on discovered topology
 
-??? success "Solution: Exercise 5 - Reconnaissance"
+??? success "Solution: Exercise 5 - Remote Access"
     #### Host discovery results
 
     From jumphost:

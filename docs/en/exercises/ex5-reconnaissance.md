@@ -1,4 +1,4 @@
-# Exercise 5: Network Reconnaissance and Security Assessment
+# Exercise 5: Remote Access and Security Assessment
 
 **Time Estimate**: 35-45 minutes  
 **Lab Topology**: `ot-sec-flat` (easier) or `ot-sec-segmented` (realistic)  
@@ -6,8 +6,8 @@
 
 ## Learning Objectives
 
-- Conduct network reconnaissance from DMZ jumphost
-- Identify exposed services using port scanning
+- Conduct remote access testing from DMZ jumphost
+- Identify exposed services via port scanning
 - Discover potential security vulnerabilities
 - Practice professional security assessment methodology
 
@@ -24,7 +24,7 @@ A security assessor has remote access to the jumphost in the DMZ. The objective 
 
 ## Tasks
 
-### Task 1: Initial reconnaissance from jumphost
+### Task 1: Initial remote access from jumphost
 
 1. SSH to jumphost:
 
@@ -198,7 +198,7 @@ Success indicators:
 1. What services should never be directly accessible from DMZ?
 2. How would you restrict jumphost access in production?
 3. What additional security controls would improve this architecture?
-4. How could these reconnaissance activities be detected?
+4. How could these remote access activities be detected?
 
 ## Common Issues
 

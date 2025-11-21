@@ -33,7 +33,7 @@ Before starting, ensure you can:
 These exercises use two lab topologies:
 
 - `ot-sec-flat.clab.yml` - Flat network with VLANs but minimal segmentation
-- `ot-sec-segmented.clab.yml` - Segmented network with firewall and bonding
+- `ot-sec-segmented.clab.yml` - Segmented network with firewall rules
 
 Each exercise specifies which topology to use.
 
@@ -45,7 +45,7 @@ Each exercise specifies which topology to use.
 | 2 | ARP Spoofing Attack | 30-40 min | Both (flat easier) | Intermediate | [Start :material-arrow-right:](ex2-arp-spoofing.md) |
 | 3 | Spanning Tree Analysis | 25-35 min | Both | Intermediate | [Start :material-arrow-right:](ex3-spanning-tree.md) |
 | 4 | Link Aggregation | 20-30 min | Segmented only | Intermediate | [Start :material-arrow-right:](ex4-link-aggregation.md) |
-| 5 | Network Reconnaissance | 35-45 min | Both | Intermediate | [Start :material-arrow-right:](ex5-reconnaissance.md) |
+| 5 | Remote Access Assessment | 35-45 min | Both | Intermediate | [Start :material-arrow-right:](ex5-reconnaissance.md) |
 | 6 | OT Protocol Discovery | 30-35 min | Both (flat easier) | Intermediate | [Start :material-arrow-right:](ex6-protocol-discovery.md) |
 | 7 | Segmentation & Firewall Design | 35-45 min | Segmented (primary) | Intermediate/Advanced | [Start :material-arrow-right:](ex7-segmentation-firewall.md) |
 

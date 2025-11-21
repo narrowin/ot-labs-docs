@@ -436,7 +436,7 @@ The exercises cover:
 2. ARP Spoofing
 3. Spanning Tree Analysis
 4. Link Aggregation
-5. Network Reconnaissance
+5. Remote Access Assessment
 6. OT Protocol Discovery
 7. Network Segmentation and Firewall Design
 
