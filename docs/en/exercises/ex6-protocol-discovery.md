@@ -400,3 +400,307 @@ As an OT security professional, your role is to:
 5. Implement monitoring to detect unauthorized protocol usage
 
 The protocols you analyzed today represent 80% of what you'll encounter in real industrial environments. Understanding their security characteristics is fundamental to effective OT security assessment.
+
+---
+
+## Solution
+
+??? success "Click to view solution"
+    ### Task 1: Generate OT Traffic
+
+    Open HMI desktop in browser:
+    ```
+    http://localhost:5800
+    ```
+
+    In HMI desktop, open Chromium and navigate to WebVisu:
+    ```
+    http://10.10.0.11:8080/webvisu.htm
+    ```
+
+    Interact with buttons and switches in the visualization to generate HTTP and potentially Modbus traffic.
+
+    ### Task 2: Capture Traffic
+
+    1. Open VS Code Containerlab TopoViewer
+    2. Right-click on link between `wago-plc2a-vlan10` and `sw-acc1`
+    3. Select "Wireshark Capture"
+    4. Interact again with WebVisu in HMI
+    5. Observe traffic in Wireshark
+
+    ### Task 3: Analyze Modbus TCP
+
+    Apply Wireshark filter:
+    ```wireshark
+    mbtcp
+    ```
+
+    Or alternatively:
+    ```wireshark
+    tcp.port == 502
+    ```
+
+    **Expected Observations:**
+
+    - **Function Codes**: Typically Read Holding Registers (0x03), Write Single Coil (0x05), Write Multiple Registers (0x10)
+    - **Values visible**: Yes - all register values visible in cleartext
+    - **Encryption**: No - Modbus TCP has no encryption
+    - **Authentication**: No - no authentication in protocol
+
+    **Security Implication**: An attacker in the same network segment can:
+    - Read all process values
+    - Send commands to the PLC
+    - Manipulate traffic (Man-in-the-Middle)
+
+    From jumphost you can test Modbus connectivity:
+    ```bash
+    ssh admin@192.168.100.52
+    nc -zv 10.10.0.11 502
+    ```
+
+    Expected output:
+    ```text
+    Connection to 10.10.0.11 502 port [tcp/*] succeeded!
+    ```
+
+    ### Task 4: Analyze CODESYS Protocol
+
+    Filter for HTTP traffic to WebVisu:
+    ```wireshark
+    http && ip.addr == 10.10.0.11
+    ```
+
+    Follow HTTP stream:
+    - Right-click on HTTP packet
+    - Follow → HTTP Stream
+    - Observe visualization data in cleartext
+
+    **Expected Observations:**
+    - WebVisu uses HTTP (Port 8080)
+    - No HTTPS encryption
+    - Variable values and status in cleartext
+    - Session information exposed
+
+    For CODESYS runtime protocol (normally from engineering workstation):
+    ```wireshark
+    udp.port == 2455 || tcp.port == 1217
+    ```
+
+    In the lab you may see little CODESYS runtime traffic as no engineering workstation is actively programming.
+
+    **Port overview on PLC:**
+
+    You can check open ports from jumphost or from PLC itself:
+    ```bash
+    ssh admin@192.168.100.53  # wago-plc2a-vlan10
+    ss -tuln | grep LISTEN
+    ```
+
+    Expected output:
+    ```text
+    tcp   LISTEN 0      5              0.0.0.0:8080       0.0.0.0:*    # WebVisu
+    tcp   LISTEN 0      128            0.0.0.0:22         0.0.0.0:*    # SSH
+    tcp   LISTEN 0      63          10.10.0.11:502        0.0.0.0:*    # Modbus
+    tcp   LISTEN 0      10          10.10.0.11:4840       0.0.0.0:*    # OPC UA
+    ```
+
+    ### Task 5: Analyze OPC UA Security Configuration
+
+    **Generate OPC UA Traffic:**
+
+    Option 1 - From HMI browser:
+    ```
+    http://10.20.0.11:8080/webvisu.htm  # ctrlx-plc3-vlan20
+    ```
+
+    Option 2 - Test connectivity from jumphost:
+    ```bash
+    ssh admin@192.168.100.52
+    nc -zv 10.20.0.11 4840
+    ```
+
+    Expected output:
+    ```text
+    Connection to 10.20.0.11 4840 port [tcp/*] succeeded!
+    ```
+
+    **Wireshark Analysis:**
+
+    Capture traffic between `ctrlx-plc3-vlan20` and `sw-acc1`.
+
+    Filter for OPC UA:
+    ```wireshark
+    opcua
+    ```
+
+    Or:
+    ```wireshark
+    tcp.port == 4840
+    ```
+
+    **Analyze CreateSessionRequest:**
+
+    Expand: `OpcUa Binary Protocol → Message → CreateSessionRequest`
+
+    Find: `SecurityPolicyUri`
+
+    **Expected Value:**
+    ```
+    http://opcfoundation.org/UA/SecurityPolicy#None
+    ```
+
+    **Meaning**: No encryption enabled.
+
+    **Analyze ActivateSessionRequest:**
+
+    Expand: `OpcUa Binary Protocol → Message → ActivateSessionRequest`
+
+    Find: `UserIdentityToken`
+
+    **Expected Type:**
+    ```
+    AnonymousIdentityToken
+    ```
+
+    **Meaning**: No authentication required.
+
+    **Analyze BrowseRequest/Response:**
+
+    - Complete OPC UA node structure visible
+    - All tag names in cleartext
+    - Organization structure of process data model exposed
+    - Attacker can create complete asset inventory
+
+    **Analyze ReadRequest/Response:**
+
+    - Variable values transmitted in cleartext
+    - No integrity protection
+    - No confidentiality
+    - Real-time process data visible to attacker
+
+    **Assessment Results:**
+
+    1. **SecurityPolicy**: None (FAIL)
+    2. **Encryption**: No (FAIL)
+    3. **Authentication**: Anonymous (FAIL)
+    4. **Tag names visible**: Yes (FAIL)
+    5. **Variable values visible**: Yes (FAIL)
+
+    **IEC 62443 Violations:**
+
+    - SR 1.1 (Identification & Authentication): FAIL
+    - SR 3.1 (Communication Integrity): FAIL
+    - SR 4.1 (Information Confidentiality): FAIL
+
+    **Recommendation:**
+
+    Change OPC UA server configuration:
+    ```
+    SecurityPolicy: Basic256Sha256
+    SecurityMode: SignAndEncrypt
+    Authentication: Certificate-based
+    ```
+
+    ### Task 6: PROFINET Protocol Discovery
+
+    **Capture PROFINET Traffic:**
+
+    Capture traffic between `abb-800xa-vlan40` and `sw-acc2`.
+
+    **Wireshark Filter:**
+
+    ```wireshark
+    eth.type == 0x8892
+    ```
+
+    Or:
+    ```wireshark
+    pn_io
+    ```
+
+    **Expected Observations:**
+
+    1. **Ethertype**: 0x8892 (PROFINET Real-Time)
+    2. **No TCP/IP Headers**: This is Layer 2, not Layer 4
+    3. **FrameID**: Typically 0x8000-0x8001 (RT cyclic data)
+    4. **Cyclic Pattern**: Packets every ~4ms (very regular)
+    5. **MAC Addresses visible**:
+       - Source: 00:03:2c:40:00:11 (ABB system)
+       - Destination: 00:0b:0f:20:00:11 (PROFINET device)
+
+    **Timing Analysis:**
+
+    Select multiple consecutive PROFINET packets and check time delta:
+
+    In Wireshark:
+    - View → Time Display Format → Seconds Since Previous Displayed Packet
+    - Expectation: ~0.004 seconds (4ms cycle time)
+
+    **Assessment Results:**
+
+    1. **Ethertype**: 0x8892 (Layer 2 Real-Time)
+    2. **TCP/IP Headers**: No - direct Ethernet frame
+    3. **Cycle Time**: ~4ms (very deterministic)
+    4. **MAC Addresses**: Yes, visible
+    5. **Encryption**: No - impossible with real-time
+    6. **Filter for tcp/udp**: PROFINET RT does not appear
+
+    **Security Implications:**
+
+    - No routing possible (Layer 2)
+    - No encryption possible
+    - Physical access = full control
+    - VLAN isolation is critical
+    - Port security required
+    - Anomaly detection based on timing
+
+    **PROFINET DCP (Discovery):**
+
+    For PROFINET device discovery:
+    ```wireshark
+    pn_dcp
+    ```
+
+    DCP broadcasts reveal:
+    - Device name
+    - Manufacturer
+    - IP configuration
+    - Role in network
+
+    ### Task 7: Protocol Comparison
+
+    **Analysis Summary:**
+
+    | Protocol | Encryption | Auth | Main Risk | Defense |
+    |----------|------------|------|-----------|---------|
+    | **Modbus TCP** | No | No | Cleartext access | Segmentation + Monitoring |
+    | **CODESYS** | Optional, usually No | Optional | Engineering access | Disable in production |
+    | **OPC UA** | Yes (often disabled) | Yes (often disabled) | Misconfiguration | Enable security features |
+    | **PROFINET RT** | Impossible | No | Layer 2 attacks | Physical + VLAN isolation |
+
+    **Audit Checklist Completed:**
+
+    - [x] Protocols inventoried (Modbus, OPC UA, PROFINET, HTTP)
+    - [x] OPC UA SecurityPolicy checked (None = FAIL)
+    - [x] OPC UA Authentication checked (Anonymous = FAIL)
+    - [x] Modbus segmentation checked
+    - [x] CODESYS ports identified (should be disabled)
+    - [x] PROFINET VLAN isolation checked
+    - [x] IEC 62443 violations documented
+
+    **Key Takeaways:**
+
+    1. **Legacy Protocols** (Modbus): No security features → Compensating controls required
+    2. **Modern Protocols** (OPC UA): Security present but often disabled → Audit and activation required
+    3. **Real-Time Protocols** (PROFINET): Encryption impossible → Architectural security critical
+    4. **All Protocols**: Benefit from segmentation, monitoring, and access control
+
+    **Next Steps:**
+
+    1. Enable OPC UA security features (highest priority)
+    2. Enforce network segmentation (see Exercise 7)
+    3. Disable CODESYS engineering ports for production
+    4. Implement IDS/IPS for OT protocol anomalies
+    5. Conduct regular protocol audits
+
+```

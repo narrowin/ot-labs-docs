@@ -137,3 +137,339 @@ Wir möchten die breite "Allow VLAN 40 to VLAN 10"-Regel durch spezifische Regel
 ## Fazit
 
 Segmentierung ist die Grundlage der OT-Sicherheit, muss aber von strikten Firewall-Regeln begleitet werden. Durch den Wechsel von "Allow Any" zu "Allow Specific Ports" reduzieren wir die Angriffsfläche erheblich.
+
+---
+
+## Lösung
+
+??? success "Zum Anzeigen der Lösung klicken"
+    ### Aufgabe 1: Kommunikationsflüsse kartieren
+
+    **Legitime Kommunikationspfade:**
+
+    1. **HMI (VLAN 40) → SPSen (VLAN 10, 20, 30)**
+        - Modbus TCP (Port 502): JA - für Prozesssteuerung
+        - HTTP/WebVisu (Port 8080): JA - für Visualisierung
+        - OPC UA (Port 4840): JA - moderne Alternative
+        - SSH (Port 22): NEIN - nur für Engineering, nicht HMI
+
+    2. **Engineering-Station (VLAN 50) → SPSen**
+        - CODESYS Runtime (Port 2455, 1217): JA - für Programmierung
+        - SSH (Port 22): JA - für Wartung
+        - HTTP (Port 8080): JA - für WebVisu-Zugriff
+
+    3. **SPSen → Internet**
+        - NEIN - SPSen sollten keinen direkten Internet-Zugang haben
+        - Ausnahme: NTP für Zeitsynchronisation (kontrolliert über Firewall)
+
+    4. **SPSen untereinander**
+        - JA - Inter-Controller-Kommunikation möglich
+        - Protokolle: Modbus TCP, OPC UA, proprietäre Protokolle
+
+    **Antwort auf die Frage:**
+
+    - **Muss HMI per SSH in die SPS?** NEIN - SSH ist für Engineering/Wartung, nicht für normale HMI-Funktionen
+    - **Muss HMI SPS anpingen?** JA - für Verfügbarkeitsprüfungen ist ICMP sinnvoll
+    - **Muss HMI auf Webserver zugreifen?** JA - WebVisu läuft auf HTTP (Port 8080)
+
+    ### Aufgabe 2: Kommunikationsmatrix erstellen
+
+    **Erweiterte Kommunikationsmatrix:**
+
+    | Quelle | Ziel | Protokoll | Port | Aktion | Begründung |
+    |--------|------|-----------|------|--------|------------|
+    | HMI (10.40.0.12) | SPS (10.10.0.11) | Modbus TCP | 502 | ERLAUBEN | Prozessdaten lesen/schreiben |
+    | HMI (10.40.0.12) | SPS (10.10.0.11) | HTTP | 8080 | ERLAUBEN | WebVisu-Zugriff |
+    | HMI (10.40.0.12) | SPS (10.10.0.11) | OPC UA | 4840 | ERLAUBEN | Alternative zu Modbus |
+    | HMI (10.40.0.12) | SPS (10.10.0.11) | ICMP | - | ERLAUBEN | Verfügbarkeitsprüfung |
+    | HMI (10.40.0.12) | SPS (10.10.0.11) | SSH | 22 | BLOCKIEREN | Nicht für HMI-Betrieb nötig |
+    | EWS (10.50.0.11) | SPS (10.10.0.11) | SSH | 22 | ERLAUBEN | Engineering/Wartung |
+    | EWS (10.50.0.11) | SPS (10.10.0.11) | CODESYS | 2455, 1217 | ERLAUBEN | Programmierung |
+    | EWS (10.50.0.11) | SPS (10.10.0.11) | HTTP | 8080 | ERLAUBEN | WebVisu-Konfiguration |
+    | SPS (10.10.0.11) | Internet | Any | Any | BLOCKIEREN | Keine direkte Internet-Verbindung |
+    | Any | Any | Any | Any | BLOCKIEREN | Default-Deny-Policy |
+
+    ### Aufgabe 3: Aktuelle Firewall-Regeln analysieren
+
+    **SSH zur Firewall:**
+
+    ```bash
+    ssh admin@192.168.100.11
+    ```
+
+    Passwort: `admin`
+
+    Alternativ mit sshpass (für Automatisierung):
+    ```bash
+    sshpass -p admin ssh admin@192.168.100.11
+    ```
+
+    **Firewall-Regeln anzeigen:**
+
+    ```bash
+    /ip firewall filter print where chain=forward
+    ```
+
+    **Erwartete Ausgabe (ot-sec-flat):**
+
+    ```text
+    Flags: X - disabled, I - invalid; D - dynamic 
+     0    ;;; allow established,related connections
+          chain=forward action=accept connection-state=established,related 
+
+     1    ;;; allow forwarding ICMP
+          chain=forward action=accept protocol=icmp 
+
+     2    ;;; allow SSH to the jumphost from internet
+          chain=forward action=accept protocol=tcp dst-address=2.2.2.2 
+          in-interface-list=ext dst-port=22 
+
+     3    ;;; allow all traffic from DMZ to VLAN10
+          chain=forward action=accept in-interface=dmz-ext out-interface=vlan10 
+
+     4    ;;; default forward drop
+          chain=forward action=accept log=yes log-prefix="default forward drop"
+    ```
+
+    **Erwartete Ausgabe (ot-sec-segmented):**
+
+    ```text
+    Flags: X - disabled, I - invalid; D - dynamic 
+     0    ;;; allow established,related connections
+          chain=forward action=accept connection-state=established,related
+
+     1    ;;; allow forwarding ICMP
+          chain=forward action=accept protocol=icmp
+
+     2    ;;; allow SSH to the jumphost from internet
+          chain=forward action=accept protocol=tcp dst-address=2.2.2.2
+          in-interface-list=ext dst-port=22
+
+     3    ;;; allow Control Room to Hygiene
+          chain=forward action=accept in-interface=vlan40 out-interface=vlan10
+
+     4    ;;; allow Control Room to Process
+          chain=forward action=accept in-interface=vlan40 out-interface=vlan20
+
+     5    ;;; allow Control Room to Disposal
+          chain=forward action=accept in-interface=vlan40 out-interface=vlan30
+
+     6    ;;; allow Parameterization to Hygiene
+          chain=forward action=accept in-interface=vlan50 out-interface=vlan10
+
+     ... weitere Regeln ...
+    ```
+
+    **Analyse:**
+
+    - **Flat-Topologie**: Regel 3 erlaubt ALL traffic von DMZ zu VLAN 10 - zu permissiv
+    - **Segmented-Topologie**: Regel 3 erlaubt ALL traffic von VLAN 40 zu VLAN 10 - zu permissiv
+    - **Problem**: Keine Port-Einschränkungen, keine Protokoll-Spezifizierung
+    - **Risiko**: SSH, unnötige Dienste sind erreichbar
+
+    ### Aufgabe 4: Restriktive Regeln implementieren
+
+    **WARNUNG**: Diese Änderungen können die Netzwerkverbindung unterbrechen. In Produktion immer in Wartungsfenster durchführen und Rollback-Plan haben.
+
+    **Schritt 1: Spezifische Regel für Modbus TCP hinzufügen**
+
+    ```bash
+    /ip firewall filter add chain=forward action=accept \
+        src-address=10.40.0.12 dst-address=10.10.0.11 \
+        protocol=tcp dst-port=502 \
+        comment="Allow HMI to PLC Modbus" place-before=0
+    ```
+
+    **Schritt 2: Spezifische Regel für WebVisu HTTP hinzufügen**
+
+    ```bash
+    /ip firewall filter add chain=forward action=accept \
+        src-address=10.40.0.12 dst-address=10.10.0.11 \
+        protocol=tcp dst-port=8080 \
+        comment="Allow HMI to PLC WebVisu" place-before=0
+    ```
+
+    **Schritt 3: Spezifische Regel für OPC UA hinzufügen**
+
+    ```bash
+    /ip firewall filter add chain=forward action=accept \
+        src-address=10.40.0.12 dst-address=10.10.0.11 \
+        protocol=tcp dst-port=4840 \
+        comment="Allow HMI to PLC OPC-UA" place-before=0
+    ```
+
+    **Schritt 4: Regeln überprüfen**
+
+    ```bash
+    /ip firewall filter print where chain=forward
+    ```
+
+    Sie sollten jetzt die neuen spezifischen Regeln ganz oben sehen.
+
+    **Schritt 5: Breite "Allow any"-Regel identifizieren**
+
+    Finden Sie die Regel-Nummer der breiten Regel:
+
+    ```bash
+    /ip firewall filter print where chain=forward
+    ```
+
+    In `ot-sec-segmented`: Suchen Sie nach "allow Control Room to Hygiene" (z.B. Regel #3)
+    In `ot-sec-flat`: Suchen Sie nach "allow all traffic from DMZ to VLAN10" (z.B. Regel #3)
+
+    **Schritt 6: Breite Regel deaktivieren**
+
+    ```bash
+    /ip firewall filter disable [find comment="allow Control Room to Hygiene"]
+    ```
+
+    Oder für flat:
+    ```bash
+    /ip firewall filter disable [find comment="allow all traffic from DMZ to VLAN10"]
+    ```
+
+    **Schritt 7: Default-Drop aktivieren (Optional)**
+
+    In `ot-sec-flat` ist die Default-Drop-Regel tatsächlich auf "accept" gesetzt. Um echte Sicherheit zu haben:
+
+    ```bash
+    /ip firewall filter set [find comment="default forward drop"] action=drop
+    ```
+
+    **ACHTUNG**: Dies blockiert allen Verkehr, der nicht explizit erlaubt ist. Stellen Sie sicher, dass alle notwendigen Regeln vorhanden sind!
+
+    **Schritt 8: Testen**
+
+    Von einem anderen Terminal (nicht über SSH zur Firewall!):
+
+    ```bash
+    # Test 1: HMI kann WebVisu erreichen (sollte funktionieren)
+    docker exec clab-ot-sec-flat-pilz-hmi01-vlan40 curl -I --connect-timeout 3 http://10.10.0.11:8080
+
+    # Test 2: HMI kann Modbus erreichen (sollte funktionieren)
+    docker exec clab-ot-sec-flat-pilz-hmi01-vlan40 nc -zv 10.10.0.11 502
+
+    # Test 3: HMI kann SSH NICHT erreichen (sollte blockiert sein, falls Default-Drop aktiv)
+    docker exec clab-ot-sec-flat-pilz-hmi01-vlan40 nc -zv -w 2 10.10.0.11 22
+    ```
+
+    **Erwartete Ergebnisse:**
+
+    Test 1 & 2: Erfolgreich
+    Test 3: Connection timed out oder refused (wenn Default-Drop aktiv)
+
+    **Rollback (falls nötig):**
+
+    ```bash
+    # Breite Regel wieder aktivieren
+    /ip firewall filter enable [find comment="allow Control Room to Hygiene"]
+
+    # Default-Drop wieder auf accept setzen
+    /ip firewall filter set [find comment="default forward drop"] action=accept
+    ```
+
+    ### Aufgabe 5: Flat vs. Segmentiert vergleichen
+
+    **Vergleichstabelle:**
+
+    | Aspekt | Flat Network | Segmented Network (mit Firewall) |
+    |--------|--------------|----------------------------------|
+    | **Broadcast-Domäne** | Eine grosse Domäne | Mehrere kleine VLANs |
+    | **ARP-Spoofing-Reichweite** | Alle Geräte betroffen | Auf VLAN beschränkt |
+    | **Lateral Movement** | Einfach - direkter Zugang | Schwierig - Firewall blockiert |
+    | **Angriffsfläche** | Alle Ports auf allen Geräten | Nur erlaubte Ports/Protokolle |
+    | **Verkehrsfilterung** | Keine | Zentral an Firewall |
+    | **Überwachung** | Verteilt, komplex | Zentral an Firewall |
+    | **Incident Response** | Schwierig zu isolieren | Kann Zonen isolieren |
+    | **Compliance** | IEC-62443 SR 5.1 FAIL | IEC-62443 SR 5.1 PASS |
+
+    **Angriffsszenario - Flat Network:**
+
+    1. Angreifer kompromittiert HMI (10.40.0.12)
+    2. Führt ARP-Spoofing durch → Man-in-the-Middle auf gesamtem Netzwerk
+    3. Direkter Zugriff auf SPS über SSH (Port 22)
+    4. Direkter Zugriff auf alle Engineering-Ports
+    5. Kann sich lateral zu allen anderen Geräten bewegen
+    6. Keine zentrale Überwachung des Verkehrs
+
+    **Angriffsszenario - Segmented Network:**
+
+    1. Angreifer kompromittiert HMI (10.40.0.12 in VLAN 40)
+    2. ARP-Spoofing nur in VLAN 40 möglich
+    3. Versuch, auf SPS (10.10.0.11 in VLAN 10) zuzugreifen
+    4. Firewall blockiert SSH (Port 22) → Zugriff verweigert
+    5. Firewall erlaubt nur Modbus, HTTP, OPC UA
+    6. Firewall loggt alle Zugriffsversuche
+    7. IDS/IPS kann Anomalien erkennen
+    8. Security-Team wird alarmiert
+    9. VLAN 10 kann isoliert werden ohne VLAN 40 zu beeinflussen
+
+    **Fazit:**
+
+    - **Flat Network**: Einfach zu verwalten, aber katastrophal bei Kompromittierung
+    - **Segmented Network**: Komplexer, aber deutlich sicherer und IEC-62443-konform
+    - **Best Practice**: Segmentierung + spezifische Firewall-Regeln + Monitoring
+
+    ### Zusätzliche Best Practices
+
+    **1. Logging aktivieren:**
+
+    ```bash
+    /ip firewall filter set [find comment="default forward drop"] log=yes log-prefix="fw-drop"
+    ```
+
+    **2. Address Lists für bessere Verwaltung:**
+
+    ```bash
+    # HMI-Geräte definieren
+    /ip firewall address-list add list=hmi-devices address=10.40.0.12
+    /ip firewall address-list add list=hmi-devices address=10.40.0.13
+
+    # SPS-Geräte definieren
+    /ip firewall address-list add list=plc-devices address=10.10.0.11
+    /ip firewall address-list add list=plc-devices address=10.10.0.12
+    /ip firewall address-list add list=plc-devices address=10.20.0.11
+
+    # Regel mit Address Lists
+    /ip firewall filter add chain=forward action=accept \
+        src-address-list=hmi-devices dst-address-list=plc-devices \
+        protocol=tcp dst-port=502 \
+        comment="Allow HMI to PLCs Modbus"
+    ```
+
+    **3. Port-Objekte (Service Groups):**
+
+    ```bash
+    # In RouterOS können Sie mit Address Lists arbeiten, aber keine Port-Groups
+    # Alternative: Mehrere spezifische Regeln oder Kommentare zur Gruppierung
+    ```
+
+    **4. Regelmässige Audits:**
+
+    ```bash
+    # Alle Regeln mit Zählern anzeigen
+    /ip firewall filter print stats
+
+    # Nicht genutzte Regeln identifizieren (bytes=0)
+    /ip firewall filter print stats where bytes=0
+    ```
+
+    **5. Change Management:**
+
+    - Alle Firewall-Änderungen dokumentieren
+    - Backup vor Änderungen erstellen:
+      ```bash
+      /system backup save name=before-firewall-change
+      ```
+    - In Testumgebung validieren
+    - Schrittweise in Produktion ausrollen
+
+    ### Zusammenfassung: Lessons Learned
+
+    1. **Segmentierung allein reicht nicht** - Firewall-Regeln sind essentiell
+    2. **Default-Deny ist kritisch** - "Allow any" macht Segmentierung wertlos
+    3. **Least Privilege durchsetzen** - Nur absolut notwendige Ports erlauben
+    4. **Monitoring ist Pflicht** - Logging und Alerting aktivieren
+    5. **Dokumentation ist entscheidend** - Wissen, warum jede Regel existiert
+    6. **Testen, testen, testen** - Vor Produktivsetzung validieren
+    7. **IEC 62443 SR 5.1** - Netzwerksegmentierung ist Grundanforderung
