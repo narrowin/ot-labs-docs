@@ -73,6 +73,29 @@ Eine Kommunikationsmatrix definiert erlaubten Verkehr. Füllen Sie die unten ste
 
 Wir möchten die breite "Allow VLAN 40 to VLAN 10"-Regel durch spezifische Regeln für Modbus und HTTP ersetzen.
 
+#### Expertenansicht: Komplexität vs. Wartbarkeit
+
+**Warnung**: Bei Firewall-Regelsätzen kann die Granularität sehr schnell sehr komplex werden. Es ist verlockend, extrem fein granulare Regeln zu erstellen (z.B. separate Regeln für jedes einzelne Gerät, jeden Port, jede Protokollvariante), aber dies führt zu Regelsätzen mit hunderten von Einträgen, die niemand mehr versteht oder warten kann.
+
+**Häufige Fallen**:
+
+- Zu viele spezifische Host-zu-Host-Regeln statt zonenbasierter Regeln
+- Mehrfache überlappende Regeln, bei denen unklar ist, welche greift
+- Fehlende Dokumentation oder veraltete Kommentare
+- "Notfall"-Regeln, die temporär sein sollten, aber permanent werden
+- Regeln, die niemand mehr zu löschen wagt, weil unbekannt ist, was sie tun
+
+**Empfehlung: Einfach und verwaltbar halten**:
+
+1. **Zonenbasierte Policies** bevorzugen statt einzelne Hosts (z.B. "VLAN 40 zu VLAN 10" statt "Host A zu Host B")
+2. **Serviceobjekte gruppieren** (z.B. "OT-Basisdienste" = Modbus + OPC-UA + HTTP)
+3. **Klare Namenskonventionen** (z.B. "ALLOW_LEITWARTE_zu_HYGIENE_OT-Services")
+4. **Regelmässig aufräumen** - Nicht verwendete Regeln entfernen
+5. **Dokumentieren** - Geschäftsbegründung in Kommentaren festhalten
+6. **Testen** - Vor Produktivsetzung in Testumgebung validieren
+
+**Faustregel**: Wenn Ihr Regelsatz mehr als 50 Regeln hat und keine klare Struktur, ist es Zeit für eine Vereinfachung. Ein gut gestalteter Regelsatz mit 20 verständlichen Regeln ist sicherer als ein chaotischer mit 200 Regeln.
+
 1.  **Spezifische Regeln hinzufügen** (oben oder vor der Drop-Regel platziert):
 
     ```bash

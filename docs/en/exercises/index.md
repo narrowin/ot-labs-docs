@@ -46,7 +46,7 @@ Each exercise specifies which topology to use.
 | 3 | Spanning Tree Analysis | 25-35 min | Both | Intermediate | [Start :material-arrow-right:](ex3-spanning-tree.md) |
 | 4 | Link Aggregation | 20-30 min | Segmented only | Intermediate | [Start :material-arrow-right:](ex4-link-aggregation.md) |
 | 5 | Remote Access Assessment | 35-45 min | Both | Intermediate | [Start :material-arrow-right:](ex5-reconnaissance.md) |
-| 6 | OT Protocol Discovery | 30-35 min | Both (flat easier) | Intermediate | [Start :material-arrow-right:](ex6-protocol-discovery.md) |
+| 6 | OT Protocol Discovery | 45-50 min | Both (flat easier) | Intermediate | [Start :material-arrow-right:](ex6-protocol-discovery.md) |
 | 7 | Segmentation & Firewall Design | 35-45 min | Segmented (primary) | Intermediate/Advanced | [Start :material-arrow-right:](ex7-segmentation-firewall.md) |
 
 ## Additional Resources

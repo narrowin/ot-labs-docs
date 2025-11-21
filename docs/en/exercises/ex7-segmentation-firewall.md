@@ -73,6 +73,29 @@ A communication matrix defines allowed traffic. Fill in the table below (mentall
 
 We want to replace the broad "Allow VLAN 40 to VLAN 10" rule with specific rules for Modbus and HTTP.
 
+#### Expert View: Complexity vs. Maintainability
+
+**Warning**: With firewall rule sets, granularity can get very complex very fast. It's tempting to create extremely fine-grained rules (e.g., separate rules for every single device, every port, every protocol variant), but this leads to rule sets with hundreds of entries that nobody understands or can maintain anymore.
+
+**Common Pitfalls**:
+
+- Too many specific host-to-host rules instead of zone-based rules
+- Multiple overlapping rules where it's unclear which one applies
+- Missing documentation or outdated comments
+- "Emergency" rules that were supposed to be temporary but become permanent
+- Rules that nobody dares to delete because it's unknown what they do
+
+**Recommendation: Keep It Simple and Manageable**:
+
+1. **Prefer zone-based policies** over individual hosts (e.g., "VLAN 40 to VLAN 10" instead of "Host A to Host B")
+2. **Group service objects** (e.g., "OT-Base-Services" = Modbus + OPC-UA + HTTP)
+3. **Clear naming conventions** (e.g., "ALLOW_ControlRoom_to_Hygiene_OT-Services")
+4. **Regular cleanup** - Remove unused rules
+5. **Document** - Record business justification in comments
+6. **Test** - Validate in test environment before production
+
+**Rule of thumb**: If your rule set has more than 50 rules without clear structure, it's time to simplify. A well-designed rule set with 20 understandable rules is safer than a chaotic one with 200 rules.
+
 1.  **Add specific rules** (placed at the top or before the drop rule):
 
     ```bash
