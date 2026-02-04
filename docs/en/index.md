@@ -15,6 +15,8 @@
 
 The actual labs are unfortunately not publicly published. If you are interested in accessing the labs, please contact us and lets have a chat.
 
+A browsable live view of the lab can be freely accessed at: [Narrowin OT-Lab](https://demo.narrowin.ch/network/?network=34)
+
 We also offer this lab as a two-day on-site training course. For more details, please visit [https://www.narrowin.ch/en/courses.html](https://www.narrowin.ch/en/courses.html). While currently delivered on-site, we are evaluating virtual training options. If you are interested, please send us a brief email.
 
 ### About This Workshop

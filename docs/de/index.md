@@ -15,6 +15,8 @@
 
 Die Labs sind leider nicht öffentlich verfügbar. Falls Sie Interesse am Zugang zu den Labs haben, nehmen Sie bitte Kontakt mit uns auf.
 
+Ein digitaler Zwilling des Labs ist frei zugreifbar unter: [Narrowin OT-Lab](https://demo.narrowin.ch/network/?network=34)
+
 Wir bieten dieses Lab auch als zweitägige Vor-Ort-Schulung an. Für weitere Details besuchen Sie bitte [https://www.narrowin.ch/de/courses.html](https://www.narrowin.ch/de/courses.html). Derzeit wird die Schulung vor Ort durchgeführt, wir evaluieren jedoch auch virtuelle Schulungsoptionen. Bei Interesse senden Sie uns bitte eine kurze E-Mail.
 
 ### Über diesen Workshop
