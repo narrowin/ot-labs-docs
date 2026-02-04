@@ -28,9 +28,7 @@ In an OT environment, visibility is key. Unlike IT networks where HTTPS and SSH 
 
 To analyze traffic, we first need to generate it. We will use the HMI to interact with a PLC's web visualization.
 
-1.  Open the **HMI Desktop** in your browser:
-    *   URL: `http://localhost:5800`
-    *   This connects you to the `pilz-hmi01-vlan40` desktop via VNC.
+1.  Under Ports goto: **HMI Chromium browser**
 
 2.  On the HMI desktop, open the **Chromium** web browser.
 
@@ -121,7 +119,7 @@ We need to generate OPC UA traffic to analyze it. The simplest approach is to us
 
 **Generate Traffic from HMI**
 
-1. Open the HMI Desktop in your browser: `http://localhost:5800`
+1. Open the **HMI Chromium Browser** under Ports
 
 2. In the HMI Chromium browser, open a new tab
 
@@ -407,11 +405,6 @@ The protocols you analyzed today represent 80% of what you'll encounter in real 
 
 ??? success "Click to view solution"
     ### Task 1: Generate OT Traffic
-
-    Open HMI desktop in browser:
-    ```
-    http://localhost:5800
-    ```
 
     In HMI desktop, open Chromium and navigate to WebVisu:
     ```
