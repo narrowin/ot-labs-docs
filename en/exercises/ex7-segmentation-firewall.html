@@ -1,0 +1,1958 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="OT Networks: Design & Defend">
+      
+      
+      
+        <link rel="canonical" href="https://narrowin.github.io/ot-labs-docs/en/exercises/ex7-segmentation-firewall.html">
+      
+      
+        <link rel="prev" href="ex6-protocol-discovery.html">
+      
+      
+        <link rel="next" href="appendix.html">
+      
+      
+        
+          <link rel="alternate" href="/ot-labs-docs/en/" hreflang="en">
+        
+          <link rel="alternate" href="/ot-labs-docs/de/" hreflang="de">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>7. Segmentation & Firewall - OT Networks: Design & Defend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+        <script src="https://unpkg.com/iframe-worker/shim"></script>
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#exercise-7-network-segmentation-and-firewall-design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-header__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="../assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OT Networks: Design & Defend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              7. Segmentation & Firewall
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/en/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/de/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/narrowin/ot-labs-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-nav__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="../assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    OT Networks: Design & Defend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/narrowin/ot-labs-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Exercises
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex1-vlan-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. VLAN Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex2-arp-spoofing.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. ARP Spoofing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex3-spanning-tree.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Spanning Tree
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex4-link-aggregation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Link Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex5-reconnaissance.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Remote Access
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex6-protocol-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Protocol Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Segmentation & Firewall
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="ex7-segmentation-firewall.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Segmentation & Firewall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#learning-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Objectives
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-map-communication-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Map Communication Flows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-create-a-communication-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Create a Communication Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-analyze-current-firewall-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Analyze Current Firewall Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-design-and-implement-restrictive-rules-optionaladvanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4: Design and Implement Restrictive Rules (Optional/Advanced)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task 4: Design and Implement Restrictive Rules (Optional/Advanced)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expert-view-complexity-vs-maintainability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expert View: Complexity vs. Maintainability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-compare-flat-vs-segmented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5: Compare Flat vs. Segmented
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-map-communication-flows_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Map Communication Flows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-create-communication-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Create Communication Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-analyze-current-firewall-rules_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Analyze Current Firewall Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-implement-restrictive-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4: Implement Restrictive Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-compare-flat-vs-segmented_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5: Compare Flat vs. Segmented
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary-lessons-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Lessons Learned
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="appendix.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Appendix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatsheet.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheatsheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Container101.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container101
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../automation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../slides.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feedback.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#learning-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Objectives
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-map-communication-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Map Communication Flows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-create-a-communication-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Create a Communication Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-analyze-current-firewall-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Analyze Current Firewall Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-design-and-implement-restrictive-rules-optionaladvanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4: Design and Implement Restrictive Rules (Optional/Advanced)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task 4: Design and Implement Restrictive Rules (Optional/Advanced)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expert-view-complexity-vs-maintainability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expert View: Complexity vs. Maintainability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-compare-flat-vs-segmented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5: Compare Flat vs. Segmented
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-map-communication-flows_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Map Communication Flows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-create-communication-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Create Communication Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-analyze-current-firewall-rules_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Analyze Current Firewall Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-implement-restrictive-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4: Implement Restrictive Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-compare-flat-vs-segmented_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5: Compare Flat vs. Segmented
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary-lessons-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Lessons Learned
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="exercise-7-network-segmentation-and-firewall-design">Exercise 7: Network Segmentation and Firewall Design</h1>
+<p><strong>Time Estimate</strong>: 35-45 minutes<br />
+<strong>Lab Topology</strong>: <code>ot-sec-segmented</code> (primary), <code>ot-sec-flat</code> (comparison)<br />
+<strong>Difficulty</strong>: <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 4h-5v16h5zm-7 5H9v11h5zm-7 5H2v6h5z"/></svg></span> Intermediate to Advanced</p>
+<h2 id="learning-objectives">Learning Objectives</h2>
+<ul>
+<li>Understand zone-based segmentation (Purdue Model concepts)</li>
+<li>Create a communication matrix for OT devices</li>
+<li>Design firewall rules to restrict traffic to necessary protocols</li>
+<li>Compare security posture of flat vs. segmented networks</li>
+</ul>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Exercise 1 &amp; 6</li>
+<li>Basic understanding of firewalls</li>
+</ul>
+<h2 id="scenario">Scenario</h2>
+<p>In the <code>ot-sec-flat</code> topology, all devices were in the same broadcast domain. If one device was compromised, the attacker could access everything. In <code>ot-sec-segmented</code>, we have VLANs separating functions:
+- <strong>VLAN 10 (Hygiene)</strong>: PLCs
+- <strong>VLAN 20 (Process)</strong>: PLCs
+- <strong>VLAN 40 (Control Room)</strong>: HMI
+- <strong>VLAN 50 (Engineering)</strong>: Workstations</p>
+<p>However, segmentation alone isn't enough if the firewall allows all traffic between zones. We need to implement "Least Privilege".</p>
+<h2 id="tasks">Tasks</h2>
+<h3 id="task-1-map-communication-flows">Task 1: Map Communication Flows</h3>
+<ol>
+<li>
+<p>Identify the legitimate communication paths needed for the plant to operate:</p>
+<ul>
+<li><strong>HMI (VLAN 40)</strong> needs to read/write data to <strong>PLCs (VLAN 10, 20, 30)</strong>.</li>
+<li><strong>Engineering Station (VLAN 50)</strong> needs to program <strong>PLCs</strong>.</li>
+<li><strong>PLCs</strong> usually do <em>not</em> need to talk to the Internet.</li>
+<li><strong>PLCs</strong> might need to talk to each other (inter-controller communication).</li>
+</ul>
+</li>
+<li>
+<p><strong>Question</strong>: Does the HMI need to SSH into the PLC? Does it need to ping it? Does it need to access the web server?</p>
+<ul>
+<li><em>Answer</em>: Typically, HMI only needs Modbus TCP (502) or a proprietary protocol (e.g., 1217/2455 for CODESYS). WebVisu uses HTTP (80/8080).</li>
+</ul>
+</li>
+</ol>
+<h3 id="task-2-create-a-communication-matrix">Task 2: Create a Communication Matrix</h3>
+<p>A communication matrix defines allowed traffic. Fill in the table below (mentally or on paper):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Source</th>
+<th style="text-align: left;">Destination</th>
+<th style="text-align: left;">Protocol</th>
+<th style="text-align: left;">Port</th>
+<th style="text-align: left;">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">HMI (10.40.0.12)</td>
+<td style="text-align: left;">PLC (10.10.0.11)</td>
+<td style="text-align: left;">Modbus TCP</td>
+<td style="text-align: left;">502</td>
+<td style="text-align: left;">Allow</td>
+</tr>
+<tr>
+<td style="text-align: left;">HMI (10.40.0.12)</td>
+<td style="text-align: left;">PLC (10.10.0.11)</td>
+<td style="text-align: left;">HTTP (WebVisu)</td>
+<td style="text-align: left;">8080</td>
+<td style="text-align: left;">Allow</td>
+</tr>
+<tr>
+<td style="text-align: left;">HMI (10.40.0.12)</td>
+<td style="text-align: left;">PLC (10.10.0.11)</td>
+<td style="text-align: left;">SSH</td>
+<td style="text-align: left;">22</td>
+<td style="text-align: left;"><strong>Block</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Any</td>
+<td style="text-align: left;">Any</td>
+<td style="text-align: left;">Any</td>
+<td style="text-align: left;">Any</td>
+<td style="text-align: left;"><strong>Block</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="task-3-analyze-current-firewall-rules">Task 3: Analyze Current Firewall Rules</h3>
+<ol>
+<li>
+<p>SSH into the <code>gw-firewall</code> (Mikrotik):
+    <div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.11
+</code></pre></div>
+    (Password: <code>admin</code>)</p>
+</li>
+<li>
+<p>View the current forwarding rules:
+    <div class="highlight"><pre><span></span><code>/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>print<span class="w"> </span>where<span class="w"> </span><span class="nv">chain</span><span class="o">=</span>forward
+</code></pre></div></p>
+</li>
+<li>
+<p>Look for the rule allowing Control Room (VLAN 40) to Hygiene (VLAN 10).</p>
+<ul>
+<li>It likely looks like: <code>action=accept chain=forward in-interface=vlan40 out-interface=vlan10</code></li>
+<li><strong>Analysis</strong>: This rule allows <em>all</em> protocols. This is too permissive.</li>
+</ul>
+</li>
+</ol>
+<h3 id="task-4-design-and-implement-restrictive-rules-optionaladvanced">Task 4: Design and Implement Restrictive Rules (Optional/Advanced)</h3>
+<p><em>Note: This task requires familiarity with RouterOS syntax. Proceed with caution.</em></p>
+<p>We want to replace the broad "Allow VLAN 40 to VLAN 10" rule with specific rules for Modbus and HTTP.</p>
+<h4 id="expert-view-complexity-vs-maintainability">Expert View: Complexity vs. Maintainability</h4>
+<p><strong>Warning</strong>: With firewall rule sets, granularity can get very complex very fast. It's tempting to create extremely fine-grained rules (e.g., separate rules for every single device, every port, every protocol variant), but this leads to rule sets with hundreds of entries that nobody understands or can maintain anymore.</p>
+<p><strong>Common Pitfalls</strong>:</p>
+<ul>
+<li>Too many specific host-to-host rules instead of zone-based rules</li>
+<li>Multiple overlapping rules where it's unclear which one applies</li>
+<li>Missing documentation or outdated comments</li>
+<li>"Emergency" rules that were supposed to be temporary but become permanent</li>
+<li>Rules that nobody dares to delete because it's unknown what they do</li>
+</ul>
+<p><strong>Recommendation: Keep It Simple and Manageable</strong>:</p>
+<ol>
+<li><strong>Prefer zone-based policies</strong> over individual hosts (e.g., "VLAN 40 to VLAN 10" instead of "Host A to Host B")</li>
+<li><strong>Group service objects</strong> (e.g., "OT-Base-Services" = Modbus + OPC-UA + HTTP)</li>
+<li><strong>Clear naming conventions</strong> (e.g., "ALLOW_ControlRoom_to_Hygiene_OT-Services")</li>
+<li><strong>Regular cleanup</strong> - Remove unused rules</li>
+<li><strong>Document</strong> - Record business justification in comments</li>
+<li><strong>Test</strong> - Validate in test environment before production</li>
+</ol>
+<p><strong>Rule of thumb</strong>: If your rule set has more than 50 rules without clear structure, it's time to simplify. A well-designed rule set with 20 understandable rules is safer than a chaotic one with 200 rules.</p>
+<ol>
+<li>
+<p><strong>Add specific rules</strong> (placed at the top or before the drop rule):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Allow Modbus TCP from HMI to PLC</span>
+/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>add<span class="w"> </span><span class="nv">chain</span><span class="o">=</span>forward<span class="w"> </span><span class="nv">action</span><span class="o">=</span>accept<span class="w"> </span>src-address<span class="o">=</span><span class="m">10</span>.40.0.12<span class="w"> </span>dst-address<span class="o">=</span><span class="m">10</span>.10.0.11<span class="w"> </span><span class="nv">protocol</span><span class="o">=</span>tcp<span class="w"> </span>dst-port<span class="o">=</span><span class="m">502</span><span class="w"> </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;Allow HMI to PLC Modbus&quot;</span><span class="w"> </span>place-before<span class="o">=</span><span class="m">0</span>
+
+<span class="c1"># Allow HTTP (WebVisu) from HMI to PLC</span>
+/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>add<span class="w"> </span><span class="nv">chain</span><span class="o">=</span>forward<span class="w"> </span><span class="nv">action</span><span class="o">=</span>accept<span class="w"> </span>src-address<span class="o">=</span><span class="m">10</span>.40.0.12<span class="w"> </span>dst-address<span class="o">=</span><span class="m">10</span>.10.0.11<span class="w"> </span><span class="nv">protocol</span><span class="o">=</span>tcp<span class="w"> </span>dst-port<span class="o">=</span><span class="m">8080</span><span class="w"> </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;Allow HMI to PLC Web&quot;</span><span class="w"> </span>place-before<span class="o">=</span><span class="m">0</span>
+</code></pre></div>
+</li>
+<li>
+<p><strong>Disable the broad rule</strong>:
+    Find the number of the rule <code>allow Control Room to Hygiene</code> using <code>/ip firewall filter print</code>. Let's assume it is number <code>X</code>.
+    <div class="highlight"><pre><span></span><code>/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>disable<span class="w"> </span>X
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Verify</strong>:</p>
+<ul>
+<li>Can you still access the WebVisu from the HMI? (Should be YES)</li>
+<li>Can you SSH from the HMI to the PLC? (Should be NO, if the default policy is drop or if no other rule matches).</li>
+<li><em>Note</em>: The current lab config has a <code>default forward drop</code> rule that is <code>disabled=yes</code>. To fully enforce this, you would need to enable that drop rule at the end.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Enable the default drop rule at the bottom</span>
+/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="o">[</span>find<span class="w"> </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;default forward drop&quot;</span><span class="o">]</span>
+</code></pre></div>
+</li>
+</ol>
+<h3 id="task-5-compare-flat-vs-segmented">Task 5: Compare Flat vs. Segmented</h3>
+<ol>
+<li>
+<p><strong>Flat Network</strong>:</p>
+<ul>
+<li>Attacker on HMI can ARP spoof the PLC.</li>
+<li>Attacker can access any port on the PLC.</li>
+<li>No central point to filter traffic.</li>
+</ul>
+</li>
+<li>
+<p><strong>Segmented Network (with Firewall)</strong>:</p>
+<ul>
+<li>ARP spoofing is contained within the VLAN.</li>
+<li>Firewall enforces policy (e.g., "Only Modbus allowed").</li>
+<li>Central logging of denied attempts (if logging is enabled).</li>
+</ul>
+</li>
+</ol>
+<h2 id="conclusion">Conclusion</h2>
+<p>Segmentation is the foundation of OT security, but it must be accompanied by strict firewall rules. By moving from "Allow Any" to "Allow Specific Ports", we significantly reduce the attack surface.</p>
+<hr />
+<h2 id="solution">Solution</h2>
+<details class="success">
+<summary>Click to view solution</summary>
+<h3 id="task-1-map-communication-flows_1">Task 1: Map Communication Flows</h3>
+<p><strong>Legitimate Communication Paths:</strong></p>
+<ol>
+<li>
+<p><strong>HMI (VLAN 40) → PLCs (VLAN 10, 20, 30)</strong></p>
+<ul>
+<li>Modbus TCP (Port 502): YES - for process control</li>
+<li>HTTP/WebVisu (Port 8080): YES - for visualization</li>
+<li>OPC UA (Port 4840): YES - modern alternative</li>
+<li>SSH (Port 22): NO - only for engineering, not HMI</li>
+</ul>
+</li>
+<li>
+<p><strong>Engineering Station (VLAN 50) → PLCs</strong></p>
+<ul>
+<li>CODESYS Runtime (Port 2455, 1217): YES - for programming</li>
+<li>SSH (Port 22): YES - for maintenance</li>
+<li>HTTP (Port 8080): YES - for WebVisu access</li>
+</ul>
+</li>
+<li>
+<p><strong>PLCs → Internet</strong></p>
+<ul>
+<li>NO - PLCs should not have direct Internet access</li>
+<li>Exception: NTP for time synchronization (controlled via firewall)</li>
+</ul>
+</li>
+<li>
+<p><strong>PLCs to Each Other</strong></p>
+<ul>
+<li>YES - Inter-controller communication possible</li>
+<li>Protocols: Modbus TCP, OPC UA, proprietary protocols</li>
+</ul>
+</li>
+</ol>
+<p><strong>Answer to the Question:</strong></p>
+<ul>
+<li><strong>Must HMI SSH into PLC?</strong> NO - SSH is for engineering/maintenance, not normal HMI functions</li>
+<li><strong>Must HMI ping PLC?</strong> YES - ICMP is useful for availability checks</li>
+<li><strong>Must HMI access web server?</strong> YES - WebVisu runs on HTTP (Port 8080)</li>
+</ul>
+<h3 id="task-2-create-communication-matrix">Task 2: Create Communication Matrix</h3>
+<p><strong>Extended Communication Matrix:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Protocol</th>
+<th>Port</th>
+<th>Action</th>
+<th>Justification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HMI (10.40.0.12)</td>
+<td>PLC (10.10.0.11)</td>
+<td>Modbus TCP</td>
+<td>502</td>
+<td>ALLOW</td>
+<td>Read/write process data</td>
+</tr>
+<tr>
+<td>HMI (10.40.0.12)</td>
+<td>PLC (10.10.0.11)</td>
+<td>HTTP</td>
+<td>8080</td>
+<td>ALLOW</td>
+<td>WebVisu access</td>
+</tr>
+<tr>
+<td>HMI (10.40.0.12)</td>
+<td>PLC (10.10.0.11)</td>
+<td>OPC UA</td>
+<td>4840</td>
+<td>ALLOW</td>
+<td>Alternative to Modbus</td>
+</tr>
+<tr>
+<td>HMI (10.40.0.12)</td>
+<td>PLC (10.10.0.11)</td>
+<td>ICMP</td>
+<td>-</td>
+<td>ALLOW</td>
+<td>Availability check</td>
+</tr>
+<tr>
+<td>HMI (10.40.0.12)</td>
+<td>PLC (10.10.0.11)</td>
+<td>SSH</td>
+<td>22</td>
+<td>BLOCK</td>
+<td>Not needed for HMI operation</td>
+</tr>
+<tr>
+<td>EWS (10.50.0.11)</td>
+<td>PLC (10.10.0.11)</td>
+<td>SSH</td>
+<td>22</td>
+<td>ALLOW</td>
+<td>Engineering/maintenance</td>
+</tr>
+<tr>
+<td>EWS (10.50.0.11)</td>
+<td>PLC (10.10.0.11)</td>
+<td>CODESYS</td>
+<td>2455, 1217</td>
+<td>ALLOW</td>
+<td>Programming</td>
+</tr>
+<tr>
+<td>EWS (10.50.0.11)</td>
+<td>PLC (10.10.0.11)</td>
+<td>HTTP</td>
+<td>8080</td>
+<td>ALLOW</td>
+<td>WebVisu configuration</td>
+</tr>
+<tr>
+<td>PLC (10.10.0.11)</td>
+<td>Internet</td>
+<td>Any</td>
+<td>Any</td>
+<td>BLOCK</td>
+<td>No direct Internet connection</td>
+</tr>
+<tr>
+<td>Any</td>
+<td>Any</td>
+<td>Any</td>
+<td>Any</td>
+<td>BLOCK</td>
+<td>Default-deny policy</td>
+</tr>
+</tbody>
+</table>
+<h3 id="task-3-analyze-current-firewall-rules_1">Task 3: Analyze Current Firewall Rules</h3>
+<p><strong>SSH to Firewall:</strong></p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.11
+</code></pre></div>
+<p>Password: <code>admin</code></p>
+<p>Alternatively with sshpass (for automation):
+<div class="highlight"><pre><span></span><code>sshpass<span class="w"> </span>-p<span class="w"> </span>admin<span class="w"> </span>ssh<span class="w"> </span>admin@192.168.100.11
+</code></pre></div></p>
+<p><strong>Display Firewall Rules:</strong></p>
+<div class="highlight"><pre><span></span><code>/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>print<span class="w"> </span>where<span class="w"> </span><span class="nv">chain</span><span class="o">=</span>forward
+</code></pre></div>
+<p><strong>Expected Output (ot-sec-flat):</strong></p>
+<div class="highlight"><pre><span></span><code>Flags: X - disabled, I - invalid; D - dynamic 
+ 0    ;;; allow established,related connections
+      chain=forward action=accept connection-state=established,related 
+
+ 1    ;;; allow forwarding ICMP
+      chain=forward action=accept protocol=icmp 
+
+ 2    ;;; allow SSH to the jumphost from internet
+      chain=forward action=accept protocol=tcp dst-address=2.2.2.2 
+      in-interface-list=ext dst-port=22 
+
+ 3    ;;; allow all traffic from DMZ to VLAN10
+      chain=forward action=accept in-interface=dmz-ext out-interface=vlan10 
+
+ 4    ;;; default forward drop
+      chain=forward action=accept log=yes log-prefix=&quot;default forward drop&quot;
+</code></pre></div>
+<p><strong>Expected Output (ot-sec-segmented):</strong></p>
+<div class="highlight"><pre><span></span><code>Flags: X - disabled, I - invalid; D - dynamic 
+ 0    ;;; allow established,related connections
+      chain=forward action=accept connection-state=established,related
+
+ 1    ;;; allow forwarding ICMP
+      chain=forward action=accept protocol=icmp
+
+ 2    ;;; allow SSH to the jumphost from internet
+      chain=forward action=accept protocol=tcp dst-address=2.2.2.2
+      in-interface-list=ext dst-port=22
+
+ 3    ;;; allow Control Room to Hygiene
+      chain=forward action=accept in-interface=vlan40 out-interface=vlan10
+
+ 4    ;;; allow Control Room to Process
+      chain=forward action=accept in-interface=vlan40 out-interface=vlan20
+
+ 5    ;;; allow Control Room to Disposal
+      chain=forward action=accept in-interface=vlan40 out-interface=vlan30
+
+ 6    ;;; allow Parameterization to Hygiene
+      chain=forward action=accept in-interface=vlan50 out-interface=vlan10
+
+ ... more rules ...
+</code></pre></div>
+<p><strong>Analysis:</strong></p>
+<ul>
+<li><strong>Flat Topology</strong>: Rule 3 allows ALL traffic from DMZ to VLAN 10 - too permissive</li>
+<li><strong>Segmented Topology</strong>: Rule 3 allows ALL traffic from VLAN 40 to VLAN 10 - too permissive</li>
+<li><strong>Problem</strong>: No port restrictions, no protocol specification</li>
+<li><strong>Risk</strong>: SSH, unnecessary services are reachable</li>
+</ul>
+<h3 id="task-4-implement-restrictive-rules">Task 4: Implement Restrictive Rules</h3>
+<p><strong>WARNING</strong>: These changes can break network connectivity. Always perform in production during maintenance window with rollback plan.</p>
+<p><strong>Step 1: Add Specific Rule for Modbus TCP</strong></p>
+<div class="highlight"><pre><span></span><code>/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>add<span class="w"> </span><span class="nv">chain</span><span class="o">=</span>forward<span class="w"> </span><span class="nv">action</span><span class="o">=</span>accept<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>src-address<span class="o">=</span><span class="m">10</span>.40.0.12<span class="w"> </span>dst-address<span class="o">=</span><span class="m">10</span>.10.0.11<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">protocol</span><span class="o">=</span>tcp<span class="w"> </span>dst-port<span class="o">=</span><span class="m">502</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;Allow HMI to PLC Modbus&quot;</span><span class="w"> </span>place-before<span class="o">=</span><span class="m">0</span>
+</code></pre></div>
+<p><strong>Step 2: Add Specific Rule for WebVisu HTTP</strong></p>
+<div class="highlight"><pre><span></span><code>/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>add<span class="w"> </span><span class="nv">chain</span><span class="o">=</span>forward<span class="w"> </span><span class="nv">action</span><span class="o">=</span>accept<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>src-address<span class="o">=</span><span class="m">10</span>.40.0.12<span class="w"> </span>dst-address<span class="o">=</span><span class="m">10</span>.10.0.11<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">protocol</span><span class="o">=</span>tcp<span class="w"> </span>dst-port<span class="o">=</span><span class="m">8080</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;Allow HMI to PLC WebVisu&quot;</span><span class="w"> </span>place-before<span class="o">=</span><span class="m">0</span>
+</code></pre></div>
+<p><strong>Step 3: Add Specific Rule for OPC UA</strong></p>
+<div class="highlight"><pre><span></span><code>/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>add<span class="w"> </span><span class="nv">chain</span><span class="o">=</span>forward<span class="w"> </span><span class="nv">action</span><span class="o">=</span>accept<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>src-address<span class="o">=</span><span class="m">10</span>.40.0.12<span class="w"> </span>dst-address<span class="o">=</span><span class="m">10</span>.10.0.11<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">protocol</span><span class="o">=</span>tcp<span class="w"> </span>dst-port<span class="o">=</span><span class="m">4840</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;Allow HMI to PLC OPC-UA&quot;</span><span class="w"> </span>place-before<span class="o">=</span><span class="m">0</span>
+</code></pre></div>
+<p><strong>Step 4: Verify Rules</strong></p>
+<div class="highlight"><pre><span></span><code>/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>print<span class="w"> </span>where<span class="w"> </span><span class="nv">chain</span><span class="o">=</span>forward
+</code></pre></div>
+<p>You should now see the new specific rules at the top.</p>
+<p><strong>Step 5: Identify Broad "Allow Any" Rule</strong></p>
+<p>Find the rule number of the broad rule:</p>
+<div class="highlight"><pre><span></span><code>/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>print<span class="w"> </span>where<span class="w"> </span><span class="nv">chain</span><span class="o">=</span>forward
+</code></pre></div>
+<p>In <code>ot-sec-segmented</code>: Look for "allow Control Room to Hygiene" (e.g. rule #3)
+In <code>ot-sec-flat</code>: Look for "allow all traffic from DMZ to VLAN10" (e.g. rule #3)</p>
+<p><strong>Step 6: Disable Broad Rule</strong></p>
+<div class="highlight"><pre><span></span><code>/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>disable<span class="w"> </span><span class="o">[</span>find<span class="w"> </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;allow Control Room to Hygiene&quot;</span><span class="o">]</span>
+</code></pre></div>
+<p>Or for flat:
+<div class="highlight"><pre><span></span><code>/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>disable<span class="w"> </span><span class="o">[</span>find<span class="w"> </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;allow all traffic from DMZ to VLAN10&quot;</span><span class="o">]</span>
+</code></pre></div></p>
+<p><strong>Step 7: Enable Default-Drop (Optional)</strong></p>
+<p>In <code>ot-sec-flat</code> the default-drop rule is actually set to "accept". For real security:</p>
+<div class="highlight"><pre><span></span><code>/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="o">[</span>find<span class="w"> </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;default forward drop&quot;</span><span class="o">]</span><span class="w"> </span><span class="nv">action</span><span class="o">=</span>drop
+</code></pre></div>
+<p><strong>CAUTION</strong>: This blocks all traffic not explicitly allowed. Ensure all necessary rules are in place!</p>
+<p><strong>Step 8: Test</strong></p>
+<p>From another terminal (not via SSH to firewall!):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Test 1: HMI can reach WebVisu (should work)</span>
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>clab-ot-sec-flat-pilz-hmi01-vlan40<span class="w"> </span>curl<span class="w"> </span>-I<span class="w"> </span>--connect-timeout<span class="w"> </span><span class="m">3</span><span class="w"> </span>http://10.10.0.11:8080
+
+<span class="c1"># Test 2: HMI can reach Modbus (should work)</span>
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>clab-ot-sec-flat-pilz-hmi01-vlan40<span class="w"> </span>nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.10.0.11<span class="w"> </span><span class="m">502</span>
+
+<span class="c1"># Test 3: HMI cannot reach SSH (should be blocked if default-drop active)</span>
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>clab-ot-sec-flat-pilz-hmi01-vlan40<span class="w"> </span>nc<span class="w"> </span>-zv<span class="w"> </span>-w<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">10</span>.10.0.11<span class="w"> </span><span class="m">22</span>
+</code></pre></div>
+<p><strong>Expected Results:</strong></p>
+<p>Test 1 &amp; 2: Successful
+Test 3: Connection timed out or refused (if default-drop active)</p>
+<p><strong>Rollback (if needed):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Re-enable broad rule</span>
+/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="o">[</span>find<span class="w"> </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;allow Control Room to Hygiene&quot;</span><span class="o">]</span>
+
+<span class="c1"># Set default-drop back to accept</span>
+/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="o">[</span>find<span class="w"> </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;default forward drop&quot;</span><span class="o">]</span><span class="w"> </span><span class="nv">action</span><span class="o">=</span>accept
+</code></pre></div>
+<h3 id="task-5-compare-flat-vs-segmented_1">Task 5: Compare Flat vs. Segmented</h3>
+<p><strong>Comparison Table:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Flat Network</th>
+<th>Segmented Network (with Firewall)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Broadcast Domain</strong></td>
+<td>One large domain</td>
+<td>Multiple small VLANs</td>
+</tr>
+<tr>
+<td><strong>ARP Spoofing Reach</strong></td>
+<td>All devices affected</td>
+<td>Limited to VLAN</td>
+</tr>
+<tr>
+<td><strong>Lateral Movement</strong></td>
+<td>Easy - direct access</td>
+<td>Difficult - firewall blocks</td>
+</tr>
+<tr>
+<td><strong>Attack Surface</strong></td>
+<td>All ports on all devices</td>
+<td>Only allowed ports/protocols</td>
+</tr>
+<tr>
+<td><strong>Traffic Filtering</strong></td>
+<td>None</td>
+<td>Central at firewall</td>
+</tr>
+<tr>
+<td><strong>Monitoring</strong></td>
+<td>Distributed, complex</td>
+<td>Central at firewall</td>
+</tr>
+<tr>
+<td><strong>Incident Response</strong></td>
+<td>Hard to isolate</td>
+<td>Can isolate zones</td>
+</tr>
+<tr>
+<td><strong>Compliance</strong></td>
+<td>IEC 62443 SR 5.1 FAIL</td>
+<td>IEC 62443 SR 5.1 PASS</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Attack Scenario - Flat Network:</strong></p>
+<ol>
+<li>Attacker compromises HMI (10.40.0.12)</li>
+<li>Performs ARP spoofing → Man-in-the-Middle on entire network</li>
+<li>Direct access to PLC via SSH (Port 22)</li>
+<li>Direct access to all engineering ports</li>
+<li>Can move laterally to all other devices</li>
+<li>No central monitoring of traffic</li>
+</ol>
+<p><strong>Attack Scenario - Segmented Network:</strong></p>
+<ol>
+<li>Attacker compromises HMI (10.40.0.12 in VLAN 40)</li>
+<li>ARP spoofing only possible in VLAN 40</li>
+<li>Attempts to access PLC (10.10.0.11 in VLAN 10)</li>
+<li>Firewall blocks SSH (Port 22) → Access denied</li>
+<li>Firewall only allows Modbus, HTTP, OPC UA</li>
+<li>Firewall logs all access attempts</li>
+<li>IDS/IPS can detect anomalies</li>
+<li>Security team alerted</li>
+<li>VLAN 10 can be isolated without affecting VLAN 40</li>
+</ol>
+<p><strong>Conclusion:</strong></p>
+<ul>
+<li><strong>Flat Network</strong>: Easy to manage but catastrophic when compromised</li>
+<li><strong>Segmented Network</strong>: More complex but significantly more secure and IEC 62443 compliant</li>
+<li><strong>Best Practice</strong>: Segmentation + specific firewall rules + monitoring</li>
+</ul>
+<h3 id="additional-best-practices">Additional Best Practices</h3>
+<p><strong>1. Enable Logging:</strong></p>
+<div class="highlight"><pre><span></span><code>/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="o">[</span>find<span class="w"> </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;default forward drop&quot;</span><span class="o">]</span><span class="w"> </span><span class="nv">log</span><span class="o">=</span>yes<span class="w"> </span>log-prefix<span class="o">=</span><span class="s2">&quot;fw-drop&quot;</span>
+</code></pre></div>
+<p><strong>2. Address Lists for Better Management:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Define HMI devices</span>
+/ip<span class="w"> </span>firewall<span class="w"> </span>address-list<span class="w"> </span>add<span class="w"> </span><span class="nv">list</span><span class="o">=</span>hmi-devices<span class="w"> </span><span class="nv">address</span><span class="o">=</span><span class="m">10</span>.40.0.12
+/ip<span class="w"> </span>firewall<span class="w"> </span>address-list<span class="w"> </span>add<span class="w"> </span><span class="nv">list</span><span class="o">=</span>hmi-devices<span class="w"> </span><span class="nv">address</span><span class="o">=</span><span class="m">10</span>.40.0.13
+
+<span class="c1"># Define PLC devices</span>
+/ip<span class="w"> </span>firewall<span class="w"> </span>address-list<span class="w"> </span>add<span class="w"> </span><span class="nv">list</span><span class="o">=</span>plc-devices<span class="w"> </span><span class="nv">address</span><span class="o">=</span><span class="m">10</span>.10.0.11
+/ip<span class="w"> </span>firewall<span class="w"> </span>address-list<span class="w"> </span>add<span class="w"> </span><span class="nv">list</span><span class="o">=</span>plc-devices<span class="w"> </span><span class="nv">address</span><span class="o">=</span><span class="m">10</span>.10.0.12
+/ip<span class="w"> </span>firewall<span class="w"> </span>address-list<span class="w"> </span>add<span class="w"> </span><span class="nv">list</span><span class="o">=</span>plc-devices<span class="w"> </span><span class="nv">address</span><span class="o">=</span><span class="m">10</span>.20.0.11
+
+<span class="c1"># Rule with Address Lists</span>
+/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>add<span class="w"> </span><span class="nv">chain</span><span class="o">=</span>forward<span class="w"> </span><span class="nv">action</span><span class="o">=</span>accept<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>src-address-list<span class="o">=</span>hmi-devices<span class="w"> </span>dst-address-list<span class="o">=</span>plc-devices<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">protocol</span><span class="o">=</span>tcp<span class="w"> </span>dst-port<span class="o">=</span><span class="m">502</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">comment</span><span class="o">=</span><span class="s2">&quot;Allow HMI to PLCs Modbus&quot;</span>
+</code></pre></div>
+<p><strong>3. Regular Audits:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Show all rules with counters</span>
+/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>print<span class="w"> </span>stats
+
+<span class="c1"># Identify unused rules (bytes=0)</span>
+/ip<span class="w"> </span>firewall<span class="w"> </span>filter<span class="w"> </span>print<span class="w"> </span>stats<span class="w"> </span>where<span class="w"> </span><span class="nv">bytes</span><span class="o">=</span><span class="m">0</span>
+</code></pre></div>
+<p><strong>4. Change Management:</strong></p>
+<ul>
+<li>Document all firewall changes</li>
+<li>Create backup before changes:
+  <div class="highlight"><pre><span></span><code>/system<span class="w"> </span>backup<span class="w"> </span>save<span class="w"> </span><span class="nv">name</span><span class="o">=</span>before-firewall-change
+</code></pre></div></li>
+<li>Validate in test environment</li>
+<li>Roll out incrementally in production</li>
+</ul>
+<h3 id="summary-lessons-learned">Summary: Lessons Learned</h3>
+<ol>
+<li><strong>Segmentation alone is not enough</strong> - Firewall rules are essential</li>
+<li><strong>Default-deny is critical</strong> - "Allow any" makes segmentation worthless</li>
+<li><strong>Enforce least privilege</strong> - Only allow absolutely necessary ports</li>
+<li><strong>Monitoring is mandatory</strong> - Enable logging and alerting</li>
+<li><strong>Documentation is crucial</strong> - Know why each rule exists</li>
+<li><strong>Test, test, test</strong> - Validate before production deployment</li>
+<li><strong>IEC 62443 SR 5.1</strong> - Network segmentation is fundamental requirement</li>
+</ol>
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tracking"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

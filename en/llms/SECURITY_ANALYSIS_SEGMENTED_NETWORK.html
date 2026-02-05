@@ -1,0 +1,2004 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="OT Networks: Design & Defend">
+      
+      
+      
+        <link rel="canonical" href="https://narrowin.github.io/ot-labs-docs/en/llms/SECURITY_ANALYSIS_SEGMENTED_NETWORK.html">
+      
+      
+      
+      
+        
+          <link rel="alternate" href="/ot-labs-docs/en/" hreflang="en">
+        
+          <link rel="alternate" href="/ot-labs-docs/de/" hreflang="de">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Security Analysis: OT Network Segmented Topology - OT Networks: Design & Defend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+        <script src="https://unpkg.com/iframe-worker/shim"></script>
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#security-analysis-ot-network-segmented-topology" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-header__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="../assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OT Networks: Design & Defend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Security Analysis: OT Network Segmented Topology
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/en/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/de/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/narrowin/ot-labs-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-nav__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="../assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    OT Networks: Design & Defend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/narrowin/ot-labs-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Exercises
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercises/index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercises/ex1-vlan-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. VLAN Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercises/ex2-arp-spoofing.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. ARP Spoofing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercises/ex3-spanning-tree.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Spanning Tree
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercises/ex4-link-aggregation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Link Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercises/ex5-reconnaissance.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Remote Access
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercises/ex6-protocol-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Protocol Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercises/ex7-segmentation-firewall.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Segmentation & Firewall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercises/appendix.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Appendix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatsheet.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheatsheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Container101.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container101
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../automation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../slides.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feedback.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Architecture Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#security-zones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Zones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Devices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#critical-vulnerabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical Vulnerabilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Critical Vulnerabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-firewall-bypass-default-allow-rule-critical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. FIREWALL BYPASS - DEFAULT ALLOW RULE (CRITICAL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-weak-authentication-credentials-critical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. WEAK AUTHENTICATION CREDENTIALS (CRITICAL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-default-drop-rule-disabled-critical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. DEFAULT DROP RULE DISABLED (CRITICAL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-severity-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Severity Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="High-Severity Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-overly-permissive-zone-to-zone-access-high" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. OVERLY PERMISSIVE ZONE-TO-ZONE ACCESS (HIGH)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-no-protocol-filtering-or-dpi-high" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. NO PROTOCOL FILTERING OR DPI (HIGH)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-unrestricted-icmp-high" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. UNRESTRICTED ICMP (HIGH)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-no-network-access-control-nac-high" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. NO NETWORK ACCESS CONTROL (NAC) (HIGH)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#medium-severity-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medium-Severity Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Medium-Severity Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#8-dhcp-security-weaknesses-medium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. DHCP SECURITY WEAKNESSES (MEDIUM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-no-network-segmentation-at-layer-2-medium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. NO NETWORK SEGMENTATION AT LAYER 2 (MEDIUM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-weak-dns-security-medium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. WEAK DNS SECURITY (MEDIUM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#11-no-time-synchronization-security-medium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. NO TIME SYNCHRONIZATION SECURITY (MEDIUM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-management-interface-exposure-medium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. MANAGEMENT INTERFACE EXPOSURE (MEDIUM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-insufficient-logging-and-monitoring-medium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. INSUFFICIENT LOGGING AND MONITORING (MEDIUM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-no-network-redundancy-medium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. NO NETWORK REDUNDANCY (MEDIUM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#low-severity-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Low-Severity Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Low-Severity Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#15-unnecessary-services-enabled-low" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. UNNECESSARY SERVICES ENABLED (LOW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-mtu-configuration-low" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. MTU CONFIGURATION (LOW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#missing-security-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Security Controls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Missing Security Controls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#17-no-intrusion-detection-system-critical-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. NO INTRUSION DETECTION SYSTEM (CRITICAL MISSING)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-no-asset-inventory-and-management-high-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18. NO ASSET INVENTORY AND MANAGEMENT (HIGH MISSING)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#19-no-industrial-protocol-gateway-high-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19. NO INDUSTRIAL PROTOCOL GATEWAY (HIGH MISSING)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#20-no-backup-and-recovery-procedures-medium-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20. NO BACKUP AND RECOVERY PROCEDURES (MEDIUM MISSING)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance Mapping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compliance Mapping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#iec-62443-3-3-security-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IEC 62443-3-3 Security Levels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nist-sp-800-82-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NIST SP 800-82 Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendations-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendations Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommendations Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#immediate-actions-critical-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Immediate Actions (Critical Priority)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#short-term-actions-30-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Short-Term Actions (30 days)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium-term-actions-90-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medium-Term Actions (90 days)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#long-term-actions-6-12-months" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long-Term Actions (6-12 months)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="security-analysis-ot-network-segmented-topology">Security Analysis: OT Network Segmented Topology</h1>
+<p><strong>Analysis Date:</strong> November 12, 2025
+<strong>Topology:</strong> ot-sec-segmented.clab.yml
+<strong>Analyst:</strong> Security Assessment</p>
+<h2 id="executive-summary">Executive Summary</h2>
+<p>This document provides a comprehensive security analysis of the segmented OT network architecture. The analysis evaluates the network against industry best practices including IEC 62443, NIST SP 800-82, and the Purdue Model for industrial networks.</p>
+<p><strong>Overall Security Posture:</strong> MODERATE with CRITICAL VULNERABILITIES</p>
+<p>While the segmented architecture demonstrates several security improvements over flat networks, multiple critical and high-severity issues were identified that significantly compromise the security posture.</p>
+<h2 id="network-architecture-overview">Network Architecture Overview</h2>
+<h3 id="security-zones">Security Zones</h3>
+<p>The network implements the following security zones:</p>
+<ul>
+<li><strong>Internet Zone</strong> (1.1.1.0/24): External connectivity</li>
+<li><strong>DMZ Zone</strong> (2.2.2.0/24, VLAN 60): Jumphost and external access</li>
+<li><strong>VLAN 10 - Hygiene</strong> (10.10.0.0/24): Cleaning/hygiene processes</li>
+<li><strong>VLAN 20 - Process</strong> (10.20.0.0/24): Main production processes</li>
+<li><strong>VLAN 30 - Disposal</strong> (10.30.0.0/24): Waste disposal systems</li>
+<li><strong>VLAN 40 - Control Room</strong> (10.40.0.0/24): HMI and SCADA systems</li>
+<li><strong>VLAN 50 - Parameterization</strong> (10.50.0.0/24): Engineering workstations</li>
+</ul>
+<h3 id="network-devices">Network Devices</h3>
+<ul>
+<li><strong>gw-firewall</strong> (192.168.100.11): MikroTik RouterOS 7.18 - Gateway/Firewall</li>
+<li><strong>sw-dist</strong> (192.168.100.12): MikroTik RouterOS 7.18 - Distribution Switch</li>
+<li><strong>sw-acc1</strong> (192.168.100.13): MikroTik RouterOS 7.18 - Access Switch 1</li>
+<li><strong>sw-acc2</strong> (192.168.100.14): MikroTik RouterOS 7.18 - Access Switch 2</li>
+</ul>
+<h2 id="critical-vulnerabilities">Critical Vulnerabilities</h2>
+<h3 id="1-firewall-bypass-default-allow-rule-critical">1. FIREWALL BYPASS - DEFAULT ALLOW RULE (CRITICAL)</h3>
+<p><strong>Location:</strong> <code>gw-firewall</code> line 81
+<div class="highlight"><pre><span></span><code>/ip firewall filter add action=accept chain=forward comment=&quot;allow any for testing&quot; disabled=no
+</code></pre></div></p>
+<p><strong>Risk Level:</strong> CRITICAL</p>
+<p><strong>Impact:</strong>
+- This rule bypasses ALL firewall segmentation controls
+- Effectively creates a flat network despite VLAN segmentation
+- Negates the entire security architecture
+- Allows lateral movement between all zones
+- Permits unrestricted access from Control Room to Process zones
+- Enables direct access from DMZ to all internal zones</p>
+<p><strong>Best Practice Violation:</strong>
+- IEC 62443-3-3: Zone and conduit security enforcement
+- NIST SP 800-82: Principle of least privilege
+- Defense-in-depth strategy completely compromised</p>
+<p><strong>Recommendation:</strong>
+- <strong>IMMEDIATELY REMOVE</strong> this rule in production environments
+- Implement explicit deny-by-default policy
+- Add specific allow rules only for documented business requirements
+- Log all denied traffic for security monitoring</p>
+<p><strong>Fix:</strong>
+<div class="highlight"><pre><span></span><code>/ip firewall filter remove [find comment=&quot;allow any for testing&quot;]
+# Ensure default drop rule is enabled
+/ip firewall filter set [find comment=&quot;default forward drop&quot;] disabled=no
+</code></pre></div></p>
+<h3 id="2-weak-authentication-credentials-critical">2. WEAK AUTHENTICATION CREDENTIALS (CRITICAL)</h3>
+<p><strong>Location:</strong> All network devices and endpoints</p>
+<p><strong>Current Configuration:</strong>
+<div class="highlight"><pre><span></span><code>Username: admin
+Password: admin
+</code></pre></div></p>
+<p><strong>Risk Level:</strong> CRITICAL</p>
+<p><strong>Impact:</strong>
+- Trivial credential guessing attack
+- No defense against brute force
+- Enables unauthorized device access
+- Permits configuration tampering
+- Allows malware deployment to PLCs
+- Facilitates industrial espionage</p>
+<p><strong>Best Practice Violation:</strong>
+- IEC 62443-3-3 SR 1.1: Human user identification and authentication
+- IEC 62443-3-3 SR 1.5: Authenticator management
+- NIST SP 800-53 IA-5: Authenticator management</p>
+<p><strong>Recommendation:</strong>
+- Implement strong, unique passwords per device (minimum 16 characters)
+- Use centralized authentication (RADIUS/TACACS+)
+- Implement multi-factor authentication for critical systems
+- Enforce password complexity policies
+- Implement account lockout after failed attempts
+- Regular password rotation schedule</p>
+<h3 id="3-default-drop-rule-disabled-critical">3. DEFAULT DROP RULE DISABLED (CRITICAL)</h3>
+<p><strong>Location:</strong> <code>gw-firewall</code> line 83
+<div class="highlight"><pre><span></span><code>/ip firewall filter add action=drop chain=forward comment=&quot;default forward drop&quot; disabled=yes
+</code></pre></div></p>
+<p><strong>Risk Level:</strong> CRITICAL</p>
+<p><strong>Impact:</strong>
+- No default-deny security posture
+- Unintended traffic may be permitted
+- Security policy violations may go undetected
+- Difficult to audit and verify security controls</p>
+<p><strong>Best Practice Violation:</strong>
+- Fundamental security principle: Default deny
+- IEC 62443-3-3: Explicit security policies required</p>
+<p><strong>Recommendation:</strong>
+<div class="highlight"><pre><span></span><code>/ip firewall filter set [find comment=&quot;default forward drop&quot;] disabled=no
+</code></pre></div></p>
+<h2 id="high-severity-issues">High-Severity Issues</h2>
+<h3 id="4-overly-permissive-zone-to-zone-access-high">4. OVERLY PERMISSIVE ZONE-TO-ZONE ACCESS (HIGH)</h3>
+<p><strong>Location:</strong> <code>gw-firewall</code> firewall rules</p>
+<p><strong>Current Configuration:</strong>
+<div class="highlight"><pre><span></span><code># DMZ can access Process and Control Room
+allow DMZ to Process (line 73)
+allow DMZ to Control Room (line 74)
+
+# Control Room can access all production zones
+allow Control Room to Hygiene (line 75)
+allow Control Room to Process (line 76)
+allow Control Room to Disposal (line 77)
+
+# Parameterization can access all zones
+allow Parameterization to all zones (lines 78-81)
+</code></pre></div></p>
+<p><strong>Risk Level:</strong> HIGH</p>
+<p><strong>Impact:</strong>
+- Violates Purdue Model separation of levels
+- Excessive lateral movement opportunities
+- Single compromised workstation can pivot to all zones
+- DMZ compromise leads to production access
+- Control Room compromise affects all processes</p>
+<p><strong>Best Practice Violation:</strong>
+- IEC 62443-3-3: Minimize attack surface
+- Purdue Model: Strict level separation
+- NIST SP 800-82: Defense-in-depth</p>
+<p><strong>Recommendation:</strong>
+- Implement granular, protocol-specific rules
+- Use application-layer filtering (deep packet inspection)
+- Restrict DMZ access to specific services only (e.g., SSH to jumphost)
+- Control Room should read-only access to production, not bidirectional
+- Parameterization should use time-limited access windows
+- Implement network access control (NAC)</p>
+<p><strong>Example Improved Rules:</strong>
+<div class="highlight"><pre><span></span><code># DMZ to specific service only
+/ip firewall filter add action=accept chain=forward \
+  in-interface=dmz-ext out-interface=vlan20 \
+  protocol=tcp dst-port=502 src-address=2.2.2.2 \
+  comment=&quot;DMZ: Jumphost Modbus to Process&quot;
+
+# Control Room read-only monitoring
+/ip firewall filter add action=accept chain=forward \
+  in-interface=vlan40 out-interface=vlan20 \
+  protocol=tcp dst-port=502 connection-state=new \
+  comment=&quot;Control Room: Read-only Modbus to Process&quot;
+</code></pre></div></p>
+<h3 id="5-no-protocol-filtering-or-dpi-high">5. NO PROTOCOL FILTERING OR DPI (HIGH)</h3>
+<p><strong>Location:</strong> All firewall rules</p>
+<p><strong>Current Configuration:</strong>
+- Rules permit entire interface-to-interface traffic
+- No port-specific restrictions
+- No protocol validation
+- No application-layer inspection</p>
+<p><strong>Risk Level:</strong> HIGH</p>
+<p><strong>Impact:</strong>
+- Malicious traffic can use any protocol
+- No detection of protocol violations
+- Tunneling and encapsulation attacks possible
+- Cannot enforce industrial protocol security</p>
+<p><strong>Best Practice Violation:</strong>
+- IEC 62443-3-3 SR 3.1: Communication integrity
+- NIST SP 800-82: Protocol validation</p>
+<p><strong>Recommendation:</strong>
+- Implement port-specific rules for industrial protocols:
+  - Modbus TCP: 502
+  - EtherNet/IP: 44818, 2222
+  - OPC UA: 4840
+  - S7comm: 102
+  - BACnet: 47808
+- Deploy industrial protocol firewall or DPI
+- Use protocol anomaly detection
+- Implement payload inspection where possible</p>
+<h3 id="6-unrestricted-icmp-high">6. UNRESTRICTED ICMP (HIGH)</h3>
+<p><strong>Location:</strong> <code>gw-firewall</code> lines 69-70
+<div class="highlight"><pre><span></span><code>/ip firewall filter add action=accept chain=input comment=&quot;allow ICMP to the device&quot; protocol=icmp
+/ip firewall filter add action=accept chain=forward comment=&quot;allow forwarding ICMP&quot; protocol=icmp
+</code></pre></div></p>
+<p><strong>Risk Level:</strong> HIGH</p>
+<p><strong>Impact:</strong>
+- Network reconnaissance trivially easy
+- Zone mapping via ping sweeps
+- Enables covert channels
+- Facilitates DDoS amplification
+- Timing-based side-channel attacks</p>
+<p><strong>Best Practice Violation:</strong>
+- IEC 62443-3-3 SR 7.6: Network and security configuration settings
+- Defense-in-depth: Minimize information disclosure</p>
+<p><strong>Recommendation:</strong>
+- Rate-limit ICMP (max 5 packets/second)
+- Restrict ICMP types (allow only echo-request/reply, TTL-exceeded)
+- Block ICMP from external interfaces
+- Log excessive ICMP for anomaly detection</p>
+<p><strong>Example Configuration:</strong>
+<div class="highlight"><pre><span></span><code>/ip firewall filter add action=accept chain=input \
+  protocol=icmp icmp-options=8:0 limit=5,10:packet \
+  comment=&quot;Rate-limited ping to device&quot;
+</code></pre></div></p>
+<h3 id="7-no-network-access-control-nac-high">7. NO NETWORK ACCESS CONTROL (NAC) (HIGH)</h3>
+<p><strong>Location:</strong> Access switches sw-acc1 and sw-acc2</p>
+<p><strong>Current Configuration:</strong>
+- BPDU guard enabled on edge ports (good)
+- Edge ports configured correctly (good)
+- No MAC authentication
+- No 802.1X authentication
+- No dynamic VLAN assignment</p>
+<p><strong>Risk Level:</strong> HIGH</p>
+<p><strong>Impact:</strong>
+- Rogue devices can connect to any VLAN
+- No device authentication before network access
+- Compromised devices can impersonate PLCs
+- Physical security bypass trivial</p>
+<p><strong>Best Practice Violation:</strong>
+- IEC 62443-3-3 SR 1.7: Strength of password-based authentication
+- IEC 62443-3-3 SR 1.1: Unique identification and authentication
+- NIST SP 800-82: Network access control</p>
+<p><strong>Recommendation:</strong>
+- Implement 802.1X authentication on all access ports
+- Use MAC authentication bypass (MAB) for devices without 802.1X
+- Deploy dynamic VLAN assignment based on device identity
+- Implement port security (MAC address limits)
+- Use guest VLAN for unknown devices
+- Monitor and alert on new MAC addresses</p>
+<h2 id="medium-severity-issues">Medium-Severity Issues</h2>
+<h3 id="8-dhcp-security-weaknesses-medium">8. DHCP SECURITY WEAKNESSES (MEDIUM)</h3>
+<p><strong>Location:</strong> <code>gw-firewall</code> DHCP configuration</p>
+<p><strong>Current Configuration:</strong>
+- DHCP enabled on VLAN 10 only
+- Static IP reservations not visible
+- No DHCP snooping
+- No IP-MAC binding enforcement</p>
+<p><strong>Risk Level:</strong> MEDIUM</p>
+<p><strong>Impact:</strong>
+- DHCP spoofing possible
+- Rogue DHCP server attacks
+- IP address conflicts
+- ARP spoofing easier to execute
+- Man-in-the-middle attacks facilitated</p>
+<p><strong>Best Practice Violation:</strong>
+- IEC 62443-3-3 SR 3.1: Communication integrity
+- NIST SP 800-82: Secure network protocols</p>
+<p><strong>Recommendation:</strong>
+- Implement DHCP snooping on all switches
+- Configure trusted DHCP server ports only
+- Build DHCP binding database
+- Enable dynamic ARP inspection (DAI)
+- Use static IP assignments for critical assets (PLCs, HMI)
+- Implement IP Source Guard</p>
+<h3 id="9-no-network-segmentation-at-layer-2-medium">9. NO NETWORK SEGMENTATION AT LAYER 2 (MEDIUM)</h3>
+<p><strong>Location:</strong> sw-dist, sw-acc1, sw-acc2</p>
+<p><strong>Current Configuration:</strong>
+- VLANs configured (good)
+- Proper VLAN tagging (good)
+- All VLANs visible on all trunk ports
+- No private VLANs
+- No VLAN pruning</p>
+<p><strong>Risk Level:</strong> MEDIUM</p>
+<p><strong>Impact:</strong>
+- VLAN hopping possible via double-tagging
+- Unnecessary broadcast domains
+- Higher attack surface
+- Lateral movement via layer 2</p>
+<p><strong>Best Practice Violation:</strong>
+- Defense-in-depth principle
+- VLAN security best practices</p>
+<p><strong>Recommendation:</strong>
+- Implement VLAN pruning (only allow needed VLANs on trunks)
+- Use native VLAN 99 (good practice already in place)
+- Disable DTP (Dynamic Trunking Protocol)
+- Consider Private VLANs for further isolation
+- Implement Q-in-Q for additional segmentation</p>
+<p><strong>Example Configuration:</strong>
+<div class="highlight"><pre><span></span><code># Only allow necessary VLANs on each trunk
+/interface bridge vlan
+  # sw-dist to sw-acc1: Only VLANs 10,20,30,40,50
+  set [find comment=Parameterization] tagged=ether12,ether10 untagged=&quot;&quot;
+</code></pre></div></p>
+<h3 id="10-weak-dns-security-medium">10. WEAK DNS SECURITY (MEDIUM)</h3>
+<p><strong>Location:</strong> <code>gw-firewall</code> DNS configuration</p>
+<p><strong>Current Configuration:</strong>
+<div class="highlight"><pre><span></span><code>/ip dns set allow-remote-requests=yes
+</code></pre></div>
+- Static DNS entries configured
+- No DNSSEC validation
+- DNS open to all clients
+- No DNS filtering or threat intelligence</p>
+<p><strong>Risk Level:</strong> MEDIUM</p>
+<p><strong>Impact:</strong>
+- DNS cache poisoning possible
+- DNS hijacking attacks
+- No protection against malicious domains
+- Malware C2 via DNS tunneling
+- Data exfiltration via DNS</p>
+<p><strong>Best Practice Violation:</strong>
+- NIST SP 800-81: Secure Domain Name System (DNS) Deployment Guide
+- IEC 62443-3-3 SR 3.1: Communication integrity</p>
+<p><strong>Recommendation:</strong>
+- Implement DNS filtering (block malicious domains)
+- Enable DNSSEC validation
+- Use DNS RPZ (Response Policy Zones)
+- Restrict DNS to specific sources
+- Log DNS queries for anomaly detection
+- Use threat intelligence feeds
+- Consider DNS over HTTPS/TLS for external queries</p>
+<h3 id="11-no-time-synchronization-security-medium">11. NO TIME SYNCHRONIZATION SECURITY (MEDIUM)</h3>
+<p><strong>Location:</strong> <code>gw-firewall</code> NTP configuration</p>
+<p><strong>Current Configuration:</strong>
+<div class="highlight"><pre><span></span><code>/system ntp server set enabled=yes
+</code></pre></div>
+- NTP server enabled
+- No authentication
+- No source restrictions
+- Accepts requests from anywhere</p>
+<p><strong>Risk Level:</strong> MEDIUM</p>
+<p><strong>Impact:</strong>
+- NTP amplification DDoS attacks
+- Time manipulation attacks
+- Log correlation issues
+- Certificate validation failures
+- Cryptographic key generation weaknesses</p>
+<p><strong>Best Practice Violation:</strong>
+- NIST SP 1800-15: Securing Small-Business and Home IoT Devices
+- IEC 62443-3-3 SR 3.9: Protection of audit information</p>
+<p><strong>Recommendation:</strong>
+- Implement NTP authentication (symmetric keys or Autokey)
+- Restrict NTP clients to known sources
+- Use NTP client mode only for firewall (don't serve time to internet)
+- Deploy dedicated NTP server in management network
+- Monitor for NTP anomalies</p>
+<p><strong>Example Configuration:</strong>
+<div class="highlight"><pre><span></span><code># Restrict NTP to local networks only
+/ip firewall filter add action=accept chain=input \
+  dst-port=123 protocol=udp \
+  src-address-list=local-networks \
+  comment=&quot;NTP from local only&quot;
+</code></pre></div></p>
+<h3 id="12-management-interface-exposure-medium">12. MANAGEMENT INTERFACE EXPOSURE (MEDIUM)</h3>
+<p><strong>Location:</strong> <code>gw-firewall</code> input chain rules</p>
+<p><strong>Current Configuration:</strong>
+<div class="highlight"><pre><span></span><code>/ip firewall filter add action=accept chain=input \
+  comment=&quot;allow access from MGMT networks&quot; \
+  src-address-list=mgmt
+</code></pre></div>
+- Entire RFC1918 space in mgmt list (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)
+- HTTP access allowed from jumphost
+- SSH access overly permissive</p>
+<p><strong>Risk Level:</strong> MEDIUM</p>
+<p><strong>Impact:</strong>
+- Lateral movement from compromised endpoints
+- Management interface attacks from production networks
+- Unnecessary attack surface</p>
+<p><strong>Best Practice Violation:</strong>
+- IEC 62443-3-3 SR 1.3: Account management
+- Least privilege principle</p>
+<p><strong>Recommendation:</strong>
+- Restrict management access to dedicated management VLAN only
+- Use jump server for all management access
+- Implement bastion host architecture
+- Disable unnecessary services (HTTP, Telnet)
+- Use SSH with key-based authentication only
+- Implement IP whitelisting for management
+- Two-factor authentication for critical devices</p>
+<h3 id="13-insufficient-logging-and-monitoring-medium">13. INSUFFICIENT LOGGING AND MONITORING (MEDIUM)</h3>
+<p><strong>Location:</strong> <code>gw-firewall</code> and all switches</p>
+<p><strong>Current Configuration:</strong>
+- Remote syslog configured (good)
+- Default drop rules log (good when enabled)
+- No detailed traffic logging
+- No flow monitoring (NetFlow/IPFIX)
+- No IDS/IPS integration</p>
+<p><strong>Risk Level:</strong> MEDIUM</p>
+<p><strong>Impact:</strong>
+- Security incidents may go undetected
+- Difficult incident response and forensics
+- No baseline for anomaly detection
+- Cannot prove compliance</p>
+<p><strong>Best Practice Violation:</strong>
+- IEC 62443-3-3 SR 3.3: Security audit
+- IEC 62443-2-1: Audit and accountability
+- NIST SP 800-82: Security event logging</p>
+<p><strong>Recommendation:</strong>
+- Enable comprehensive logging:
+  - All firewall denies
+  - Authentication events
+  - Configuration changes
+  - Interface state changes
+- Deploy SIEM for log aggregation and correlation
+- Implement NetFlow/IPFIX for traffic analysis
+- Deploy IDS/IPS (Suricata/Snort with OT rulesets)
+- Regular log review and retention policy
+- Alert on critical events</p>
+<h3 id="14-no-network-redundancy-medium">14. NO NETWORK REDUNDANCY (MEDIUM)</h3>
+<p><strong>Location:</strong> Network topology</p>
+<p><strong>Current Configuration:</strong>
+- Single uplink from sw-dist to gw-firewall
+- No bonding or link aggregation (despite "bond" comments)
+- Single point of failure at multiple levels
+- No spanning-tree configured for redundancy</p>
+<p><strong>Risk Level:</strong> MEDIUM (Availability)</p>
+<p><strong>Impact:</strong>
+- Single link failure causes zone isolation
+- Gateway failure causes complete outage
+- No high availability
+- Extended downtime in case of failure</p>
+<p><strong>Best Practice Violation:</strong>
+- IEC 62443-3-3 SR 7.2: Resource management
+- High availability requirements for industrial systems</p>
+<p><strong>Recommendation:</strong>
+- Implement link aggregation (LACP) between devices
+- Deploy redundant firewalls (VRRP/HSRP)
+- Configure spanning-tree (RSTP/MSTP)
+- Use ring topology for switches where possible
+- Implement redundant power supplies
+- Plan for firmware update redundancy</p>
+<h2 id="low-severity-issues">Low-Severity Issues</h2>
+<h3 id="15-unnecessary-services-enabled-low">15. UNNECESSARY SERVICES ENABLED (LOW)</h3>
+<p><strong>Location:</strong> All devices</p>
+<p><strong>Services Observed:</strong>
+- HTTP enabled on firewall
+- DNS server on firewall
+- DHCP server on firewall
+- NTP server on firewall</p>
+<p><strong>Risk Level:</strong> LOW</p>
+<p><strong>Impact:</strong>
+- Increased attack surface
+- Additional vulnerability points
+- Resource consumption</p>
+<p><strong>Recommendation:</strong>
+- Disable HTTP, use HTTPS only (or CLI only)
+- Deploy dedicated DNS server
+- Deploy dedicated DHCP server
+- Use NTP client mode only</p>
+<h3 id="16-mtu-configuration-low">16. MTU CONFIGURATION (LOW)</h3>
+<p><strong>Location:</strong> All links</p>
+<p><strong>Current Configuration:</strong>
+- MTU 1500 on all links
+- VLAN interfaces MTU 1500</p>
+<p><strong>Risk Level:</strong> LOW</p>
+<p><strong>Impact:</strong>
+- Potential fragmentation issues
+- Suboptimal performance for jumbo frames
+- No impact on security</p>
+<p><strong>Recommendation:</strong>
+- Consider MTU 9000 for internal OT networks (if devices support)
+- Ensure consistent MTU across paths
+- Not a security issue, but operational consideration</p>
+<h2 id="missing-security-controls">Missing Security Controls</h2>
+<h3 id="17-no-intrusion-detection-system-critical-missing">17. NO INTRUSION DETECTION SYSTEM (CRITICAL MISSING)</h3>
+<p><strong>Required:</strong> IDS/IPS with industrial protocol awareness</p>
+<p><strong>Recommendation:</strong>
+- Deploy Suricata or Snort with ET-Open + OT-specific rulesets
+- Monitor for:
+  - Modbus function code anomalies
+  - Unauthorized PLC programming
+  - S7 PUT/GET commands
+  - OPC UA certificate violations
+- Place sensors at zone boundaries
+- Use span/mirror ports on switches for visibility</p>
+<h3 id="18-no-asset-inventory-and-management-high-missing">18. NO ASSET INVENTORY AND MANAGEMENT (HIGH MISSING)</h3>
+<p><strong>Required:</strong> Automated asset discovery and tracking</p>
+<p><strong>Recommendation:</strong>
+- Deploy industrial asset management solution
+- Maintain device inventory with:
+  - Device type and manufacturer
+  - Firmware versions
+  - Network location
+  - Device function
+  - Security criticality rating
+- Automated vulnerability scanning (passive)
+- Configuration baseline monitoring</p>
+<h3 id="19-no-industrial-protocol-gateway-high-missing">19. NO INDUSTRIAL PROTOCOL GATEWAY (HIGH MISSING)</h3>
+<p><strong>Required:</strong> Protocol break for IT/OT boundary</p>
+<p><strong>Recommendation:</strong>
+- Deploy industrial DMZ with protocol gateway
+- Break protocols at zone boundaries
+- Implement data diodes for one-way traffic
+- Use industrial firewall with DPI
+- Consider Claroty, Nozomi, or open-source alternatives</p>
+<h3 id="20-no-backup-and-recovery-procedures-medium-missing">20. NO BACKUP AND RECOVERY PROCEDURES (MEDIUM MISSING)</h3>
+<p><strong>Required:</strong> Configuration backups and disaster recovery</p>
+<p><strong>Recommendation:</strong>
+- Automated daily configuration backups
+- Version control for network configurations
+- PLC program backups
+- Documented recovery procedures
+- Regular restoration testing
+- Offline backup storage</p>
+<h2 id="compliance-mapping">Compliance Mapping</h2>
+<h3 id="iec-62443-3-3-security-levels">IEC 62443-3-3 Security Levels</h3>
+<p><strong>Current Assessment:</strong> Security Level 1 (SL1) - Protection against casual or coincidental violation</p>
+<p><strong>Target:</strong> Security Level 2 (SL2) - Protection against intentional violation using simple means</p>
+<p><strong>Gap Analysis:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Current Status</th>
+<th>Gap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SR 1.1 Human user identification</td>
+<td>Weak credentials</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>SR 1.3 Account management</td>
+<td>No centralized auth</td>
+<td>MEDIUM</td>
+</tr>
+<tr>
+<td>SR 1.7 Password authentication</td>
+<td>Default passwords</td>
+<td>CRITICAL</td>
+</tr>
+<tr>
+<td>SR 2.1 Authorization enforcement</td>
+<td>Firewall bypassed</td>
+<td>CRITICAL</td>
+</tr>
+<tr>
+<td>SR 3.1 Communication integrity</td>
+<td>No protocol validation</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>SR 3.3 Security audit</td>
+<td>Limited logging</td>
+<td>MEDIUM</td>
+</tr>
+<tr>
+<td>SR 5.1 Network segmentation</td>
+<td>VLANs present but bypassed</td>
+<td>CRITICAL</td>
+</tr>
+<tr>
+<td>SR 7.6 Network/security config</td>
+<td>Insecure defaults</td>
+<td>HIGH</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nist-sp-800-82-recommendations">NIST SP 800-82 Recommendations</h3>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Implementation Status</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network segmentation</td>
+<td>Partial - bypassed by firewall rule</td>
+<td>CRITICAL</td>
+</tr>
+<tr>
+<td>Access control</td>
+<td>Weak - default credentials</td>
+<td>CRITICAL</td>
+</tr>
+<tr>
+<td>Security monitoring</td>
+<td>Basic - needs enhancement</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>Incident response</td>
+<td>Not addressed</td>
+<td>MEDIUM</td>
+</tr>
+<tr>
+<td>Defense-in-depth</td>
+<td>Partial implementation</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>Secure protocols</td>
+<td>Not enforced</td>
+<td>HIGH</td>
+</tr>
+</tbody>
+</table>
+<h2 id="recommendations-summary">Recommendations Summary</h2>
+<h3 id="immediate-actions-critical-priority">Immediate Actions (Critical Priority)</h3>
+<ol>
+<li><strong>REMOVE "allow any for testing" firewall rule</strong></li>
+<li><strong>ENABLE default-drop firewall rule</strong></li>
+<li><strong>CHANGE all default passwords</strong> to strong, unique credentials</li>
+<li><strong>IMPLEMENT explicit zone-to-zone rules</strong> with port restrictions</li>
+<li><strong>DEPLOY IDS/IPS</strong> at zone boundaries</li>
+</ol>
+<h3 id="short-term-actions-30-days">Short-Term Actions (30 days)</h3>
+<ol>
+<li>Implement 802.1X or MAC authentication on access ports</li>
+<li>Deploy centralized authentication (RADIUS)</li>
+<li>Configure protocol-specific firewall rules</li>
+<li>Implement DHCP snooping and dynamic ARP inspection</li>
+<li>Enable comprehensive logging and SIEM integration</li>
+<li>Deploy asset inventory system</li>
+<li>Rate-limit ICMP and restrict to essential types</li>
+<li>Implement DNS security measures</li>
+</ol>
+<h3 id="medium-term-actions-90-days">Medium-Term Actions (90 days)</h3>
+<ol>
+<li>Deploy industrial protocol gateway at IT/OT boundary</li>
+<li>Implement redundancy (LACP, VRRP, spanning-tree)</li>
+<li>Establish configuration management and backup procedures</li>
+<li>Implement network access control (NAC)</li>
+<li>Deploy threat intelligence integration</li>
+<li>Conduct vulnerability assessment of OT devices</li>
+<li>Develop incident response procedures</li>
+</ol>
+<h3 id="long-term-actions-6-12-months">Long-Term Actions (6-12 months)</h3>
+<ol>
+<li>Achieve IEC 62443-3-3 Security Level 2 compliance</li>
+<li>Implement security monitoring and SOC integration</li>
+<li>Deploy data diodes for critical unidirectional flows</li>
+<li>Implement multi-factor authentication</li>
+<li>Establish security awareness training program</li>
+<li>Regular penetration testing</li>
+<li>Continuous improvement process</li>
+</ol>
+<h2 id="conclusion">Conclusion</h2>
+<p>The segmented network architecture demonstrates good foundational design with proper VLAN segmentation and zone definition. However, the <strong>critical "allow any" firewall rule completely negates the security benefits</strong> of this architecture, effectively creating a flat network.</p>
+<p><strong>Key Findings:</strong></p>
+<ul>
+<li><strong>Architecture:</strong> Good (defense-in-depth design with zones)</li>
+<li><strong>Implementation:</strong> Poor (security controls bypassed or disabled)</li>
+<li><strong>Overall Risk:</strong> HIGH (critical vulnerabilities present)</li>
+</ul>
+<p><strong>Priority Actions:</strong></p>
+<ol>
+<li>Remove firewall bypass rule</li>
+<li>Enable default-drop policy</li>
+<li>Change all default passwords</li>
+<li>Implement granular access controls</li>
+<li>Deploy monitoring and detection capabilities</li>
+</ol>
+<p>Once these critical issues are addressed, the network will provide a solid foundation for industrial security. The current state leaves the network highly vulnerable to both external attacks and insider threats.</p>
+<h2 id="references">References</h2>
+<ul>
+<li>IEC 62443-3-3: Industrial communication networks - Network and system security - Part 3-3: System security requirements and security levels</li>
+<li>NIST SP 800-82 Rev. 3: Guide to Operational Technology (OT) Security</li>
+<li>NIST SP 800-53 Rev. 5: Security and Privacy Controls for Information Systems and Organizations</li>
+<li>Purdue Enterprise Reference Architecture (PERA)</li>
+<li>ISA/IEC 62443 Standards Series</li>
+<li>SANS Industrial Control Systems Security Best Practices</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tracking"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

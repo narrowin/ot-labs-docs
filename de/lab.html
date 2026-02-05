@@ -1,0 +1,3484 @@
+
+<!doctype html>
+<html lang="de" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="OT Networks: Design & Defend">
+      
+      
+      
+        <link rel="canonical" href="https://narrowin.github.io/ot-labs-docs/de/lab.html">
+      
+      
+        <link rel="prev" href="index.html">
+      
+      
+        <link rel="next" href="exercises/index.html">
+      
+      
+        
+          <link rel="alternate" href="/ot-labs-docs/en/" hreflang="en">
+        
+          <link rel="alternate" href="/ot-labs-docs/de/" hreflang="de">
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Labor - OT Networks: Design & Defend</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+        <script src="https://unpkg.com/iframe-worker/shim"></script>
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#laborumgebung" class="md-skip">
+          Zum Inhalt
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Kopfzeile">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-header__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OT Networks: Design & Defend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Labor
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Sprache wechseln">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/en/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/de/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Suche" placeholder="Suche" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Suche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Zurücksetzen" aria-label="Zurücksetzen" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Suche wird initialisiert
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/narrowin/ot-labs-docs" title="Zum Repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-nav__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    OT Networks: Design & Defend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/narrowin/ot-labs-docs" title="Zum Repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Übersicht
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labor
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="lab.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#uberblick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Überblick
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erste-schritte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erste Schritte
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Erste Schritte">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#laborumgebung-starten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Laborumgebung starten
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ein-labor-starten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ein Labor starten
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ein Labor starten">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wasseraufbereitungs-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wasseraufbereitungs-Frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datenverkehr-mit-wireshark-betrachten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datenverkehr mit Wireshark betrachten
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kurzreferenz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kurzreferenz
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kurzreferenz">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#das-management-netzwerk-verstehen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Das Management-Netzwerk verstehen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Das Management-Netzwerk verstehen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#management-ebene-192168100024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management-Ebene (192.168.100.0/24)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#labor-topologie-ebene-100008" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Labor-Topologie-Ebene (10.0.0.0/8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sps-weboberflachen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPS-Weboberflächen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SPS-Weboberflächen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sps-weboberflachen-in-codespaces-aufrufen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPS-Weboberflächen in Codespaces aufrufen
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standard-anmeldedaten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard-Anmeldedaten
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#erste-5-minuten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erste 5 Minuten
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laborarchitektur" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Laborarchitektur
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Laborarchitektur">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#netzwerktopologie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerktopologie
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Netzwerktopologie">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#netzwerkgerate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerkgeräte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#betriebstechnik-assets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Betriebstechnik-Assets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unterstutzungsinfrastruktur" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unterstützungsinfrastruktur
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sicherheitszonen-und-segmentierung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sicherheitszonen und Segmentierung
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autorisierte-datenflusse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autorisierte Datenflüsse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laborkomponenten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Laborkomponenten
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Laborkomponenten">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sps-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPS-Container
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SPS-Container">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sps-fahigkeiten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPS-Fähigkeiten
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#netzwerkkonfiguration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerkkonfiguration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#netzwerkinfrastruktur" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerkinfrastruktur
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Netzwerkinfrastruktur">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#geratefahigkeiten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gerätefähigkeiten
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategische-uberwachungspunkte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategische Überwachungspunkte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unterstutzungssysteme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unterstützungssysteme
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Unterstützungssysteme">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxmox-jumphost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        proxmox-jumphost
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#netzwerkadressierung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerkadressierung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Netzwerkadressierung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#management-netzwerk-192168100024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management-Netzwerk: 192.168.100.0/24
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Management-Netzwerk: 192.168.100.0/24">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#netzwerkgerate_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerkgeräte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-systeme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host-Systeme
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan-10-hygiene-netzwerk-10100024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN 10 - Hygiene-Netzwerk: 10.10.0.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan-20-prozess-netzwerk-10200024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN 20 - Prozess-Netzwerk: 10.20.0.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan-30-entsorgungs-netzwerk-10300024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN 30 - Entsorgungs-Netzwerk: 10.30.0.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan-40-leitstellen-netzwerk-10400024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN 40 - Leitstellen-Netzwerk: 10.40.0.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan-50-parametrierungs-netzwerk-10500024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN 50 - Parametrierungs-Netzwerk: 10.50.0.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dmz-netzwerk-222024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DMZ-Netzwerk: 2.2.2.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internet-simulation-111024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internet-Simulation: 1.1.1.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laborzugriff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Laborzugriff
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Laborzugriff">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verbindungsmethoden" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verbindungsmethoden
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zugriff-uber-vs-code-containerlab-erweiterung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zugriff über VS Code Containerlab-Erweiterung
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verfugbare-werkzeuge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verfügbare Werkzeuge
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verfügbare Werkzeuge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#netzwerkanalyse-werkzeuge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerkanalyse-Werkzeuge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dsniff-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dsniff-Suite
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workshop-laborubungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workshop-Laborübungen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workshop-Laborübungen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#teil-1-ot-netzwerke-verstehen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Teil 1: OT-Netzwerke verstehen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Teil 1: OT-Netzwerke verstehen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ubung-11-laboreinfuhrung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Übung 1.1: Laboreinführung
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ubung-12-vlan-entdeckung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Übung 1.2: VLAN-Entdeckung
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#teil-2-ot-netzwerk-sicherheitsuberwachung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Teil 2: OT-Netzwerk-Sicherheitsüberwachung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Teil 2: OT-Netzwerk-Sicherheitsüberwachung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ubung-21-fernzugriffsanalyse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Übung 2.1: Fernzugriffsanalyse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ubung-22-mikrosegmentierung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Übung 2.2: Mikrosegmentierung
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#teil-3-einstieg-in-die-uberwachung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Teil 3: Einstieg in die Überwachung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Teil 3: Einstieg in die Überwachung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ubung-31-firewall-regeldesign" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Übung 3.1: Firewall-Regeldesign
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fehlersuche-und-verifikation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fehlersuche und Verifikation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fehlersuche und Verifikation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#labor-gesundheitscheck-skript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Labor-Gesundheitscheck-Skript
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#erweiterungsideen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erweiterungsideen
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Übungen
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Übungen
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Übersicht
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex1-vlan-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. VLAN-Erkennung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex2-arp-spoofing.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. ARP-Spoofing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex3-spanning-tree.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Spanning Tree
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex4-link-aggregation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Link-Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex5-reconnaissance.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Fernzugriff
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex6-protocol-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Protokoll-Erkennung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex7-segmentation-firewall.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Segmentierung & Firewall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/appendix.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anhang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cheatsheet.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheatsheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Container101.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container-Grundlagen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="automation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automatisierung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="slides.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Folien
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="feedback.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#uberblick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Überblick
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erste-schritte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erste Schritte
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Erste Schritte">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#laborumgebung-starten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Laborumgebung starten
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ein-labor-starten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ein Labor starten
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ein Labor starten">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wasseraufbereitungs-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wasseraufbereitungs-Frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datenverkehr-mit-wireshark-betrachten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datenverkehr mit Wireshark betrachten
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kurzreferenz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kurzreferenz
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kurzreferenz">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#das-management-netzwerk-verstehen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Das Management-Netzwerk verstehen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Das Management-Netzwerk verstehen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#management-ebene-192168100024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management-Ebene (192.168.100.0/24)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#labor-topologie-ebene-100008" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Labor-Topologie-Ebene (10.0.0.0/8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sps-weboberflachen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPS-Weboberflächen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SPS-Weboberflächen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sps-weboberflachen-in-codespaces-aufrufen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPS-Weboberflächen in Codespaces aufrufen
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standard-anmeldedaten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard-Anmeldedaten
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#erste-5-minuten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erste 5 Minuten
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laborarchitektur" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Laborarchitektur
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Laborarchitektur">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#netzwerktopologie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerktopologie
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Netzwerktopologie">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#netzwerkgerate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerkgeräte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#betriebstechnik-assets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Betriebstechnik-Assets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unterstutzungsinfrastruktur" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unterstützungsinfrastruktur
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sicherheitszonen-und-segmentierung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sicherheitszonen und Segmentierung
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autorisierte-datenflusse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autorisierte Datenflüsse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laborkomponenten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Laborkomponenten
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Laborkomponenten">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sps-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPS-Container
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SPS-Container">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sps-fahigkeiten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPS-Fähigkeiten
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#netzwerkkonfiguration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerkkonfiguration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#netzwerkinfrastruktur" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerkinfrastruktur
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Netzwerkinfrastruktur">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#geratefahigkeiten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gerätefähigkeiten
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategische-uberwachungspunkte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategische Überwachungspunkte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unterstutzungssysteme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unterstützungssysteme
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Unterstützungssysteme">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxmox-jumphost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        proxmox-jumphost
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#netzwerkadressierung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerkadressierung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Netzwerkadressierung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#management-netzwerk-192168100024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management-Netzwerk: 192.168.100.0/24
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Management-Netzwerk: 192.168.100.0/24">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#netzwerkgerate_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerkgeräte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-systeme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host-Systeme
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan-10-hygiene-netzwerk-10100024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN 10 - Hygiene-Netzwerk: 10.10.0.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan-20-prozess-netzwerk-10200024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN 20 - Prozess-Netzwerk: 10.20.0.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan-30-entsorgungs-netzwerk-10300024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN 30 - Entsorgungs-Netzwerk: 10.30.0.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan-40-leitstellen-netzwerk-10400024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN 40 - Leitstellen-Netzwerk: 10.40.0.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan-50-parametrierungs-netzwerk-10500024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN 50 - Parametrierungs-Netzwerk: 10.50.0.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dmz-netzwerk-222024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DMZ-Netzwerk: 2.2.2.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internet-simulation-111024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internet-Simulation: 1.1.1.0/24
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laborzugriff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Laborzugriff
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Laborzugriff">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verbindungsmethoden" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verbindungsmethoden
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zugriff-uber-vs-code-containerlab-erweiterung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zugriff über VS Code Containerlab-Erweiterung
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verfugbare-werkzeuge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verfügbare Werkzeuge
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verfügbare Werkzeuge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#netzwerkanalyse-werkzeuge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Netzwerkanalyse-Werkzeuge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dsniff-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dsniff-Suite
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workshop-laborubungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workshop-Laborübungen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workshop-Laborübungen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#teil-1-ot-netzwerke-verstehen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Teil 1: OT-Netzwerke verstehen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Teil 1: OT-Netzwerke verstehen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ubung-11-laboreinfuhrung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Übung 1.1: Laboreinführung
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ubung-12-vlan-entdeckung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Übung 1.2: VLAN-Entdeckung
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#teil-2-ot-netzwerk-sicherheitsuberwachung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Teil 2: OT-Netzwerk-Sicherheitsüberwachung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Teil 2: OT-Netzwerk-Sicherheitsüberwachung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ubung-21-fernzugriffsanalyse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Übung 2.1: Fernzugriffsanalyse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ubung-22-mikrosegmentierung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Übung 2.2: Mikrosegmentierung
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#teil-3-einstieg-in-die-uberwachung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Teil 3: Einstieg in die Überwachung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Teil 3: Einstieg in die Überwachung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ubung-31-firewall-regeldesign" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Übung 3.1: Firewall-Regeldesign
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fehlersuche-und-verifikation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fehlersuche und Verifikation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fehlersuche und Verifikation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#labor-gesundheitscheck-skript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Labor-Gesundheitscheck-Skript
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#erweiterungsideen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erweiterungsideen
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="laborumgebung">Laborumgebung</h1>
+<h2 id="uberblick">Überblick</h2>
+<p>Dieser Workshop nutzt eine realistische OT-Netzwerk-Laborumgebung, die mit Containerlab aufgebaut wurde. Das Labor simuliert eine typische Industrieanlage mit mehreren Sicherheitszonen, SPSen, Netzwerksegmentierung und Überwachungspunkten, die reale Deployments widerspiegeln können.</p>
+<p>Das Labor ist herstellerneutral und verwendet ausschliesslich Open-Source- und kostenfreie Werkzeuge. Alle Komponenten laufen in Containern, was schnelle Bereitstellung, Experimente und Zurücksetzen während praktischer Übungen ermöglicht.</p>
+<p><img alt="Codespace Setup abgeschlossen" src="img/codespace-setup-complete.png" /></p>
+<h2 id="erste-schritte">Erste Schritte</h2>
+<h3 id="laborumgebung-starten">Laborumgebung starten</h3>
+<p>Das Labor läuft in einem Entwicklungscontainer mit allen erforderlichen Werkzeugen vorinstalliert. Wählen Sie eine Option:</p>
+<p><strong>Option 1: GitHub Codespaces (Empfohlen)</strong></p>
+<p>GitHub Codespaces bietet eine cloudbasierte Umgebung, die über Ihren Browser zugänglich ist. Keine lokale Installation erforderlich.</p>
+<ol>
+<li>Gehen Sie zu <a href="https://github.com/narrowin-labs/ot-lab">github.com/narrowin-labs/ot-lab</a></li>
+<li>Klicken Sie auf "Codespaces Open in Codespaces"</li>
+<li>Warten Sie 5-10 Minuten für die initiale Einrichtung (nur beim ersten Mal)</li>
+</ol>
+<p><strong>Initiale Einrichtungszeit:</strong> Beim ersten Erstellen eines Codespace werden alle Container-Images heruntergeladen und konfiguriert. Dies dauert etwa 5-10 Minuten. Die Einrichtung ist abgeschlossen, wenn Sie die Docker-Images-Liste im Terminal sehen:</p>
+<div class="highlight"><pre><span></span><code>❯ docker images
+REPOSITORY                                    TAG       IMAGE ID       CREATED         SIZE
+ghcr.io/narrowin/ot-sec-lab-hmi               latest    96b8774dc7e4   5 days ago      731MB
+ghcr.io/narrowin/ot-sec-lab-plc               latest    9f7db1f2f47d   7 days ago      333MB
+ghcr.io/kaelemc/wireshark-vnc-docker          latest    4cebbe954b93   3 months ago    554MB
+ghcr.io/narrowin/ot-sec-lab-linux             latest    643864c992c6   4 months ago    908MB
+ghcr.io/narrowin/vrnetlab_mikrotik_routeros   7.18      50052d2a79a1   6 months ago    1.01GB
+ghcr.io/siemens/ghostwire                     latest    18664310d22f   15 months ago   36.5MB
+ghcr.io/siemens/packetflix                    latest    6bed7a0d2a95   20 months ago   122MB
+</code></pre></div>
+<p>Nachfolgende Starts sind deutlich schneller (unter 1 Minute).</p>
+<p>Dokumentation: <a href="https://docs.github.com/en/codespaces">docs.github.com/codespaces</a></p>
+<h3 id="ein-labor-starten">Ein Labor starten</h3>
+<p>Öffnen Sie die Containerlab-Erweiterung, klicken Sie mit der rechten Maustaste auf eines der beiden Labore und wählen Sie "Edit topology (TopoViewer)":</p>
+<p><img alt="Labor aus Containerlab-Erweiterung bereitstellen" src="img/clab-start.png" /></p>
+<p>Klicken Sie auf das Play-Symbol, um das Labor zu deployen. Dies startet das Labor. Warten Sie 3-5 Minuten, bis das Labor vollständig funktionsfähig ist. Sobald alle Knoten grün sind:</p>
+<p><img alt="Laufendes Labor bereit" src="img/clab-up-and-running.png" /></p>
+<p>führen Sie im Terminal aus: <code>scripts/lab-test.py ot-sec-flat</code> oder <code>scripts/lab-test.py ot-sec-segmented</code>, je nachdem, was Sie gestartet haben. Wenn alle Checks des Testskripts grün sind, sind Sie startklar.</p>
+<h4 id="wasseraufbereitungs-frontend">Wasseraufbereitungs-Frontend</h4>
+<p>Öffnen Sie den Ports-Bereich im unteren Panel, klicken Sie mit der rechten Maustaste auf <code>HMI WeChromium bVNC</code> oder <code>ABB 800xA HMI Interface</code> und wählen Sie <code>Open in Browser</code>.
+<img alt="Laufendes Labor bereit" src="img/clab-ports-selection.png" /></p>
+<p>Experimentieren Sie mit der OT-Ausrüstung:
+<img alt="Laufendes Labor bereit" src="img/clab-abb-interface.png" /></p>
+<h4 id="datenverkehr-mit-wireshark-betrachten">Datenverkehr mit Wireshark betrachten</h4>
+<p>Sobald das Labor läuft, können Sie <strong>jede</strong> Kommunikation mit Live-Paketmitschnitten überwachen. Klicken Sie mit der rechten Maustaste auf einen Link im TopoViewer und wählen Sie, auf welcher Seite des Links Sie mitschneiden möchten. Dies öffnet Wireshark innerhalb von VS Code zur Analyse des Datenverkehrs.</p>
+<p><img alt="Laufendes Labor bereit" src="img/clab-packet-capture.png" /></p>
+<p>Beim ersten Mal fragt VS Code, ob Sie mit Edgeshark öffnen möchten: wählen Sie ja.</p>
+<p><img alt="Mit Edgeshark starten" src="img/clab-edgeshark-question.png" /></p>
+<p>Beim ersten Start kann das neu erstellte Fenster mit einem Fehler starten. Schliessen Sie es und versuchen Sie es erneut.</p>
+<h2 id="kurzreferenz">Kurzreferenz</h2>
+<h3 id="das-management-netzwerk-verstehen">Das Management-Netzwerk verstehen</h3>
+<p>Das Labor hat zwei separate Netzwerkebenen:</p>
+<h4 id="management-ebene-192168100024">Management-Ebene (192.168.100.0/24)</h4>
+<ul>
+<li>Automatisch von Containerlab erstellt</li>
+<li>Ermöglicht Zugriff auf Container vom Host</li>
+<li>Verwenden Sie diese IPs für SSH oder Weboberflächen</li>
+<li>Simuliert Out-of-Band-Management in realen Netzwerken</li>
+</ul>
+<h4 id="labor-topologie-ebene-100008">Labor-Topologie-Ebene (10.0.0.0/8)</h4>
+<ul>
+<li>Das Netzwerk für Ihre Tests</li>
+<li>Container-Kommunikation untereinander</li>
+<li>Anwendung von Netzwerksegmentierung und Sicherheitsrichtlinien</li>
+</ul>
+<div class="highlight"><pre><span></span><code>Ihr Host-Rechner / Browser
+         |
+         | Exportierte Ports
+         | :5800 -&gt; HMI WebVNC (Chromium-Browser im Labor)
+         | :8080 -&gt; ABB 800xA HMI (10.40.0.11:8080)
+         | :8000 -&gt; MkDocs-Dokumentation
+         |
+         | Direkter Zugriff über Docker-Bridge
+         |
+    +----v--------------------------------------------+
+    |  Management-Netzwerk: 192.168.100.0/24          |
+    |  (Containerlab erstellt dies automatisch)       |
+    |                                                 |
+    |  .11      .12      .13      .52      .53   .57  |
+    |  [gw]    [sw]    [sw]    [jump]   [plc]  [abb]  |
+    +----+------+-------+--------+--------+------+----+
+         |      |       |        |        |      |
+         |      |       |        |        |      |
+    +----+------+-------+--------+--------+------+----+
+    |  Labor-Topologie-Netzwerke                      |
+    |  10.10.0.0/24, 10.20.0.0/24, 10.30.0.0/24, etc. |
+    |  (Ihr eigentliches zu testendes Netzwerk)       |
+    +-------------------------------------------------+
+</code></pre></div>
+<p>When you SSH to a device using 192.168.100.x, you are accessing it through the management layer, not through the lab topology. This mirrors how real industrial networks use separate management networks.</p>
+<h3 id="sps-weboberflachen">SPS-Weboberflächen</h3>
+<p>Eine vollständige Liste der SPS-Weboberflächen und deren URLs finden Sie im <a href="cheatsheet.html#sps-weboberflachen">Spickzettel</a>.</p>
+<h4 id="sps-weboberflachen-in-codespaces-aufrufen">SPS-Weboberflächen in Codespaces aufrufen</h4>
+<p>In GitHub Codespaces sind alle SPS-Weboberflächen über den integrierten Chromium HMI WebVNC-Browser zugänglich:</p>
+<ol>
+<li>Öffnen Sie das <strong>Ports</strong>-Panel in VS Code (unteres Panel)</li>
+<li>Suchen Sie den <strong>HMI WeChromium bVNC (5800)</strong>-Port</li>
+<li>Rechtsklick und <strong>Open in Browser</strong> wählen</li>
+<li>Ein Browserfenster öffnet sich mit der Labordokumentation</li>
+<li>Klicken Sie auf einen SPS-Link in der Dokumentation, um die Weboberfläche zu öffnen</li>
+</ol>
+<p>Dieser Ansatz ermöglicht Zugriff auf alle SPS-Weboberflächen ohne individuelles Port-Forwarding. Der Browser läuft innerhalb des Labornetzwerks mit direktem Zugriff auf alle Geräte.</p>
+<p><strong>Alternativer direkter Port-Zugriff:</strong></p>
+<p>Einzelne Ports können auch direkt über Port-Forwarding aufgerufen werden:</p>
+<ul>
+<li>Port 8080 leitet zur ABB 800xA HMI-Schnittstelle weiter (10.40.0.11:8080)</li>
+<li>Klicken Sie auf das Globus-Symbol neben einem weitergeleiteten Port im Ports-Panel</li>
+<li>Weitergeleitete Ports sind standardmässig privat (GitHub-Authentifizierung erforderlich)</li>
+</ul>
+<h3 id="standard-anmeldedaten">Standard-Anmeldedaten</h3>
+<p>Alle Laborgeräte verwenden standardisierte Anmeldedaten:</p>
+<div class="highlight"><pre><span></span><code>Benutzername: admin
+Passwort: admin
+</code></pre></div>
+<h3 id="erste-5-minuten">Erste 5 Minuten</h3>
+<ol>
+<li>SSH zum Jumphost: <code>ssh admin@192.168.100.52</code></li>
+<li>Ping zu einer SPS (VLAN 10): <code>ping 10.10.0.11</code></li>
+<li>Labor inspizieren: <code>clab inspect -t ot-sec-segmented.clab.yml</code></li>
+<li>Optional: SPS-Weboberfläche öffnen: <code>http://10.10.0.11:8080</code> (falls aktiviert)</li>
+<li>SSH-Zugriff zur SPS testen: <code>ssh admin@192.168.100.53</code></li>
+</ol>
+<h2 id="laborarchitektur">Laborarchitektur</h2>
+<h3 id="netzwerktopologie">Netzwerktopologie</h3>
+<p>Das Labor implementiert eine Defense-in-Depth-Architektur mit folgenden Komponenten:</p>
+<h4 id="netzwerkgerate">Netzwerkgeräte</h4>
+<table>
+<thead>
+<tr>
+<th>Gerät</th>
+<th>Rolle</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gw-firewall</code></td>
+<td>Gateway-Firewall</td>
+<td>IT/OT-Grenzschutz und Routing</td>
+</tr>
+<tr>
+<td><code>sw-dist</code></td>
+<td>Distribution-Switch</td>
+<td>Kernvermittlung des OT-Netzwerks</td>
+</tr>
+<tr>
+<td><code>sw-acc1</code></td>
+<td>Access-Switch 1</td>
+<td>Zonenvermittlung für VLANs 10/20/30</td>
+</tr>
+<tr>
+<td><code>sw-acc2</code></td>
+<td>Access-Switch 2</td>
+<td>Zonenvermittlung für VLANs 10/40/50</td>
+</tr>
+</tbody>
+</table>
+<h4 id="betriebstechnik-assets">Betriebstechnik-Assets</h4>
+<table>
+<thead>
+<tr>
+<th>Gerät</th>
+<th>Hersteller</th>
+<th>Standort</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>wago-plc2a-vlan10</code></td>
+<td>WAGO</td>
+<td>VLAN 10 (Hygiene)</td>
+<td>SPS</td>
+</tr>
+<tr>
+<td><code>wago-plc2b-vlan10</code></td>
+<td>WAGO</td>
+<td>VLAN 10 (Hygiene)</td>
+<td>SPS</td>
+</tr>
+<tr>
+<td><code>ctrlx-plc3-vlan20</code></td>
+<td>Bosch Rexroth (ctrlX)</td>
+<td>VLAN 20 (Prozess)</td>
+<td>SPS</td>
+</tr>
+<tr>
+<td><code>schneider-plc4-vlan30</code></td>
+<td>Schneider Electric</td>
+<td>VLAN 30 (Entsorgung)</td>
+<td>SPS</td>
+</tr>
+<tr>
+<td><code>abb-800xa-vlan40</code></td>
+<td>ABB</td>
+<td>VLAN 40 (Leitstelle)</td>
+<td>HMI/Steuerung</td>
+</tr>
+<tr>
+<td><code>dell-ews1-vlan50</code></td>
+<td>Dell Engineering Workstation</td>
+<td>VLAN 50 (Parametrierung)</td>
+<td>EWS</td>
+</tr>
+<tr>
+<td><code>hirschmann-edge1-vlan50</code></td>
+<td>Hirschmann Edge Gateway</td>
+<td>VLAN 50 (Parametrierung)</td>
+<td>Edge-Gateway</td>
+</tr>
+</tbody>
+</table>
+<h4 id="unterstutzungsinfrastruktur">Unterstützungsinfrastruktur</h4>
+<table>
+<thead>
+<tr>
+<th>Gerät</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>proxmox-jumphost</code></td>
+<td>Fernzugriffs-Gateway in DMZ</td>
+</tr>
+<tr>
+<td><code>panasonic-toughbook-internet</code></td>
+<td>Externe Konnektivitätssimulation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sicherheitszonen-und-segmentierung">Sicherheitszonen und Segmentierung</h3>
+<p>Das Labor implementiert IEC 62443-basierte Sicherheitszonen mit definierten Security Levels (SL):</p>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>Funktion</th>
+<th>Typische Assets</th>
+<th>SL</th>
+<th>Begründung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>OT-DMZ</strong></td>
+<td>Demilitarisierte Zone zwischen IT und OT</td>
+<td>Jumphosts, Patch-Server, Update-Proxies, Historians, Fernzugriffs-Gateways</td>
+<td>2</td>
+<td>Schutz vor absichtlichem Missbrauch; verbindet SL 1 (IT) und SL 3 (OT-Kern)</td>
+</tr>
+<tr>
+<td><strong>OT-Operations: Hygiene</strong></td>
+<td>Sanitär- und Hilfssysteme</td>
+<td>SPSen, Ventile, Sensoren (VLAN 10)</td>
+<td>3</td>
+<td>Sicherheits- oder Compliance-relevant; erfordert höhere Absicherung</td>
+</tr>
+<tr>
+<td><strong>OT-Operations: Prozess</strong></td>
+<td>Kernproduktionssteuerung</td>
+<td>Haupt-SPSen, Sensoren, Aktoren (VLAN 20)</td>
+<td>2</td>
+<td>Kernprozesssteuerung; Schutz gegen qualifizierte Angreifer</td>
+</tr>
+<tr>
+<td><strong>OT-Engineering: Netzwerkmanagement</strong></td>
+<td>Infrastrukturmanagement</td>
+<td>Managementserver, SNMP, Backup-Systeme</td>
+<td>3</td>
+<td>Sensible Infrastruktur; starke Authentifizierung erforderlich</td>
+</tr>
+<tr>
+<td><strong>OT-Engineering: Parametrierung</strong></td>
+<td>Engineering und Programmierung</td>
+<td>Engineering-Workstations, Codesys, Laptops</td>
+<td>2</td>
+<td>Eingeschränkter Zugriff; Fokus auf Integrität und kontrollierte Verbindungen</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Hinweis:</strong> Security Level (SL) gemäss IEC 62443-Standard</p>
+<h3 id="autorisierte-datenflusse">Autorisierte Datenflüsse</h3>
+<p>Das Labor implementiert kontrollierte Kommunikationspfade zwischen Zonen:</p>
+<table>
+<thead>
+<tr>
+<th>Von</th>
+<th>Nach</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Internet (IT)</td>
+<td>OT-DMZ (Jumphost)</td>
+<td>Fernzugriff für Ingenieure</td>
+</tr>
+<tr>
+<td>OT-DMZ (Jumphost)</td>
+<td>OT-Operations (Prozess/Steuerung)</td>
+<td>Engineering-Zugriff zu SPSen</td>
+</tr>
+<tr>
+<td>OT-DMZ (Jumphost)</td>
+<td>OT-Engineering (Netzwerkmanagement)</td>
+<td>Netzwerkgerätemanagement</td>
+</tr>
+<tr>
+<td>OT-Engineering (Param)</td>
+<td>OT-Operations (Prozess)</td>
+<td>SPS-Programmierung und Updates</td>
+</tr>
+<tr>
+<td>OT-Operations (Prozess)</td>
+<td>OT-Operations (Hygiene)</td>
+<td>Inter-Prozess-Kommunikation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="laborkomponenten">Laborkomponenten</h2>
+<h3 id="sps-container">SPS-Container</h3>
+<p>Jede SPS im Labor läuft mit CODESYS-Runtime und simuliert eine echte Industriesteuerung.</p>
+<h4 id="sps-fahigkeiten">SPS-Fähigkeiten</h4>
+<p>Alle SPSen sind containerisierte Ubuntu-Systeme mit:</p>
+<ul>
+<li>CODESYS Control Linux SL (IEC 61131-3-konforme SoftSPS mit Soft-Echtzeiteigenschaften)</li>
+<li>Modbus TCP, PROFINET, EtherNET/IP und OPC-UA-Unterstützung</li>
+<li>Webbasiertes HMI (Port 8080)</li>
+<li>SSH-Zugriff für Konfiguration</li>
+<li>Simulierte I/O und Prozessdaten</li>
+</ul>
+<h4 id="netzwerkkonfiguration">Netzwerkkonfiguration</h4>
+<table>
+<thead>
+<tr>
+<th>Netzwerk</th>
+<th>Subnetz</th>
+<th>VLAN</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hygiene (VLAN 10)</td>
+<td><code>10.10.0.0/24</code></td>
+<td>10</td>
+<td>Sanitärsysteme</td>
+</tr>
+<tr>
+<td>Prozess (VLAN 20)</td>
+<td><code>10.20.0.0/24</code></td>
+<td>20</td>
+<td>Kernproduktionssteuerung</td>
+</tr>
+<tr>
+<td>Entsorgung (VLAN 30)</td>
+<td><code>10.30.0.0/24</code></td>
+<td>30</td>
+<td>Abfallentsorgungssysteme</td>
+</tr>
+<tr>
+<td>Leitstelle (VLAN 40)</td>
+<td><code>10.40.0.0/24</code></td>
+<td>40</td>
+<td>HMI- und Steuerungssysteme</td>
+</tr>
+<tr>
+<td>Parametrierung (VLAN 50)</td>
+<td><code>10.50.0.0/24</code></td>
+<td>50</td>
+<td>Engineering-Workstations</td>
+</tr>
+</tbody>
+</table>
+<h3 id="netzwerkinfrastruktur">Netzwerkinfrastruktur</h3>
+<p>Alle Netzwerkgeräte laufen mit MikroTik RouterOS 7.18 in virtualisierten Containern.</p>
+<h4 id="geratefahigkeiten">Gerätefähigkeiten</h4>
+<table>
+<thead>
+<tr>
+<th>Funktion</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VLAN-Tagging</td>
+<td>Volle 802.1Q VLAN-Unterstützung für Netzwerksegmentierung</td>
+</tr>
+<tr>
+<td>Port-Mirroring</td>
+<td>SPAN-Ports für nicht-intrusive Verkehrsmitschnitte</td>
+</tr>
+<tr>
+<td>Firewall</td>
+<td>Stateful Packet Filtering und Zugriffskontrolle</td>
+</tr>
+<tr>
+<td>Routing</td>
+<td>Inter-Zonen-Routing mit Policy-basierter Weiterleitung</td>
+</tr>
+<tr>
+<td>SNMP-Überwachung</td>
+<td>Netzwerkmanagement- und Überwachungsintegration</td>
+</tr>
+<tr>
+<td>MAC-Management</td>
+<td>MAC-Adresstabelle und Sicherheitsfunktionen</td>
+</tr>
+</tbody>
+</table>
+<h4 id="strategische-uberwachungspunkte">Strategische Überwachungspunkte</h4>
+<table>
+<thead>
+<tr>
+<th>Standort</th>
+<th>Sichtbarkeit</th>
+<th>Anwendungsfall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gateway-Firewall</td>
+<td>OT-Internet-Grenze</td>
+<td>Externe Bedrohungen, Fernzugriffsüberwachung</td>
+</tr>
+<tr>
+<td>Distribution-Switch</td>
+<td>Inter-Zonen-Verkehr</td>
+<td>Zonen-zu-Zonen-Kommunikationsmuster</td>
+</tr>
+<tr>
+<td>Access-Switches</td>
+<td>Zonen-interner Verkehr</td>
+<td>Gerätekommunikation innerhalb von Zonen</td>
+</tr>
+</tbody>
+</table>
+<h3 id="unterstutzungssysteme">Unterstützungssysteme</h3>
+<h4 id="proxmox-jumphost">proxmox-jumphost</h4>
+<table>
+<thead>
+<tr>
+<th>Funktion</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rolle</td>
+<td>Fernzugriffs-Gateway in DMZ</td>
+</tr>
+<tr>
+<td>Werkzeuge</td>
+<td>Vorinstallierte Netzwerkwerkzeuge für Übungen</td>
+</tr>
+<tr>
+<td>Zugriff</td>
+<td>SSH von Ihrem Laptop; verwenden Sie dies für alle Befehle, sofern nicht anders angegeben</td>
+</tr>
+</tbody>
+</table>
+<h2 id="netzwerkadressierung">Netzwerkadressierung</h2>
+<h3 id="management-netzwerk-192168100024">Management-Netzwerk: 192.168.100.0/24</h3>
+<p>Alle Laborgeräte sind über das Management-Netzwerk zugänglich.</p>
+<h4 id="netzwerkgerate_1">Netzwerkgeräte</h4>
+<table>
+<thead>
+<tr>
+<th>Gerät</th>
+<th>Management-IP</th>
+<th>Container-Name</th>
+<th>Zugriff</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gateway-Firewall</td>
+<td><code>192.168.100.11</code></td>
+<td><code>clab-ot-sec-segmented-gw-firewall</code></td>
+<td>SSH, Web</td>
+</tr>
+<tr>
+<td>Distribution-Switch</td>
+<td><code>192.168.100.12</code></td>
+<td><code>clab-ot-sec-segmented-sw-dist</code></td>
+<td>SSH, Web</td>
+</tr>
+<tr>
+<td>Access-Switch 1</td>
+<td><code>192.168.100.13</code></td>
+<td><code>clab-ot-sec-segmented-sw-acc1</code></td>
+<td>SSH, Web</td>
+</tr>
+<tr>
+<td>Access-Switch 2</td>
+<td><code>192.168.100.14</code></td>
+<td><code>clab-ot-sec-segmented-sw-acc2</code></td>
+<td>SSH, Web</td>
+</tr>
+</tbody>
+</table>
+<h4 id="host-systeme">Host-Systeme</h4>
+<table>
+<thead>
+<tr>
+<th>Gerät</th>
+<th>Management-IP</th>
+<th>Container-Name</th>
+<th>Zugriff</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Internet</td>
+<td><code>192.168.100.51</code></td>
+<td><code>clab-ot-sec-segmented-panasonic-toughbook-internet</code></td>
+<td>SSH</td>
+</tr>
+<tr>
+<td>Jumphost</td>
+<td><code>192.168.100.52</code></td>
+<td><code>clab-ot-sec-segmented-proxmox-jumphost</code></td>
+<td>SSH</td>
+</tr>
+<tr>
+<td>wago-plc2a-vlan10</td>
+<td><code>192.168.100.53</code></td>
+<td><code>clab-ot-sec-segmented-wago-plc2a-vlan10</code></td>
+<td>SSH, Web</td>
+</tr>
+<tr>
+<td>wago-plc2b-vlan10</td>
+<td><code>192.168.100.54</code></td>
+<td><code>clab-ot-sec-segmented-wago-plc2b-vlan10</code></td>
+<td>SSH, Web</td>
+</tr>
+<tr>
+<td>ctrlx-plc3-vlan20</td>
+<td><code>192.168.100.55</code></td>
+<td><code>clab-ot-sec-segmented-ctrlx-plc3-vlan20</code></td>
+<td>SSH, Web</td>
+</tr>
+<tr>
+<td>schneider-plc4-vlan30</td>
+<td><code>192.168.100.56</code></td>
+<td><code>clab-ot-sec-segmented-schneider-plc4-vlan30</code></td>
+<td>SSH, Web</td>
+</tr>
+<tr>
+<td>abb-800xa-vlan40</td>
+<td><code>192.168.100.57</code></td>
+<td><code>clab-ot-sec-segmented-abb-800xa-vlan40</code></td>
+<td>SSH, Web</td>
+</tr>
+<tr>
+<td>dell-ews1-vlan50</td>
+<td><code>192.168.100.58</code></td>
+<td><code>clab-ot-sec-segmented-dell-ews1-vlan50</code></td>
+<td>SSH</td>
+</tr>
+<tr>
+<td>hirschmann-edge1-vlan50</td>
+<td><code>192.168.100.59</code></td>
+<td><code>clab-ot-sec-segmented-hirschmann-edge1-vlan50</code></td>
+<td>Edge-Gateway</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vlan-10-hygiene-netzwerk-10100024">VLAN 10 - Hygiene-Netzwerk: 10.10.0.0/24</h3>
+<table>
+<thead>
+<tr>
+<th>Gerät</th>
+<th>IP-Adresse</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gateway</td>
+<td><code>10.10.0.1</code></td>
+<td>Standard-Gateway (gw-firewall)</td>
+</tr>
+<tr>
+<td>wago-plc2a-vlan10</td>
+<td><code>10.10.0.11</code></td>
+<td>Hygiene-SPS</td>
+</tr>
+<tr>
+<td>wago-plc2b-vlan10</td>
+<td><code>10.10.0.12</code></td>
+<td>Hygiene-SPS</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vlan-20-prozess-netzwerk-10200024">VLAN 20 - Prozess-Netzwerk: 10.20.0.0/24</h3>
+<table>
+<thead>
+<tr>
+<th>Gerät</th>
+<th>IP-Adresse</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gateway</td>
+<td><code>10.20.0.1</code></td>
+<td>Standard-Gateway (gw-firewall)</td>
+</tr>
+<tr>
+<td>ctrlx-plc3-vlan20</td>
+<td><code>10.20.0.11</code></td>
+<td>Prozess-SPS</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vlan-30-entsorgungs-netzwerk-10300024">VLAN 30 - Entsorgungs-Netzwerk: 10.30.0.0/24</h3>
+<table>
+<thead>
+<tr>
+<th>Gerät</th>
+<th>IP-Adresse</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gateway</td>
+<td><code>10.30.0.1</code></td>
+<td>Standard-Gateway (gw-firewall)</td>
+</tr>
+<tr>
+<td>schneider-plc4-vlan30</td>
+<td><code>10.30.0.11</code></td>
+<td>Entsorgungs-SPS</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vlan-40-leitstellen-netzwerk-10400024">VLAN 40 - Leitstellen-Netzwerk: 10.40.0.0/24</h3>
+<table>
+<thead>
+<tr>
+<th>Gerät</th>
+<th>IP-Adresse</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gateway</td>
+<td><code>10.40.0.1</code></td>
+<td>Standard-Gateway (gw-firewall)</td>
+</tr>
+<tr>
+<td>abb-800xa-vlan40</td>
+<td><code>10.40.0.11</code></td>
+<td>HMI/Steuerungssystem</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vlan-50-parametrierungs-netzwerk-10500024">VLAN 50 - Parametrierungs-Netzwerk: 10.50.0.0/24</h3>
+<table>
+<thead>
+<tr>
+<th>Gerät</th>
+<th>IP-Adresse</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gateway</td>
+<td><code>10.50.0.1</code></td>
+<td>Standard-Gateway (gw-firewall)</td>
+</tr>
+<tr>
+<td>dell-ews1-vlan50</td>
+<td><code>10.50.0.11</code></td>
+<td>Engineering-Workstation</td>
+</tr>
+<tr>
+<td>hirschmann-edge1-vlan50</td>
+<td><code>10.50.0.12</code></td>
+<td>Edge-Gateway</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dmz-netzwerk-222024">DMZ-Netzwerk: 2.2.2.0/24</h3>
+<table>
+<thead>
+<tr>
+<th>Gerät</th>
+<th>IP-Adresse</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gateway</td>
+<td><code>2.2.2.1</code></td>
+<td>Firewall-DMZ-Schnittstelle</td>
+</tr>
+<tr>
+<td>proxmox-jumphost</td>
+<td><code>2.2.2.2</code></td>
+<td>Fernzugriffs-Gateway</td>
+</tr>
+</tbody>
+</table>
+<h3 id="internet-simulation-111024">Internet-Simulation: 1.1.1.0/24</h3>
+<table>
+<thead>
+<tr>
+<th>Gerät</th>
+<th>IP-Adresse</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>panasonic-toughbook-internet</td>
+<td><code>1.1.1.1</code></td>
+<td>Externes Netzwerksimulation</td>
+</tr>
+<tr>
+<td>Firewall External</td>
+<td><code>1.1.1.2</code></td>
+<td>Firewall-WAN-Schnittstelle</td>
+</tr>
+</tbody>
+</table>
+<h2 id="laborzugriff">Laborzugriff</h2>
+<h3 id="verbindungsmethoden">Verbindungsmethoden</h3>
+<h3 id="zugriff-uber-vs-code-containerlab-erweiterung">Zugriff über VS Code Containerlab-Erweiterung</h3>
+<p>Das Labor beinhaltet VS Code-Integration für einfachen Gerätezugriff:</p>
+<ol>
+<li>Rechtsklick auf Gerät in Containerlab-Erweiterung</li>
+<li>SSH-Verbindung auswählen</li>
+<li>Oder Topology Viewer verwenden: Klick auf Gerät, dann Aktion → SSH</li>
+</ol>
+<h2 id="verfugbare-werkzeuge">Verfügbare Werkzeuge</h2>
+<h3 id="netzwerkanalyse-werkzeuge">Netzwerkanalyse-Werkzeuge</h3>
+<table>
+<thead>
+<tr>
+<th>Werkzeug</th>
+<th>Zweck</th>
+<th>Verwendungsbeispiel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping</code></td>
+<td>Netzwerkkonnektivität testen</td>
+<td><code>ping 10.10.0.11</code></td>
+</tr>
+<tr>
+<td><code>nmap</code></td>
+<td>Netzwerk- und Port-Scanning</td>
+<td><code>nmap -sV 10.10.0.0/24</code></td>
+</tr>
+<tr>
+<td><code>tcpdump</code></td>
+<td>Kommandozeilen-Paketmitschnitt</td>
+<td><code>tcpdump -i eth0 -w capture.pcap</code></td>
+</tr>
+<tr>
+<td><code>arp</code></td>
+<td>ARP-Tabelle anzeigen</td>
+<td><code>arp -a</code></td>
+</tr>
+<tr>
+<td><code>nc</code></td>
+<td>TCP/UDP Client/Server</td>
+<td><code>nc -l 5000</code></td>
+</tr>
+<tr>
+<td><code>ssh</code></td>
+<td>Remote-Login</td>
+<td><code>ssh admin@192.168.100.53</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="dsniff-suite">Dsniff-Suite</h3>
+<p>Dsniff bietet Werkzeuge für Netzwerk-Auditing und Penetrationstests.</p>
+<table>
+<thead>
+<tr>
+<th>Werkzeug</th>
+<th>Zweck</th>
+<th>Beispiel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dsniff</code></td>
+<td>Klartext-Anmeldedaten erfassen (FTP, HTTP, SMTP)</td>
+<td><code>dsniff -i eth0</code></td>
+</tr>
+<tr>
+<td><code>filesnarf</code></td>
+<td>Dateien aus Netzwerkverkehr extrahieren</td>
+<td><code>filesnarf -i eth0</code></td>
+</tr>
+<tr>
+<td><code>mailsnarf</code></td>
+<td>E-Mail-Nachrichten rekonstruieren</td>
+<td><code>mailsnarf -i eth0</code></td>
+</tr>
+<tr>
+<td><code>urlsnarf</code></td>
+<td>Alle HTTP-URLs protokollieren</td>
+<td><code>urlsnarf -i eth0</code></td>
+</tr>
+<tr>
+<td><code>arpspoof</code></td>
+<td>ARP-Spoofing für MITM-Angriffe</td>
+<td><code>arpspoof -i eth0 -t 10.10.0.11 10.10.0.1</code></td>
+</tr>
+<tr>
+<td><code>dnsspoof</code></td>
+<td>DNS-Hijacking</td>
+<td><code>dnsspoof -i eth0 -f hosts.txt</code></td>
+</tr>
+<tr>
+<td><code>macof</code></td>
+<td>Switch-CAM-Tabelle fluten</td>
+<td><code>macof -i eth0</code></td>
+</tr>
+<tr>
+<td><code>tcpkill</code></td>
+<td>TCP-Verbindungen beenden</td>
+<td><code>tcpkill -i eth0 host 10.10.0.11</code></td>
+</tr>
+<tr>
+<td><code>tcpnice</code></td>
+<td>TCP-Verbindungen verlangsamen</td>
+<td><code>tcpnice -i eth0 host 10.10.0.11</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Wichtig:</strong> IP-Forwarding für MITM-Angriffe aktivieren:
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/proc/sys/net/ipv4/ip_forward
+</code></pre></div></p>
+<h2 id="workshop-laborubungen">Workshop-Laborübungen</h2>
+<p>Während des Workshops arbeiten Sie progressive praktische Übungen durch.</p>
+<h3 id="teil-1-ot-netzwerke-verstehen">Teil 1: OT-Netzwerke verstehen</h3>
+<p><strong>Ziele:</strong>
+- OT-Protokolle im Einsatz entdecken (Modbus TCP, proprietäre Protokolle)
+- Kommunikationsmuster zwischen SPSen und Systemen identifizieren
+- Open-Source-Überwachungswerkzeuge gegen Live-Verkehr testen
+- Protokollcharakteristiken und Sicherheitsimplikationen analysieren</p>
+<h4 id="ubung-11-laboreinfuhrung">Übung 1.1: Laboreinführung</h4>
+<p><strong>Empfohlener Ansatz:</strong></p>
+<ol>
+<li>Laborumgebung starten</li>
+<li>Topology Viewer öffnen</li>
+<li>Bei verschiedenen Systemen anmelden (gw-firewall, panasonic-toughbook-internet, proxmox-jumphost)</li>
+<li>Konnektivität mit Ping zu verschiedenen Zonen testen</li>
+</ol>
+<h4 id="ubung-12-vlan-entdeckung">Übung 1.2: VLAN-Entdeckung</h4>
+<p><strong>Empfohlener Ansatz:</strong></p>
+<ol>
+<li>Wireshark auf einem Link zwischen zwei Switches verwenden</li>
+<li>Welche VLANs sehen Sie?</li>
+<li>Verkehr von ctrlx-plc3-vlan20 zu seinem Switch mitschneiden</li>
+<li>Welche VLANs sind sichtbar?</li>
+<li>Was ist der Unterschied zwischen Trunk- und Access-Ports?</li>
+</ol>
+<h3 id="teil-2-ot-netzwerk-sicherheitsuberwachung">Teil 2: OT-Netzwerk-Sicherheitsüberwachung</h3>
+<p><strong>Ziele:</strong>
+- Überwachung an strategischen Punkten einsetzen (Gateway, Inter-Zone, Edge)
+- Verkehrssammlung und -weiterleitung konfigurieren
+- Sichtbarkeit über Zonen hinweg validieren
+- Überwachungseffektivität testen und blinde Flecken identifizieren</p>
+<h4 id="ubung-21-fernzugriffsanalyse">Übung 2.1: Fernzugriffsanalyse</h4>
+<p><strong>Empfohlener Ansatz:</strong></p>
+<ol>
+<li>SSH zum Jumphost</li>
+<li>Erkunden: Was können Sie im Labor erreichen?</li>
+<li><code>nmap</code> verwenden, um die Firewall zu scannen</li>
+<li>Welche offenen Ports entdecken Sie?</li>
+<li>Welche Dienste sind exponiert?</li>
+</ol>
+<p><strong>Fortgeschritten:</strong></p>
+<ol>
+<li>Initiale Firewall-Regeln auf gw-firewall konfigurieren, um Jumphost-Zugriff zu beschränken</li>
+<li>Frage: Welche Schutzmechanismen für Fernzugriff wären effektiver als statische Firewall-Regeln?</li>
+</ol>
+<h4 id="ubung-22-mikrosegmentierung">Übung 2.2: Mikrosegmentierung</h4>
+<p><strong>Empfohlener Ansatz:</strong></p>
+<ol>
+<li>Untersuchen Sie, wie Mikrosegmentierung für <code>wago-plc2a-vlan10</code> funktioniert</li>
+<li>Entwerfen Sie Firewall-Regeln, die erforderlich sind, um <code>wago-plc2a-vlan10</code> von aussen zugänglich zu machen, während die Exposition begrenzt wird</li>
+</ol>
+<p><strong>Fortgeschritten:</strong></p>
+<ol>
+<li>Switch-Port-ACLs auf dem mit wago-plc2b-vlan10 verbundenen Port implementieren</li>
+<li>Fragen:</li>
+<li>Was sind die Charakteristiken von Switch-ACLs?</li>
+<li>Bieten sie denselben Schutz wie Stateful Packet Filter?</li>
+<li>Wann würden Sie ACLs vs. Firewall-Regeln verwenden?</li>
+</ol>
+<h3 id="teil-3-einstieg-in-die-uberwachung">Teil 3: Einstieg in die Überwachung</h3>
+<p><strong>Ziele:</strong>
+- Überwachungs-Use-Cases für erkannte Bedrohungen definieren
+- Erkennungsregeln für Anomalien konfigurieren
+- Alarmierung für Sicherheitsereignisse einrichten
+- Reaktions-Playbooks erstellen
+- Erkennung zur Reduzierung von Fehlalarmen abstimmen</p>
+<h4 id="ubung-31-firewall-regeldesign">Übung 3.1: Firewall-Regeldesign</h4>
+<p><strong>Empfohlener Ansatz:</strong></p>
+<ol>
+<li>Sicherheitskonzept für das Labor entwerfen (zunächst theoretisch):</li>
+<li>Kommunikationsmatrix erstellen</li>
+<li>Konkretes Firewall-Regelwerk definieren</li>
+<li>
+<p>Regelzwecke und Verantwortliche dokumentieren</p>
+</li>
+<li>
+<p>Überlegen: Welchen zusätzlichen Wert würde eine Next-Generation-Firewall bieten?</p>
+</li>
+<li>
+<p>IDS-Platzierung und -Funktionalität planen</p>
+</li>
+</ol>
+<p><strong>Fortgeschritten:</strong></p>
+<ol>
+<li>Einfaches Firewall-Regel-Management-Tool entwerfen und implementieren</li>
+<li>Wie können Regeln nach einem Jahr leicht revalidiert werden?</li>
+<li>Wer ist für jede Regel verantwortlich?</li>
+<li>Was ist der Zweck jeder Regel?</li>
+<li>Regeln mit Tickets/Änderungsanfragen verknüpfen</li>
+<li>
+<p>Regelerstellungsdatum und Überprüfungsplan verfolgen</p>
+</li>
+<li>
+<p>Firewall-Regeln implementieren und testen</p>
+</li>
+</ol>
+<h2 id="fehlersuche-und-verifikation">Fehlersuche und Verifikation</h2>
+<h3 id="labor-gesundheitscheck-skript">Labor-Gesundheitscheck-Skript</h3>
+<p>Das Labor beinhaltet ein umfassendes Gesundheitscheck-Skript, das verifiziert, dass alle Komponenten korrekt laufen.</p>
+<p><strong>Wann zu verwenden:</strong></p>
+<ul>
+<li>Nach der ersten Bereitstellung des Labors</li>
+<li>Bei Problemen zur Identifikation der Ursache</li>
+<li>Vor Übungsbeginn zur Sicherstellung der Betriebsbereitschaft</li>
+<li>Nach Konfigurationsänderungen</li>
+</ul>
+<p><strong>Gesundheitscheck ausführen:</strong></p>
+<div class="highlight"><pre><span></span><code>./scripts/lab-test.py<span class="w"> </span>ot-sec-segmented
+<span class="c1"># oder für flache Topologie</span>
+./scripts/lab-test.py<span class="w"> </span>ot-sec-flat
+</code></pre></div>
+<p><strong>Was es prüft:</strong></p>
+<p>Das Skript verifiziert alle kritischen Laborkomponenten in organisierten Kategorien:</p>
+<ul>
+<li><strong>Infrastruktur</strong> - Containerlab-Bereitstellung, alle Container laufen</li>
+<li><strong>Netzwerkgeräte</strong> - MikroTik-Switches und Gateway-Reaktionsfähigkeit</li>
+<li><strong>SPS-Laufzeiten</strong> - CODESYS-Prozesse und Programmausführungszustand</li>
+<li><strong>Host-Ports</strong> - Exponierte Dienste (8080, 5800, 1218) mit Quell-Containern</li>
+<li><strong>Container-Ports</strong> - HTTP-Dienste auf allen Geräten</li>
+<li><strong>Konnektivität</strong> - Netzwerkerreichbarkeit vom Jumphost, Inter-Node-Kommunikation, Gateway-Zugriff</li>
+<li><strong>Speicher</strong> - Erforderliche Bind-Mounts für SPS-Konfigurationen</li>
+</ul>
+<p><strong>Ergebnisse verstehen:</strong></p>
+<ul>
+<li><strong>PASS</strong> - Komponente funktioniert korrekt</li>
+<li><strong>FAIL</strong> - Kritisches Problem erfordert Aufmerksamkeit</li>
+<li><strong>WARN</strong> - Nicht-kritisches Problem (wird für optionale Komponenten nicht mehr angezeigt)</li>
+</ul>
+<p><strong>Häufige Probleme:</strong></p>
+<p>Container laufen nicht:</p>
+<div class="highlight"><pre><span></span><code>clab<span class="w"> </span>inspect<span class="w"> </span>-t<span class="w"> </span>ot-sec-segmented.clab.yml
+docker<span class="w"> </span>ps<span class="w"> </span>-a<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>clab-ot-sec
+</code></pre></div>
+<p>Konnektivitätstests schlagen fehl - Netzwerkgerätestatus prüfen:</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.11<span class="w">  </span><span class="c1"># Gateway</span>
+ssh<span class="w"> </span>admin@192.168.100.12<span class="w">  </span><span class="c1"># Distribution-Switch</span>
+</code></pre></div>
+<p>SPS-Laufzeiten schlagen fehl - Prozessstatus im Container prüfen:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>clab-ot-sec-segmented-wago-plc2a-vlan10<span class="w"> </span>pgrep<span class="w"> </span>-f<span class="w"> </span>codesyscontrol
+</code></pre></div>
+<h3 id="erweiterungsideen">Erweiterungsideen</h3>
+<ol>
+<li><strong>Erweiterte Überwachung</strong></li>
+<li>Zeek für Protokollanalyse einsetzen</li>
+<li>Suricata IDS mit benutzerdefinierten Regeln einrichten</li>
+<li>
+<p>ELK-Stack für Log-Aggregation integrieren</p>
+</li>
+<li>
+<p><strong>Sicherheitstests</strong></p>
+</li>
+<li>Firewall-Regelwerke implementieren</li>
+<li>Netzwerksegmentierungseffektivität testen</li>
+<li>
+<p>Angriffsszenarien simulieren</p>
+</li>
+<li>
+<p><strong>Protokollanalyse</strong></p>
+</li>
+<li>Zusätzliche OT-Protokolle analysieren</li>
+<li>Benutzerdefinierte Wireshark-Dissektoren erstellen</li>
+<li>
+<p>Protokollverhalten dokumentieren</p>
+</li>
+<li>
+<p><strong>Automatisierung</strong></p>
+</li>
+<li>Bereitstellungsprozesse skripten</li>
+<li>Konfigurationsbackups automatisieren</li>
+<li>Test-Frameworks erstellen</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tracking"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "In Zwischenablage kopiert", "clipboard.copy": "In Zwischenablage kopieren", "search.result.more.one": "1 weiteres Suchergebnis auf dieser Seite", "search.result.more.other": "# weitere Suchergebnisse auf dieser Seite", "search.result.none": "Keine Suchergebnisse", "search.result.one": "1 Suchergebnis", "search.result.other": "# Suchergebnisse", "search.result.placeholder": "Suchbegriff eingeben", "search.result.term.missing": "Es fehlt", "select.version": "Version ausw\u00e4hlen"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2594 @@
+
+<!doctype html>
+<html lang="de" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="OT Networks: Design & Defend">
+      
+      
+      
+        <link rel="canonical" href="https://narrowin.github.io/ot-labs-docs/de/exercises/ex6-protocol-discovery.html">
+      
+      
+        <link rel="prev" href="ex5-reconnaissance.html">
+      
+      
+        <link rel="next" href="ex7-segmentation-firewall.html">
+      
+      
+        
+          <link rel="alternate" href="/ot-labs-docs/en/" hreflang="en">
+        
+          <link rel="alternate" href="/ot-labs-docs/de/" hreflang="de">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>6. Protokoll-Erkennung - OT Networks: Design & Defend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+        <script src="https://unpkg.com/iframe-worker/shim"></script>
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ubung-6-ot-protokoll-erkennung" class="md-skip">
+          Zum Inhalt
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Kopfzeile">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-header__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="../assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OT Networks: Design & Defend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              6. Protokoll-Erkennung
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Sprache wechseln">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/en/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/de/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Suche" placeholder="Suche" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Suche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Zurücksetzen" aria-label="Zurücksetzen" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Suche wird initialisiert
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/narrowin/ot-labs-docs" title="Zum Repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-nav__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="../assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    OT Networks: Design & Defend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/narrowin/ot-labs-docs" title="Zum Repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Übersicht
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Übungen
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Übungen
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Übersicht
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex1-vlan-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. VLAN-Erkennung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex2-arp-spoofing.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. ARP-Spoofing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex3-spanning-tree.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Spanning Tree
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex4-link-aggregation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Link-Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex5-reconnaissance.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Fernzugriff
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Protokoll-Erkennung
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="ex6-protocol-discovery.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Protokoll-Erkennung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#lernziele" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lernziele
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voraussetzungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voraussetzungen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#szenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Szenario
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aufgaben" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgaben
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aufgaben">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-1-ot-verkehr-generieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 1: OT-Verkehr generieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-2-verkehr-mit-wireshark-erfassen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 2: Verkehr mit Wireshark erfassen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-3-modbus-tcp-analysieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 3: Modbus TCP analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-4-codesys-protokoll-analysieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 4: CODESYS-Protokoll analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-5-opc-ua-sicherheitskonfiguration-analysieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 5: OPC-UA-Sicherheitskonfiguration analysieren
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aufgabe 5: OPC-UA-Sicherheitskonfiguration analysieren">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hintergrund" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hintergrund
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opc-ua-verkehr-generieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OPC-UA-Verkehr generieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opc-ua-verkehr-erfassen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OPC-UA-Verkehr erfassen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sicherheitskonfiguration-analysieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sicherheitskonfiguration analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bewertungsfragen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bewertungsfragen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#praxisbezug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Praxisbezug
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-6-profinet-protokoll-erkennung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 6: PROFINET-Protokoll-Erkennung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aufgabe 6: PROFINET-Protokoll-Erkennung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wesentliche-unterschiede" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wesentliche Unterschiede
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warum-dies-wichtig-ist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warum dies wichtig ist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#profinet-verkehr-erfassen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROFINET-Verkehr erfassen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#profinet-echtzeit-verkehr-analysieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROFINET-Echtzeit-Verkehr analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bewertungsfragen_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bewertungsfragen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sicherheitsimplikationen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sicherheitsimplikationen
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-7-protokollvergleich-und-sicherheitsbewertung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 7: Protokollvergleich und Sicherheitsbewertung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aufgabe 7: Protokollvergleich und Sicherheitsbewertung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protokollvergleichs-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protokollvergleichs-Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kritische-bewertungsfragen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kritische Bewertungsfragen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-checkliste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit-Checkliste
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iec-62443-sicherheitsanforderungs-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IEC-62443-Sicherheitsanforderungs-Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fazit-verteidigung-in-der-tiefe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fazit: Verteidigung in der Tiefe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fazit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fazit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#losung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lösung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lösung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-1-ot-verkehr-generieren_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 1: OT-Verkehr generieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-2-verkehr-erfassen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 2: Verkehr erfassen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-3-modbus-tcp-analysieren_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 3: Modbus TCP analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-4-codesys-protokoll-analysieren_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 4: CODESYS-Protokoll analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-5-opc-ua-sicherheitskonfiguration-analysieren_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 5: OPC-UA-Sicherheitskonfiguration analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-6-profinet-protokoll-erkennung_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 6: PROFINET-Protokoll-Erkennung
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-7-protokollvergleich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 7: Protokollvergleich
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex7-segmentation-firewall.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Segmentierung & Firewall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="appendix.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anhang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatsheet.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheatsheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Container101.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container-Grundlagen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../automation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automatisierung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../slides.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Folien
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feedback.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#lernziele" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lernziele
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voraussetzungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voraussetzungen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#szenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Szenario
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aufgaben" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgaben
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aufgaben">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-1-ot-verkehr-generieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 1: OT-Verkehr generieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-2-verkehr-mit-wireshark-erfassen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 2: Verkehr mit Wireshark erfassen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-3-modbus-tcp-analysieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 3: Modbus TCP analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-4-codesys-protokoll-analysieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 4: CODESYS-Protokoll analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-5-opc-ua-sicherheitskonfiguration-analysieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 5: OPC-UA-Sicherheitskonfiguration analysieren
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aufgabe 5: OPC-UA-Sicherheitskonfiguration analysieren">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hintergrund" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hintergrund
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opc-ua-verkehr-generieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OPC-UA-Verkehr generieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opc-ua-verkehr-erfassen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OPC-UA-Verkehr erfassen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sicherheitskonfiguration-analysieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sicherheitskonfiguration analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bewertungsfragen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bewertungsfragen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#praxisbezug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Praxisbezug
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-6-profinet-protokoll-erkennung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 6: PROFINET-Protokoll-Erkennung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aufgabe 6: PROFINET-Protokoll-Erkennung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wesentliche-unterschiede" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wesentliche Unterschiede
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warum-dies-wichtig-ist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warum dies wichtig ist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#profinet-verkehr-erfassen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROFINET-Verkehr erfassen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#profinet-echtzeit-verkehr-analysieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PROFINET-Echtzeit-Verkehr analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bewertungsfragen_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bewertungsfragen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sicherheitsimplikationen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sicherheitsimplikationen
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-7-protokollvergleich-und-sicherheitsbewertung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 7: Protokollvergleich und Sicherheitsbewertung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aufgabe 7: Protokollvergleich und Sicherheitsbewertung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protokollvergleichs-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protokollvergleichs-Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kritische-bewertungsfragen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kritische Bewertungsfragen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-checkliste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit-Checkliste
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iec-62443-sicherheitsanforderungs-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IEC-62443-Sicherheitsanforderungs-Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fazit-verteidigung-in-der-tiefe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fazit: Verteidigung in der Tiefe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fazit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fazit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#losung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lösung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lösung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-1-ot-verkehr-generieren_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 1: OT-Verkehr generieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-2-verkehr-erfassen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 2: Verkehr erfassen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-3-modbus-tcp-analysieren_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 3: Modbus TCP analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-4-codesys-protokoll-analysieren_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 4: CODESYS-Protokoll analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-5-opc-ua-sicherheitskonfiguration-analysieren_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 5: OPC-UA-Sicherheitskonfiguration analysieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-6-profinet-protokoll-erkennung_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 6: PROFINET-Protokoll-Erkennung
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-7-protokollvergleich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 7: Protokollvergleich
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ubung-6-ot-protokoll-erkennung">Übung 6: OT-Protokoll-Erkennung</h1>
+<p><strong>Zeitschätzung</strong>: 45-50 Minuten<br />
+<strong>Lab-Topologie</strong>: <code>ot-sec-flat</code> (empfohlen) oder <code>ot-sec-segmented</code><br />
+<strong>Schwierigkeit</strong>: <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.5 5.5v13h-2v-13zM21 4h-5v16h5zm-7 5H9v11h5zm-7 5H2v6h5z"/></svg></span> Fortgeschritten</p>
+<h2 id="lernziele">Lernziele</h2>
+<ul>
+<li>OT-Protokolle im Live-Verkehr entdecken</li>
+<li>Modbus-TCP-Kommunikation identifizieren</li>
+<li>CODESYS-Runtime-Protokoll analysieren</li>
+<li>OPC-UA-Sicherheitskonfigurationen bewerten</li>
+<li>PROFINET-Eigenschaften erkennen</li>
+<li>Sicherheitsimplikationen von Klartext-Protokollen verstehen</li>
+</ul>
+<h2 id="voraussetzungen">Voraussetzungen</h2>
+<ul>
+<li>Übung 1 (Wireshark-Grundlagen)</li>
+<li>Grundverständnis von TCP/IP</li>
+</ul>
+<h2 id="szenario">Szenario</h2>
+<p>In einer OT-Umgebung ist Sichtbarkeit der Schlüssel. Im Gegensatz zu IT-Netzwerken, wo HTTPS und SSH dominieren, verlassen sich OT-Netzwerke oft auf Klartext-Protokolle wie Modbus TCP und proprietäre Protokolle wie CODESYS. In dieser Übung generieren Sie Verkehr zwischen einem HMI und einer SPS, erfassen ihn und analysieren die Protokolldetails, um zu verstehen, was ein Angreifer sehen könnte.</p>
+<h2 id="aufgaben">Aufgaben</h2>
+<h3 id="aufgabe-1-ot-verkehr-generieren">Aufgabe 1: OT-Verkehr generieren</h3>
+<p>Um Verkehr zu analysieren, müssen wir ihn zuerst generieren. Wir verwenden das HMI zur Interaktion mit der Web-Visualisierung einer SPS.</p>
+<ol>
+<li>
+<p>Öffnen Sie unter Ports: <strong>Chromium HMI WebVNC</strong></p>
+</li>
+<li>
+<p>Navigieren Sie zum Cheat Sheet:</p>
+<ul>
+<li>URL: <code>http://10.10.0.11:8080/webvisu.htm</code></li>
+<li>(Falls das nicht lädt, versuchen Sie <code>http://10.10.0.11:8080</code>)</li>
+</ul>
+</li>
+<li>
+<p>Interagieren Sie mit der Visualisierung (klicken Sie Buttons, schalten Sie Schalter), um Verkehr zu generieren.</p>
+</li>
+</ol>
+<h3 id="aufgabe-2-verkehr-mit-wireshark-erfassen">Aufgabe 2: Verkehr mit Wireshark erfassen</h3>
+<p>Jetzt erfassen wir den Verkehr, der zur SPS fliesst, mit den integrierten Lab-Tools.</p>
+<ol>
+<li>
+<p>Gehen Sie in VS Code zur <strong>Containerlab</strong>-Erweiterung (TopoViewer).</p>
+</li>
+<li>
+<p>Lokalisieren Sie die Verbindung zwischen <code>wago-plc2a-vlan10</code> und <code>sw-acc1</code>.</p>
+</li>
+<li>
+<p>Klicken Sie mit der <strong>rechten Maustaste</strong> auf die Verbindung (oder den Interface-Punkt auf der SPS-Seite) und wählen Sie <strong>Wireshark Capture</strong>.</p>
+<ul>
+<li>Dies startet eine Wireshark-Instanz direkt in Ihrem Browser bzw. Editor über Edgeshark.</li>
+</ul>
+</li>
+<li>
+<p>Gehen Sie zurück zum HMI (VNC) und interagieren Sie 10-15 Sekunden lang erneut mit der WebVisu (klicken Sie Buttons, schalten Sie Schalter).</p>
+</li>
+<li>
+<p>Kehren Sie zum Wireshark-Fenster zurück. Sie sollten Pakete in Echtzeit erscheinen sehen.</p>
+</li>
+<li>
+<p>Stoppen Sie die Erfassung (roter quadratischer Button in Wireshark-Toolbar), um die Daten zu analysieren.</p>
+</li>
+</ol>
+<h3 id="aufgabe-3-modbus-tcp-analysieren">Aufgabe 3: Modbus TCP analysieren</h3>
+<ol>
+<li>
+<p>In Wireshark für Modbus-TCP-Verkehr filtern:</p>
+<div class="highlight"><pre><span></span><code>mbtcp
+</code></pre></div>
+<p><em>Hinweis: Falls Sie <code>mbtcp</code> nicht sehen, versuchen Sie Filter für Port <code>tcp.port == 502</code>.</em></p>
+</li>
+<li>
+<p>Wählen Sie ein Paket. Erweitern Sie den <strong>Modbus</strong>-Abschnitt in den Paketdetails.</p>
+</li>
+<li>
+<p><strong>Fragen</strong>:</p>
+<ul>
+<li>Welche Function Codes sehen Sie? (z.B. Read Holding Registers, Write Single Coil)</li>
+<li>Können Sie die Werte sehen, die gelesen oder geschrieben werden?</li>
+<li>Gibt es Verschlüsselung oder Authentifizierung?</li>
+</ul>
+</li>
+</ol>
+<h3 id="aufgabe-4-codesys-protokoll-analysieren">Aufgabe 4: CODESYS-Protokoll analysieren</h3>
+<p>Die WebVisu kommuniziert mit der Runtime, oft über proprietäre Protokolle oder HTTP/XML. Die Engineering-Workstation würde jedoch das CODESYS-Protokoll verwenden. Suchen wir danach oder nach anderem Management-Verkehr.</p>
+<ol>
+<li>
+<p>Filter löschen und nach Verkehr auf Port <strong>2455</strong> (UDP) oder <strong>1217</strong> (TCP) suchen.</p>
+<div class="highlight"><pre><span></span><code>udp.port == 2455 || tcp.port == 1217
+</code></pre></div>
+</li>
+<li>
+<p>Falls Sie diesen Verkehr nicht sehen, liegt es möglicherweise daran, dass wir nur WebVisu verwenden. Um CODESYS-Engineering-Verkehr zu generieren, würden wir die CODESYS IDE benötigen.</p>
+<p><em>Alternative</em>: Schauen Sie nach HTTP-Verkehr für die WebVisu.</p>
+<div class="highlight"><pre><span></span><code>http &amp;&amp; ip.addr == 10.10.0.11
+</code></pre></div>
+</li>
+<li>
+<p>HTTP-Streams analysieren.</p>
+<ul>
+<li>Rechtsklicken Sie auf ein Paket -&gt; Follow -&gt; HTTP Stream.</li>
+<li>Beobachten Sie, dass die Visualisierungsdaten im Klartext übertragen werden (es sei denn, HTTPS ist konfiguriert, was in älteren Setups oft nicht der Standard ist).</li>
+</ul>
+</li>
+</ol>
+<h3 id="aufgabe-5-opc-ua-sicherheitskonfiguration-analysieren">Aufgabe 5: OPC-UA-Sicherheitskonfiguration analysieren</h3>
+<p>OPC UA ist der moderne Industrie-4.0-Protokollstandard. Im Gegensatz zu Modbus wurde es mit Sicherheitsfunktionen entwickelt, diese werden jedoch oft in Produktionsumgebungen deaktiviert. Ihre Aufgabe als OT-Sicherheitsexperte ist es, zu bewerten, ob die Sicherheit korrekt konfiguriert ist.</p>
+<h4 id="hintergrund">Hintergrund</h4>
+<p>OPC UA unterstützt:</p>
+<ul>
+<li><strong>Verschlüsselung</strong> (SignAndEncrypt)</li>
+<li><strong>Authentifizierung</strong> (Benutzername/Passwort oder zertifikatbasiert)</li>
+<li><strong>Autorisierung</strong> (rollenbasierte Zugriffskontrolle)</li>
+</ul>
+<p>Die meisten Implementierungen laufen jedoch mit <code>SecurityPolicy=None</code> und <code>Anonymous</code>-Authentifizierung aus Gründen der Einfachheit oder Legacy-Kompatibilität.</p>
+<h4 id="opc-ua-verkehr-generieren">OPC-UA-Verkehr generieren</h4>
+<p>Die Lab-SPSen haben OPC-UA-Server auf Port 4840 aktiviert:</p>
+<ul>
+<li><code>ctrlx-plc3-vlan20</code> unter <code>10.20.0.11:4840</code></li>
+<li><code>schneider-plc4-vlan30</code> unter <code>10.30.0.11:4840</code></li>
+</ul>
+<p>Wir müssen OPC-UA-Verkehr generieren, um ihn zu analysieren. Der einfachste Ansatz ist die Nutzung des HMI-Webbrowsers.</p>
+<p><strong>Verkehr vom HMI generieren</strong></p>
+<ol>
+<li>
+<p>Öffnen Sie unter Ports: HMI-Chromium-Browser</p>
+</li>
+<li>
+<p>Gehen sie zum Cheat Sheet</p>
+</li>
+<li>
+<p>Navigieren Sie zu: <code>http://10.20.0.11:8080/webvisu.htm</code></p>
+</li>
+<li>Die WebVisu kann im Hintergrund über OPC UA mit der SPS kommunizieren</li>
+<li>Interagieren Sie mit der Visualisierung, um Verkehr zu generieren</li>
+</ol>
+<p><strong>Alternative: Verbindung vom Jumphost testen</strong></p>
+<p>Falls Sie Terminal-Zugriff auf den Jumphost haben, prüfen Sie, ob der OPC-UA-Port erreichbar ist:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Konnektivität testen</span>
+nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.20.0.11<span class="w"> </span><span class="m">4840</span>
+
+<span class="c1"># Einfache Verbindungsprobe senden</span>
+timeout<span class="w"> </span><span class="m">2</span><span class="w"> </span>telnet<span class="w"> </span><span class="m">10</span>.20.0.11<span class="w"> </span><span class="m">4840</span>
+</code></pre></div>
+<p>Sie sollten eine etablierte Verbindung sehen, die bestätigt, dass der OPC-UA-Server läuft.</p>
+<h4 id="opc-ua-verkehr-erfassen">OPC-UA-Verkehr erfassen</h4>
+<ol>
+<li>Starten Sie die Wireshark-Erfassung auf der Verbindung zwischen <code>ctrlx-plc3-vlan20</code> und <code>sw-acc1</code></li>
+<li>Führen Sie die OPC-UA-Client-Verbindung aus (Option oben)</li>
+<li>Stoppen Sie die Erfassung nach Abschluss der Verbindung</li>
+</ol>
+<h4 id="sicherheitskonfiguration-analysieren">Sicherheitskonfiguration analysieren</h4>
+<ol>
+<li>
+<p>Filtern Sie nach OPC-UA-Verkehr:</p>
+<div class="highlight"><pre><span></span><code>opcua
+</code></pre></div>
+<p>Oder nach Port:</p>
+<div class="highlight"><pre><span></span><code>tcp.port == 4840
+</code></pre></div>
+</li>
+<li>
+<p>Finden Sie das <strong>CreateSessionRequest</strong>-Paket:</p>
+<ul>
+<li>Erweitern: <code>OpcUa Binary Protocol -&gt; Message -&gt; CreateSessionRequest</code></li>
+<li>Finden: <code>SecurityPolicyUri</code></li>
+<li>Wert prüfen: <code>http://opcfoundation.org/UA/SecurityPolicy#None</code> bedeutet keine Verschlüsselung</li>
+</ul>
+</li>
+<li>
+<p>Finden Sie das <strong>ActivateSessionRequest</strong>-Paket:</p>
+<ul>
+<li>Erweitern: <code>OpcUa Binary Protocol -&gt; Message -&gt; ActivateSessionRequest</code></li>
+<li>Prüfen: <code>UserIdentityToken</code></li>
+<li>Suchen nach: <code>AnonymousIdentityToken</code> bedeutet keine Authentifizierung</li>
+</ul>
+</li>
+<li>
+<p>Analysieren Sie eine <strong>BrowseRequest/Response</strong>:</p>
+<ul>
+<li>Dies zeigt die komplette Tag-Struktur der SPS</li>
+<li>Alle Tag-Namen sind im Klartext sichtbar</li>
+<li>Ein Angreifer kann das komplette Prozessdatenmodell abbilden</li>
+</ul>
+</li>
+<li>
+<p>Schauen Sie sich <strong>ReadRequest/Response</strong> an:</p>
+<ul>
+<li>Variablenwerte werden im Klartext übertragen</li>
+<li>Kein Integritätsschutz</li>
+<li>Ein Angreifer kann Echtzeit-Prozesswerte sehen</li>
+</ul>
+</li>
+</ol>
+<h4 id="bewertungsfragen">Bewertungsfragen</h4>
+<ol>
+<li><strong>Welche SecurityPolicy ist konfiguriert?</strong> (Erwartet: None)</li>
+<li><strong>Ist die Kommunikation verschlüsselt?</strong> (Erwartet: Nein)</li>
+<li><strong>Welche Authentifizierung wird benötigt?</strong> (Erwartet: Anonymous - keine)</li>
+<li><strong>Können Sie Tag-Namen in der Browse-Response sehen?</strong> (Erwartet: Ja)</li>
+<li><strong>Können Sie Variablenwerte in Read-Responses sehen?</strong> (Erwartet: Ja)</li>
+<li><strong>Welche IEC-62443-Anforderungen werden verletzt?</strong><ul>
+<li>SR 1.1: Identifikation und Authentifizierung (FAIL - Anonymous)</li>
+<li>SR 3.1: Kommunikationsintegrität (FAIL - keine Signierung)</li>
+<li>SR 4.1: Informationsvertraulichkeit (FAIL - keine Verschlüsselung)</li>
+</ul>
+</li>
+</ol>
+<h4 id="praxisbezug">Praxisbezug</h4>
+<p>Dies ist einer der häufigsten Befunde in OT-Sicherheitsaudits. OPC UA hat ausgezeichnete Sicherheitsfunktionen, aber Organisationen deaktivieren sie, weil:</p>
+<ul>
+<li>Konfigurationskomplexität (wahrgenommen, nicht tatsächlich)</li>
+<li>Legacy-Kompatibilitätsbedenken (manchmal berechtigt)</li>
+<li>Performance-Mythen (Verschlüsselungs-Overhead ist auf moderner Hardware vernachlässigbar)</li>
+<li>Mangelndes Bewusstsein (häufigster Grund)</li>
+</ul>
+<p><strong>Audit-Empfehlung:</strong> Aktivieren Sie OPC-UA-Sicherheit mit <code>SecurityPolicy=Basic256Sha256</code>, <code>SecurityMode=SignAndEncrypt</code> und zertifikatbasierter Authentifizierung. Testen Sie mit bestehenden Clients, um Kompatibilität zu prüfen.</p>
+<h3 id="aufgabe-6-profinet-protokoll-erkennung">Aufgabe 6: PROFINET-Protokoll-Erkennung</h3>
+<p>PROFINET ist das dominierende Echtzeit-Industrie-Ethernet-Protokoll in der europäischen Fertigung, insbesondere in der Automobil- und Prozessindustrie. Im Gegensatz zu den vorherigen Protokollen, die auf TCP/IP-Schichten operieren, läuft PROFINET-Echtzeit-Verkehr direkt auf Layer 2 (Ethernet-Frames) für Mikrosekunden-genaue Steuerung.</p>
+<h4 id="wesentliche-unterschiede">Wesentliche Unterschiede</h4>
+<table>
+<thead>
+<tr>
+<th>Aspekt</th>
+<th>Modbus/OPC UA</th>
+<th>PROFINET RT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OSI-Schicht</td>
+<td>Layer 4 (TCP)</td>
+<td>Layer 2 (Ethernet)</td>
+</tr>
+<tr>
+<td>Routbar?</td>
+<td>Ja</td>
+<td>Nein (benötigt L2-Nachbarschaft)</td>
+</tr>
+<tr>
+<td>Verschlüsselung</td>
+<td>Möglich</td>
+<td>Nein (Echtzeit-Einschränkungen)</td>
+</tr>
+<tr>
+<td>Überwachung</td>
+<td>Gerouteter TAP</td>
+<td>SPAN-Port erforderlich</td>
+</tr>
+</tbody>
+</table>
+<h4 id="warum-dies-wichtig-ist">Warum dies wichtig ist</h4>
+<p>Das Verständnis von Layer-2-Protokollen ändert Ihren Sicherheitsbewertungsansatz:</p>
+<ul>
+<li><strong>Keine Segmentierung über Subnetze</strong> - PROFINET benötigt L2-Nachbarschaft</li>
+<li><strong>Keine Verschlüsselung</strong> - Echtzeit-Performance-Anforderungen (Sub-Millisekunden-Latenz)</li>
+<li><strong>Andere IDS-Platzierung</strong> - SPAN-Ports verwenden, keine gerouteten TAPs</li>
+<li><strong>Sicherheit ist architektonisch</strong> - Physische Zugriffskontrolle, VLAN-Isolation, Anomalieerkennung</li>
+</ul>
+<h4 id="profinet-verkehr-erfassen">PROFINET-Verkehr erfassen</h4>
+<p>Das ABB-800xA-System (<code>abb-800xa-vlan40</code> unter <code>10.40.0.11</code>) hat aktive PROFINET-Echtzeit-Kommunikation.</p>
+<ol>
+<li>
+<p>Gehen Sie in VS Code zur <strong>Containerlab</strong>-Erweiterung (TopoViewer)</p>
+</li>
+<li>
+<p>Lokalisieren Sie die Verbindung zwischen <code>abb-800xa-vlan40</code> und <code>sw-acc2</code></p>
+</li>
+<li>
+<p>Klicken Sie mit der <strong>rechten Maustaste</strong> auf die Verbindung und wählen Sie <strong>Wireshark Capture</strong></p>
+</li>
+<li>
+<p>Lassen Sie es 10-15 Sekunden erfassen, um PROFINET-Frames zu sammeln</p>
+</li>
+<li>
+<p>Stoppen Sie die Erfassung</p>
+</li>
+</ol>
+<h4 id="profinet-echtzeit-verkehr-analysieren">PROFINET-Echtzeit-Verkehr analysieren</h4>
+<p><strong>Filter für PROFINET:</strong></p>
+<div class="highlight"><pre><span></span><code># PROFINET-Echtzeit-Verkehr
+eth.type == 0x8892
+</code></pre></div>
+<p>Oder im Wireshark-Display-Filter:</p>
+<div class="highlight"><pre><span></span><code>pn_io
+</code></pre></div>
+<p><strong>Was Sie sehen sollten:</strong></p>
+<ol>
+<li>
+<p><strong>Ethertype 0x8892</strong> - Echtzeit-Zyklus-I/O-Daten</p>
+<ul>
+<li>Keine TCP/IP-Header (dies ist Layer 2, nicht TCP/IP)</li>
+<li>Direkte Ethernet-Frames</li>
+<li>Quell-/Ziel-MAC-Adressen sichtbar</li>
+</ul>
+</li>
+<li>
+<p><strong>FrameID in hex (typischerweise 0x8000-0x8001)</strong></p>
+<ul>
+<li>0x8000-Bereich = RT-Zyklus-Daten</li>
+<li>Schauen Sie sich die Paketdetails für das FrameID-Feld an</li>
+</ul>
+</li>
+<li>
+<p><strong>Zyklisches Muster</strong></p>
+<ul>
+<li>PROFINET RT läuft in festen Intervallen (typischerweise 1-10ms)</li>
+<li>In diesem Lab: ca. 4ms Zykluszeit</li>
+<li>Paket-Timing ist extrem regelmässig</li>
+<li>Wählen Sie mehrere Pakete und prüfen Sie das Zeitdelta zwischen ihnen</li>
+</ul>
+</li>
+<li>
+<p><strong>Nutzdaten</strong></p>
+<ul>
+<li>Rohe I/O-Daten (digital/analoge Werte)</li>
+<li>Keine Verschlüsselung möglich (Echtzeit-Performance-Anforderung)</li>
+<li>Prozesswerte werden im Klartext übertragen</li>
+</ul>
+</li>
+</ol>
+<h4 id="bewertungsfragen_1">Bewertungsfragen</h4>
+<ol>
+<li><strong>Was ist der Ethertype?</strong> (Erwartet: 0x8892)</li>
+<li><strong>Gibt es TCP/IP-Header?</strong> (Erwartet: Nein - dies ist Layer 2)</li>
+<li><strong>Was ist die ungefähre Zykluszeit?</strong> (Zeit zwischen Paketen messen - sollte ~4ms sein)</li>
+<li><strong>Können Sie MAC-Adressen sehen?</strong> (Erwartet: Ja - 00:03:2c:40:00:11 und 00:0b:0f:20:00:11)</li>
+<li><strong>Sind die Daten verschlüsselt?</strong> (Erwartet: Nein - kann Echtzeit-Verkehr nicht verschlüsseln)</li>
+<li><strong>Was passiert, wenn Sie nach <code>tcp</code> oder <code>udp</code> filtern?</strong> (Erwartet: PROFINET RT erscheint nicht - es ist Layer 2)</li>
+</ol>
+<h4 id="sicherheitsimplikationen">Sicherheitsimplikationen</h4>
+<p><strong>Angriffsszenarien:</strong></p>
+<ul>
+<li><strong>Aufklärung</strong>: DCP-Broadcasts offenbaren alle Geräte, Hersteller, Firmware-Versionen</li>
+<li><strong>Topologie-Mapping</strong>: LLDP (oft mit PROFINET verwendet) exponiert Netzwerkarchitektur</li>
+<li><strong>Paket-Injektion</strong>: Angreifer im selben L2-Segment kann RT-Frames fälschen</li>
+<li><strong>Timing-Angriffe</strong>: Störung des zyklischen Timings kann Notabschaltungen verursachen</li>
+</ul>
+<p><strong>Verteidigungsanforderungen:</strong></p>
+<ul>
+<li><strong>Physische Sicherheit</strong>: L2-Zugriff schützen (Switch-Ports)</li>
+<li><strong>VLAN-Isolation</strong>: PROFINET-Domänen trennen</li>
+<li><strong>Port-Security</strong>: MAC-Adressen-Filterung auf Switches</li>
+<li><strong>Anomalieerkennung</strong>: Auf Timing-Unregelmässigkeiten, unerwartete Geräte überwachen</li>
+<li><strong>Keine Anwendungsschicht-Sicherheit</strong>: Kann keine Verschlüsselung, TLS usw. verwenden</li>
+</ul>
+<p><strong>IEC-62443-Kontext:</strong></p>
+<p>PROFINET entstand vor IEC 62443 und wurde für Performance, nicht für Sicherheit entwickelt. Sicherheit muss durch Folgendes implementiert werden:</p>
+<ul>
+<li>Netzwerkarchitektur (Zonen und Leitungen)</li>
+<li>Physische Zugriffskontrolle</li>
+<li>Überwachung und Erkennung (nicht Prävention auf Protokollebene)</li>
+</ul>
+<h3 id="aufgabe-7-protokollvergleich-und-sicherheitsbewertung">Aufgabe 7: Protokollvergleich und Sicherheitsbewertung</h3>
+<p>Nachdem Sie mehrere OT-Protokolle analysiert haben, vergleichen Sie deren Sicherheitsmerkmale und verstehen Sie, wann Sie jedes in realen Umgebungen antreffen werden.</p>
+<h4 id="protokollvergleichs-matrix">Protokollvergleichs-Matrix</h4>
+<table>
+<thead>
+<tr>
+<th>Protokoll</th>
+<th>Schicht</th>
+<th>Port/Typ</th>
+<th>Verschlüsselung</th>
+<th>Auth</th>
+<th>Hauptanwendungsfall</th>
+<th>Sicherheitsansatz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Modbus TCP</strong></td>
+<td>L4 TCP</td>
+<td>502</td>
+<td>Nein</td>
+<td>Nein</td>
+<td>Legacy-SCADA, einfaches SPS-Polling</td>
+<td>Segmentierung, Überwachung, Modbus/TLS erwägen</td>
+</tr>
+<tr>
+<td><strong>CODESYS</strong></td>
+<td>L4 TCP/UDP</td>
+<td>1217, 2455</td>
+<td>Optional</td>
+<td>Optional</td>
+<td>SPS-Engineering, Diagnose</td>
+<td>In Produktion deaktivieren, nur während Wartung verwenden</td>
+</tr>
+<tr>
+<td><strong>OPC UA</strong></td>
+<td>L4 TCP</td>
+<td>4840</td>
+<td>Ja (oft deaktiviert)</td>
+<td>Ja (oft deaktiviert)</td>
+<td>Vertikale Integration, MES/SCADA, Industrie 4.0</td>
+<td><strong>Integrierte Sicherheitsfunktionen aktivieren</strong></td>
+</tr>
+<tr>
+<td><strong>PROFINET RT</strong></td>
+<td>L2 Ethernet</td>
+<td>0x8892</td>
+<td>Nein (unmöglich)</td>
+<td>Nein</td>
+<td>Echtzeit-I/O-Steuerung, Automotive, diskrete Fertigung</td>
+<td>Physische + architektonische Kontrollen</td>
+</tr>
+</tbody>
+</table>
+<h4 id="kritische-bewertungsfragen">Kritische Bewertungsfragen</h4>
+<p>Für jedes in einer OT-Umgebung entdeckte Protokoll fragen:</p>
+<ol>
+<li>
+<p><strong>Ist dieses Protokoll notwendig?</strong></p>
+<ul>
+<li>CODESYS-Engineering-Ports sollten in der Produktion deaktiviert sein</li>
+<li>Modbus kann Legacy sein und durch OPC UA ersetzt werden</li>
+</ul>
+</li>
+<li>
+<p><strong>Ist die Sicherheit optimal konfiguriert?</strong></p>
+<ul>
+<li>OPC UA: SecurityPolicy und Authentifizierung sollten aktiviert sein</li>
+<li>Modbus: Upgrade auf Modbus/TLS oder Einbindung in VPN erwägen</li>
+</ul>
+</li>
+<li>
+<p><strong>Ist die Netzwerkarchitektur angemessen?</strong></p>
+<ul>
+<li>Alle Protokolle: Ordentliche VLAN-Segmentierung</li>
+<li>PROFINET: Muss L2-Isolation haben, kann nicht routen</li>
+<li>OPC UA: Kann routen, Firewall-Regeln zwischen Zonen berücksichtigen</li>
+</ul>
+</li>
+<li>
+<p><strong>Ist Überwachung vorhanden?</strong></p>
+<ul>
+<li>Modbus/OPC UA: Kann auf L3/L4 überwachen (gerouteter TAP oder Firewall-Logs)</li>
+<li>PROFINET: Benötigt L2-SPAN-Port zum Switch</li>
+<li>Alle: Normales Verhalten als Baseline, bei Anomalien alarmieren</li>
+</ul>
+</li>
+</ol>
+<h4 id="audit-checkliste">Audit-Checkliste</h4>
+<p>Bei der Bewertung einer OT-Umgebung:</p>
+<ul>
+<li>[ ] Alle verwendeten Protokolle inventarisieren (Wireshark auf SPAN-Ports)</li>
+<li>[ ] Für OPC UA: Prüfen, dass SecurityPolicy NICHT None ist</li>
+<li>[ ] Für OPC UA: Prüfen, dass Authentifizierung erforderlich ist (nicht Anonymous)</li>
+<li>[ ] Für Modbus: Netzwerksegmentierung verhindert unbefugten Zugriff prüfen</li>
+<li>[ ] Für CODESYS: Engineering-Ports sind deaktiviert oder zugriffskontrolliert prüfen</li>
+<li>[ ] Für PROFINET: VLAN-Isolation und Port-Security prüfen</li>
+<li>[ ] Für alle: Überwachung/IDS ist vorhanden und auf OT-Protokolle abgestimmt prüfen</li>
+<li>[ ] Befunde mit spezifischen IEC-62443-SR-Verletzungen dokumentieren</li>
+</ul>
+<h4 id="iec-62443-sicherheitsanforderungs-mapping">IEC-62443-Sicherheitsanforderungs-Mapping</h4>
+<table>
+<thead>
+<tr>
+<th>SR</th>
+<th>Anforderung</th>
+<th>Modbus TCP</th>
+<th>OPC UA (Fehlkonfiguriert)</th>
+<th>OPC UA (Korrekt)</th>
+<th>PROFINET</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SR 1.1</td>
+<td>Benutzeridentifikation</td>
+<td>Nicht anwendbar</td>
+<td>FAIL (Anonymous)</td>
+<td>PASS (Zertifikat)</td>
+<td>Nicht anwendbar</td>
+</tr>
+<tr>
+<td>SR 3.1</td>
+<td>Kommunikationsintegrität</td>
+<td>FAIL (kein Schutz)</td>
+<td>FAIL (keine Signierung)</td>
+<td>PASS (Signiert)</td>
+<td>FAIL (kein Schutz)</td>
+</tr>
+<tr>
+<td>SR 4.1</td>
+<td>Informationsvertraulichkeit</td>
+<td>FAIL (Klartext)</td>
+<td>FAIL (keine Verschlüsselung)</td>
+<td>PASS (Verschlüsselt)</td>
+<td>FAIL (unmöglich)</td>
+</tr>
+<tr>
+<td>SR 5.1</td>
+<td>Netzwerksegmentierung</td>
+<td>Erforderlich</td>
+<td>Erforderlich</td>
+<td>Empfohlen</td>
+<td><strong>Kritisch</strong></td>
+</tr>
+</tbody>
+</table>
+<h4 id="fazit-verteidigung-in-der-tiefe">Fazit: Verteidigung in der Tiefe</h4>
+<p>Keine einzelne Protokollsicherheitsfunktion bietet vollständigen Schutz. OT-Sicherheit erfordert:</p>
+<ol>
+<li><strong>Protokollebenen-Sicherheit</strong> (wo verfügbar) - OPC-UA-Sicherheitsfunktionen aktivieren</li>
+<li><strong>Netzwerkarchitektur</strong> - Ordentliche Segmentierung, VLANs, Zugriffskontrolle</li>
+<li><strong>Überwachung und Erkennung</strong> - Normales Verhalten als Baseline, bei Anomalien alarmieren</li>
+<li><strong>Physische Sicherheit</strong> - Besonders für L2-Protokolle wie PROFINET</li>
+<li><strong>Zugriffsverwaltung</strong> - Unnötige Dienste deaktivieren (CODESYS in Produktion)</li>
+</ol>
+<p><strong>Wichtigste Erkenntnis:</strong> Legacy-Protokolle (Modbus) erfordern kompensierende Kontrollen. Moderne Protokolle (OPC UA) haben Sicherheitsfunktionen, die aktiviert werden müssen. Echtzeit-Protokolle (PROFINET) erfordern architektonische Sicherheit, da Protokollebenen-Sicherheit nicht möglich ist.</p>
+<h2 id="fazit">Fazit</h2>
+<p>Diese Übung demonstrierte die Sicherheitsrealität von OT-Protokollen:</p>
+<ul>
+<li><strong>Legacy-Protokolle</strong> (Modbus) haben keine Sicherheitsfunktionen - verlassen sich auf Segmentierung und Überwachung</li>
+<li><strong>Moderne Protokolle</strong> (OPC UA) haben ausgezeichnete Sicherheitsfunktionen, die oft deaktiviert sind - auditieren und aktivieren</li>
+<li><strong>Echtzeit-Protokolle</strong> (PROFINET) können keine Verschlüsselung verwenden - erfordern architektonische Kontrollen</li>
+<li><strong>Alle Protokolle</strong> profitieren von Netzwerksegmentierung, Überwachung und ordentlicher Zugriffskontrolle</li>
+</ul>
+<p>Als OT-Sicherheitsexperte ist Ihre Rolle:</p>
+<ol>
+<li>Inventarisieren, welche Protokolle verwendet werden</li>
+<li>Ihre Sicherheitskonfiguration bewerten</li>
+<li>Lücken gegenüber IEC-62443-Anforderungen identifizieren</li>
+<li>Praktische, betriebsfreundliche Massnahmen empfehlen</li>
+<li>Überwachung implementieren, um unbefugte Protokollnutzung zu erkennen</li>
+</ol>
+<p>Die heute analysierten Protokolle repräsentieren 80% dessen, was Sie in realen Industrieumgebungen antreffen werden. Das Verständnis ihrer Sicherheitsmerkmale ist grundlegend für eine effektive OT-Sicherheitsbewertung.</p>
+<hr />
+<h2 id="losung">Lösung</h2>
+<details class="success">
+<summary>Zum Anzeigen der Lösung klicken</summary>
+<h3 id="aufgabe-1-ot-verkehr-generieren_1">Aufgabe 1: OT-Verkehr generieren</h3>
+<p>Im HMI-Desktop Chromium öffnen und zur WebVisu navigieren:
+<div class="highlight"><pre><span></span><code>http://10.10.0.11:8080/webvisu.htm
+</code></pre></div></p>
+<p>Interagieren Sie mit Buttons und Schaltern in der Visualisierung, um HTTP- und möglicherweise Modbus-Verkehr zu generieren.</p>
+<h3 id="aufgabe-2-verkehr-erfassen">Aufgabe 2: Verkehr erfassen</h3>
+<ol>
+<li>In VS Code Containerlab TopoViewer öffnen</li>
+<li>Rechtsklick auf Verbindung zwischen <code>wago-plc2a-vlan10</code> und <code>sw-acc1</code></li>
+<li>"Wireshark Capture" wählen</li>
+<li>Im HMI erneut mit WebVisu interagieren</li>
+<li>Verkehr in Wireshark beobachten</li>
+</ol>
+<h3 id="aufgabe-3-modbus-tcp-analysieren_1">Aufgabe 3: Modbus TCP analysieren</h3>
+<p>Wireshark-Filter anwenden:
+<div class="highlight"><pre><span></span><code>mbtcp
+</code></pre></div></p>
+<p>Oder alternativ:
+<div class="highlight"><pre><span></span><code>tcp.port == 502
+</code></pre></div></p>
+<p><strong>Erwartete Beobachtungen:</strong></p>
+<ul>
+<li><strong>Function Codes</strong>: Typischerweise Read Holding Registers (0x03), Write Single Coil (0x05), Write Multiple Registers (0x10)</li>
+<li><strong>Werte sichtbar</strong>: Ja - alle Registerwerte sind im Klartext sichtbar</li>
+<li><strong>Verschlüsselung</strong>: Nein - Modbus TCP hat keine Verschlüsselung</li>
+<li><strong>Authentifizierung</strong>: Nein - keine Authentifizierung im Protokoll</li>
+</ul>
+<p><strong>Sicherheitsimplikation</strong>: Ein Angreifer im selben Netzwerksegment kann:
+- Alle Prozesswerte lesen
+- Befehle an die SPS senden
+- Verkehr manipulieren (Man-in-the-Middle)</p>
+<p>Vom Jumphost können Sie die Modbus-Konnektivität testen:
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.52
+nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.10.0.11<span class="w"> </span><span class="m">502</span>
+</code></pre></div></p>
+<p>Erwartete Ausgabe:
+<div class="highlight"><pre><span></span><code>Connection to 10.10.0.11 502 port [tcp/*] succeeded!
+</code></pre></div></p>
+<h3 id="aufgabe-4-codesys-protokoll-analysieren_1">Aufgabe 4: CODESYS-Protokoll analysieren</h3>
+<p>Filter für HTTP-Verkehr zur WebVisu:
+<div class="highlight"><pre><span></span><code>http &amp;&amp; ip.addr == 10.10.0.11
+</code></pre></div></p>
+<p>HTTP-Stream folgen:
+- Rechtsklick auf HTTP-Paket
+- Follow → HTTP Stream
+- Beobachten Sie Visualisierungsdaten im Klartext</p>
+<p><strong>Erwartete Beobachtungen:</strong>
+- WebVisu verwendet HTTP (Port 8080)
+- Keine HTTPS-Verschlüsselung
+- Variablenwerte und Status im Klartext
+- Session-Informationen exponiert</p>
+<p>Für CODESYS-Runtime-Protokoll (normalerweise von Engineering-Workstation):
+<div class="highlight"><pre><span></span><code>udp.port == 2455 || tcp.port == 1217
+</code></pre></div></p>
+<p>Im Lab sehen Sie möglicherweise wenig CODESYS-Runtime-Verkehr, da keine Engineering-Workstation aktiv programmiert.</p>
+<p><strong>Port-Übersicht auf der SPS:</strong></p>
+<p>Sie können die offenen Ports vom Jumphost oder von der SPS selbst prüfen:
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.53<span class="w">  </span><span class="c1"># wago-plc2a-vlan10</span>
+ss<span class="w"> </span>-tuln<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>LISTEN
+</code></pre></div></p>
+<p>Erwartete Ausgabe:
+<div class="highlight"><pre><span></span><code>tcp   LISTEN 0      5              0.0.0.0:8080       0.0.0.0:*    # WebVisu
+tcp   LISTEN 0      128            0.0.0.0:22         0.0.0.0:*    # SSH
+tcp   LISTEN 0      63          10.10.0.11:502        0.0.0.0:*    # Modbus
+tcp   LISTEN 0      10          10.10.0.11:4840       0.0.0.0:*    # OPC UA
+</code></pre></div></p>
+<h3 id="aufgabe-5-opc-ua-sicherheitskonfiguration-analysieren_1">Aufgabe 5: OPC-UA-Sicherheitskonfiguration analysieren</h3>
+<p><strong>OPC-UA-Verkehr generieren:</strong></p>
+<p>Option 1 - Vom HMI-Browser:
+<div class="highlight"><pre><span></span><code>http://10.20.0.11:8080/webvisu.htm  # ctrlx-plc3-vlan20
+</code></pre></div></p>
+<p>Option 2 - Konnektivität vom Jumphost testen:
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.52
+nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.20.0.11<span class="w"> </span><span class="m">4840</span>
+</code></pre></div></p>
+<p>Erwartete Ausgabe:
+<div class="highlight"><pre><span></span><code>Connection to 10.20.0.11 4840 port [tcp/*] succeeded!
+</code></pre></div></p>
+<p><strong>Wireshark-Analyse:</strong></p>
+<p>Erfassen Sie Verkehr zwischen <code>ctrlx-plc3-vlan20</code> und <code>sw-acc1</code>.</p>
+<p>Filter für OPC UA:
+<div class="highlight"><pre><span></span><code>opcua
+</code></pre></div></p>
+<p>Oder:
+<div class="highlight"><pre><span></span><code>tcp.port == 4840
+</code></pre></div></p>
+<p><strong>CreateSessionRequest analysieren:</strong></p>
+<p>Erweitern: <code>OpcUa Binary Protocol → Message → CreateSessionRequest</code></p>
+<p>Suchen: <code>SecurityPolicyUri</code></p>
+<p><strong>Erwarteter Wert:</strong>
+<div class="highlight"><pre><span></span><code>http://opcfoundation.org/UA/SecurityPolicy#None
+</code></pre></div></p>
+<p><strong>Bedeutung</strong>: Keine Verschlüsselung aktiviert.</p>
+<p><strong>ActivateSessionRequest analysieren:</strong></p>
+<p>Erweitern: <code>OpcUa Binary Protocol → Message → ActivateSessionRequest</code></p>
+<p>Suchen: <code>UserIdentityToken</code></p>
+<p><strong>Erwarteter Typ:</strong>
+<div class="highlight"><pre><span></span><code>AnonymousIdentityToken
+</code></pre></div></p>
+<p><strong>Bedeutung</strong>: Keine Authentifizierung erforderlich.</p>
+<p><strong>BrowseRequest/Response analysieren:</strong></p>
+<ul>
+<li>Komplette OPC-UA-Node-Struktur ist sichtbar</li>
+<li>Alle Tag-Namen im Klartext</li>
+<li>Organisationsstruktur des Prozessdatenmodells exponiert</li>
+<li>Ein Angreifer kann vollständiges Asset-Inventar erstellen</li>
+</ul>
+<p><strong>ReadRequest/Response analysieren:</strong></p>
+<ul>
+<li>Variablenwerte im Klartext übertragen</li>
+<li>Keine Integritätsprüfung</li>
+<li>Keine Vertraulichkeit</li>
+<li>Echtzeit-Prozessdaten für Angreifer sichtbar</li>
+</ul>
+<p><strong>Bewertungsergebnisse:</strong></p>
+<ol>
+<li><strong>SecurityPolicy</strong>: None (FAIL)</li>
+<li><strong>Verschlüsselung</strong>: Nein (FAIL)</li>
+<li><strong>Authentifizierung</strong>: Anonymous (FAIL)</li>
+<li><strong>Tag-Namen sichtbar</strong>: Ja (FAIL)</li>
+<li><strong>Variablenwerte sichtbar</strong>: Ja (FAIL)</li>
+</ol>
+<p><strong>IEC-62443-Verletzungen:</strong></p>
+<ul>
+<li>SR 1.1 (Identifikation &amp; Authentifizierung): FAIL</li>
+<li>SR 3.1 (Kommunikationsintegrität): FAIL</li>
+<li>SR 4.1 (Informationsvertraulichkeit): FAIL</li>
+</ul>
+<p><strong>Empfehlung:</strong></p>
+<p>OPC-UA-Server-Konfiguration ändern:
+<div class="highlight"><pre><span></span><code>SecurityPolicy: Basic256Sha256
+SecurityMode: SignAndEncrypt
+Authentication: Certificate-based
+</code></pre></div></p>
+<h3 id="aufgabe-6-profinet-protokoll-erkennung_1">Aufgabe 6: PROFINET-Protokoll-Erkennung</h3>
+<p><strong>PROFINET-Verkehr erfassen:</strong></p>
+<p>Erfassen Sie Verkehr zwischen <code>abb-800xa-vlan40</code> und <code>sw-acc2</code>.</p>
+<p><strong>Wireshark-Filter:</strong></p>
+<div class="highlight"><pre><span></span><code>eth.type == 0x8892
+</code></pre></div>
+<p>Oder:
+<div class="highlight"><pre><span></span><code>pn_io
+</code></pre></div></p>
+<p><strong>Erwartete Beobachtungen:</strong></p>
+<ol>
+<li><strong>Ethertype</strong>: 0x8892 (PROFINET Echtzeit)</li>
+<li><strong>Keine TCP/IP-Header</strong>: Dies ist Layer 2, nicht Layer 4</li>
+<li><strong>FrameID</strong>: Typischerweise 0x8000-0x8001 (RT-Zyklus-Daten)</li>
+<li><strong>Zyklisches Muster</strong>: Pakete alle ~4ms (sehr regelmässig)</li>
+<li><strong>MAC-Adressen sichtbar</strong>:</li>
+<li>Quelle: 00:03:2c:40:00:11 (ABB-System)</li>
+<li>Ziel: 00:0b:0f:20:00:11 (PROFINET-Gerät)</li>
+</ol>
+<p><strong>Timing-Analyse:</strong></p>
+<p>Wählen Sie mehrere aufeinanderfolgende PROFINET-Pakete und prüfen Sie das Zeitdelta:</p>
+<p>In Wireshark:
+- View → Time Display Format → Seconds Since Previous Displayed Packet
+- Erwartung: ~0.004 Sekunden (4ms Zykluszeit)</p>
+<p><strong>Bewertungsergebnisse:</strong></p>
+<ol>
+<li><strong>Ethertype</strong>: 0x8892 (Layer 2 Echtzeit)</li>
+<li><strong>TCP/IP-Header</strong>: Nein - direkter Ethernet-Frame</li>
+<li><strong>Zykluszeit</strong>: ~4ms (sehr deterministisch)</li>
+<li><strong>MAC-Adressen</strong>: Ja, sichtbar</li>
+<li><strong>Verschlüsselung</strong>: Nein - unmöglich bei Echtzeit</li>
+<li><strong>Nach tcp/udp filtern</strong>: PROFINET RT erscheint nicht</li>
+</ol>
+<p><strong>Sicherheitsimplikationen:</strong></p>
+<ul>
+<li>Kein Routing möglich (Layer 2)</li>
+<li>Keine Verschlüsselung möglich</li>
+<li>Physischer Zugang = volle Kontrolle</li>
+<li>VLAN-Isolation ist kritisch</li>
+<li>Port Security erforderlich</li>
+<li>Anomalieerkennung basierend auf Timing</li>
+</ul>
+<p><strong>PROFINET DCP (Discovery):</strong></p>
+<p>Für PROFINET-Geräteerkennung:
+<div class="highlight"><pre><span></span><code>pn_dcp
+</code></pre></div></p>
+<p>DCP-Broadcasts offenbaren:
+- Gerätename
+- Hersteller
+- IP-Konfiguration
+- Rolle im Netzwerk</p>
+<h3 id="aufgabe-7-protokollvergleich">Aufgabe 7: Protokollvergleich</h3>
+<p><strong>Zusammenfassung der Analyse:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Protokoll</th>
+<th>Verschlüsselung</th>
+<th>Auth</th>
+<th>Hauptrisiko</th>
+<th>Verteidigung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Modbus TCP</strong></td>
+<td>Nein</td>
+<td>Nein</td>
+<td>Klartext-Zugriff</td>
+<td>Segmentierung + Überwachung</td>
+</tr>
+<tr>
+<td><strong>CODESYS</strong></td>
+<td>Optional, meist Nein</td>
+<td>Optional</td>
+<td>Engineering-Zugriff</td>
+<td>In Produktion deaktivieren</td>
+</tr>
+<tr>
+<td><strong>OPC UA</strong></td>
+<td>Ja (oft deaktiviert)</td>
+<td>Ja (oft deaktiviert)</td>
+<td>Fehlkonfiguration</td>
+<td>Sicherheitsfunktionen aktivieren</td>
+</tr>
+<tr>
+<td><strong>PROFINET RT</strong></td>
+<td>Unmöglich</td>
+<td>Nein</td>
+<td>Layer-2-Angriffe</td>
+<td>Physische + VLAN-Isolation</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Audit-Checkliste erfüllt:</strong></p>
+<ul>
+<li>[x] Protokolle inventarisiert (Modbus, OPC UA, PROFINET, HTTP)</li>
+<li>[x] OPC-UA-SecurityPolicy geprüft (None = FAIL)</li>
+<li>[x] OPC-UA-Authentifizierung geprüft (Anonymous = FAIL)</li>
+<li>[x] Modbus-Segmentierung geprüft</li>
+<li>[x] CODESYS-Ports identifiziert (sollten deaktiviert sein)</li>
+<li>[x] PROFINET-VLAN-Isolation geprüft</li>
+<li>[x] IEC-62443-Verletzungen dokumentiert</li>
+</ul>
+<p><strong>Wichtigste Erkenntnisse:</strong></p>
+<ol>
+<li><strong>Legacy-Protokolle</strong> (Modbus): Keine Sicherheitsfunktionen → Kompensierende Kontrollen erforderlich</li>
+<li><strong>Moderne Protokolle</strong> (OPC UA): Sicherheit vorhanden, aber oft deaktiviert → Audit und Aktivierung erforderlich</li>
+<li><strong>Echtzeit-Protokolle</strong> (PROFINET): Verschlüsselung unmöglich → Architektonische Sicherheit kritisch</li>
+<li><strong>Alle Protokolle</strong>: Profitieren von Segmentierung, Überwachung und Zugriffskontrolle</li>
+</ol>
+<p><strong>Nächste Schritte:</strong></p>
+<ol>
+<li>OPC-UA-Sicherheitsfunktionen aktivieren (höchste Priorität)</li>
+<li>Netzwerksegmentierung durchsetzen (siehe Übung 7)</li>
+<li>CODESYS-Engineering-Ports für Produktion deaktivieren</li>
+<li>IDS/IPS für OT-Protokoll-Anomalien implementieren</li>
+<li>Regelmässige Protokoll-Audits durchführen</li>
+</ol>
+</details>
+<p>```</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tracking"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "In Zwischenablage kopiert", "clipboard.copy": "In Zwischenablage kopieren", "search.result.more.one": "1 weiteres Suchergebnis auf dieser Seite", "search.result.more.other": "# weitere Suchergebnisse auf dieser Seite", "search.result.none": "Keine Suchergebnisse", "search.result.one": "1 Suchergebnis", "search.result.other": "# Suchergebnisse", "search.result.placeholder": "Suchbegriff eingeben", "search.result.term.missing": "Es fehlt", "select.version": "Version ausw\u00e4hlen"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

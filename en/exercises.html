@@ -1,0 +1,3230 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="OT Networks: Design & Defend">
+      
+      
+      
+        <link rel="canonical" href="https://narrowin.github.io/ot-labs-docs/en/exercises.html">
+      
+      
+      
+      
+        
+          <link rel="alternate" href="/ot-labs-docs/en/" hreflang="en">
+        
+          <link rel="alternate" href="/ot-labs-docs/de/" hreflang="de">
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>OT Security Lab Exercises - OT Networks: Design & Defend</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+        <script src="https://unpkg.com/iframe-worker/shim"></script>
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ot-security-lab-exercises" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-header__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OT Networks: Design & Defend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              OT Security Lab Exercises
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/en/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/de/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/narrowin/ot-labs-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-nav__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    OT Networks: Design & Defend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/narrowin/ot-labs-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lab.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercises
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Exercises
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex1-vlan-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. VLAN Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex2-arp-spoofing.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. ARP Spoofing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex3-spanning-tree.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Spanning Tree
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex4-link-aggregation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Link Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex5-reconnaissance.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Remote Access
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex6-protocol-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Protocol Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex7-segmentation-firewall.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Segmentation & Firewall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/appendix.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Appendix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cheatsheet.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheatsheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Container101.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container101
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="automation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="slides.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Slides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="feedback.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required-knowledge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Knowledge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#topology-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topology Selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise List
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-1-vlan-discovery-and-traffic-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1: VLAN Discovery and Traffic Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercise 1: VLAN Discovery and Traffic Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#learning-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Objectives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-verify-plc-connectivity-within-same-vlan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Verify PLC connectivity within same VLAN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-capture-traffic-on-trunk-port-between-switches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Capture traffic on trunk port between switches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-capture-traffic-on-access-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Capture traffic on access port
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#questions-to-consider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to Consider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-connectivity-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Connectivity testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-trunk-port-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Trunk port capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-access-port-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Access port capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-2-arp-spoofing-attack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2: ARP Spoofing Attack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercise 2: ARP Spoofing Attack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#learning-objectives_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Objectives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-observe-normal-arp-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Observe normal ARP behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-set-up-traffic-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Set up traffic capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-execute-arp-spoofing-attack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Execute ARP spoofing attack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-capture-cleartext-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4: Capture cleartext credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#questions-to-consider_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to Consider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-issues_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Challenge
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Challenge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-attack-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-attack state
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attack-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attack execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detection-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detection methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mitigation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mitigation strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-3-spanning-tree-protocol-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3: Spanning Tree Protocol Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercise 3: Spanning Tree Protocol Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#learning-objectives_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Objectives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-identify-switch-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Identify switch topology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-examine-link-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Examine link topology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-capture-bpdu-frames" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Capture BPDU frames
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-understand-redundancy-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4: Understand redundancy approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#questions-to-consider_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to Consider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-issues_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bridge-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bridge configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bonding-verification-segmented-topology-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bonding verification (Segmented topology only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#root-bridge-identification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root bridge identification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-4-link-aggregation-and-load-balancing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4: Link Aggregation and Load Balancing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercise 4: Link Aggregation and Load Balancing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#learning-objectives_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Objectives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-verify-lacp-negotiation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Verify LACP negotiation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-observe-traffic-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Observe traffic distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-test-hash-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Test hash algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-test-link-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4: Test link failover
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#questions-to-consider_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to Consider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-issues_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#traffic-distribution-observation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Traffic distribution observation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#packet-count-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Packet count verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failover-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-5-remote-access-and-security-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5: Remote Access and Security Assessment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercise 5: Remote Access and Security Assessment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#learning-objectives_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Objectives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-initial-remote-access-from-jumphost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Initial remote access from jumphost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-host-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Host discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-service-identification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Service identification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-access-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4: Access testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-document-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5: Document findings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#questions-to-consider_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to Consider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-issues_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-challenge_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Challenge
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Challenge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#host-discovery-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host discovery results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-scan-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service scan results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security findings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended mitigations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-wireshark-filters-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix: Wireshark Filters Quick Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix: Wireshark Filters Quick Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vlan-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arp-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ARP Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stprstp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STP/RSTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protocol-specific" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol-Specific
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combining-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining Filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Common Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-not-starting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Not Starting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cannot-ssh-to-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cannot SSH to Devices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wireshark-not-opening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wireshark Not Opening
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-traffic-in-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No Traffic in Captures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ping-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ping Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ot-security-lab-exercises">OT Security Lab Exercises</h1>
+<h2 id="overview">Overview</h2>
+<p>These hands-on exercises provide practical experience with OT network security concepts. Each exercise focuses on fundamental network security principles commonly encountered in industrial control system environments.</p>
+<p><strong>Total Time</strong>: 2-3 hours for all exercises</p>
+<p><strong>Lab Requirements</strong>: You need a running lab environment (GitHub Codespaces or DevPod). See the <a href="lab.html">Lab Environment</a> page for setup instructions.</p>
+<p><strong>Exercise Approach</strong>: Exercises are independent and can be completed in any order, though following the sequence provides a logical progression of concepts.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="required-knowledge">Required Knowledge</h3>
+<ul>
+<li>Basic Linux command line</li>
+<li>Network fundamentals (IP addressing, VLANs, routing)</li>
+<li>SSH basics</li>
+<li>Wireshark basics</li>
+</ul>
+<h3 id="lab-access">Lab Access</h3>
+<p>Before starting, ensure you can:</p>
+<ol>
+<li>Access your lab environment (Codespaces or DevPod)</li>
+<li>Deploy a lab topology using Containerlab extension</li>
+<li>SSH into lab devices</li>
+<li>Capture traffic using Wireshark via Edgeshark</li>
+</ol>
+<h3 id="topology-selection">Topology Selection</h3>
+<p>These exercises use two lab topologies:</p>
+<ul>
+<li><code>ot-sec-flat.clab.yml</code> - Flat network with VLANs but minimal segmentation</li>
+<li><code>ot-sec-segmented.clab.yml</code> - Segmented network with firewall and bonding</li>
+</ul>
+<p>Each exercise specifies which topology to use.</p>
+<h2 id="exercise-list">Exercise List</h2>
+<table>
+<thead>
+<tr>
+<th>Exercise</th>
+<th>Topic</th>
+<th>Time</th>
+<th>Topology</th>
+<th>Difficulty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>VLAN Discovery</td>
+<td>20-30 min</td>
+<td>Both</td>
+<td>Beginner</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ARP Spoofing Attack</td>
+<td>30-40 min</td>
+<td>Both (flat easier)</td>
+<td>Intermediate</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Spanning Tree Analysis</td>
+<td>25-35 min</td>
+<td>Both</td>
+<td>Intermediate</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Link Aggregation</td>
+<td>20-30 min</td>
+<td>Segmented only</td>
+<td>Intermediate</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Remote Access Assessment</td>
+<td>35-45 min</td>
+<td>Both</td>
+<td>Intermediate</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="exercise-1-vlan-discovery-and-traffic-analysis">Exercise 1: VLAN Discovery and Traffic Analysis</h2>
+<p><strong>Time Estimate</strong>: 20-30 minutes</p>
+<p><strong>Lab Topology</strong>: <code>ot-sec-flat</code> or <code>ot-sec-segmented</code></p>
+<p><strong>Difficulty</strong>: Beginner</p>
+<h3 id="learning-objectives">Learning Objectives</h3>
+<ul>
+<li>Understand 802.1Q VLAN tagging on trunk ports</li>
+<li>Differentiate between trunk and access port behavior</li>
+<li>Recognize VLAN isolation in packet captures</li>
+<li>Identify security implications of VLAN segmentation</li>
+</ul>
+<h3 id="prerequisites_1">Prerequisites</h3>
+<ul>
+<li>Lab deployed and running</li>
+<li>Basic Wireshark knowledge</li>
+<li>Understanding of ping command</li>
+</ul>
+<h3 id="scenario">Scenario</h3>
+<p>Industrial networks use VLANs to logically segment different operational zones. In this lab, VLANs separate hygiene systems (VLAN 10), process control (VLAN 20), disposal systems (VLAN 30), control room (VLAN 40), and engineering workstations (VLAN 50). Understanding how VLANs work and how to identify them in traffic is essential for OT security monitoring.</p>
+<h3 id="tasks">Tasks</h3>
+<h4 id="task-1-verify-plc-connectivity-within-same-vlan">Task 1: Verify PLC connectivity within same VLAN</h4>
+<ol>
+<li>SSH into <code>wago-plc2a-vlan10</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.53
+</code></pre></div>
+<p>Password: <code>admin</code></p>
+<ol>
+<li>Test connectivity to another device in VLAN 10:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">10</span>.10.0.12
+</code></pre></div>
+<ol>
+<li>Test connectivity to device in different VLAN:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">10</span>.20.0.11
+</code></pre></div>
+<p><strong>Question</strong>: Do both pings succeed? Why or why not?</p>
+<h4 id="task-2-capture-traffic-on-trunk-port-between-switches">Task 2: Capture traffic on trunk port between switches</h4>
+<ol>
+<li>In Containerlab extension TopoViewer, right-click on the link between <code>sw-dist</code> and <code>sw-acc1</code></li>
+<li>Select capture from <code>sw-dist</code> side</li>
+<li>
+<p>Wireshark opens via Edgeshark</p>
+</li>
+<li>
+<p>Apply Wireshark filter:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>vlan
+</code></pre></div>
+<ol>
+<li>Generate traffic by pinging from a PLC (use existing SSH session):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">10</span>.10.0.1
+</code></pre></div>
+<p><strong>Questions</strong>:</p>
+<ul>
+<li>Which VLANs do you see in the captures?</li>
+<li>Look at the Ethernet frame details - where is the VLAN tag located?</li>
+<li>What is the VLAN ID field value?</li>
+</ul>
+<h4 id="task-3-capture-traffic-on-access-port">Task 3: Capture traffic on access port</h4>
+<ol>
+<li>Stop the previous capture</li>
+<li>Right-click on link between <code>sw-acc1</code> and <code>wago-plc2a-vlan10</code></li>
+<li>Select capture from switch side</li>
+<li>Generate traffic again:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">10</span>.10.0.1
+</code></pre></div>
+<ol>
+<li>Apply same filter: <code>vlan</code></li>
+</ol>
+<p><strong>Questions</strong>:</p>
+<ul>
+<li>Do you see any VLAN tags now?</li>
+<li>What is the difference between trunk and access ports regarding VLAN tags?</li>
+<li>Why does the switch remove VLAN tags on access ports?</li>
+</ul>
+<h3 id="verification">Verification</h3>
+<p>Success indicators:</p>
+<ul>
+<li>Pings within same VLAN succeed</li>
+<li>Pings across VLANs succeed (flat) or fail (segmented with firewall)</li>
+<li>Trunk port captures show 802.1Q headers</li>
+<li>Access port captures show untagged frames</li>
+<li>Multiple VLAN IDs visible on trunk (10, 20, 30, 40, 50)</li>
+</ul>
+<h3 id="questions-to-consider">Questions to Consider</h3>
+<ol>
+<li>If an attacker gains access to a trunk port, what additional attack surface does this create?</li>
+<li>How would you detect unauthorized VLAN access?</li>
+<li>What is VLAN hopping and how could it be prevented?</li>
+</ol>
+<h3 id="common-issues">Common Issues</h3>
+<ul>
+<li><strong>Issue</strong>: Cannot see VLAN tags in capture</li>
+<li>
+<p><strong>Solution</strong>: Make sure you are capturing on trunk port between switches, not on access port to device</p>
+</li>
+<li>
+<p><strong>Issue</strong>: Wireshark does not open</p>
+</li>
+<li>
+<p><strong>Solution</strong>: First time may require accepting Edgeshark prompt. Close and retry.</p>
+</li>
+<li>
+<p><strong>Issue</strong>: Pings fail within same VLAN</p>
+</li>
+<li><strong>Solution</strong>: Check lab is fully deployed. Run <code>scripts/lab-test.py ot-sec-flat</code> to verify.</li>
+</ul>
+<details class="success">
+<summary>Solution: Exercise 1 - VLAN Discovery</summary>
+<h4 id="task-1-connectivity-testing">Task 1: Connectivity testing</h4>
+<p>SSH to wago-plc2a-vlan10:</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.53
+</code></pre></div>
+<p>Ping within VLAN 10 - SUCCEEDS:</p>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">10</span>.10.0.12
+</code></pre></div>
+<p>Expected output:</p>
+<div class="highlight"><pre><span></span><code>PING 10.10.0.12 (10.10.0.12) 56(84) bytes of data.
+64 bytes from 10.10.0.12: icmp_seq=1 ttl=64 time=0.521 ms
+64 bytes from 10.10.0.12: icmp_seq=2 ttl=64 time=0.389 ms
+64 bytes from 10.10.0.12: icmp_seq=3 ttl=64 time=0.412 ms
+64 bytes from 10.10.0.12: icmp_seq=4 ttl=64 time=0.398 ms
+
+--- 10.10.0.12 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss
+</code></pre></div>
+<p>Ping to VLAN 20 - SUCCESS (flat) or FAIL (segmented with firewall):</p>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">10</span>.20.0.11
+</code></pre></div>
+<p>In <code>ot-sec-flat</code>: Succeeds because no firewall blocks inter-VLAN traffic.
+In <code>ot-sec-segmented</code>: May fail if firewall rules block this communication.</p>
+<h4 id="task-2-trunk-port-capture">Task 2: Trunk port capture</h4>
+<p>In Wireshark on trunk link between switches, with filter <code>vlan</code>:</p>
+<p><strong>Observed</strong>: 802.1Q headers visible with VLAN ID 10 for traffic from VLAN 10 devices.</p>
+<p>Frame structure:</p>
+<div class="highlight"><pre><span></span><code>Ethernet II
+    Destination: [MAC]
+    Source: [MAC]
+    Type: 802.1Q (0x8100)
+802.1Q Virtual LAN
+    Priority: 0
+    CFI: 0
+    ID: 10
+    Type: IPv4 (0x0800)
+</code></pre></div>
+<h4 id="task-3-access-port-capture">Task 3: Access port capture</h4>
+<p>On access port to <code>wago-plc2a-vlan10</code>, filter <code>vlan</code> shows NO results.</p>
+<p>Frames are untagged. Switch adds VLAN tag when forwarding to trunk, removes it when forwarding to access port.</p>
+<p><strong>Answers to questions</strong>:</p>
+<ul>
+<li>Trunk ports show multiple VLANs: 10, 20, 30, 40, 50</li>
+<li>VLAN tag is inserted after source MAC, before EtherType</li>
+<li>Access ports have no VLAN tags - switch handles tagging</li>
+<li>This allows end devices to be VLAN-unaware</li>
+</ul>
+</details>
+<hr />
+<h2 id="exercise-2-arp-spoofing-attack">Exercise 2: ARP Spoofing Attack</h2>
+<p><strong>Time Estimate</strong>: 30-40 minutes</p>
+<p><strong>Lab Topology</strong>: <code>ot-sec-flat</code> (recommended) or <code>ot-sec-segmented</code></p>
+<p><strong>Difficulty</strong>: Intermediate</p>
+<h3 id="learning-objectives_1">Learning Objectives</h3>
+<ul>
+<li>Execute a Layer 2 man-in-the-middle attack</li>
+<li>Understand ARP protocol vulnerabilities</li>
+<li>Capture cleartext traffic during MITM attack</li>
+<li>Learn detection and mitigation strategies</li>
+</ul>
+<h3 id="prerequisites_2">Prerequisites</h3>
+<ul>
+<li>Understanding of ARP protocol</li>
+<li>Basic knowledge of network attacks</li>
+<li>Wireshark experience</li>
+<li>Root/sudo concepts</li>
+</ul>
+<h3 id="scenario_1">Scenario</h3>
+<p>ARP (Address Resolution Protocol) maps IP addresses to MAC addresses on local networks. Because ARP has no authentication, an attacker can send false ARP replies to poison the ARP cache of target devices. This redirects traffic through the attacker's system, enabling man-in-the-middle attacks. In OT environments, this can intercept PLC communications, engineering workstation traffic, or HMI connections.</p>
+<h3 id="tasks_1">Tasks</h3>
+<h4 id="task-1-observe-normal-arp-behavior">Task 1: Observe normal ARP behavior</h4>
+<ol>
+<li>SSH into victim PLC <code>wago-plc2b-vlan10</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.54
+</code></pre></div>
+<ol>
+<li>View current ARP table:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>arp<span class="w"> </span>-n
+</code></pre></div>
+<ol>
+<li>
+<p>Note the MAC address for gateway <code>10.10.0.1</code></p>
+</li>
+<li>
+<p>Start continuous ping to external network:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span><span class="m">1</span>.1.1.1
+</code></pre></div>
+<p>Leave this running (do not press Ctrl+C).</p>
+<h4 id="task-2-set-up-traffic-capture">Task 2: Set up traffic capture</h4>
+<ol>
+<li>Open new terminal/SSH session</li>
+<li>SSH into attacker PLC <code>wago-plc2a-vlan10</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.53
+</code></pre></div>
+<ol>
+<li>Start Wireshark capture on link between <code>wago-plc2a-vlan10</code> and <code>sw-acc1</code></li>
+<li>Apply filter:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>icmp
+</code></pre></div>
+<p><strong>Observation</strong>: Currently you should see NO traffic because ping is not going through the attacker.</p>
+<h4 id="task-3-execute-arp-spoofing-attack">Task 3: Execute ARP spoofing attack</h4>
+<ol>
+<li>On attacker (<code>wago-plc2a-vlan10</code>), run the ARP spoofing script:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>/home/admin/arp_spoofing-simple.sh<span class="w"> </span>eth1<span class="w"> </span><span class="m">10</span>.10.0.12<span class="w"> </span><span class="m">10</span>.10.0.1
+</code></pre></div>
+<p>Parameters:</p>
+<ul>
+<li><code>eth1</code> - interface connected to network</li>
+<li><code>10.10.0.12</code> - victim IP (wago-plc2b-vlan10)</li>
+<li><code>10.10.0.1</code> - gateway IP</li>
+</ul>
+<p><strong>Expected output</strong>:</p>
+<div class="highlight"><pre><span></span><code>[*] Enabling IP forwarding...
+[*] Poisoning 10.10.0.12 (telling it we are 10.10.0.1)...
+[*] Poisoning 10.10.0.1 (telling it we are 10.10.0.12)...
+</code></pre></div>
+<ol>
+<li>
+<p>Check Wireshark - you should now see ICMP echo requests and replies flowing through attacker</p>
+</li>
+<li>
+<p>On victim, check ARP table again:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>arp<span class="w"> </span>-n
+</code></pre></div>
+<p><strong>Question</strong>: Has the MAC address for <code>10.10.0.1</code> changed? Compare to original.</p>
+<h4 id="task-4-capture-cleartext-credentials">Task 4: Capture cleartext credentials</h4>
+<ol>
+<li>Stop the ARP spoofing script (Ctrl+C on attacker)</li>
+<li>On victim, start netcat connection:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;username:admin password:secretpass123&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span><span class="m">10</span>.20.0.11<span class="w"> </span><span class="m">1234</span>
+</code></pre></div>
+<ol>
+<li>On attacker, restart ARP spoofing:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>/home/admin/arp_spoofing-simple.sh<span class="w"> </span>eth1<span class="w"> </span><span class="m">10</span>.10.0.12<span class="w"> </span><span class="m">10</span>.10.0.1
+</code></pre></div>
+<ol>
+<li>From victim, send credentials again:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;username:admin password:secretpass123&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span><span class="m">10</span>.20.0.11<span class="w"> </span><span class="m">1234</span>
+</code></pre></div>
+<ol>
+<li>In Wireshark, remove ICMP filter and look for TCP traffic</li>
+<li>Follow TCP stream to see cleartext data</li>
+</ol>
+<h3 id="verification_1">Verification</h3>
+<p>Success indicators:</p>
+<ul>
+<li>Attacker sees victim's ping traffic in Wireshark</li>
+<li>Victim's ARP table shows attacker's MAC for gateway</li>
+<li>Script output shows poisoning messages</li>
+<li>TCP stream reveals cleartext credentials</li>
+</ul>
+<h3 id="questions-to-consider_1">Questions to Consider</h3>
+<ol>
+<li>How can you detect ARP spoofing on a production network?</li>
+<li>What mitigation strategies exist (DAI, port security, static ARP)?</li>
+<li>Why is this attack particularly dangerous in OT environments?</li>
+<li>What protocols are vulnerable to MITM credential theft?</li>
+</ol>
+<h3 id="common-issues_1">Common Issues</h3>
+<ul>
+<li><strong>Issue</strong>: Script fails with "must be run as root"</li>
+<li>
+<p><strong>Solution</strong>: Use <code>sudo</code> before the script command</p>
+</li>
+<li>
+<p><strong>Issue</strong>: No traffic visible in Wireshark during attack</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Check IP forwarding is enabled (script does this automatically)</p>
+</li>
+<li>
+<p><strong>Issue</strong>: Attack does not work in segmented topology</p>
+</li>
+<li><strong>Solution</strong>: Firewall rules may block inter-VLAN traffic. Use flat topology for easier testing.</li>
+</ul>
+<h3 id="advanced-challenge">Advanced Challenge</h3>
+<p>Use <code>dsniff</code> tool to automatically capture credentials:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>dsniff<span class="w"> </span>-i<span class="w"> </span>eth1
+</code></pre></div>
+<p>While running, generate HTTP or FTP traffic and observe automatic credential extraction.</p>
+<details class="success">
+<summary>Solution: Exercise 2 - ARP Spoofing</summary>
+<h4 id="pre-attack-state">Pre-attack state</h4>
+<p>Victim's ARP table before attack:</p>
+<div class="highlight"><pre><span></span><code>arp<span class="w"> </span>-n
+</code></pre></div>
+<p>Output shows:</p>
+<div class="highlight"><pre><span></span><code>Address          HWtype  HWaddress           Flags Mask   Iface
+10.10.0.1        ether   02:42:ac:14:00:0b   C            eth1
+</code></pre></div>
+<p>Note this MAC address.</p>
+<h4 id="attack-execution">Attack execution</h4>
+<p>From attacker <code>wago-plc2a-vlan10</code>:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>/home/admin/arp_spoofing-simple.sh<span class="w"> </span>eth1<span class="w"> </span><span class="m">10</span>.10.0.12<span class="w"> </span><span class="m">10</span>.10.0.1
+</code></pre></div>
+<p>Output:</p>
+<div class="highlight"><pre><span></span><code>[*] Enabling IP forwarding...
+[*] Poisoning 10.10.0.12 (telling it we are 10.10.0.1)...
+[*] Poisoning 10.10.0.1 (telling it we are 10.10.0.12)...
+</code></pre></div>
+<p>Script continues running.</p>
+<h4 id="verification_2">Verification</h4>
+<p>On victim, check ARP again:</p>
+<div class="highlight"><pre><span></span><code>arp<span class="w"> </span>-n
+</code></pre></div>
+<p>MAC for <code>10.10.0.1</code> now shows attacker's MAC instead of real gateway MAC.</p>
+<p>In Wireshark on attacker's interface, ICMP traffic from victim now visible.</p>
+<h4 id="detection-methods">Detection methods</h4>
+<ol>
+<li>Monitor ARP tables for unexpected changes</li>
+<li>Detect gratuitous ARP packets</li>
+<li>Use ARP monitoring tools (arpwatch)</li>
+<li>Compare MAC-to-IP mappings against known good state</li>
+</ol>
+<h4 id="mitigation-strategies">Mitigation strategies</h4>
+<ol>
+<li>Dynamic ARP Inspection (DAI) on switches</li>
+<li>Port security limiting MAC addresses per port</li>
+<li>Static ARP entries for critical infrastructure</li>
+<li>Network segmentation reducing attack scope</li>
+<li>802.1X authentication before network access</li>
+</ol>
+</details>
+<hr />
+<h2 id="exercise-3-spanning-tree-protocol-analysis">Exercise 3: Spanning Tree Protocol Analysis</h2>
+<p><strong>Time Estimate</strong>: 25-35 minutes</p>
+<p><strong>Lab Topology</strong>: <code>ot-sec-flat</code> or <code>ot-sec-segmented</code></p>
+<p><strong>Difficulty</strong>: Intermediate</p>
+<h3 id="learning-objectives_2">Learning Objectives</h3>
+<ul>
+<li>Understand Spanning Tree Protocol operation</li>
+<li>Identify root bridge and port states</li>
+<li>Observe STP BPDU exchange</li>
+<li>(Segmented only) Analyze LACP bonding with STP</li>
+</ul>
+<h3 id="prerequisites_3">Prerequisites</h3>
+<ul>
+<li>Understanding of Layer 2 switching</li>
+<li>Knowledge of STP/RSTP concepts</li>
+<li>Basic MikroTik RouterOS commands</li>
+<li>SSH access to switches</li>
+</ul>
+<h3 id="scenario_2">Scenario</h3>
+<p>Spanning Tree Protocol (STP) prevents loops in switched networks by blocking redundant paths. Industrial networks use RSTP (Rapid Spanning Tree Protocol) for faster convergence. Both lab topologies run STP on all switches. The segmented lab additionally uses LACP (Link Aggregation Control Protocol) bonding between switches, which works in coordination with STP for both redundancy and increased bandwidth.</p>
+<h3 id="tasks_2">Tasks</h3>
+<h4 id="task-1-identify-switch-topology">Task 1: Identify switch topology</h4>
+<ol>
+<li>SSH into distribution switch:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.12
+</code></pre></div>
+<p>Password: <code>admin</code></p>
+<ol>
+<li>View bridge configuration:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>/interface bridge print
+</code></pre></div>
+<ol>
+<li>List all bridge ports:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>/interface bridge port print
+</code></pre></div>
+<p><strong>Questions</strong>:</p>
+<ul>
+<li>What is the bridge name?</li>
+<li>Which interfaces are bridge members?</li>
+<li>Which interfaces have VLAN filtering enabled?</li>
+</ul>
+<h4 id="task-2-examine-link-topology">Task 2: Examine link topology</h4>
+<ol>
+<li>Check which interfaces connect to other switches:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>/interface bridge port print
+</code></pre></div>
+<ol>
+<li><strong>Segmented topology only</strong>: Check bonding configuration:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>/interface bonding print detail
+</code></pre></div>
+<p><strong>Expected in segmented</strong>:</p>
+<ul>
+<li>Bond name: <code>bond-sw-acc1</code></li>
+<li>Mode: <code>802.3ad</code> (LACP)</li>
+<li>Slaves: <code>ether9</code>, <code>ether10</code></li>
+</ul>
+<p><strong>Expected in flat</strong>:</p>
+<ul>
+<li>No bonding interfaces</li>
+<li>Single link: ether10 connects to sw-acc1</li>
+</ul>
+<p><strong>Questions</strong>:</p>
+<ul>
+<li>How many links connect sw-dist to sw-acc1?</li>
+<li>(Segmented) Are both bond members active?</li>
+</ul>
+<h4 id="task-3-capture-bpdu-frames">Task 3: Capture BPDU frames</h4>
+<ol>
+<li>In TopoViewer, start Wireshark capture on link between <code>sw-dist</code> and <code>sw-acc1</code></li>
+<li>Apply filter:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>stp
+</code></pre></div>
+<p>Or alternatively:</p>
+<div class="highlight"><pre><span></span><code>eth.dst == 01:80:c2:00:00:00
+</code></pre></div>
+<p><strong>Observations</strong>:</p>
+<ul>
+<li>BPDUs sent to multicast address <code>01:80:c2:00:00:00</code></li>
+<li>Root bridge identifier</li>
+<li>Port roles (designated, root)</li>
+<li>
+<p>Bridge priority values</p>
+</li>
+<li>
+<p>Check bridge settings on both switches:</p>
+</li>
+</ul>
+<p>On <code>sw-dist</code>:</p>
+<div class="highlight"><pre><span></span><code>/interface bridge print detail
+</code></pre></div>
+<p>On <code>sw-acc1</code> (SSH to 192.168.100.13):</p>
+<div class="highlight"><pre><span></span><code>/interface bridge print detail
+</code></pre></div>
+<p><strong>Question</strong>: Which switch has lower priority and becomes root bridge?</p>
+<h4 id="task-4-understand-redundancy-approach">Task 4: Understand redundancy approach</h4>
+<p><strong>In flat topology</strong>:</p>
+<ul>
+<li>Single link between switches</li>
+<li>STP prevents loops between other switch connections</li>
+<li>No link-level redundancy between sw-dist and sw-acc1</li>
+</ul>
+<p><strong>In segmented topology</strong>:</p>
+<ul>
+<li>LACP bond provides link redundancy</li>
+<li>STP still runs on other ports</li>
+<li>Two complementary redundancy mechanisms</li>
+</ul>
+<p>From distribution switch, check configuration:</p>
+<div class="highlight"><pre><span></span><code>/interface ethernet print
+/interface bridge port print
+</code></pre></div>
+<p><strong>Question</strong>: What happens if the single uplink fails in flat topology?</p>
+<h3 id="verification_3">Verification</h3>
+<p>Success indicators:</p>
+<ul>
+<li>Bridge configuration shows vlan-filtering enabled</li>
+<li>BPDU frames visible in Wireshark captures</li>
+<li>Root bridge identified from bridge settings</li>
+<li>(Segmented) Bond interface exists with LACP active</li>
+<li>(Flat) Single link topology documented</li>
+<li>Understanding of how STP prevents loops</li>
+</ul>
+<h3 id="questions-to-consider_2">Questions to Consider</h3>
+<ol>
+<li>Why does STP run even when there's no redundant path (flat)?</li>
+<li>(Segmented) What happens if one bond member fails?</li>
+<li>How quickly does STP reconverge after topology change?</li>
+<li>What security risks does STP present (BPDU attacks)?</li>
+</ol>
+<h3 id="common-issues_2">Common Issues</h3>
+<ul>
+<li><strong>Issue</strong>: No bonding interface visible in flat</li>
+<li>
+<p><strong>Solution</strong>: Correct - flat topology has no bonding, only single links</p>
+</li>
+<li>
+<p><strong>Issue</strong>: Cannot SSH to switches</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Use management IPs 192.168.100.11-14, not data plane IPs</p>
+</li>
+<li>
+<p><strong>Issue</strong>: No BPDUs in capture</p>
+</li>
+<li>
+<p><strong>Solution</strong>: BPDUs are sent periodically (every 2 seconds). Wait or generate topology change.</p>
+</li>
+<li>
+<p><strong>Issue</strong>: Exercise says "segmented only" but I'm in flat</p>
+</li>
+<li><strong>Solution</strong>: Exercise 3 works in both topologies - bonding tasks are marked as segmented-only within the exercise</li>
+</ul>
+<details class="success">
+<summary>Solution: Exercise 3 - STP Analysis</summary>
+<h4 id="bridge-configuration">Bridge configuration</h4>
+<p>SSH to <code>sw-dist</code>:</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.12
+</code></pre></div>
+<p>View bridge:</p>
+<div class="highlight"><pre><span></span><code>/interface bridge print
+</code></pre></div>
+<p>Output:</p>
+<div class="highlight"><pre><span></span><code>Flags: X - disabled, R - running
+ 0 R name=&quot;bridge&quot; mtu=auto actual-mtu=1500 l2mtu=65535 arp=enabled 
+     arp-timeout=auto mac-address=XX:XX:XX:XX:XX:XX auto-mac=no 
+     protocol-mode=rstp vlan-filtering=yes
+</code></pre></div>
+<p>Bridge ports:</p>
+<div class="highlight"><pre><span></span><code>/interface bridge port print
+</code></pre></div>
+<p><strong>Flat topology</strong> shows ether10, ether12, ether8, ether2 as bridge members with VLAN settings.</p>
+<p><strong>Segmented topology</strong> shows ether12, bond-sw-acc1, ether8, ether2 as bridge members with VLAN settings.</p>
+<h4 id="bonding-verification-segmented-topology-only">Bonding verification (Segmented topology only)</h4>
+<div class="highlight"><pre><span></span><code>/interface bonding print detail
+</code></pre></div>
+<p>Output shows:</p>
+<div class="highlight"><pre><span></span><code>0   name=&quot;bond-sw-acc1&quot; mtu=auto mode=802.3ad primary=none 
+    slaves=ether9,ether10 link-monitoring=mii arp-interval=100ms 
+    lacp-rate=30secs transmit-hash-policy=layer-2-and-3
+</code></pre></div>
+<p>Monitor status:</p>
+<div class="highlight"><pre><span></span><code>/interface bonding monitor bond-sw-acc1 once
+</code></pre></div>
+<p>Output:</p>
+<div class="highlight"><pre><span></span><code>              mode: 802.3ad
+            active: yes
+      active-ports: ether9 ether10
+   lacp-negotiated: yes
+</code></pre></div>
+<p>In flat topology, bonding is not used - each switch connects via a single physical interface.</p>
+<h4 id="root-bridge-identification">Root bridge identification</h4>
+<p>Check priority on both switches. Lower priority wins. Default priority is 32768.</p>
+<p>BPDU captures show root bridge ID in protocol fields.</p>
+</details>
+<hr />
+<h2 id="exercise-4-link-aggregation-and-load-balancing">Exercise 4: Link Aggregation and Load Balancing</h2>
+<p><strong>Time Estimate</strong>: 20-30 minutes</p>
+<p><strong>Lab Topology</strong>: <code>ot-sec-segmented</code> only</p>
+<p><strong>Difficulty</strong>: Intermediate</p>
+<h3 id="learning-objectives_3">Learning Objectives</h3>
+<ul>
+<li>Analyze LACP link aggregation operation</li>
+<li>Observe traffic distribution across bonded links</li>
+<li>Test link failover behavior</li>
+<li>Understand load balancing algorithms</li>
+</ul>
+<h3 id="prerequisites_4">Prerequisites</h3>
+<ul>
+<li>Completed Exercise 3 (STP Analysis)</li>
+<li>Understanding of LACP concepts</li>
+<li>Wireshark experience</li>
+<li>Basic MikroTik commands</li>
+</ul>
+<h3 id="scenario_3">Scenario</h3>
+<p>Link aggregation combines multiple physical links into one logical link for increased bandwidth and redundancy. LACP (802.3ad) dynamically negotiates bonding. Traffic is distributed across member links using a hash algorithm based on source/destination MAC, IP, or ports. Understanding how this works is important for capacity planning and troubleshooting in OT networks.</p>
+<h3 id="tasks_3">Tasks</h3>
+<h4 id="task-1-verify-lacp-negotiation">Task 1: Verify LACP negotiation</h4>
+<ol>
+<li>SSH to <code>sw-dist</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.12
+</code></pre></div>
+<ol>
+<li>Monitor LACP protocol operation:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>/interface bonding monitor bond-sw-acc1 once
+</code></pre></div>
+<p><strong>Expected output includes</strong>:</p>
+<ul>
+<li><code>lacp-partner-system-id</code> - MAC of partner switch</li>
+<li><code>active-ports</code> - Number of active links</li>
+<li>
+<p><code>lacp-negotiated</code> - True/false</p>
+</li>
+<li>
+<p>Check detailed bonding configuration:</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>/interface bonding print detail where name=bond-sw-acc1
+</code></pre></div>
+<p><strong>Questions</strong>:</p>
+<ul>
+<li>What is the bonding mode?</li>
+<li>Which physical interfaces are slaves?</li>
+<li>What is the transmit hash policy?</li>
+</ul>
+<h4 id="task-2-observe-traffic-distribution">Task 2: Observe traffic distribution</h4>
+<ol>
+<li>Start Wireshark captures on BOTH bond member links:</li>
+<li>Capture link <code>sw-dist</code> ether9 to <code>sw-acc1</code></li>
+<li>
+<p>Open second Wireshark for ether10</p>
+</li>
+<li>
+<p>SSH to <code>wago-plc2a-vlan10</code>:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.53
+</code></pre></div>
+<ol>
+<li>Generate continuous traffic with varying sources:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-f<span class="w"> </span><span class="m">1</span>.1.1.1
+</code></pre></div>
+<p>Use <code>-f</code> (flood) for high packet rate to see distribution.</p>
+<ol>
+<li>Observe both Wireshark captures</li>
+</ol>
+<p><strong>Questions</strong>:</p>
+<ul>
+<li>Is traffic balanced equally across both links?</li>
+<li>Do you see traffic on both links or just one?</li>
+<li>What determines which link is used for specific flows?</li>
+</ul>
+<h4 id="task-3-test-hash-algorithm">Task 3: Test hash algorithm</h4>
+<ol>
+<li>Stop flood ping</li>
+<li>Generate traffic from multiple sources:</li>
+</ol>
+<p>Terminal 1 - <code>wago-plc2a-vlan10</code>:</p>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-i<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span><span class="m">1</span>.1.1.1
+</code></pre></div>
+<p>Terminal 2 - <code>wago-plc2b-vlan10</code>:</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.54
+ping<span class="w"> </span>-i<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span><span class="m">1</span>.1.1.1
+</code></pre></div>
+<ol>
+<li>Check packet counts on bond members:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>/interface monitor-traffic ether9,ether10
+</code></pre></div>
+<p><strong>Question</strong>: Are different source IPs distributed to different links?</p>
+<h4 id="task-4-test-link-failover">Task 4: Test link failover</h4>
+<ol>
+<li>Keep pings running from previous step</li>
+<li>On <code>sw-dist</code>, disable one bond member:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>/interface ethernet disable ether9
+</code></pre></div>
+<ol>
+<li>Observe:</li>
+<li>Do pings continue without interruption?</li>
+<li>How quickly does failover occur?</li>
+<li>
+<p>Check Wireshark on remaining active link</p>
+</li>
+<li>
+<p>Re-enable the interface:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>/interface ethernet enable ether9
+</code></pre></div>
+<ol>
+<li>Check bond status:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>/interface bonding monitor bond-sw-acc1 once
+</code></pre></div>
+<p><strong>Question</strong>: Does both links return to active state automatically?</p>
+<h3 id="verification_4">Verification</h3>
+<p>Success indicators:</p>
+<ul>
+<li>LACP shows negotiated status</li>
+<li>Both bond members active</li>
+<li>Traffic visible on member links</li>
+<li>Failover occurs in under 1 second</li>
+<li>Disabled link automatically rejoins when enabled</li>
+<li>Packet count increases on both interfaces</li>
+</ul>
+<h3 id="questions-to-consider_3">Questions to Consider</h3>
+<ol>
+<li>Why might traffic use only one link for a specific flow?</li>
+<li>What are advantages and disadvantages of different hash algorithms?</li>
+<li>How does LACP compare to static bonding?</li>
+<li>What happens if LACP hello packets are lost?</li>
+</ol>
+<h3 id="common-issues_3">Common Issues</h3>
+<ul>
+<li><strong>Issue</strong>: Traffic only uses one link</li>
+<li>
+<p><strong>Solution</strong>: Hash algorithm makes per-flow decisions. Single source/destination uses one link. Use multiple sources to see distribution.</p>
+</li>
+<li>
+<p><strong>Issue</strong>: Cannot monitor traffic on interface</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Use <code>/interface monitor-traffic ether9,ether10</code> command format</p>
+</li>
+<li>
+<p><strong>Issue</strong>: Failover takes several seconds</p>
+</li>
+<li><strong>Solution</strong>: This is normal for LACP. RSTP must also reconverge.</li>
+</ul>
+<details class="success">
+<summary>Solution: Exercise 4 - Link Aggregation</summary>
+<h4 id="traffic-distribution-observation">Traffic distribution observation</h4>
+<p>With single source ping, traffic typically uses one link consistently due to hash algorithm using source/destination IPs.</p>
+<p>With multiple sources (different source IPs), traffic distributes across links.</p>
+<p>Hash policy <code>layer-2-and-3</code> uses source/dest MAC and IP addresses.</p>
+<h4 id="packet-count-verification">Packet count verification</h4>
+<div class="highlight"><pre><span></span><code>/interface monitor-traffic ether9,ether10
+</code></pre></div>
+<p>Shows rx-packets-per-second and tx-packets-per-second for each interface.</p>
+<p>With diverse traffic, both interfaces show increasing packet counts.</p>
+<h4 id="failover-test">Failover test</h4>
+<p>Disable one member:</p>
+<div class="highlight"><pre><span></span><code>/interface ethernet disable ether9
+</code></pre></div>
+<p>Pings continue without interruption. All traffic switches to ether10.</p>
+<p>Re-enable:</p>
+<div class="highlight"><pre><span></span><code>/interface ethernet enable ether9
+</code></pre></div>
+<p>LACP renegotiates (takes few seconds), then both links active again.</p>
+<p>Failover is subsecond for established flows.</p>
+</details>
+<hr />
+<h2 id="exercise-5-remote-access-and-security-assessment">Exercise 5: Remote Access and Security Assessment</h2>
+<p><strong>Time Estimate</strong>: 35-45 minutes</p>
+<p><strong>Lab Topology</strong>: <code>ot-sec-flat</code> (easier) or <code>ot-sec-segmented</code> (realistic)</p>
+<p><strong>Difficulty</strong>: Intermediate</p>
+<h3 id="learning-objectives_4">Learning Objectives</h3>
+<ul>
+<li>Conduct remote access testing from DMZ jumphost</li>
+<li>Identify exposed services using port scanning</li>
+<li>Discover potential security vulnerabilities</li>
+<li>Practice professional security assessment methodology</li>
+</ul>
+<h3 id="prerequisites_5">Prerequisites</h3>
+<ul>
+<li>Understanding of TCP/IP fundamentals</li>
+<li>Basic nmap knowledge</li>
+<li>SSH and service concepts</li>
+<li>Security assessment awareness</li>
+</ul>
+<h3 id="scenario_4">Scenario</h3>
+<p>A security assessor has remote access to the jumphost in the DMZ. The objective is to map the OT network, identify running services, and document potential security issues. This simulates real-world remote access scenarios where engineers or attackers gain initial foothold and attempt to expand access into OT zones.</p>
+<h3 id="tasks_4">Tasks</h3>
+<h4 id="task-1-initial-remote-access-from-jumphost">Task 1: Initial remote access from jumphost</h4>
+<ol>
+<li>SSH to jumphost:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.52
+</code></pre></div>
+<p>Password: <code>admin</code></p>
+<ol>
+<li>Check your network position:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ip<span class="w"> </span>addr<span class="w"> </span>show
+ip<span class="w"> </span>route<span class="w"> </span>show
+</code></pre></div>
+<p><strong>Questions</strong>:</p>
+<ul>
+<li>What IP address does the jumphost have?</li>
+<li>
+<p>What networks are reachable according to routing table?</p>
+</li>
+<li>
+<p>Test basic connectivity:</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">10</span>.10.0.1
+ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">10</span>.10.0.11
+</code></pre></div>
+<p><strong>Note</strong>: In segmented topology, firewall may block some traffic.</p>
+<h4 id="task-2-host-discovery">Task 2: Host discovery</h4>
+<ol>
+<li>Scan VLAN 10 (Hygiene) for live hosts:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-sn<span class="w"> </span><span class="m">10</span>.10.0.0/24
+</code></pre></div>
+<p><code>-sn</code> performs ping scan (no port scan)</p>
+<p><strong>Expected output</strong>:</p>
+<div class="highlight"><pre><span></span><code>Nmap scan report for 10.10.0.1
+Host is up.
+
+Nmap scan report for 10.10.0.11
+Host is up.
+
+Nmap scan report for 10.10.0.12
+Host is up.
+</code></pre></div>
+<ol>
+<li>Try other VLANs:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-sn<span class="w"> </span><span class="m">10</span>.20.0.0/24
+nmap<span class="w"> </span>-sn<span class="w"> </span><span class="m">10</span>.40.0.0/24
+</code></pre></div>
+<p><strong>Question</strong>: Which VLANs are accessible from jumphost?</p>
+<h4 id="task-3-service-identification">Task 3: Service identification</h4>
+<ol>
+<li>Scan common OT ports on discovered PLC:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-sV<span class="w"> </span>-p22,80,502,8080,2455<span class="w"> </span><span class="m">10</span>.10.0.11
+</code></pre></div>
+<p>Port reference:</p>
+<ul>
+<li>22: SSH</li>
+<li>80: HTTP</li>
+<li>502: Modbus TCP</li>
+<li>8080: CODESYS WebVisu</li>
+<li>2455: CODESYS runtime</li>
+</ul>
+<p><strong>Expected output</strong>:</p>
+<div class="highlight"><pre><span></span><code>PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.x
+8080/tcp open  http    nginx
+</code></pre></div>
+<ol>
+<li>Scan all PLCs in VLAN 10:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-p8080<span class="w"> </span><span class="m">10</span>.10.0.11-12
+</code></pre></div>
+<p><strong>Questions</strong>:</p>
+<ul>
+<li>Which services are exposed?</li>
+<li>Are any services running that should not be?</li>
+<li>What can you infer about the devices from service banners?</li>
+</ul>
+<h4 id="task-4-access-testing">Task 4: Access testing</h4>
+<ol>
+<li>Test SSH access to PLC:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@10.10.0.11
+</code></pre></div>
+<p>Try password: <code>admin</code></p>
+<p><strong>Question</strong>: Does this succeed? Should PLCs be directly accessible via SSH from jumphost?</p>
+<ol>
+<li>Test web interface access:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-I<span class="w"> </span>http://10.10.0.11:8080
+</code></pre></div>
+<p><strong>Observation</strong>: Check HTTP response headers for version information.</p>
+<ol>
+<li>If <code>nc</code> available, test Modbus port:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.10.0.11<span class="w"> </span><span class="m">502</span>
+</code></pre></div>
+<h4 id="task-5-document-findings">Task 5: Document findings</h4>
+<p>Create a simple report of findings:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>assessment_findings.txt<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s">OT Network Security Assessment</span>
+
+<span class="s">Date: $(date)</span>
+<span class="s">Assessor: $(whoami)</span>
+
+<span class="s">FINDINGS:</span>
+
+<span class="s">1. Accessible Networks:</span>
+<span class="s">   - VLAN 10: [list discovered hosts]</span>
+<span class="s">   - VLAN 20: [accessible? yes/no]</span>
+
+<span class="s">2. Exposed Services:</span>
+<span class="s">   - Host 10.10.0.11:</span>
+<span class="s">     * Port 22 (SSH): OPEN</span>
+<span class="s">     * Port 8080 (HTTP): OPEN</span>
+<span class="s">     * Port 502 (Modbus): [status]</span>
+
+<span class="s">3. Security Issues:</span>
+<span class="s">   - [List any concerns]</span>
+
+<span class="s">4. Recommendations:</span>
+<span class="s">   - [Suggested mitigations]</span>
+<span class="s">EOF</span>
+
+cat<span class="w"> </span>assessment_findings.txt
+</code></pre></div>
+<h3 id="verification_5">Verification</h3>
+<p>Success indicators:</p>
+<ul>
+<li>Host discovery identifies live PLCs</li>
+<li>Service scans reveal open ports</li>
+<li>SSH access tested (may succeed or fail depending on firewall)</li>
+<li>HTTP interfaces discovered</li>
+<li>Findings documented</li>
+</ul>
+<h3 id="questions-to-consider_4">Questions to Consider</h3>
+<ol>
+<li>What services should never be directly accessible from DMZ?</li>
+<li>How would you restrict jumphost access in production?</li>
+<li>What additional security controls would improve this architecture?</li>
+<li>How could these remote access activities be detected?</li>
+</ol>
+<h3 id="common-issues_4">Common Issues</h3>
+<ul>
+<li><strong>Issue</strong>: nmap command not found</li>
+<li>
+<p><strong>Solution</strong>: Use <code>apt-get update &amp;&amp; apt-get install nmap</code> or tool is pre-installed</p>
+</li>
+<li>
+<p><strong>Issue</strong>: All hosts appear down</p>
+</li>
+<li>
+<p><strong>Solution</strong>: In segmented topology, firewall may block ICMP. Use <code>-Pn</code> flag to skip ping.</p>
+</li>
+<li>
+<p><strong>Issue</strong>: Cannot reach any 10.x networks</p>
+</li>
+<li><strong>Solution</strong>: Check routing with <code>ip route</code>. Verify lab deployed correctly.</li>
+</ul>
+<h3 id="advanced-challenge_1">Advanced Challenge</h3>
+<ol>
+<li>Write a shell script to automate discovery of all VLANs</li>
+<li>Generate a CSV report of all discovered services</li>
+<li>Test for default credentials on discovered services</li>
+<li>Create network diagram based on discovered topology</li>
+</ol>
+<details class="success">
+<summary>Solution: Exercise 5 - Remote Access</summary>
+<h4 id="host-discovery-results">Host discovery results</h4>
+<p>From jumphost:</p>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-sn<span class="w"> </span><span class="m">10</span>.10.0.0/24
+</code></pre></div>
+<p>Expected discoveries in flat topology:</p>
+<div class="highlight"><pre><span></span><code>10.10.0.1 (gateway)
+10.10.0.11 (wago-plc2a-vlan10)
+10.10.0.12 (wago-plc2b-vlan10)
+</code></pre></div>
+<p>Segmented topology may show fewer hosts due to firewall rules.</p>
+<h4 id="service-scan-results">Service scan results</h4>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-sV<span class="w"> </span>-p22,80,502,8080,2455<span class="w"> </span><span class="m">10</span>.10.0.11
+</code></pre></div>
+<p>Expected output:</p>
+<div class="highlight"><pre><span></span><code>PORT     STATE SERVICE  VERSION
+22/tcp   open  ssh      OpenSSH 8.2p1 Ubuntu
+8080/tcp open  http     nginx 1.18.0
+</code></pre></div>
+<p>Other ports may be filtered or closed depending on PLC configuration.</p>
+<h4 id="access-testing">Access testing</h4>
+<p>SSH to PLC:</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@10.10.0.11
+</code></pre></div>
+<p>In flat topology: Likely succeeds with password <code>admin</code>.
+In segmented topology: May be blocked by firewall rules.</p>
+<p>Web interface:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-I<span class="w"> </span>http://10.10.0.11:8080
+</code></pre></div>
+<p>Returns HTTP headers showing CODESYS WebVisu interface.</p>
+<h4 id="security-findings">Security findings</h4>
+<p>Typical issues discovered:</p>
+<ol>
+<li>PLCs accessible via SSH with default credentials</li>
+<li>Web interfaces exposed without authentication</li>
+<li>Modbus TCP accessible without authentication</li>
+<li>No network segmentation (flat topology)</li>
+<li>Default passwords in use</li>
+<li>Unnecessary services running</li>
+</ol>
+<h4 id="recommended-mitigations">Recommended mitigations</h4>
+<ol>
+<li>Implement zero-trust network segmentation</li>
+<li>Require multi-factor authentication for remote access</li>
+<li>Disable unused services on PLCs</li>
+<li>Change default credentials</li>
+<li>Implement application-aware firewall rules</li>
+<li>Deploy IDS/IPS for anomaly detection</li>
+<li>Require VPN for remote access</li>
+<li>Implement jump host hardening</li>
+</ol>
+</details>
+<hr />
+<h2 id="appendix-wireshark-filters-quick-reference">Appendix: Wireshark Filters Quick Reference</h2>
+<h3 id="vlan-analysis">VLAN Analysis</h3>
+<div class="highlight"><pre><span></span><code>vlan                          # All 802.1Q tagged frames
+vlan.id == 10                 # Only VLAN 10 traffic
+vlan.id in {10 20 30}        # Multiple VLANs
+</code></pre></div>
+<h3 id="arp-analysis">ARP Analysis</h3>
+<div class="highlight"><pre><span></span><code>arp                           # All ARP traffic
+arp.opcode == 1               # ARP requests only
+arp.opcode == 2               # ARP replies only
+arp.duplicate-address-detected  # ARP conflicts
+</code></pre></div>
+<h3 id="stprstp">STP/RSTP</h3>
+<div class="highlight"><pre><span></span><code>stp                           # All spanning tree
+rstp                          # Rapid spanning tree only
+eth.dst == 01:80:c2:00:00:00  # STP multicast address
+</code></pre></div>
+<h3 id="protocol-specific">Protocol-Specific</h3>
+<div class="highlight"><pre><span></span><code>icmp                          # ICMP (ping) traffic
+tcp.port == 502               # Modbus TCP
+tcp.port == 2455              # CODESYS
+tcp.port == 8080              # Web interfaces
+</code></pre></div>
+<h3 id="combining-filters">Combining Filters</h3>
+<div class="highlight"><pre><span></span><code>vlan.id == 10 &amp;&amp; icmp         # VLAN 10 ICMP traffic
+tcp &amp;&amp; !tcp.port == 22        # All TCP except SSH
+ip.src == 10.10.0.11 || ip.dst == 10.10.0.11  # Specific host
+</code></pre></div>
+<hr />
+<h2 id="troubleshooting-common-issues">Troubleshooting Common Issues</h2>
+<h3 id="lab-not-starting">Lab Not Starting</h3>
+<p><strong>Symptom</strong>: Containers fail to start or remain unhealthy</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Check container status: <code>docker ps -a | grep clab</code></li>
+<li>View container logs: <code>docker logs &lt;container-name&gt;</code></li>
+<li>Verify images pulled: <code>docker images | grep narrowin</code></li>
+<li>Run health check: <code>scripts/lab-test.py ot-sec-flat</code></li>
+</ol>
+<h3 id="cannot-ssh-to-devices">Cannot SSH to Devices</h3>
+<p><strong>Symptom</strong>: Connection refused or timeout</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Verify using management IP (192.168.100.x), not data plane IP</li>
+<li>Wait 2-3 minutes after lab deploy for SSH to start</li>
+<li>Check container is running: <code>docker ps | grep &lt;device-name&gt;</code></li>
+<li>Test from VS Code terminal, not external system</li>
+</ol>
+<h3 id="wireshark-not-opening">Wireshark Not Opening</h3>
+<p><strong>Symptom</strong>: Edgeshark does not launch</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Accept VS Code prompt to open with Edgeshark</li>
+<li>Close and retry capture</li>
+<li>Check Edgeshark extension installed</li>
+<li>View container logs for errors</li>
+</ol>
+<h3 id="no-traffic-in-captures">No Traffic in Captures</h3>
+<p><strong>Symptom</strong>: Wireshark shows no packets</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Verify capture started before generating traffic</li>
+<li>Check capturing on correct interface/link</li>
+<li>Remove display filters temporarily</li>
+<li>Verify devices can actually communicate (ping test)</li>
+</ol>
+<h3 id="ping-failures">Ping Failures</h3>
+<p><strong>Symptom</strong>: Destination unreachable</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Check routing: <code>ip route show</code></li>
+<li>Verify VLAN assignment</li>
+<li>In segmented topology, check if firewall blocks traffic</li>
+<li>Confirm both devices in same VLAN or proper routing configured</li>
+</ol>
+<hr />
+<h2 id="additional-resources">Additional Resources</h2>
+<ul>
+<li><a href="https://containerlab.dev/">Containerlab Documentation</a></li>
+<li><a href="https://help.mikrotik.com/">MikroTik RouterOS Manual</a></li>
+<li><a href="https://www.wireshark.org/docs/wsug_html_chunked/">Wireshark User Guide</a></li>
+<li><a href="https://www.codesys.com/">CODESYS Documentation</a></li>
+<li><a href="https://www.isa.org/standards-and-publications/isa-standards/isa-iec-62443-series-of-standards">IEC 62443 Standards Overview</a></li>
+</ul>
+<hr />
+<p><strong>Document Version</strong>: 1.0
+<strong>Last Updated</strong>: 2025-11-19
+<strong>Lab Compatibility</strong>: ot-sec-flat v1.x, ot-sec-segmented v1.x</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tracking"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

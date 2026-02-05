@@ -1,0 +1,1903 @@
+
+<!doctype html>
+<html lang="de" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="OT Networks: Design & Defend">
+      
+      
+      
+        <link rel="canonical" href="https://narrowin.github.io/ot-labs-docs/de/Container101.html">
+      
+      
+        <link rel="prev" href="cheatsheet.html">
+      
+      
+        <link rel="next" href="automation.html">
+      
+      
+        
+          <link rel="alternate" href="/ot-labs-docs/en/" hreflang="en">
+        
+          <link rel="alternate" href="/ot-labs-docs/de/" hreflang="de">
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Container-Grundlagen - OT Networks: Design & Defend</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+        <script src="https://unpkg.com/iframe-worker/shim"></script>
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#container101" class="md-skip">
+          Zum Inhalt
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Kopfzeile">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-header__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OT Networks: Design & Defend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Container-Grundlagen
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Sprache wechseln">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/en/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/de/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Suche" placeholder="Suche" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Suche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Zurücksetzen" aria-label="Zurücksetzen" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Suche wird initialisiert
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/narrowin/ot-labs-docs" title="Zum Repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-nav__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    OT Networks: Design & Defend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/narrowin/ot-labs-docs" title="Zum Repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Übersicht
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lab.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Übungen
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Übungen
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Übersicht
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex1-vlan-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. VLAN-Erkennung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex2-arp-spoofing.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. ARP-Spoofing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex3-spanning-tree.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Spanning Tree
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex4-link-aggregation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Link-Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex5-reconnaissance.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Fernzugriff
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex6-protocol-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Protokoll-Erkennung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/ex7-segmentation-firewall.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Segmentierung & Firewall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercises/appendix.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anhang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cheatsheet.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheatsheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container-Grundlagen
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="Container101.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container-Grundlagen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#warum-diese-seite-existiert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warum diese Seite existiert
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#die-einfache-wahrheit-uber-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Die einfache Wahrheit über Container
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#warum-container-fur-diesen-workshop-wichtig-sind" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warum Container für diesen Workshop wichtig sind
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-free-plan-was-sie-bekommen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Free Plan: Was Sie bekommen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GitHub Free Plan: Was Sie bekommen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#github-codespaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Codespaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#private-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private Repositories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#github-copilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Copilot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warum-das-fur-ot-fachleute-wichtig-ist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warum das für OT-Fachleute wichtig ist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sicherheitshinweis-produktionsdaten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sicherheitshinweis: Produktionsdaten
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#container-vs-virtuelle-maschinen-was-sie-wissen-mussen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container vs. Virtuelle Maschinen: Was Sie wissen müssen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Container vs. Virtuelle Maschinen: Was Sie wissen müssen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#virtuelle-maschinen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtuelle Maschinen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#einfache-vergleichstabelle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Einfache Vergleichstabelle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#was-in-diesem-workshop-passiert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Was in diesem Workshop passiert
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Was in diesem Workshop passiert">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#was-sie-tatsachlich-tun-werden" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Was Sie tatsächlich tun werden
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#was-hinter-den-kulissen-passiert-aber-sie-mussen-sich-nicht-darum-kummern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Was hinter den Kulissen passiert (aber Sie müssen sich nicht darum kümmern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#haufige-fragen-von-ot-fachleuten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Häufige Fragen von OT-Fachleuten
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#warum-speziell-containerlab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warum speziell Containerlab?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reale-perspektive-alter-weg-vs-neuer-weg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reale Perspektive: Alter Weg vs. Neuer Weg
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#die-wahrheit-uber-lernkurven" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Die Wahrheit über Lernkurven
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#was-container-fur-ot-labore-funktionieren-lasst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Was Container für OT-Labore funktionieren lässt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wichtige-einschrankungen-ehrlich-sein" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wichtige Einschränkungen (ehrlich sein)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ihr-workshop-lernpfad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ihr Workshop-Lernpfad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mochten-sie-mehr-lernen-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Möchten Sie mehr lernen? (Optional)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Möchten Sie mehr lernen? (Optional)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sehr-empfohlene-videos-hier-starten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sehr empfohlene Videos (hier starten)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offizielle-docker-ressourcen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offizielle Docker-Ressourcen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#containerlab-spezifisch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Containerlab-spezifisch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fur-visuelle-lerner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Für visuelle Lerner
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wenn-sie-mit-vms-vergleichen-mochten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wenn Sie mit VMs vergleichen möchten
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fazit-fur-diesen-workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fazit für diesen Workshop
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="automation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automatisierung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="slides.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Folien
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="feedback.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#warum-diese-seite-existiert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warum diese Seite existiert
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#die-einfache-wahrheit-uber-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Die einfache Wahrheit über Container
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#warum-container-fur-diesen-workshop-wichtig-sind" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warum Container für diesen Workshop wichtig sind
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-free-plan-was-sie-bekommen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Free Plan: Was Sie bekommen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GitHub Free Plan: Was Sie bekommen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#github-codespaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Codespaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#private-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private Repositories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#github-copilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Copilot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warum-das-fur-ot-fachleute-wichtig-ist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warum das für OT-Fachleute wichtig ist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sicherheitshinweis-produktionsdaten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sicherheitshinweis: Produktionsdaten
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#container-vs-virtuelle-maschinen-was-sie-wissen-mussen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container vs. Virtuelle Maschinen: Was Sie wissen müssen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Container vs. Virtuelle Maschinen: Was Sie wissen müssen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#virtuelle-maschinen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtuelle Maschinen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#einfache-vergleichstabelle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Einfache Vergleichstabelle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#was-in-diesem-workshop-passiert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Was in diesem Workshop passiert
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Was in diesem Workshop passiert">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#was-sie-tatsachlich-tun-werden" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Was Sie tatsächlich tun werden
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#was-hinter-den-kulissen-passiert-aber-sie-mussen-sich-nicht-darum-kummern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Was hinter den Kulissen passiert (aber Sie müssen sich nicht darum kümmern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#haufige-fragen-von-ot-fachleuten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Häufige Fragen von OT-Fachleuten
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#warum-speziell-containerlab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warum speziell Containerlab?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reale-perspektive-alter-weg-vs-neuer-weg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reale Perspektive: Alter Weg vs. Neuer Weg
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#die-wahrheit-uber-lernkurven" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Die Wahrheit über Lernkurven
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#was-container-fur-ot-labore-funktionieren-lasst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Was Container für OT-Labore funktionieren lässt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wichtige-einschrankungen-ehrlich-sein" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wichtige Einschränkungen (ehrlich sein)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ihr-workshop-lernpfad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ihr Workshop-Lernpfad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mochten-sie-mehr-lernen-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Möchten Sie mehr lernen? (Optional)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Möchten Sie mehr lernen? (Optional)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sehr-empfohlene-videos-hier-starten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sehr empfohlene Videos (hier starten)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offizielle-docker-ressourcen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offizielle Docker-Ressourcen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#containerlab-spezifisch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Containerlab-spezifisch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fur-visuelle-lerner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Für visuelle Lerner
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wenn-sie-mit-vms-vergleichen-mochten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wenn Sie mit VMs vergleichen möchten
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fazit-fur-diesen-workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fazit für diesen Workshop
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="container101">Container101</h1>
+<h2 id="warum-diese-seite-existiert">Warum diese Seite existiert</h2>
+<p>Sie sind ein OT-Fachmann und arbeiten mit SPSen, HMIs, Industrienetzwerken und Protokollen wie Modbus oder PROFINET. Vielleicht haben Sie von Docker und Containern gehört, aber sie nie wirklich gebraucht. Jetzt verwenden wir für diesen Workshop Containerlab, das auf Container-Technologie basiert.</p>
+<p>Diese Seite erklärt, was Container sind, warum sie perfekt für unseren OT-Sicherheits- und Netzwerk-Workshop sind, und warum es nichts zu befürchten gibt.</p>
+<h2 id="die-einfache-wahrheit-uber-container">Die einfache Wahrheit über Container</h2>
+<p><strong>Container sind eine Möglichkeit, Software zu verpacken und auszuführen, die es leicht macht, dieselbe Einrichtung jedes Mal zu starten, zu stoppen und zu wiederholen.</strong></p>
+<p>Das ist alles. Keine Magie. Keine versteckte Komplexität. Alles, was die Software benötigt, ist zusammen verpackt und läuft auf jedem System gleich. Ein einsatzbereites Gerät, statt jedes Mal Komponenten zusammenzubauen.</p>
+<h2 id="warum-container-fur-diesen-workshop-wichtig-sind">Warum Container für diesen Workshop wichtig sind</h2>
+<p>Wir bauen Netzwerksicherheitslabore mit SPSen, HMIs, Switches und Sicherheitsüberwachungswerkzeugen auf. Das geben uns Container:</p>
+<p><strong>Schnell und wiederholbar</strong><br />
+Statt Software manuell auf jeder Maschine zu installieren, starten wir ein komplettes Labor in Sekunden. Neustart dauert Sekunden, nicht Minuten oder Stunden.</p>
+<p><strong>Sauber und isoliert</strong><br />
+Jede Komponente (SPS-Simulator, HMI, Netzwerkwerkzeug) läuft separat. Bei Problemen wird nur dieses eine Teil neu gestartet.</p>
+<p><strong>Einfach zu teilen</strong><br />
+Alle erhalten genau dasselbe Labor-Setup. Keine "funktioniert auf meiner Maschine"-Probleme.</p>
+<p><strong>Leichtgewichtig</strong><br />
+Mehrere SPSen, Switches und Werkzeuge laufen auf Ihrem Laptop. Container verwenden viel weniger Speicher und CPU als virtuelle Maschinen.</p>
+<h2 id="github-free-plan-was-sie-bekommen">GitHub Free Plan: Was Sie bekommen</h2>
+<p>Dieser Workshop nutzt den kostenlosen GitHub-Plan, der leistungsstarke Werkzeuge zum Lernen und Entwickeln kostenlos bereitstellt.</p>
+<h3 id="github-codespaces">GitHub Codespaces</h3>
+<p><strong>Was sind Codespaces?</strong><br />
+Cloudbasierte Entwicklungsumgebungen, die in Ihrem Browser laufen. Denken Sie daran als vollständiger Computer mit VS Code, Docker und allen Workshop-Werkzeugen vorinstalliert, von überall zugänglich.</p>
+<p><strong>Kostenloser Plan beinhaltet:</strong></p>
+<ul>
+<li>120 Core-Stunden pro Monat</li>
+<li>15 GB Speicher</li>
+<li>4-Core-Maschinen verfügbar</li>
+</ul>
+<p><strong>Für diesen Workshop:</strong><br />
+Ein 4-Core-Codespace führt diese gesamte Laborumgebung aus. 120 Stunden bedeuten, Sie können das Labor jeden Monat mehrere volle Tage kostenlos ausführen.</p>
+<h3 id="private-repositories">Private Repositories</h3>
+<p><strong>Was Sie kostenlos bekommen:</strong></p>
+<ul>
+<li>Unbegrenzte private Repositories</li>
+<li>Unbegrenzte Mitarbeiter</li>
+<li>Volle Versionskontrolle und Zusammenarbeitsfunktionen</li>
+</ul>
+<h3 id="github-copilot">GitHub Copilot</h3>
+<p><strong>Was es ist:</strong><br />
+KI-gestützter Coding-Assistent, der Ihnen hilft, Code zu schreiben, Konfigurationen zu verstehen und Probleme zu beheben.</p>
+<p><strong>Kostenlos für:</strong></p>
+<ul>
+<li>Studenten (verifiziert über GitHub Student Developer Pack)</li>
+<li>Maintainer beliebter Open-Source-Projekte</li>
+<li>Kostenlose Testversion für alle verfügbar</li>
+</ul>
+<p><strong>Für diesen Workshop:</strong><br />
+Copilot kann Ihnen helfen, Topologie-Dateien zu verstehen, Automatisierungsskripte zu schreiben und Netzwerkkonfigurationen zu debuggen. Besonders nützlich beim Erweitern von Laboren nach dem Workshop.</p>
+<h3 id="warum-das-fur-ot-fachleute-wichtig-ist">Warum das für OT-Fachleute wichtig ist</h3>
+<p>Entwicklungswerkzeuge auf Unternehmensniveau ohne Kosten. Keine Budgetgenehmigung nötig, um mit OT-Sicherheitslaboren zu lernen und zu experimentieren.</p>
+<p>Komplette industrielle Netzwerksimulationen in der Cloud, zugänglich von jedem Gerät. Perfekt zum Lernen in Ihrem eigenen Tempo.</p>
+<h3 id="sicherheitshinweis-produktionsdaten">Sicherheitshinweis: Produktionsdaten</h3>
+<p><strong>Verwenden Sie niemals Produktions- oder Firmendaten mit Codespaces oder Copilot.</strong></p>
+<p>GitHub Codespaces läuft in der Cloud. GitHub Copilot verarbeitet Code, um Vorschläge zu liefern. Während GitHub Sicherheitsmassnahmen hat, verbieten die Sicherheitsrichtlinien Ihrer Organisation wahrscheinlich das Hochladen sensibler Daten auf externe Dienste.</p>
+<p><strong>Verwenden Sie nicht:</strong></p>
+<ul>
+<li>Echte SPS-Konfigurationen aus Ihrer Anlage</li>
+<li>Tatsächliche Netzwerkdiagramme mit echten IP-Adressen</li>
+<li>Produktionspasswörter oder Anmeldedaten</li>
+<li>Firmenspezifischen Code oder Konfigurationen</li>
+<li>Alle Daten, die von NDAs oder Vertraulichkeitsvereinbarungen abgedeckt sind</li>
+</ul>
+<p><strong>Dieser Workshop verwendet nur simulierte, generische Labordaten.</strong><br />
+Perfekt zum Lernen ohne Sicherheitsbedenken.</p>
+<p>Für echte Firmendaten verwenden Sie lokale Entwicklungsumgebungen auf firmengeführter Infrastruktur, nicht Cloud-Dienste.</p>
+<h2 id="container-vs-virtuelle-maschinen-was-sie-wissen-mussen">Container vs. Virtuelle Maschinen: Was Sie wissen müssen</h2>
+<p>Sie kennen vielleicht virtuelle Maschinen (VMs). Container sind ähnlich, aber viel leichter.</p>
+<h3 id="virtuelle-maschinen">Virtuelle Maschinen</h3>
+<ul>
+<li>Vollständiges Betriebssystem für jede VM</li>
+<li>Braucht Minuten zum Starten</li>
+<li>Verwendet viel Speicher und Festplattenspeicher</li>
+<li>Gute Isolation, aber schwer</li>
+</ul>
+<h3 id="container">Container</h3>
+<ul>
+<li>Teilen das zugrunde liegende Betriebssystem</li>
+<li>Starten in Sekunden</li>
+<li>Verwenden viel weniger Speicher und Festplatte</li>
+<li>Leicht, aber trotzdem ausreichend isoliert für Labore</li>
+</ul>
+<p><strong>Für diesen Workshop:</strong> Container sind leichtgewichtige VMs, die sofort starten.</p>
+<h3 id="einfache-vergleichstabelle">Einfache Vergleichstabelle</h3>
+<table>
+<thead>
+<tr>
+<th>Was Sie brauchen</th>
+<th>Virtuelle Maschine</th>
+<th>Container</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Einen SPS-Simulator starten</td>
+<td>Warten Sie 2-3 Minuten</td>
+<td>Bereit in 2-3 Sekunden</td>
+</tr>
+<tr>
+<td>10 verschiedene Geräte ausführen</td>
+<td>Schwer auf Ihrem Laptop</td>
+<td>Komfortabel auf Ihrem Laptop</td>
+</tr>
+<tr>
+<td>Auf sauberen Zustand zurücksetzen</td>
+<td>Langsames Herunterfahren und Neustart</td>
+<td>Sofort</td>
+</tr>
+<tr>
+<td>Exakte Einrichtung mit Kollegen teilen</td>
+<td>Grosse VM-Images zu übertragen</td>
+<td>Kleine Container-Images</td>
+</tr>
+</tbody>
+</table>
+<h2 id="was-in-diesem-workshop-passiert">Was in diesem Workshop passiert</h2>
+<p>Sie werden Containerlab über eine VS Code-Erweiterung verwenden. Keine komplexen Befehle zum Tippen. Kein tiefes technisches Wissen erforderlich.</p>
+<h3 id="was-sie-tatsachlich-tun-werden">Was Sie tatsächlich tun werden</h3>
+<ol>
+<li><strong>Topologie-Datei öffnen</strong> - Textdatei, die Ihr Labornetzwerk beschreibt (SPSen, Switches, HMIs)</li>
+<li><strong>"Deploy" in VS Code klicken</strong> - Die Erweiterung startet Ihr Labor</li>
+<li><strong>Labor verwenden</strong> - Geräte verbinden, Sicherheitstests durchführen, Datenverkehr erfassen</li>
+<li><strong>"Destroy" klicken</strong> - Alles wird sauber entfernt</li>
+</ol>
+<p>Vier Schritte. Einfach.</p>
+<h3 id="was-hinter-den-kulissen-passiert-aber-sie-mussen-sich-nicht-darum-kummern">Was hinter den Kulissen passiert (aber Sie müssen sich nicht darum kümmern)</h3>
+<p>Wenn Sie "Deploy" klicken, macht Containerlab:</p>
+<ul>
+<li>Liest Ihre Topologie-Datei</li>
+<li>Lädt vorgefertigte Container-Images für Ihre Geräte herunter oder verwendet sie</li>
+<li>Startet jedes Gerät als Container</li>
+<li>Verbindet sie mit virtuellen Netzwerkkabeln</li>
+<li>Gibt Ihnen Zugriff auf jedes Gerät</li>
+</ul>
+<p>Wenn Sie fertig sind und "Destroy" klicken, wird alles sauber entfernt. Keine übrig gebliebenen Dateien oder Konfigurationen.</p>
+<h2 id="haufige-fragen-von-ot-fachleuten">Häufige Fragen von OT-Fachleuten</h2>
+<p><strong>F: Ist das sicher genug für unser Labor?</strong><br />
+Ja. Container bieten gute Isolation für Training und Tests. Sie werden von Millionen von Entwicklern und Unternehmen weltweit verwendet. Für unseren Workshop sind sie mehr als ausreichend.</p>
+<p><strong>F: Muss ich Docker-Befehle lernen?</strong><br />
+Nein. Die Containerlab VS Code-Erweiterung bietet Buttons statt Befehle.</p>
+<p><strong>F: Können Container industrielle Protokolle wie Modbus, S7 oder PROFINET handhaben?</strong><br />
+Ja. Container führen jede Software aus, einschliesslich industrieller Protokollstacks und Simulatoren. Der Netzwerkverkehr funktioniert wie erwartet.</p>
+<p><strong>F: Was passiert bei einem Absturz?</strong><br />
+Komponente neu bereitstellen. Schnell und sauber.</p>
+<p><strong>F: Ist das die "Cloud"?</strong><br />
+Nein. Alles läuft lokal auf Ihrem Laptop. Kein Internet erforderlich (nach initialer Einrichtung). Volle Kontrolle.</p>
+<p><strong>F: Kann ich das nach dem Workshop für eigene Tests verwenden?</strong><br />
+Ja. Genau dafür ist es gedacht - für eigene OT-Sicherheits- und Netzwerk-Testlabore.</p>
+<p><strong>F: Wird das meinen Computer durcheinanderbringen?</strong><br />
+Nein. Container sind isoliert. Beim Entfernen verschwinden sie vollständig. Nichts bleibt zurück.</p>
+<h2 id="warum-speziell-containerlab">Warum speziell Containerlab?</h2>
+<p>Containerlab wurde von Netzwerkingenieuren für Netzwerkingenieure entwickelt. Es löst das Problem, Netzwerkkonfigurationen und -topologien schnell zu testen.</p>
+<p><strong>Warum es perfekt für OT-Arbeit ist:</strong></p>
+<ul>
+<li>Gesamte Netzwerktopologie in einer Textdatei definieren</li>
+<li>Unterstützt Netzwerkgeräte (Switches, Router) und Endgeräte (SPSen, HMIs)</li>
+<li>Bereitstellung in Sekunden, genauso schnell wieder abbauen</li>
+<li>Nahtlose VS Code Integration</li>
+<li>Einfaches Teilen von Laboren - Topologie-Datei an Kollegen senden</li>
+<li>Kostenlos und Open Source</li>
+</ul>
+<p>Netzwerkingenieure bei grossen Herstellern wie Nokia, Cisco und Juniper verwenden Containerlab täglich. Es ist kampferprobt und zuverlässig.</p>
+<h2 id="reale-perspektive-alter-weg-vs-neuer-weg">Reale Perspektive: Alter Weg vs. Neuer Weg</h2>
+<p><strong>Traditioneller Ansatz:</strong><br />
+Physisches Labor aufbauen oder mehrere VMs konfigurieren. Dauert Stunden oder Tage. Bricht leicht. Schwer zu teilen. Schmerzhaftes Zurücksetzen.</p>
+<p><strong>Container-Ansatz:</strong><br />
+Textdatei schreiben, die Ihr Netzwerk beschreibt. Deploy klicken. Labor bereit in 30 Sekunden. Etwas kaputt? Erneut bereitstellen in 30 Sekunden. Datei mit Kollegen teilen, die sofort die identische Einrichtung erhalten.</p>
+<p><strong>Der Unterschied:</strong><br />
+Zeit für OT-Sicherheit und -Netzwerke lernen, statt mit Infrastruktur kämpfen.</p>
+<h2 id="die-wahrheit-uber-lernkurven">Die Wahrheit über Lernkurven</h2>
+<p><strong>Sie müssen kein Container-Experte werden.</strong></p>
+<p>Was Sie wissen müssen:</p>
+<ul>
+<li>Wie man ein Labor bereitstellt (einen Button klicken)</li>
+<li>Wie man sich mit Geräten im Labor verbindet (wie immer)</li>
+<li>Wie man das Labor zerstört, wenn fertig (einen anderen Button klicken)</li>
+</ul>
+<p>Das ist alles. Die Containerlab VS Code-Erweiterung übernimmt alles andere.</p>
+<p><strong>Nach diesem Workshop</strong>, wenn Sie tiefer eintauchen möchten, gibt es ausgezeichnete Ressourcen. Aber fürs Erste konzentrieren Sie sich auf OT-Sicherheit und -Netzwerke. Container-Technologie ist nur das Werkzeug, das die Labore zum Laufen bringt.</p>
+<h2 id="was-container-fur-ot-labore-funktionieren-lasst">Was Container für OT-Labore funktionieren lässt</h2>
+<p>Container zeichnen sich durch das Simulieren von OT-Umgebungen aus:</p>
+<p><strong>Netzwerkverhalten ist realistisch</strong><br />
+Virtuelle Netzwerkverbindungen verhalten sich wie echte Ethernet-Kabel. Industrielle Protokolle funktionieren identisch. Netzwerkverkehr sieht für Überwachungswerkzeuge gleich aus.</p>
+<p><strong>Leistung ist ausreichend</strong><br />
+Ein moderner Laptop führt bequem 10-20 containerisierte Geräte aus. Ausreichend für realistische OT-Netzwerktopologien mit mehreren Zonen.</p>
+<p><strong>Zustand kann bewahrt werden</strong><br />
+SPS-Konfiguration zwischen Sitzungen beibehalten oder jedes Mal frisch starten. Ihre Wahl.</p>
+<p><strong>Timing ist vorhersehbar</strong><br />
+Nicht für harte Echtzeit-Steuerung geeignet, aber perfekt zum Testen von Netzwerkprotokollen, Sicherheitsüberwachung und Angriffsszenarien.</p>
+<h2 id="wichtige-einschrankungen-ehrlich-sein">Wichtige Einschränkungen (ehrlich sein)</h2>
+<p>Seien wir klar darüber, was dies ist und was nicht:</p>
+<p><strong>Nicht für Produktion</strong><br />
+Dies sind Simulationen und Testumgebungen. Niemals in tatsächliche Anlagennetzwerke einsetzen.</p>
+<p><strong>Keine Echtzeit-Steuerung</strong><br />
+Perfekt zum Testen von Protokollen und Sicherheit. Nicht für sicherheitskritische Steuerungssysteme mit harten Echtzeit-Garantien geeignet.</p>
+<p><strong>Nicht identisch mit echten Geräten</strong><br />
+Simulatoren verhalten sich wie SPSen und HMIs, führen aber nicht Ihre genaue Produktions-Firmware aus.</p>
+<p><strong>Fazit:</strong><br />
+Für Training und Tests - perfekt.<br />
+Für Produktionssteuerung - echte, zertifizierte Hardware verwenden.</p>
+<h2 id="ihr-workshop-lernpfad">Ihr Workshop-Lernpfad</h2>
+<p><strong>Vor dem Workshop:</strong></p>
+<ul>
+<li>Stressen Sie nicht wegen Containern. Sie sind nur ein Werkzeug.</li>
+<li>Stellen Sie sicher, dass Docker Desktop und VS Code installiert sind (wir führen Sie).</li>
+<li>Vertrauen Sie darauf, dass Millionen von Menschen dies täglich verwenden.</li>
+</ul>
+<p><strong>Während des Workshops:</strong></p>
+<ul>
+<li>Konzentrieren Sie sich auf OT-Sicherheit und -Netzwerke, nicht auf Container-Technologie.</li>
+<li>Verwenden Sie die VS Code-Erweiterung - Point-and-Click-Interface.</li>
+<li>Stellen Sie jederzeit Fragen, wenn etwas unklar ist.</li>
+</ul>
+<p><strong>Nach dem Workshop:</strong></p>
+<ul>
+<li>Sie werden selbstbewusst Ihre eigenen Testlabore aufbauen.</li>
+<li>Erkunden Sie erweiterte Funktionen, wenn interessiert.</li>
+<li>Verstehen Sie, warum Container in OT-Sicherheits- und Netzwerktests beliebt sind.</li>
+</ul>
+<h2 id="mochten-sie-mehr-lernen-optional">Möchten Sie mehr lernen? (Optional)</h2>
+<p>Wenn Sie nach dem Workshop tiefer eintauchen möchten, haben diese Ressourcen Millionen von Menschen geholfen, Container zu verstehen. Alle sind anfängerfreundlich:</p>
+<h3 id="sehr-empfohlene-videos-hier-starten">Sehr empfohlene Videos (hier starten)</h3>
+<p><strong>Docker in 100 Seconds</strong> von Fireship<br />
+<a href="https://www.youtube.com/watch?v=Gjnup-PuquQ">https://www.youtube.com/watch?v=Gjnup-PuquQ</a><br />
+Schnell, visuell und perfekt, um die Grundlagen zu verstehen.</p>
+<p><strong>you need to learn Docker RIGHT NOW</strong> von NetworkChuck<br />
+<a href="https://www.youtube.com/watch?v=eGz9DS-aIeY">https://www.youtube.com/watch?v=eGz9DS-aIeY</a><br />
+Spassig, praktisch und anfängerfreundliche Einführung.</p>
+<h3 id="offizielle-docker-ressourcen">Offizielle Docker-Ressourcen</h3>
+<p><strong>Docker Get Started Guide</strong><br />
+<a href="https://docs.docker.com/get-started/">https://docs.docker.com/get-started/</a><br />
+Offizielle Docker-Dokumentation, gut strukturiert und klar.</p>
+<p><strong>Docker 101 Interactive Tutorial</strong><br />
+<a href="https://www.docker.com/101-tutorial">https://www.docker.com/101-tutorial</a><br />
+Praktisches Tutorial, das Sie in Ihrem Browser oder auf Ihrer Maschine machen können.</p>
+<p><strong>What is a Container? (Docker's explanation)</strong><br />
+<a href="https://www.docker.com/resources/what-container/">https://www.docker.com/resources/what-container/</a><br />
+Dockers eigene anfängerfreundliche Erklärung.</p>
+<h3 id="containerlab-spezifisch">Containerlab-spezifisch</h3>
+<p><strong>Containerlab Quick Start</strong><br />
+<a href="https://containerlab.dev/quickstart/">https://containerlab.dev/quickstart/</a><br />
+Die offizielle Schnellstartanleitung - sehr zugänglich.</p>
+<p><strong>Containerlab VS Code Extension</strong><br />
+<a href="https://containerlab.dev/manual/vsc-extension/">https://containerlab.dev/manual/vsc-extension/</a><br />
+Dokumentation für die Erweiterung, die wir im Workshop verwenden werden.</p>
+<p><strong>Containerlab YouTube Channel</strong><br />
+<a href="https://www.youtube.com/@containerlab">https://www.youtube.com/@containerlab</a><br />
+Video-Tutorials und Demonstrationen.</p>
+<h3 id="fur-visuelle-lerner">Für visuelle Lerner</h3>
+<p><strong>Play with Docker</strong><br />
+<a href="https://labs.play-with-docker.com/">https://labs.play-with-docker.com/</a><br />
+Kostenlose Online-Umgebung, um Docker-Befehle auszuprobieren, ohne etwas zu installieren.</p>
+<p><strong>Docker Curriculum by Prakhar Srivastav</strong><br />
+<a href="https://docker-curriculum.com/">https://docker-curriculum.com/</a><br />
+Anfängerfreundliches Tutorial mit klaren Erklärungen und Beispielen.</p>
+<h3 id="wenn-sie-mit-vms-vergleichen-mochten">Wenn Sie mit VMs vergleichen möchten</h3>
+<p><strong>Containers vs Virtual Machines (IBM Technology)</strong><br />
+<a href="https://www.youtube.com/watch?v=cjXI-yxqGTI">https://www.youtube.com/watch?v=cjXI-yxqGTI</a><br />
+Klare Videoerklärung der Unterschiede.</p>
+<h2 id="fazit-fur-diesen-workshop">Fazit für diesen Workshop</h2>
+<p>Sie müssen kein Container-Experte sein. Sie müssen nur wissen, dass Container ausgereifte, bewährte Technologie sind, die von Millionen von Entwicklern und Unternehmen weltweit verwendet wird.</p>
+<p>Die VS Code-Erweiterung übernimmt die schwere Arbeit. Sie konzentrieren sich auf OT-Sicherheit und -Netzwerke.</p>
+<p>Container sind einfach das Werkzeug, das uns erlaubt, schnelle, wiederholbare, teilbare OT-Sicherheits- und Netzwerklabore zu bauen. Das ist ihr Zweck hier. Sie machen es gut.</p>
+<p>Bereit, in OT-Sicherheit und -Netzwerke einzutauchen? Los geht's.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tracking"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "In Zwischenablage kopiert", "clipboard.copy": "In Zwischenablage kopieren", "search.result.more.one": "1 weiteres Suchergebnis auf dieser Seite", "search.result.more.other": "# weitere Suchergebnisse auf dieser Seite", "search.result.none": "Keine Suchergebnisse", "search.result.one": "1 Suchergebnis", "search.result.other": "# Suchergebnisse", "search.result.placeholder": "Suchbegriff eingeben", "search.result.term.missing": "Es fehlt", "select.version": "Version ausw\u00e4hlen"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

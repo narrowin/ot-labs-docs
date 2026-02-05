@@ -1,0 +1,1624 @@
+
+<!doctype html>
+<html lang="de" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="OT Networks: Design & Defend">
+      
+      
+      
+        <link rel="canonical" href="https://narrowin.github.io/ot-labs-docs/de/exercises/ex5-reconnaissance.html">
+      
+      
+        <link rel="prev" href="ex4-link-aggregation.html">
+      
+      
+        <link rel="next" href="ex6-protocol-discovery.html">
+      
+      
+        
+          <link rel="alternate" href="/ot-labs-docs/en/" hreflang="en">
+        
+          <link rel="alternate" href="/ot-labs-docs/de/" hreflang="de">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>5. Fernzugriff - OT Networks: Design & Defend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+        <script src="https://unpkg.com/iframe-worker/shim"></script>
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ubung-5-fernzugriff-und-sicherheitsbewertung" class="md-skip">
+          Zum Inhalt
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Kopfzeile">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-header__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="../assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OT Networks: Design & Defend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5. Fernzugriff
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Sprache wechseln">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/en/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ot-labs-docs/de/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Suche" placeholder="Suche" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Suche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Zurücksetzen" aria-label="Zurücksetzen" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Suche wird initialisiert
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/narrowin/ot-labs-docs" title="Zum Repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://narrowin.ch/explorer" title="OT Networks: Design &amp; Defend" class="md-nav__button md-logo" aria-label="OT Networks: Design & Defend" data-md-component="logo">
+      
+  <img src="../assets/images/narrowin.svg" alt="logo">
+
+    </a>
+    OT Networks: Design & Defend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/narrowin/ot-labs-docs" title="Zum Repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OT-LABS
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Übersicht
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Übungen
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Übungen
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Übersicht
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex1-vlan-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. VLAN-Erkennung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex2-arp-spoofing.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. ARP-Spoofing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex3-spanning-tree.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Spanning Tree
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex4-link-aggregation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Link-Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Fernzugriff
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="ex5-reconnaissance.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Fernzugriff
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#lernziele" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lernziele
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voraussetzungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voraussetzungen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#szenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Szenario
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aufgaben" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgaben
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aufgaben">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-1-erster-fernzugriff-vom-jumphost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 1: Erster Fernzugriff vom Jumphost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-2-host-erkennung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 2: Host-Erkennung
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-3-service-identifikation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 3: Service-Identifikation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-4-zugriffstest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 4: Zugriffstest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-5-ergebnisse-dokumentieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 5: Ergebnisse dokumentieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uberprufung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Überprüfung
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zu-uberlegende-fragen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zu überlegende Fragen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#haufige-probleme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Häufige Probleme
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erweiterte-herausforderung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erweiterte Herausforderung
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#losung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lösung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lösung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#host-erkennungsergebnisse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host-Erkennungsergebnisse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-scan-ergebnisse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service-Scan-Ergebnisse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zugriffstest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zugriffstest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sicherheitsergebnisse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sicherheitsergebnisse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empfohlene-abhilfemassnahmen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Empfohlene Abhilfemassnahmen
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex6-protocol-discovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Protokoll-Erkennung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ex7-segmentation-firewall.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Segmentierung & Firewall
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="appendix.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anhang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatsheet.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheatsheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Container101.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container-Grundlagen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../automation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automatisierung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../slides.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Folien
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feedback.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#lernziele" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lernziele
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voraussetzungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voraussetzungen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#szenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Szenario
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aufgaben" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgaben
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aufgaben">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-1-erster-fernzugriff-vom-jumphost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 1: Erster Fernzugriff vom Jumphost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-2-host-erkennung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 2: Host-Erkennung
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-3-service-identifikation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 3: Service-Identifikation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-4-zugriffstest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 4: Zugriffstest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgabe-5-ergebnisse-dokumentieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aufgabe 5: Ergebnisse dokumentieren
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uberprufung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Überprüfung
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zu-uberlegende-fragen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zu überlegende Fragen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#haufige-probleme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Häufige Probleme
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erweiterte-herausforderung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erweiterte Herausforderung
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#losung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lösung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lösung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#host-erkennungsergebnisse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host-Erkennungsergebnisse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-scan-ergebnisse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service-Scan-Ergebnisse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zugriffstest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zugriffstest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sicherheitsergebnisse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sicherheitsergebnisse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empfohlene-abhilfemassnahmen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Empfohlene Abhilfemassnahmen
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ubung-5-fernzugriff-und-sicherheitsbewertung">Übung 5: Fernzugriff und Sicherheitsbewertung</h1>
+<p><strong>Zeitschätzung</strong>: 35-45 Minuten<br />
+<strong>Lab-Topologie</strong>: <code>ot-sec-flat</code> (einfacher) oder <code>ot-sec-segmented</code> (realistisch)<br />
+<strong>Schwierigkeit</strong>: <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.5 5.5v13h-2v-13zM21 4h-5v16h5zm-7 5H9v11h5zm-7 5H2v6h5z"/></svg></span> Fortgeschritten</p>
+<h2 id="lernziele">Lernziele</h2>
+<ul>
+<li>Fernzugriff-Tests vom DMZ-Jumphost durchführen</li>
+<li>Exponierte Dienste mittels Port-Scanning identifizieren</li>
+<li>Potenzielle Sicherheitsschwachstellen entdecken</li>
+<li>Professionelle Sicherheitsbewertungsmethodik praktizieren</li>
+</ul>
+<h2 id="voraussetzungen">Voraussetzungen</h2>
+<ul>
+<li>Verständnis von TCP/IP-Grundlagen</li>
+<li>Grundlegende nmap-Kenntnisse</li>
+<li>SSH- und Service-Konzepte</li>
+<li>Bewusstsein für Sicherheitsbewertung</li>
+</ul>
+<h2 id="szenario">Szenario</h2>
+<p>Ein Sicherheitsbewerter hat Remote-Zugriff auf den Jumphost in der DMZ. Das Ziel ist es, das OT-Netzwerk zu kartieren, laufende Dienste zu identifizieren und potenzielle Sicherheitsprobleme zu dokumentieren. Dies simuliert reale Remote-Zugriffs-Szenarien, in denen Ingenieure oder Angreifer anfänglichen Zugang erhalten und versuchen, den Zugriff auf OT-Zonen zu erweitern.</p>
+<h2 id="aufgaben">Aufgaben</h2>
+<h3 id="aufgabe-1-erster-fernzugriff-vom-jumphost">Aufgabe 1: Erster Fernzugriff vom Jumphost</h3>
+<ol>
+<li>SSH zum Jumphost:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@192.168.100.52
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Standard-Anmeldedaten</p>
+<p>Passwort: <code>admin</code></p>
+</div>
+<ol>
+<li>Überprüfen Sie Ihre Netzwerkposition:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ip<span class="w"> </span>addr<span class="w"> </span>show
+ip<span class="w"> </span>route<span class="w"> </span>show
+</code></pre></div>
+<p><strong>Fragen</strong>:</p>
+<ul>
+<li>Welche IP-Adresse hat der Jumphost?</li>
+<li>
+<p>Welche Netzwerke sind gemäss Routing-Tabelle erreichbar?</p>
+</li>
+<li>
+<p>Grundlegende Konnektivität testen:</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">10</span>.10.0.1
+ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">10</span>.10.0.11
+</code></pre></div>
+<p><strong>Hinweis</strong>: In segmentierter Topologie kann die Firewall einigen Verkehr blockieren.</p>
+<h3 id="aufgabe-2-host-erkennung">Aufgabe 2: Host-Erkennung</h3>
+<ol>
+<li>VLAN 10 (Hygiene) nach aktiven Hosts scannen:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-sn<span class="w"> </span><span class="m">10</span>.10.0.0/24
+</code></pre></div>
+<p><code>-sn</code> führt Ping-Scan durch (kein Port-Scan)</p>
+<p><strong>Erwartete Ausgabe</strong>:</p>
+<div class="highlight"><pre><span></span><code>Nmap scan report for 10.10.0.1
+Host is up.
+
+Nmap scan report for 10.10.0.11
+Host is up.
+
+Nmap scan report for 10.10.0.12
+Host is up.
+</code></pre></div>
+<ol>
+<li>Andere VLANs versuchen:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-sn<span class="w"> </span><span class="m">10</span>.20.0.0/24
+nmap<span class="w"> </span>-sn<span class="w"> </span><span class="m">10</span>.40.0.0/24
+</code></pre></div>
+<p><strong>Frage</strong>: Welche VLANs sind vom Jumphost aus erreichbar?</p>
+<h3 id="aufgabe-3-service-identifikation">Aufgabe 3: Service-Identifikation</h3>
+<ol>
+<li>Gängige OT-Ports auf entdeckter SPS scannen:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-sV<span class="w"> </span>-p22,80,502,8080,2455<span class="w"> </span><span class="m">10</span>.10.0.11
+</code></pre></div>
+<p>Port-Referenz:</p>
+<ul>
+<li>22: SSH</li>
+<li>80: HTTP</li>
+<li>502: Modbus TCP</li>
+<li>8080: CODESYS WebVisu</li>
+<li>2455: CODESYS Runtime</li>
+</ul>
+<p><strong>Erwartete Ausgabe</strong>:</p>
+<div class="highlight"><pre><span></span><code>PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.x
+8080/tcp open  http    nginx
+</code></pre></div>
+<ol>
+<li>Alle SPSen in VLAN 10 scannen:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-p8080<span class="w"> </span><span class="m">10</span>.10.0.11-12
+</code></pre></div>
+<p><strong>Fragen</strong>:</p>
+<ul>
+<li>Welche Dienste sind exponiert?</li>
+<li>Laufen Dienste, die nicht laufen sollten?</li>
+<li>Was können Sie aus den Service-Bannern über die Geräte ableiten?</li>
+</ul>
+<h3 id="aufgabe-4-zugriffstest">Aufgabe 4: Zugriffstest</h3>
+<ol>
+<li>SSH-Zugriff auf SPS testen:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@10.10.0.11
+</code></pre></div>
+<p>Passwort versuchen: <code>admin</code></p>
+<p><strong>Frage</strong>: Ist dies erfolgreich? Sollten SPSen direkt per SSH vom Jumphost erreichbar sein?</p>
+<ol>
+<li>Web-Interface-Zugriff testen:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-I<span class="w"> </span>http://10.10.0.11:8080
+</code></pre></div>
+<p><strong>Beobachtung</strong>: HTTP-Response-Header auf Versionsinformationen prüfen.</p>
+<ol>
+<li>Falls <code>nc</code> verfügbar, Modbus-Port testen:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.10.0.11<span class="w"> </span><span class="m">502</span>
+</code></pre></div>
+<h3 id="aufgabe-5-ergebnisse-dokumentieren">Aufgabe 5: Ergebnisse dokumentieren</h3>
+<p>Einfachen Bericht der Ergebnisse erstellen:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>assessment_findings.txt<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s">OT-Netzwerk-Sicherheitsbewertung</span>
+
+<span class="s">Datum: $(date)</span>
+<span class="s">Bewerter: $(whoami)</span>
+
+<span class="s">ERGEBNISSE:</span>
+
+<span class="s">1. Erreichbare Netzwerke:</span>
+<span class="s">   - VLAN 10: [Liste entdeckter Hosts]</span>
+<span class="s">   - VLAN 20: [erreichbar? ja/nein]</span>
+
+<span class="s">2. Exponierte Dienste:</span>
+<span class="s">   - Host 10.10.0.11:</span>
+<span class="s">     * Port 22 (SSH): OFFEN</span>
+<span class="s">     * Port 8080 (HTTP): OFFEN</span>
+<span class="s">     * Port 502 (Modbus): [Status]</span>
+
+<span class="s">3. Sicherheitsprobleme:</span>
+<span class="s">   - [Bedenken auflisten]</span>
+
+<span class="s">4. Empfehlungen:</span>
+<span class="s">   - [Vorgeschlagene Abhilfemassnahmen]</span>
+<span class="s">EOF</span>
+
+cat<span class="w"> </span>assessment_findings.txt
+</code></pre></div>
+<h2 id="uberprufung">Überprüfung</h2>
+<p>Erfolgsindikatoren:</p>
+<ul>
+<li>Host-Erkennung identifiziert aktive SPSen</li>
+<li>Service-Scans zeigen offene Ports</li>
+<li>SSH-Zugriff getestet (kann je nach Firewall erfolgreich sein oder fehlschlagen)</li>
+<li>HTTP-Interfaces entdeckt</li>
+<li>Ergebnisse dokumentiert</li>
+</ul>
+<h2 id="zu-uberlegende-fragen">Zu überlegende Fragen</h2>
+<ol>
+<li>Welche Dienste sollten niemals direkt von der DMZ aus erreichbar sein?</li>
+<li>Wie würden Sie den Jumphost-Zugriff in der Produktion einschränken?</li>
+<li>Welche zusätzlichen Sicherheitskontrollen würden diese Architektur verbessern?</li>
+<li>Wie könnten diese Fernzugriff-Aktivitäten erkannt werden?</li>
+</ol>
+<h2 id="haufige-probleme">Häufige Probleme</h2>
+<ul>
+<li><strong>Problem</strong>: nmap-Befehl nicht gefunden</li>
+<li>
+<p><strong>Lösung</strong>: Verwenden Sie <code>apt-get update &amp;&amp; apt-get install nmap</code> oder Tool ist vorinstalliert</p>
+</li>
+<li>
+<p><strong>Problem</strong>: Alle Hosts erscheinen als down</p>
+</li>
+<li>
+<p><strong>Lösung</strong>: In segmentierter Topologie kann Firewall ICMP blockieren. Verwenden Sie <code>-Pn</code>-Flag, um Ping zu überspringen.</p>
+</li>
+<li>
+<p><strong>Problem</strong>: Keine 10.x-Netzwerke erreichbar</p>
+</li>
+<li><strong>Lösung</strong>: Routing mit <code>ip route</code> prüfen. Überprüfen, ob Lab korrekt bereitgestellt wurde.</li>
+</ul>
+<h2 id="erweiterte-herausforderung">Erweiterte Herausforderung</h2>
+<ol>
+<li>Shell-Skript schreiben zur Automatisierung der Erkennung aller VLANs</li>
+<li>CSV-Bericht aller entdeckten Dienste generieren</li>
+<li>Auf Standard-Anmeldedaten auf entdeckten Diensten testen</li>
+<li>Netzwerkdiagramm basierend auf entdeckter Topologie erstellen</li>
+</ol>
+<hr />
+<h2 id="losung">Lösung</h2>
+<details class="success">
+<summary>Zum Anzeigen der Lösung klicken</summary>
+<h3 id="host-erkennungsergebnisse">Host-Erkennungsergebnisse</h3>
+<p>Vom Jumphost:</p>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-sn<span class="w"> </span><span class="m">10</span>.10.0.0/24
+</code></pre></div>
+<p>Erwartete Entdeckungen in flacher Topologie:</p>
+<div class="highlight"><pre><span></span><code>10.10.0.1 (Gateway)
+10.10.0.11 (wago-plc2a-vlan10)
+10.10.0.12 (wago-plc2b-vlan10)
+</code></pre></div>
+<p>Segmentierte Topologie kann weniger Hosts aufgrund von Firewall-Regeln zeigen.</p>
+<h3 id="service-scan-ergebnisse">Service-Scan-Ergebnisse</h3>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-sV<span class="w"> </span>-p22,80,502,8080,2455<span class="w"> </span><span class="m">10</span>.10.0.11
+</code></pre></div>
+<p>Erwartete Ausgabe:</p>
+<div class="highlight"><pre><span></span><code>PORT     STATE SERVICE  VERSION
+22/tcp   open  ssh      OpenSSH 8.2p1 Ubuntu
+8080/tcp open  http     nginx 1.18.0
+</code></pre></div>
+<p>Andere Ports können je nach SPS-Konfiguration gefiltert oder geschlossen sein.</p>
+<h3 id="zugriffstest">Zugriffstest</h3>
+<p>SSH zur SPS:</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>admin@10.10.0.11
+</code></pre></div>
+<p>In flacher Topologie: Wahrscheinlich erfolgreich mit Passwort <code>admin</code>.
+In segmentierter Topologie: Kann durch Firewall-Regeln blockiert werden.</p>
+<p>Web-Interface:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-I<span class="w"> </span>http://10.10.0.11:8080
+</code></pre></div>
+<p>Gibt HTTP-Header zurück, die CODESYS-WebVisu-Interface zeigen.</p>
+<h3 id="sicherheitsergebnisse">Sicherheitsergebnisse</h3>
+<p>Typische entdeckte Probleme:</p>
+<ol>
+<li>SPSen per SSH mit Standard-Anmeldedaten erreichbar</li>
+<li>Web-Interfaces ohne Authentifizierung exponiert</li>
+<li>Modbus TCP ohne Authentifizierung erreichbar</li>
+<li>Keine Netzwerksegmentierung (flache Topologie)</li>
+<li>Standard-Passwörter im Einsatz</li>
+<li>Unnötige Dienste laufen</li>
+</ol>
+<h3 id="empfohlene-abhilfemassnahmen">Empfohlene Abhilfemassnahmen</h3>
+<ol>
+<li>Zero-Trust-Netzwerksegmentierung implementieren</li>
+<li>Multi-Faktor-Authentifizierung für Remote-Zugriff verlangen</li>
+<li>Ungenutzte Dienste auf SPSen deaktivieren</li>
+<li>Standard-Anmeldedaten ändern</li>
+<li>Anwendungsbewusste Firewall-Regeln implementieren</li>
+<li>IDS/IPS für Anomalieerkennung einsetzen</li>
+<li>VPN für Remote-Zugriff verlangen</li>
+<li>Jumphost-Härtung implementieren</li>
+</ol>
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tracking"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "In Zwischenablage kopiert", "clipboard.copy": "In Zwischenablage kopieren", "search.result.more.one": "1 weiteres Suchergebnis auf dieser Seite", "search.result.more.other": "# weitere Suchergebnisse auf dieser Seite", "search.result.none": "Keine Suchergebnisse", "search.result.one": "1 Suchergebnis", "search.result.other": "# Suchergebnisse", "search.result.placeholder": "Suchbegriff eingeben", "search.result.term.missing": "Es fehlt", "select.version": "Version ausw\u00e4hlen"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
