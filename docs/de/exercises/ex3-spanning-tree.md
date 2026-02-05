@@ -169,7 +169,11 @@ Erfolgsindikatoren:
 ## Lösung
 
 ??? success "Zum Anzeigen der Lösung klicken"
+
+
     ### Bridge-Konfiguration
+
+    [OT-LAB RSTP Topologie](https://demo.narrowin.ch/network/?network=34&snapshot=1&viewMode=spanning-tree&dataType=All&showDetailsId=edge-01J7Y2D1W00BWT5MZHJGJR5RH9-01J7Y2D1W0244K1AK4HRJAAPDX&stpInstanceId=0)
 
     SSH zu `sw-dist`:
 

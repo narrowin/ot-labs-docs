@@ -171,6 +171,8 @@ Success indicators:
 ??? success "Click to reveal solution"
     ### Bridge configuration
 
+    [OT-LAB RSTP Topology](https://demo.narrowin.ch/network/?network=34&snapshot=1&viewMode=spanning-tree&dataType=All&showDetailsId=edge-01J7Y2D1W00BWT5MZHJGJR5RH9-01J7Y2D1W0244K1AK4HRJAAPDX&stpInstanceId=0)
+
     SSH to `sw-dist`:
 
     ```bash
