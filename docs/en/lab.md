@@ -41,19 +41,6 @@ Subsequent starts will be much faster (under 1 minute).
 
 Documentation: [docs.github.com/codespaces](https://docs.github.com/en/codespaces)
 
-**Option 2: DevPod (Local)**
-
-DevPod creates the same environment on your local machine, giving you full control over the infrastructure.
-
-```bash
-# Install DevPod: devpod.sh/docs/getting-started/install
-devpod up github.com/narrowin-labs/ot-lab
-```
-
-DevPod reads the repository configuration and sets up all dependencies automatically.
-
-Documentation: [devpod.sh/docs](https://devpod.sh/docs)
-
 ### Starting a Lab
 
 Navigate to the Containerlab extension on the left, right-click on one of the two labs and select "Edit topology (TopoViewer)":
