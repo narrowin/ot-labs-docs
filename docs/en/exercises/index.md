@@ -1,56 +1,42 @@
-# OT Security Lab Exercises
+# Student lab exercises
 
-## Overview
+Work through these seven lessons in order on the current student `ot-sec-flat` appliance. Allow about 3½–4½ hours for the main tasks. Each lesson has a collapsed solution followed by **two optional extra sections**; allow another 2–2½ hours if you do all extras.
 
-These hands-on exercises provide practical experience with OT network security concepts. Each exercise focuses on fundamental network security principles commonly encountered in industrial control system environments.
+## Start here
 
-**Total Time**: 3-4 hours for all exercises
+1. Open your assigned Network Explorer lab and select its **live** network.
+2. Choose **Exercises** in the product launcher, then Exercise 1. Use **English / Deutsch** for your preferred language.
+3. Use each lesson's links to open the configured terminal, filtered Netmap, target details or selected capture port. In terminal and capture tabs, the active exercise title reopens the instructions. Keep a terminal open while switching to a capture.
+4. Attempt each observation before revealing its hint or solution. Record the source node, interface, command/filter and actual evidence.
 
-**Lab Requirements**: You need a running lab environment (GitHub Codespaces or DevPod). See the [Lab Environment](../lab.md) page for setup instructions.
+You need a running instructor-provided lab and its configured node credentials. Do not deploy another topology, install extensions or enter old default passwords. If a link says **unavailable**, check the selected live network and ask the instructor to verify access/bindings.
 
-**Exercise Approach**: Exercises are independent and can be completed in any order, though following the sequence provides a logical progression of concepts.
+Tool links are designed for the Network Explorer reader. In this published documentation, open the named tool in your assigned lab and select the named node/interface manually. Do not try to reach the simulated data IPs directly from your laptop.
 
-## Prerequisites
+## Lessons
 
-### Required Knowledge
+| # | Lesson | Main time | Extra challenges |
+| --- | --- | --- | --- |
+| 1 | [Compare tagged and untagged traffic](ex1-vlan-discovery.md) | 20–30 min | Four-byte frame puzzle; next-hop MAC |
+| 2 | [Trace an ARP interception](ex2-arp-spoofing.md) | 30–40 min | Incident timeline; direct versus routed interception |
+| 3 | [Explain the live spanning tree](ex3-spanning-tree.md) | 25–35 min | Root-election detective; healthy non-forwarding link |
+| 4 | [Follow flows through LACP](ex4-link-aggregation.md) | 25–35 min | Packet size versus hash; actor/partner audit |
+| 5 | [Assess access from the DMZ](ex5-reconnaissance.md) | 30–40 min | Compare vantage points; prove TCP port states |
+| 6 | [Identify OT protocols](ex6-protocol-discovery.md) | 35–45 min | Register numbering; discovery without TCP ports |
+| 7 | [Design an enforceable policy](ex7-segmentation-firewall.md) | 35–45 min | Stateful replies; complete new-VLAN build sheet |
 
-- Basic Linux command line
-- Network fundamentals (IP addressing, VLANs, routing)
-- SSH basics
-- Wireshark basics
+## Lab facts that prevent wrong conclusions
 
-### Lab Access
+- The OT baseline uses **VLAN 10 and `10.0.0.0/8`**. Historical suffixes such as `vlan20` do not prove segmentation.
+- The **DMZ is VLAN 60, `2.2.2.0/24`**. Addresses such as `1.1.1.1` and `2.2.2.2` are simulated inside the lab.
+- sw-dist and sw-acc1 have an **active two-member LACP bond**. A stable flow normally uses one member.
+- Operational state, packets and successful application responses are different forms of evidence. A port label, diagram or hostname is not a substitute.
+- Toolbox's LNE design is shared and does not apply device configuration. Exercise 7 drafts changes in your own notes. The new-VLAN extension is a design exercise pending an isolated configuration trial.
 
-Before starting, ensure you can:
+## Finish each lesson
 
-1. Access your lab environment (Codespaces or DevPod)
-2. Deploy a lab topology using Containerlab extension
-3. SSH into lab devices
-4. Capture traffic using Wireshark via Edgeshark
+Close your capture tabs and terminal tabs. In Exercise 2 also stop the helper/listener and verify the original gateway MAC and forwarding value before moving on. Leave shared device configurations and Toolbox policies unchanged.
 
-### Topology Selection
+The existing assistant knows the selected lesson. Give it the task number, actual command/output and capture filter/frame number. Wait for an answer before asking from another tab. Compare its advice with your recorded evidence and the local lesson.
 
-These exercises use two lab topologies:
-
-- `ot-sec-flat.clab.yml` - Flat network with VLANs but minimal segmentation
-- `ot-sec-segmented.clab.yml` - Segmented network with firewall rules
-
-Each exercise specifies which topology to use.
-
-## Exercise List
-
-| # | Exercise | Time | Topology | Difficulty | Link |
-|---|----------|------|----------|------------|------|
-| 1 | Compare tagged and untagged traffic | 20-30 min | Current student flat baseline | Beginner | [Start :material-arrow-right:](ex1-vlan-discovery.md) |
-| 2 | ARP Spoofing Attack | 30-40 min | Both (flat easier) | Intermediate | [Start :material-arrow-right:](ex2-arp-spoofing.md) |
-| 3 | Spanning Tree Analysis | 25-35 min | Both | Intermediate | [Start :material-arrow-right:](ex3-spanning-tree.md) |
-| 4 | Link Aggregation | 20-30 min | Segmented only | Intermediate | [Start :material-arrow-right:](ex4-link-aggregation.md) |
-| 5 | Remote Access Assessment | 35-45 min | Both | Intermediate | [Start :material-arrow-right:](ex5-reconnaissance.md) |
-| 6 | OT Protocol Discovery | 45-50 min | Both (flat easier) | Intermediate | [Start :material-arrow-right:](ex6-protocol-discovery.md) |
-| 7 | Segmentation & Firewall Design | 35-45 min | Segmented (primary) | Intermediate/Advanced | [Start :material-arrow-right:](ex7-segmentation-firewall.md) |
-
-## Additional Resources
-
-- [Appendix: Wireshark Filters](appendix.md#wireshark-filters-quick-reference)
-- [Troubleshooting Guide](appendix.md#troubleshooting-common-issues)
-- [External Resources](appendix.md#additional-resources)
+See the [filter and troubleshooting reference](appendix.md).

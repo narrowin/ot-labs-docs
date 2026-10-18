@@ -66,6 +66,13 @@ Walkthrough environment: VM222, `ot-student-lab.int.narrowin.com`, current flat 
 - **Review:** Saving Toolbox does not enforce device rules; same-VLAN traffic bypasses the gateway. The two extras distinguish replies/new initiations and account for the broad 172.16/12 match. No live policy, VLAN, address or link was changed. The isolated configuration/reset prerequisite and acceptance plan are recorded in [the VLAN feasibility analysis](2026-10-18-vlan-build-plan.md).
 - **Specific app gap:** The reader does not interpret `/toolbox/` as an app action. Exercise 7 therefore uses the verified product launcher and Policies card. No new link handler is required for the lesson.
 
+## Setup, references and capability gaps
+
+- Replaced both lab guides and quick references with the deployed appliance workflow, short readiness checks, named links and standalone manual navigation. Updated entry pages, conference task links, exercise navigation, overview and filter reference.
+- Readiness check: WAGO A reported 10.10.0.11/8 and four gateway replies. Browser actions offered WAGO A, CtrlX, Schneider and ABB; their proxy pages were checked. WAGO B TCP 8080 refused a direct lab request and no browser action was offered, so it is explicitly absent from the visualization task.
+- The reader currently supports the seven canonical lessons, not arbitrary setup/cheatsheet pages. Those pages are available in the standalone site with manual navigation. Toolbox also needs the product launcher. An isolated VLAN configuration/reset exercise is not provisioned by the app; Exercise 7 supplies the complete design and acceptance plan.
+- The course contains fourteen optional sections, two after each solution. No new automated test infrastructure, dependencies or broad/failure traffic was introduced.
+
 ## Documentation checks
 
 Run from this repository with the existing environment:
@@ -76,4 +83,4 @@ uv run --no-sync mkdocs build -f mkdocs.de.yml --site-dir /tmp/ot-course-site-de
 git diff --check
 ```
 
-The installed Material theme emits an existing emoji-extension deprecation warning. English agenda links to old lab headings are being reconciled with the setup guidance; MkDocs reports these as informational messages rather than build failures.
+Both language sites build successfully. Their internal page/anchor links resolve; absolute reader links are intentionally retained for LNE and have manual standalone instructions. The installed Material theme emits its existing emoji-extension deprecation warning.

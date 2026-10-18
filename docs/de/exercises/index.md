@@ -1,56 +1,42 @@
-# OT Security Lab Übungen
+# Übungen für das studentische Lab
 
-## Überblick
+Bearbeite die sieben Übungen der Reihe nach auf der aktuellen `ot-sec-flat`-Appliance. Plane für die Hauptaufgaben etwa 3½–4½ Stunden. Jede Übung enthält eine ausklappbare Lösung und danach **zwei optionale Zusatzteile**. Alle Extras zusammen benötigen weitere 2–2½ Stunden.
 
-Diese praxisorientierten Übungen bieten praktische Erfahrung mit OT-Netzwerksicherheitskonzepten. Jede Übung konzentriert sich auf grundlegende Netzwerksicherheitsprinzipien, die häufig in Umgebungen mit industriellen Steuerungssystemen anzutreffen sind.
+## Hier beginnen
 
-**Gesamtdauer**: 3-4 Stunden für alle Übungen
+1. Öffne dein zugewiesenes Network-Explorer-Lab und wähle das **Live**-Netzwerk.
+2. Wähle im Produktmenü **Exercises**, danach Übung 1. Mit **English / Deutsch** wechselst du die Sprache.
+3. Die Links öffnen konfigurierte Terminals, gefilterte Netmap, Zieldetails oder den ausgewählten Capture-Port. In Terminal- und Capture-Tabs öffnet der aktive Übungstitel die Anleitung. Lass das Terminal beim Wechsel zum Mitschnitt offen.
+4. Versuche zuerst die Beobachtung, bevor du Hinweis oder Lösung öffnest. Notiere Quellknoten, Interface, Befehl/Filter und tatsächliche Belege.
 
-**Lab-Anforderungen**: Sie benötigen eine laufende Lab-Umgebung (GitHub Codespaces oder DevPod). Siehe die Seite [Lab-Umgebung](../lab.md) für Installationsanweisungen.
+Du benötigst das von der Kursleitung gestartete Lab und konfigurierte Knotenzugangsdaten. Starte keine andere Topologie, installiere keine Erweiterungen und verwende keine alten Standardpasswörter. Bei **unavailable** prüfst du das gewählte Live-Netzwerk und lässt Zugriff/Bindings von der Kursleitung prüfen.
 
-**Übungsansatz**: Die Übungen sind unabhängig und können in beliebiger Reihenfolge durchgeführt werden, wobei die Reihenfolge eine logische Progression der Konzepte bietet.
+Werkzeug-Links sind für den Network-Explorer-Reader gedacht. Öffne bei Nutzung dieser veröffentlichten Dokumentation das genannte Werkzeug im zugewiesenen Lab und wähle Knoten/Interface manuell. Die simulierten Daten-IPs sind keine direkt vom Laptop erreichbaren Ziele.
 
-## Voraussetzungen
+## Übungen
 
-### Erforderliches Wissen
+| # | Übung | Hauptzeit | Zusatzaufgaben |
+| --- | --- | --- | --- |
+| 1 | [Getaggten und ungetaggten Verkehr vergleichen](ex1-vlan-discovery.md) | 20–30 Min. | Vier-Byte-Rätsel; Next-Hop-MAC |
+| 2 | [Eine ARP-Umleitung nachweisen](ex2-arp-spoofing.md) | 30–40 Min. | Vorfall-Zeitleiste; direkte und geroutete Umleitung |
+| 3 | [Den aktiven Spanning Tree erklären](ex3-spanning-tree.md) | 25–35 Min. | Root-Wahl; gesunder nicht weiterleitender Link |
+| 4 | [Datenströme durch LACP verfolgen](ex4-link-aggregation.md) | 25–35 Min. | Paketgrösse und Hash; Actor-/Partner-Prüfung |
+| 5 | [Zugriff aus der DMZ beurteilen](ex5-reconnaissance.md) | 30–40 Min. | Ausgangspunkte vergleichen; TCP-Portzustände beweisen |
+| 6 | [OT-Protokolle erkennen](ex6-protocol-discovery.md) | 35–45 Min. | Registernummerierung; Discovery ohne TCP-Port |
+| 7 | [Eine durchsetzbare Policy entwerfen](ex7-segmentation-firewall.md) | 35–45 Min. | Zustandsbehaftete Antworten; vollständiges VLAN-Arbeitsblatt |
 
-- Grundlegende Linux-Kommandozeile
-- Netzwerkgrundlagen (IP-Adressierung, VLANs, Routing)
-- SSH-Grundlagen
-- Wireshark-Grundlagen
+## Lab-Fakten gegen falsche Schlüsse
 
-### Lab-Zugang
+- Das OT-Ausgangsnetz verwendet **VLAN 10 und `10.0.0.0/8`**. Historische Namen wie `vlan20` beweisen keine Segmentierung.
+- Die **DMZ verwendet VLAN 60, `2.2.2.0/24`**. Adressen wie `1.1.1.1` und `2.2.2.2` sind innerhalb des Labs simuliert.
+- sw-dist und sw-acc1 haben einen **aktiven LACP-Bond mit zwei Mitgliedern**. Ein stabiler Datenstrom nutzt normalerweise ein Mitglied.
+- Betriebszustand, Pakete und erfolgreiche Anwendungsantworten sind unterschiedliche Belege. Port-Bezeichnung, Diagramm oder Hostname ersetzen sie nicht.
+- Der LNE-Entwurf in Toolbox ist geteilt und konfiguriert keine Geräte. In Übung 7 entwirfst du Änderungen in eigenen Notizen. Der neue VLAN-Zusatz ist bis zu einem isolierten Konfigurationsdurchgang eine Entwurfsaufgabe.
 
-Stellen Sie vor dem Start sicher, dass Sie:
+## Jede Übung abschliessen
 
-1. Auf Ihre Lab-Umgebung zugreifen können (Codespaces oder DevPod)
-2. Eine Lab-Topologie mit der Containerlab-Erweiterung bereitstellen können
-3. Per SSH auf Lab-Geräte zugreifen können
-4. Datenverkehr mit Wireshark über Edgeshark erfassen können
+Schliesse deine Capture- und Terminal-Tabs. Stoppe in Übung 2 zusätzlich Hilfsprogramm und Listener. Prüfe vor dem Weitergehen die ursprüngliche Gateway-MAC und den Forwarding-Wert. Lass geteilte Gerätekonfigurationen und Toolbox-Policies unverändert.
 
-### Topologie-Auswahl
+Der vorhandene Assistent kennt die ausgewählte Übung. Nenne Aufgabe, tatsächlichen Befehl/Ausgabe sowie Capture-Filter/Frame-Nummer. Warte auf die Antwort, bevor du aus einem anderen Tab fragst. Vergleiche den Rat mit deinen Belegen und der lokalen Anleitung.
 
-Diese Übungen verwenden zwei Lab-Topologien:
-
-- `ot-sec-flat.clab.yml` - Flaches Netzwerk mit VLANs, aber minimaler Segmentierung
-- `ot-sec-segmented.clab.yml` - Segmentiertes Netzwerk mit Firewall-Regeln
-
-Jede Übung gibt an, welche Topologie verwendet werden soll.
-
-## Übungsliste
-
-| Nr. | Übung | Zeit | Topologie | Schwierigkeit | Link |
-|---|----------|------|----------|------------|------|
-| 1 | VLAN-Erkennung | 20-30 Min. | Beide | Anfänger | [Start :material-arrow-right:](ex1-vlan-discovery.md) |
-| 2 | ARP-Spoofing-Angriff | 30-40 Min. | Beide (flat einfacher) | Fortgeschritten | [Start :material-arrow-right:](ex2-arp-spoofing.md) |
-| 3 | Spanning-Tree-Analyse | 25-35 Min. | Beide | Fortgeschritten | [Start :material-arrow-right:](ex3-spanning-tree.md) |
-| 4 | Link-Aggregation | 20-30 Min. | Nur segmentiert | Fortgeschritten | [Start :material-arrow-right:](ex4-link-aggregation.md) |
-| 5 | Fernzugriff-Bewertung | 35-45 Min. | Beide | Fortgeschritten | [Start :material-arrow-right:](ex5-reconnaissance.md) |
-| 6 | OT-Protokoll-Erkennung | 45-50 Min. | Beide (flat einfacher) | Fortgeschritten | [Start :material-arrow-right:](ex6-protocol-discovery.md) |
-| 7 | Segmentierung & Firewall-Design | 35-45 Min. | Segmentiert (primär) | Fortgeschritten/Experte | [Start :material-arrow-right:](ex7-segmentation-firewall.md) |
-
-## Zusätzliche Ressourcen
-
-- [Anhang: Wireshark-Filter](appendix.md#wireshark-filter-kurzreferenz)
-- [Troubleshooting-Leitfaden](appendix.md#troubleshooting-häufige-probleme)
-- [Externe Ressourcen](appendix.md#zusätzliche-ressourcen)
+Siehe die [Filter- und Fehlerreferenz](appendix.md).

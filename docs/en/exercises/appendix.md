@@ -1,156 +1,54 @@
-# Appendix: Reference Materials
+# Exercise reference
 
-## Wireshark Filters Quick Reference
+## Wireshark filters quick reference
 
-### VLAN Analysis
+Paste one expression into the **display-filter** bar and press Enter. These are not capture filters. A blank filtered list does not mean the recording is empty.
 
-```wireshark
-vlan                          # All 802.1Q tagged frames
-vlan.id == 10                 # Only VLAN 10 traffic
-vlan.id in {10 20 30}        # Multiple VLANs
-```
+| Filter | Use |
+| --- | --- |
+| `icmp && ip.addr == 10.10.0.11` | WAGO A's ICMP |
+| `icmp.type == 8 && ip.src == 10.10.0.11` | Requests only, for directional LACP checks |
+| `vlan` | Frames with an 802.1Q header |
+| `vlan.id == 10 && icmp` | Tagged VLAN 10 ICMP |
+| `icmp && !vlan` | Untagged ICMP |
+| `arp.opcode == 2 && arp.src.proto_ipv4 == 10.10.0.1` | ARP replies claiming the gateway IP |
+| `stp` | Spanning-tree BPDUs, including RSTP |
+| `stp.version == 2` | RSTP BPDUs |
+| `lacp` | LACP negotiation |
+| `modbus && ip.addr == 10.10.0.12` | B's bounded Modbus read and response |
+| `modbus.func_code == 3` | Read Holding Registers messages |
+| `http.request && ip.src == 10.10.0.12` | B's direct HTTP requests |
+| `tcp.port == 2323 && tcp.len > 0` | Cleartext-marker data |
+| `tcp.flags.syn == 1` | SYN and SYN/ACK; inspect ACK flag too |
+| `tcp.flags.reset == 1` | TCP resets |
+| `pn_dcp` | PROFINET DCP discovery |
+| `opcua` | Decoded OPC UA messages, if exchanged |
 
-### ARP Analysis
+[Search Wireshark's field reference](https://www.wireshark.org/docs/dfref/). Search for the field's exact spelling. Port-only filters locate traffic, but do not prove the application or its security mode.
 
-```wireshark
-arp                           # All ARP traffic
-arp.opcode == 1               # ARP requests only
-arp.opcode == 2               # ARP replies only
-arp.duplicate-address-detected  # ARP conflicts
-```
+## Troubleshooting common issues
 
-### STP/RSTP
+| Symptom | Next useful check |
+| --- | --- |
+| Tool link unavailable | Select the assigned **live** network. Ask the instructor to verify lab bindings and permissions. |
+| SSH does not connect | Use the lesson's configured **Open terminal** action. Do not try old default passwords or change the SSH server. |
+| Terminal says root, old screenshot says admin | Managed Linux endpoints use root; RouterOS uses its configured admin account. Follow the current lesson. |
+| Capture shows no ping | Start capture first, repeat the bounded ping, check node and neighbor-labelled port, then clear the filter. Allow a few seconds for the viewer to catch up. |
+| Only one LACP member has your flow | Expected for a stable hash. Repeat the same bounded flow on the other member; separate requests from replies. |
+| `vlan` is empty on an access port | Clear it and look for ICMP. Untagged endpoint frames are expected. |
+| ARP helper stops with exit 124 | Its safety timer expired. Complete cleanup or repeat the bounded task as directed. |
+| Redirects or ping loss during ARP spoofing | Verify the mapping and captured payload. Perfect ping is not a requirement for proving interception. |
+| Modbus returns an exception | Record it; verify the exact read-only unit, type, address and count. Do not guess write values. |
+| HTTP returns 404 | A responding HTTP service is different from a missing path. Check `/webvisu.htm` and port 8080. |
+| A GUI value stays constant | A steady process value is possible. Check ongoing application exchange; do not operate controls just to force movement. |
+| A final firewall drop exists, yet access works | Check earlier accepts and the actual packet path. Same-VLAN traffic can bypass the gateway entirely. |
+| Results differ from the walkthrough | Record the actual output and ask whether your lab was changed. Do not reset nodes or replace shared designs. |
 
-```wireshark
-stp                           # All spanning tree
-rstp                          # Rapid spanning tree only
-eth.dst == 01:80:c2:00:00:00  # STP multicast address
-```
+## Additional resources
 
-### Protocol-Specific
+- [Wireshark User's Guide](https://www.wireshark.org/docs/wsug_html_chunked/).
+- [RouterOS manual](https://manual.mikrotik.com/docs/introduction/).
+- [Nmap port-state reference](https://nmap.org/book/man-port-scanning-basics.html).
+- [NIST OT security guide](https://csrc.nist.gov/pubs/sp/800/82/r3/final).
 
-```wireshark
-icmp                          # ICMP (ping) traffic
-tcp.port == 502               # Modbus TCP
-tcp.port == 2455              # CODESYS
-tcp.port == 8080              # Web interfaces
-```
-
-### Combining Filters
-
-```wireshark
-vlan.id == 10 && icmp         # VLAN 10 ICMP traffic
-tcp && !tcp.port == 22        # All TCP except SSH
-ip.src == 10.10.0.11 || ip.dst == 10.10.0.11  # Specific host
-```
-
----
-
-## Troubleshooting Common Issues
-
-### Lab Not Starting
-
-**Symptom**: Containers fail to start or remain unhealthy
-
-**Solutions**:
-
-1. Check container status: `docker ps -a | grep clab`
-2. View container logs: `docker logs <container-name>`
-3. Verify images pulled: `docker images | grep narrowin`
-4. Run health check: `scripts/lab-test.py ot-sec-flat`
-
-### Cannot SSH to Devices
-
-**Symptom**: Connection refused or timeout
-
-**Solutions**:
-
-1. Verify using management IP (192.168.100.x), not data plane IP
-2. Wait 2-3 minutes after lab deploy for SSH to start
-3. Check container is running: `docker ps | grep <device-name>`
-4. Test from VS Code terminal, not external system
-
-### Wireshark Not Opening
-
-**Symptom**: Edgeshark does not launch
-
-**Solutions**:
-
-1. Accept VS Code prompt to open with Edgeshark
-2. Close and retry capture
-3. Check Edgeshark extension installed
-4. View container logs for errors
-
-### No Traffic in Captures
-
-**Symptom**: Wireshark shows no packets
-
-**Solutions**:
-
-1. Verify capture started before generating traffic
-2. Check capturing on correct interface/link
-3. Remove display filters temporarily
-4. Verify devices can actually communicate (ping test)
-
-### Ping Failures
-
-**Symptom**: Destination unreachable
-
-**Solutions**:
-
-1. Check routing: `ip route show`
-2. Verify VLAN assignment
-3. In segmented topology, check if firewall blocks traffic
-4. Confirm both devices in same VLAN or proper routing configured
-
----
-
-## Additional Resources
-
-### Documentation
-
-- [Containerlab Documentation](https://containerlab.dev/) - Network lab automation
-- [MikroTik RouterOS Manual](https://help.mikrotik.com/) - Switch configuration reference
-- [Wireshark User Guide](https://www.wireshark.org/docs/wsug_html_chunked/) - Packet analysis
-- [CODESYS Documentation](https://www.codesys.com/) - PLC programming
-
-### Standards and Best Practices
-
-- [IEC 62443 Standards](https://www.isa.org/standards-and-publications/isa-standards/isa-iec-62443-series-of-standards) - Industrial cybersecurity framework
-- [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework) - Security best practices
-
-### Tools
-
-- [nmap](https://nmap.org/) - Network discovery and security auditing
-- [tcpdump](https://www.tcpdump.org/) - Command-line packet analyzer
-- [Edgeshark](https://github.com/siemens/edgeshark) - Container network traffic capture
-
----
-
-## Advanced Topics and Extensions
-
-These topics are mentioned in the original workshop objectives but are considered advanced or require additional infrastructure not currently present in the standard lab environment.
-
-### IDS/IPS Deployment
-
-- **Zeek**: Deploying Zeek for deep protocol analysis and logging.
-- **Suricata**: Setting up Suricata IDS with custom rules for OT protocols.
-
-### Advanced Monitoring
-
-- **ELK Stack**: Integrating Elasticsearch, Logstash, and Kibana for centralized log management.
-- **SIEM**: Concepts of integrating OT logs into a Security Information and Event Management system.
-
-### Operational Security
-
-- **Detection Rules**: Configuring specific detection rules for anomalies (e.g., "New device detected", "PLC stop command").
-- **Alerting**: Setting up email or webhook alerts for security events.
-- **Playbooks**: Creating response playbooks for detected incidents.
-- **Tuning**: Methodologies for reducing false positives in detection rules.
-- **Firewall Management**: Tools and processes for managing complex firewall rulesets over time.
-
----
-
-**Document Version**: 1.0  
-**Last Updated**: 2025-11-19  
-**Lab Compatibility**: ot-sec-flat v1.x, ot-sec-segmented v1.x
+Each lesson includes topic-specific references and two optional extensions after its solution. Use [the exercise overview](index.md) to continue in order.

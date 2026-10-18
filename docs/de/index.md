@@ -65,19 +65,19 @@ Am Ende dieses Workshops werden Sie in der Lage sein:
 
 **Laborumgebung:**
 
-Das Labor läuft in vorkonfigurierten Cloud- oder lokalen Umgebungen. Siehe die [Laboranleitung](lab.md#erste-schritte) für Setup-Anweisungen.
+Die Dozierenden stellen eine laufende studentische Appliance mit Browser-Terminals, Paketmitschnitt und PLC-Visualisierungen bereit. Beginnen Sie mit der [Laboranleitung](lab.md#erste-schritte), danach den [sieben Übungen](exercises/index.md).
 
 ---
 
 ## Vorbereitung vor dem Workshop
 
-Keine Softwareinstallation erforderlich. Das Labor läuft in der Cloud über GitHub Codespaces oder lokal über DevPod.
+Keine lokale Softwareinstallation erforderlich. Verwenden Sie die von den Dozierenden bereitgestellte LNE-URL und Anmeldung.
 
 **Vor dem Workshop:**
 
-1. GitHub-Konto erstellen
-2. [Laboranleitung](lab.md#erste-schritte) für Setup-Optionen lesen
-3. **Wichtig:** Codespace vor dem Workshop starten. Der erste Start dauert 5-10 Minuten für Download und Konfiguration der Container-Images. Nachfolgende Starts dauern unter 1 Minute.
+1. Anmeldung am zugewiesenen LNE und Auswahl des studentischen Live-Netzes prüfen.
+2. Die [Kontrollen der ersten fünf Minuten](lab.md#die-ersten-funf-minuten) durchführen.
+3. Übung 1 über den Eintrag Übungen im Produktmenü öffnen.
 4. Optional: Grundkenntnisse in Linux-Kommandozeile und Netzwerkkonzepten auffrischen
 
 ---

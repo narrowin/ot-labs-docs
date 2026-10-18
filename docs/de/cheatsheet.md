@@ -1,105 +1,60 @@
-# Workshop-Spickzettel
+# Workshop-Kurzreferenz
 
-## Zugangsdaten
+Verwende dein zugewiesenes, bereits laufendes studentisches LNE und wähle das Live-Netz. Die Werkzeuglinks funktionieren im Übungsreader. Nutze in eigenständiger Dokumentation die [manuelle Navigation](lab.md#die-ersten-funf-minuten). Die [Übungsreferenz](exercises/appendix.md) enthält Paketfilter und Fehlersuche.
 
-```text
-Benutzername: admin
-Passwort: admin
-```
+## Werkzeug öffnen
 
-## Labor starten und stoppen
+| Aktion | Ziel |
+| --- | --- |
+| [WAGO-A-Terminal](/network/terminal?node=wago-plc2a-vlan10) | Hauptbeobachtungsquelle, `10.10.0.11/8` |
+| [WAGO-B-Terminal](/network/terminal?node=wago-plc2b-vlan10) | Zweite Quelle, `10.10.0.12/8` |
+| [DMZ-Jumphost-Terminal](/network/terminal?node=proxmox-jumphost) | Geroutete Quelle, `2.2.2.2/24` |
+| [Gateway-Uplink-Mitschnitt](/network/capture?node=sw-dist&interface=ether12) | Getaggter VLAN-10-Verkehr |
+| [WAGO-Access-Mitschnitt](/network/capture?node=sw-acc1&interface=ether2) | Ungetaggter Endpunktverkehr |
+| [VLAN-Ansicht](/network/?viewMode=vlan&vlanIds=10) | VLAN 10 in gewähltem Netz/Snapshot |
+| [Spanning-Tree-Ansicht](/network/?viewMode=spanning-tree&stpInstanceId=0&dataType=All) | Instanz 0, alle Daten |
 
-Verwenden Sie die VS Code Containerlab-Erweiterung mit dem Graph TopoViewer. Rechtsklick auf `ot-sec-segmented.clab.yml` (oder `ot-sec-flat.clab.yml`) und `Graph Topoviewer` wählen.
-
-Labor starten: Play-Button in der TopoViewer-Navigation drücken.
-
-Oder über die Kommandozeile:
-
-```bash
-clab deploy --topo ot-sec-segmented.clab.yml
-clab destroy --topo ot-sec-segmented.clab.yml
-```
-
-## Mit Geräten verbinden
-
-Schneller SSH-Zugriff (Gerätenamen verwenden):
-
-```bash
-ssh clab-ot-sec-flat-proxmox-jumphost
-ssh clab-ot-sec-flat-wago-plc2a-vlan10
-ssh clab-ot-sec-flat-wago-plc2b-vlan10
-ssh clab-ot-sec-flat-abb-800xa-vlan40
-```
-
-Oder SSH über IP-Adresse:
-
-```bash
-ssh admin@192.168.100.52   # jumphost
-ssh admin@192.168.100.53   # WAGO SPS 2A
-ssh admin@192.168.100.54   # WAGO SPS 2B
-ssh admin@192.168.100.57   # ABB 800XA
-```
-
-## Web-Zugriff
-
-HMI-Desktop:
-
-<http://192.168.100.60:5800>
-
-ABB-System:
-
-<http://192.168.100.57:8080>
+Warte im Terminal auf **Connected**. Starte den Mitschnitt vor dem Testverkehr und stoppe ihn vor einem Zielwechsel. Verwende `exit` und schliesse danach Terminal-/Mitschnitt-Tabs. Konfigurierte Aktionen verwenden vorhandene Zugangsdaten.
 
 ## SPS-Weboberflächen
 
-Management-IPs direkt verwenden; SPS-Weboberflächen (falls aktiviert) lauschen auf Port 8080 im Labornetzwerk.
+| Runtime | Reader-Link |
+| --- | --- |
+| WAGO A | [WebVisu](/network/webvisu?node=wago-plc2a-vlan10) |
+| WAGO B | Aktuell nicht in den freigegebenen Browseraktionen; für die Visualisierungsaufgabe WAGO A verwenden |
+| CtrlX | [WebVisu](/network/webvisu?node=ctrlx-plc3-vlan20) |
+| Schneider | [WebVisu](/network/webvisu?node=schneider-plc4-vlan30) |
+| ABB | [WebVisu](/network/webvisu?node=abb-800xa-vlan40) |
 
-| Gerät | URL (falls aktiviert) | Zweck |
-|--------|-------------------|---------|
-| abb-800xa-vlan40 | [http://10.40.0.11:8080](http://10.40.0.11:8080) | HMI/Steuerungsschnittstellenübersicht |
-| wago-plc2a-vlan10 | [http://10.10.0.11:8080](http://10.10.0.11:8080) | SPS-Weboberfläche |
-| wago-plc2b-vlan10 | [http://10.10.0.12:8080](http://10.10.0.12:8080) | SPS-Weboberfläche (noch nicht funktionsfähig) |
-| ctrlx-plc3-vlan20 | [http://10.20.0.11:8080](http://10.20.0.11:8080) | SPS-Weboberfläche |
-| schneider-plc4-vlan30 | [http://10.30.0.11:8080](http://10.30.0.11:8080) | SPS-Weboberfläche |
+Angeboten werden nur freigegebene, antwortende Runtimes im Live-Netz. Öffne in eigenständiger Dokumentation die WebVisu-Aktion der PLC im LNE. `http://<Daten-IP>:8080/webvisu.htm` ist eine Adresse innerhalb des Labs und keine Portweiterleitungsanleitung für den Laptop.
 
-## Befehle auf der SPS
+## Begrenzte Linux-Prüfungen
 
-Prüfen, ob die CODESYS-Runtime läuft:
-
-```bash
-pgrep -f codesyscontrol.bin
-# oder
-sudo /etc/init.d/codesyscontrol status
-```
-
-Runtime neu starten:
+Auf dem in der Übung genannten Knoten ausführen:
 
 ```bash
-sudo /etc/init.d/codesyscontrol restart
+ip -br addr show eth1
+ip route get 10.10.0.11
+ip neigh show dev eth1
+ping -c 4 10.10.0.1
 ```
 
-Ping-Test:
+Auf dem **DMZ-Jumphost** lautet die begrenzte Dienstprüfung:
 
 ```bash
-ping 10.10.0.1
+nmap -n -sT -Pn -p22,502,4840,8080 --max-retries 1 --host-timeout 20s --scan-delay 100ms 10.10.0.11
+curl -sS --max-time 5 -D - -o /dev/null http://10.10.0.11:8080/webvisu.htm
 ```
 
-Netzwerkverkehr mitschneiden:
+Diese Beobachtungen ändern kein PLC-Programm. Verwende den genauen lesenden Modbus-Befehl aus [Übung 6](exercises/ex6-protocol-discovery.md). Die begrenzte ARP-Aufgabe und ihre zwingende Bereinigung stehen in [Übung 2](exercises/ex2-arp-spoofing.md).
 
-```bash
-sudo tcpdump -lnei eth1
+## RouterOS-Beobachtungen
+
+```routeros
+/interface bridge monitor bridge once
+/interface bridge port print
+/interface bridge vlan print
+/ip firewall filter print detail where chain=forward
 ```
 
-## Netzwerk vom Jumphost scannen
-
-Geräte finden:
-
-```bash
-nmap 10.10.0.0/24
-```
-
-Prüfen, ob SPS-Port offen ist:
-
-```bash
-nc -zv 10.10.0.11 1217
-```
+Der Ausgangszustand ist OT-VLAN 10 mit `/8`-Adressen und DMZ-VLAN 60. Ein Hostname, offener Port oder abschliessender Drop beweist allein keine Segmentierung. Erhalte während der Beobachtungsübungen geteilte Konfiguration und Toolbox-Entwürfe. Fahre in [Übungsreihenfolge](exercises/index.md) fort.

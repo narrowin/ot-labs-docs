@@ -65,19 +65,19 @@ By the end of this workshop, you will be able to:
 
 **Lab Environment:**
 
-The lab runs in pre-configured cloud or local environments. See the [Lab Guide](lab.md#getting-started) for setup instructions.
+The instructor provides a running student appliance with browser terminals, packet capture and PLC visualizations. Follow the [Lab Guide](lab.md#getting-started), then the [seven exercises](exercises/index.md).
 
 ---
 
 ## Pre-Workshop Preparation
 
-No software installation required. The lab runs in the cloud via GitHub Codespaces or locally via DevPod.
+No local software installation is required. Use the LNE URL and login provided by your instructor.
 
 **Before the workshop:**
 
-1. Ensure you have a GitHub account
-2. Review the [Lab Guide](lab.md#getting-started) for environment setup options
-3. **Important:** If possible, start your Codespace before the workshop. Initial setup takes 5-10 minutes to download and configure container images. Subsequent starts are under 1 minute.
+1. Confirm you can sign in to the assigned LNE and select its live student network.
+2. Complete the [first-five-minute checks](lab.md#first-five-minutes).
+3. Open Exercise 1 from the product launcher's Exercises entry.
 4. Optional: Familiarize yourself with basic Linux command line and networking concepts
 
 ---

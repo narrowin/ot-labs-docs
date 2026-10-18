@@ -1,106 +1,60 @@
-# Workshop Cheatsheet
+# Workshop quick reference
 
-## Credentials
+Use your assigned, already-running student LNE. Select the live network. Tool links below work in the exercise reader; in standalone documentation use the [manual navigation](lab.md#first-five-minutes). The [exercise reference](exercises/appendix.md) covers packet filters and troubleshooting.
 
-```
-Username: admin
-Password: admin
-```
+## Open a tool
 
-## Start and Stop Lab
+| Action | Destination |
+| --- | --- |
+| [WAGO A terminal](/network/terminal?node=wago-plc2a-vlan10) | Main observation source, `10.10.0.11/8` |
+| [WAGO B terminal](/network/terminal?node=wago-plc2b-vlan10) | Second source, `10.10.0.12/8` |
+| [DMZ jumphost terminal](/network/terminal?node=proxmox-jumphost) | Routed source, `2.2.2.2/24` |
+| [Gateway-uplink capture](/network/capture?node=sw-dist&interface=ether12) | Tagged VLAN 10 traffic |
+| [WAGO access capture](/network/capture?node=sw-acc1&interface=ether2) | Untagged endpoint traffic |
+| [VLAN view](/network/?viewMode=vlan&vlanIds=10) | VLAN 10 in the selected network/snapshot |
+| [Spanning-tree view](/network/?viewMode=spanning-tree&stpInstanceId=0&dataType=All) | Instance 0, all data |
 
-Use the VS Code Containerlab extension with the Graph TopoViewer. Right click on `ot-sec-segmented.clab.yml` (or `ot-sec-flat.clab.yml`) and select `Graph Topoviewer`.
+Wait for **Connected** in the terminal. Start a capture before generating traffic. Stop it before changing targets. Use `exit` and close terminal/capture tabs after work. Configured actions select existing credentials.
 
-To start the lab press the play button in the TopoViewer navigation.
+## PLC web interfaces
 
-Or use the command line:
+| Runtime | Reader link |
+| --- | --- |
+| WAGO A | [WebVisu](/network/webvisu?node=wago-plc2a-vlan10) |
+| WAGO B | Not currently offered by the lab's approved browser actions; use WAGO A for the visualization task |
+| CtrlX | [WebVisu](/network/webvisu?node=ctrlx-plc3-vlan20) |
+| Schneider | [WebVisu](/network/webvisu?node=schneider-plc4-vlan30) |
+| ABB | [WebVisu](/network/webvisu?node=abb-800xa-vlan40) |
 
-```bash
-clab deploy --topo ot-sec-segmented.clab.yml
-clab destroy --topo ot-sec-segmented.clab.yml
-```
+Only approved, responding runtimes in the live network are offered. In standalone documentation open the PLC's WebVisu action in LNE. Direct `http://<data-IP>:8080/webvisu.htm` is an inside-lab address; it is not a laptop port-forwarding instruction.
 
+## Bounded Linux checks
 
-## Connect to Devices
-
-Quick SSH (use device name):
-
-```bash
-ssh clab-ot-sec-flat-proxmox-jumphost
-ssh clab-ot-sec-flat-wago-plc2a-vlan10
-ssh clab-ot-sec-flat-wago-plc2b-vlan10
-ssh clab-ot-sec-flat-abb-800xa-vlan40
-```
-
-Or SSH by IP address:
+Run on the node named in the lesson:
 
 ```bash
-ssh admin@192.168.100.52   # jumphost
-ssh admin@192.168.100.53   # WAGO PLC 2A
-ssh admin@192.168.100.54   # WAGO PLC 2B
-ssh admin@192.168.100.57   # ABB 800XA
+ip -br addr show eth1
+ip route get 10.10.0.11
+ip neigh show dev eth1
+ping -c 4 10.10.0.1
 ```
 
-## Web Access
-
-HMI Desktop:
-
-<http://192.168.100.60:5800>
-
-ABB System:
-
-<http://192.168.100.57:8080>
-
-## PLC Web Interfaces
-
-Use management IPs directly; PLC web UIs (if enabled) listen on port 8080 inside the lab network.
-
-| Device | URL (if enabled) | Purpose |
-|--------|-------------------|---------|
-| abb-800xa-vlan40 | [http://10.40.0.11:8080](http://10.40.0.11:8080) | HMI/control interface overview |
-| wago-plc2a-vlan10 | [http://10.10.0.11:8080](http://10.10.0.11:8080) | PLC web interface |
-| wago-plc2b-vlan10 | [http://10.10.0.12:8080](http://10.10.0.12:8080) | PLC web interface (not yet working) |
-| ctrlx-plc3-vlan20 | [http://10.20.0.11:8080](http://10.20.0.11:8080) | PLC web interface |
-| schneider-plc4-vlan30 | [http://10.30.0.11:8080](http://10.30.0.11:8080) | PLC web interface |
-
-## Commands on PLC
-
-Check if CODESYS runtime is running:
+From the **DMZ jumphost**, the scoped service check is:
 
 ```bash
-pgrep -f codesyscontrol.bin
-# or
-sudo /etc/init.d/codesyscontrol status
+nmap -n -sT -Pn -p22,502,4840,8080 --max-retries 1 --host-timeout 20s --scan-delay 100ms 10.10.0.11
+curl -sS --max-time 5 -D - -o /dev/null http://10.10.0.11:8080/webvisu.htm
 ```
 
-Restart the runtime:
+These observations do not change a PLC program. Use the exact read-only Modbus command in [Exercise 6](exercises/ex6-protocol-discovery.md). Follow [Exercise 2](exercises/ex2-arp-spoofing.md) for the bounded ARP task and its mandatory cleanup.
 
-```bash
-sudo /etc/init.d/codesyscontrol restart
+## RouterOS observations
+
+```routeros
+/interface bridge monitor bridge once
+/interface bridge port print
+/interface bridge vlan print
+/ip firewall filter print detail where chain=forward
 ```
 
-Ping test:
-
-```bash
-ping 10.10.0.1
-```
-
-Capture network traffic:
-
-```bash
-sudo tcpdump -lnei eth1
-```
-
-## Scan Network from Jumphost
-
-Find devices:
-
-```bash
-nmap 10.10.0.0/24
-```
-
-Check if PLC port is open:
-
-```bash
-nc -zv 10.10.0.11 1217
-```
+The baseline is OT VLAN 10 with `/8` addresses and DMZ VLAN 60. A hostname, open port or final drop rule alone does not prove segmentation. Keep shared configuration and Toolbox designs unchanged during the observation lessons. Continue in [exercise order](exercises/index.md).

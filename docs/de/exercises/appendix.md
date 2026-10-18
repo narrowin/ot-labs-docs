@@ -1,156 +1,54 @@
-# Anhang: Referenzmaterialien
+# Übungsreferenz
 
-## Wireshark-Filter-Kurzreferenz
+## Wireshark-Filter als Kurzreferenz
 
-### VLAN-Analyse
+Füge jeweils einen Ausdruck in die **Anzeigefilter**-Leiste ein und drücke Enter. Das sind keine Capture-Filter. Eine leere gefilterte Liste bedeutet keinen leeren Mitschnitt.
 
-```wireshark
-vlan                          # Alle 802.1Q-getaggten Frames
-vlan.id == 10                 # Nur VLAN 10-Verkehr
-vlan.id in {10 20 30}        # Mehrere VLANs
-```
+| Filter | Verwendung |
+| --- | --- |
+| `icmp && ip.addr == 10.10.0.11` | WAGO A's ICMP |
+| `icmp.type == 8 && ip.src == 10.10.0.11` | Nur Anfragen für richtungsbezogene LACP-Prüfungen |
+| `vlan` | Frames mit 802.1Q-Header |
+| `vlan.id == 10 && icmp` | Getaggtes VLAN-10-ICMP |
+| `icmp && !vlan` | Ungetaggtes ICMP |
+| `arp.opcode == 2 && arp.src.proto_ipv4 == 10.10.0.1` | ARP-Antworten mit behaupteter Gateway-IP |
+| `stp` | Spanning-Tree-BPDUs einschliesslich RSTP |
+| `stp.version == 2` | RSTP-BPDUs |
+| `lacp` | LACP-Aushandlung |
+| `modbus && ip.addr == 10.10.0.12` | B's begrenzter Modbus-Lesezugriff mit Antwort |
+| `modbus.func_code == 3` | Read-Holding-Registers-Nachrichten |
+| `http.request && ip.src == 10.10.0.12` | B's direkte HTTP-Anfragen |
+| `tcp.port == 2323 && tcp.len > 0` | Klartext-Marker-Daten |
+| `tcp.flags.syn == 1` | SYN und SYN/ACK; zusätzlich ACK-Flag prüfen |
+| `tcp.flags.reset == 1` | TCP-Resets |
+| `pn_dcp` | PROFINET-DCP-Discovery |
+| `opcua` | Dekodiertes OPC UA, sofern ausgetauscht |
 
-### ARP-Analyse
+[Suche in Wiresharks Feldreferenz](https://www.wireshark.org/docs/dfref/) nach der genauen Schreibweise. Portfilter finden Verkehr, beweisen aber keine Anwendung oder deren Sicherheitsmodus.
 
-```wireshark
-arp                           # Gesamter ARP-Verkehr
-arp.opcode == 1               # Nur ARP-Requests
-arp.opcode == 2               # Nur ARP-Replies
-arp.duplicate-address-detected  # ARP-Konflikte
-```
+## Häufige Fehler eingrenzen
 
-### STP/RSTP
+| Symptom | Nächste sinnvolle Prüfung |
+| --- | --- |
+| Werkzeug-Link nicht verfügbar | Zugewiesenes **Live**-Netzwerk wählen; Kursleitung soll Bindings und Berechtigungen prüfen. |
+| SSH verbindet nicht | Konfigurierte **Open terminal**-Aktion verwenden; keine alten Standardpasswörter probieren oder SSH-Server ändern. |
+| Terminal zeigt root statt admin im alten Bild | Verwaltete Linux-Knoten verwenden root, RouterOS sein konfiguriertes Admin-Konto. Aktueller Anleitung folgen. |
+| Kein Ping im Mitschnitt | Zuerst Capture starten, begrenzten Ping wiederholen, Knoten und Port-Nachbar prüfen, Filter leeren und einige Sekunden warten. |
+| Datenstrom nur auf einem LACP-Mitglied | Bei stabilem Hash erwartet. Gleichen begrenzten Datenstrom am anderen Mitglied wiederholen; Anfragen und Antworten trennen. |
+| `vlan` am Access-Port leer | Filter leeren und ICMP suchen. Ungetaggte Endpunkt-Frames sind erwartet. |
+| ARP-Hilfsprogramm endet mit Code 124 | Sicherheits-Timer abgelaufen; Wiederherstellung durchführen oder begrenzte Aufgabe wie beschrieben wiederholen. |
+| Redirects/Ping-Verlust bei ARP-Spoofing | Zuordnung und abgefangene Nutzlast prüfen. Perfekter Ping ist kein notwendiger Umleitungsbeleg. |
+| Modbus meldet Exception | Ergebnis notieren; genaue Lese-Unit, Typ, Adresse und Anzahl prüfen. Keine Schreibwerte erraten. |
+| HTTP liefert 404 | Antwortender Dienst und fehlender Pfad sind verschieden. `/webvisu.htm` und Port 8080 prüfen. |
+| GUI-Wert bleibt gleich | Stabile Prozesswerte sind möglich. Fortlaufenden Anwendungsaustausch prüfen; keine Bedienung nur zur erzwungenen Änderung. |
+| Zugriff trotz abschliessendem Firewall-Drop | Frühere Accepts und tatsächlichen Weg prüfen. Verkehr im selben VLAN kann das Gateway vollständig umgehen. |
+| Ergebnis weicht vom Durchgang ab | Tatsächliche Ausgabe festhalten und Lab-Änderungen erfragen. Keine Knoten zurücksetzen oder geteilten Entwürfe ersetzen. |
 
-```wireshark
-stp                           # Gesamter Spanning-Tree-Verkehr
-rstp                          # Nur Rapid Spanning Tree
-eth.dst == 01:80:c2:00:00:00  # STP-Multicast-Adresse
-```
+## Weitere Quellen
 
-### Protokoll-spezifisch
+- [Wireshark User's Guide](https://www.wireshark.org/docs/wsug_html_chunked/).
+- [RouterOS-Handbuch](https://manual.mikrotik.com/docs/introduction/).
+- [Nmap-Portzustände](https://nmap.org/book/man-port-scanning-basics.html).
+- [NIST-Leitfaden für OT-Sicherheit](https://csrc.nist.gov/pubs/sp/800/82/r3/final).
 
-```wireshark
-icmp                          # ICMP (Ping) Verkehr
-tcp.port == 502               # Modbus TCP
-tcp.port == 2455              # CODESYS
-tcp.port == 8080              # Web-Interfaces
-```
-
-### Filter kombinieren
-
-```wireshark
-vlan.id == 10 && icmp         # VLAN 10 ICMP-Verkehr
-tcp && !tcp.port == 22        # Gesamter TCP ausser SSH
-ip.src == 10.10.0.11 || ip.dst == 10.10.0.11  # Spezifischer Host
-```
-
----
-
-## Troubleshooting: Häufige Probleme
-
-### Lab startet nicht
-
-**Symptom**: Container starten nicht oder bleiben unhealthy
-
-**Lösungen**:
-
-1. Container-Status prüfen: `docker ps -a | grep clab`
-2. Container-Logs anzeigen: `docker logs <container-name>`
-3. Images überprüfen: `docker images | grep narrowin`
-4. Health-Check ausführen: `scripts/lab-test.py ot-sec-flat`
-
-### SSH zu Geräten nicht möglich
-
-**Symptom**: Connection refused oder Timeout
-
-**Lösungen**:
-
-1. Überprüfen, dass Management-IP (192.168.100.x) verwendet wird, nicht Datenebenen-IP
-2. 2-3 Minuten nach Lab-Bereitstellung warten, bis SSH startet
-3. Überprüfen, dass Container läuft: `docker ps | grep <device-name>`
-4. Von VS Code-Terminal testen, nicht von externem System
-
-### Wireshark öffnet sich nicht
-
-**Symptom**: Edgeshark startet nicht
-
-**Lösungen**:
-
-1. VS Code-Eingabeaufforderung zum Öffnen mit Edgeshark akzeptieren
-2. Schliessen und Capture erneut versuchen
-3. Überprüfen, dass Edgeshark-Erweiterung installiert ist
-4. Container-Logs auf Fehler prüfen
-
-### Kein Verkehr in Captures
-
-**Symptom**: Wireshark zeigt keine Pakete
-
-**Lösungen**:
-
-1. Überprüfen, dass Capture vor Verkehrsgenerierung gestartet wurde
-2. Überprüfen, dass auf korrektem Interface/Link erfasst wird
-3. Display-Filter vorübergehend entfernen
-4. Überprüfen, dass Geräte tatsächlich kommunizieren können (Ping-Test)
-
-### Ping-Fehler
-
-**Symptom**: Destination unreachable
-
-**Lösungen**:
-
-1. Routing prüfen: `ip route show`
-2. VLAN-Zuweisung überprüfen
-3. In segmentierter Topologie prüfen, ob Firewall Verkehr blockiert
-4. Bestätigen, dass beide Geräte im selben VLAN oder mit korrektem Routing konfiguriert sind
-
----
-
-## Zusätzliche Ressourcen
-
-### Dokumentation
-
-- [Containerlab-Dokumentation](https://containerlab.dev/) - Netzwerk-Lab-Automatisierung
-- [MikroTik RouterOS Manual](https://help.mikrotik.com/) - Switch-Konfigurationsreferenz
-- [Wireshark User Guide](https://www.wireshark.org/docs/wsug_html_chunked/) - Paketanalyse
-- [CODESYS-Dokumentation](https://www.codesys.com/) - SPS-Programmierung
-
-### Standards und Best Practices
-
-- [IEC 62443 Standards](https://www.isa.org/standards-and-publications/isa-standards/isa-iec-62443-series-of-standards) - Industrielles Cybersicherheits-Framework
-- [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework) - Sicherheits-Best-Practices
-
-### Tools
-
-- [nmap](https://nmap.org/) - Netzwerkerkennung und Sicherheitsprüfung
-- [tcpdump](https://www.tcpdump.org/) - Kommandozeilen-Paketanalyse
-- [Edgeshark](https://github.com/siemens/edgeshark) - Container-Netzwerkverkehrserfassung
-
----
-
-## Erweiterte Themen und Erweiterungen
-
-Diese Themen werden in den ursprünglichen Workshop-Zielen erwähnt, gelten aber als erweitert oder erfordern zusätzliche Infrastruktur, die derzeit nicht in der Standard-Lab-Umgebung vorhanden ist.
-
-### IDS/IPS-Bereitstellung
-
-- **Zeek**: Zeek für tiefe Protokollanalyse und Logging bereitstellen.
-- **Suricata**: Suricata IDS mit benutzerdefinierten Regeln für OT-Protokolle einrichten.
-
-### Erweiterte Überwachung
-
-- **ELK Stack**: Elasticsearch, Logstash und Kibana für zentrales Log-Management integrieren.
-- **SIEM**: Konzepte zur Integration von OT-Logs in ein Security Information and Event Management System.
-
-### Betriebssicherheit
-
-- **Erkennungsregeln**: Spezifische Erkennungsregeln für Anomalien konfigurieren (z.B. "Neues Gerät erkannt", "SPS-Stopp-Befehl").
-- **Alarmierung**: E-Mail- oder Webhook-Alarme für Sicherheitsereignisse einrichten.
-- **Playbooks**: Response-Playbooks für erkannte Vorfälle erstellen.
-- **Tuning**: Methodologien zur Reduzierung von False Positives in Erkennungsregeln.
-- **Firewall-Management**: Tools und Prozesse zur Verwaltung komplexer Firewall-Regelwerke im Laufe der Zeit.
-
----
-
-**Dokumentversion**: 1.0  
-**Letztes Update**: 2025-11-19  
-**Lab-Kompatibilität**: ot-sec-flat v1.x, ot-sec-segmented v1.x
+Jede Übung enthält Fachquellen und zwei optionale Zusatzteile nach der Lösung. Die [Übersicht](index.md) führt dich der Reihe nach weiter.
