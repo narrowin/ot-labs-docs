@@ -44,6 +44,13 @@ Walkthrough environment: VM222, `ot-student-lab.int.narrowin.com`, current flat 
 - **Validation:** Both switches reported two active members, 802.3ad and layer-2-and-3 hashing. Captures showed synchronized/collecting/distributing LACP with reciprocal actor/partner identities. CtrlX requests used ether9 and WAGO requests ether10; WAGO payloads 32/128 produced tagged lengths 78/174 on the same member. Both MkDocs builds passed.
 - **Review:** WAGO B is not incorrectly used as a source behind sw-acc1. Return-direction hashing is treated separately. Counters and pings do not become a throughput or failover measurement. A manual outage trial requires an operator-approved isolated lab and was not performed here.
 
+## Exercise 5
+
+- **Plan:** Retain remote-access assessment, discovery, service identification and reporting with explicit lab scope and evidence limits.
+- **Implementation:** Configured jumphost access, four target IPs, bounded TCP checks, an HTTP request, a reproducible finding template and two vantage-point/packet-state extensions in both languages.
+- **Validation:** The jumphost used source 2.2.2.2 via 2.2.2.1; all four listed discovery targets responded. WAGO ports 22/502/4840/8080 were open, HTTP returned 200 and 3S_WebServer, and port 65000 returned closed. The capture showed SYN/ACK for 8080 and RST/ACK for 65000. WAGO B reached the same services through a direct route. Both MkDocs builds passed.
+- **Review:** Port database labels are not application/version proofs. The report does not invent accepted credentials or a vulnerability. No password guessing, broad scans or tool installation are required.
+
 ## Documentation checks
 
 Run from this repository with the existing environment:

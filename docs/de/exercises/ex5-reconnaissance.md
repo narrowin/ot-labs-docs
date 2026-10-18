@@ -1,299 +1,138 @@
-# Übung 5: Fernzugriff und Sicherheitsbewertung
+# Übung 5: Zugriff aus der DMZ beurteilen
 
-**Zeitschätzung**: 35-45 Minuten  
-**Lab-Topologie**: `ot-sec-flat` (einfacher) oder `ot-sec-segmented` (realistisch)  
-**Schwierigkeit**: :material-signal-cellular-2: Fortgeschritten
+**Zeit:** 30–40 Minuten. **Lab:** aktuelles studentisches `ot-sec-flat`. **Niveau:** Fortgeschritten.
 
-## Lernziele
+Ermittle die Erreichbarkeit aus der DMZ und schreibe einen belegbaren Befund. Begrenze die Erkennung auf die vier genannten Lab-IPs und die Dienstprüfung auf WAGO A. Breite Subnetz-Scans, Passwortversuche und Softwareinstallation sind nicht nötig.
 
-- Fernzugriff-Tests vom DMZ-Jumphost durchführen
-- Exponierte Dienste mittels Port-Scanning identifizieren
-- Potenzielle Sicherheitsschwachstellen entdecken
-- Professionelle Sicherheitsbewertungsmethodik praktizieren
+**Lernziele:** Den Ausgangspunkt des Fernzugriffs bestimmen, begrenzte Lab-Ziele erkennen, erreichbare Dienste identifizieren, Beobachtungen von Schwachstellen unterscheiden und einen reproduzierbaren Befund mit Empfehlungen schreiben.
 
-## Voraussetzungen
+## Vorbereitung
 
-- Verständnis von TCP/IP-Grundlagen
-- Grundlegende nmap-Kenntnisse
-- SSH- und Service-Konzepte
-- Bewusstsein für Sicherheitsbewertung
+Öffne das konfigurierte [DMZ-Jumphost-Terminal](/network/terminal?node=proxmox-jumphost). Alle Hauptaufgaben laufen dort. Finde das Ziel und seinen Gateway-Weg mit der [WAGO-Suche in Netmap](/network/?search=wago-plc2a-vlan10).
 
-## Szenario
+| Ziel | Rolle |
+| --- | --- |
+| `10.10.0.1` | OT-Gateway |
+| `10.10.0.11` | WAGO A, Ziel der Dienstprüfung |
+| `10.10.0.12` | WAGO B |
+| `10.20.0.11` | CtrlX |
 
-Ein Sicherheitsbewerter hat Remote-Zugriff auf den Jumphost in der DMZ. Das Ziel ist es, das OT-Netzwerk zu kartieren, laufende Dienste zu identifizieren und potenzielle Sicherheitsprobleme zu dokumentieren. Dies simuliert reale Remote-Zugriffs-Szenarien, in denen Ingenieure oder Angreifer anfänglichen Zugang erhalten und versuchen, den Zugriff auf OT-Zonen zu erweitern.
+Das sind Lab-Adressen. Historische Namen wie `vlan20` beweisen keine getrennten VLANs im aktuellen flachen OT-Netz.
 
-## Aufgaben
+??? info "Du verwendest die eigenständige Dokumentation?"
+    Öffne **Netmap** deines zugewiesenen Live-Labs, suche **proxmox-jumphost** und wähle im Aktionsmenü **Open terminal**. Wähle für Extra 1 **wago-plc2b-vlan10**. Wähle für Extra 2 **wago-plc2a-vlan10**, **Capture packets**, Interface **eth1**. Reader-Links behalten Netzwerk und Snapshot bei und wählen diese Ziele automatisch.
 
-### Aufgabe 1: Erster Fernzugriff vom Jumphost
-
-1. SSH zum Jumphost:
+## Aufgabe 1: Den eigenen Ausgangspunkt bestimmen
 
 ```bash
-ssh admin@192.168.100.52
+date -Iseconds
+hostname
+ip -br addr show eth1
+ip route get 10.10.0.11
+command -v nmap curl
 ```
 
-!!! info "Standard-Anmeldedaten"
-    Passwort: `admin`
+**Kontrollpunkt:** Der Jumphost hat Datenadresse `2.2.2.2/24`. Die Route zu WAGO A verwendet Gateway `2.2.2.1`, Interface `eth1` und Quelladresse `2.2.2.2`. Das Management-Interface ist ein separater Weg. Notiere die tatsächlich gewählte Route zum Ziel.
 
-2. Überprüfen Sie Ihre Netzwerkposition:
+## Aufgabe 2: Nur die genannten Hosts erkennen
 
 ```bash
-ip addr show
-ip route show
+nmap -n -sn --max-retries 1 --host-timeout 10s 10.10.0.1 10.10.0.11 10.10.0.12 10.20.0.11
 ```
 
-**Fragen**:
+`-n` vermeidet DNS-Abfragen; `-sn` erkennt Hosts ohne Port-Scan. Notiere die antwortenden IPs.
 
-- Welche IP-Adresse hat der Jumphost?
-- Welche Netzwerke sind gemäss Routing-Tabelle erreichbar?
+**Kontrollpunkt:** Beim Durchgang im unveränderten Lab antworteten alle vier. Dein Ergebnis gilt für diese Quelle und diesen Zeitpunkt. Eine fehlende Antwort beweist weder einen fehlenden Host noch ein blockiertes VLAN.
 
-3. Grundlegende Konnektivität testen:
+??? info "Hinweis: Erkennung und Diensterreichbarkeit unterscheiden"
+    Kontrolliere zuerst die Route. Die nächste Aufgabe verwendet `-Pn` für ein bekanntes Lab-Ziel und benötigt deshalb keinen erfolgreichen Discovery-Probe. Erweitere bei der Fehlersuche nicht den Zielbereich.
+
+## Aufgabe 3: Erreichbare TCP-Ports messen
 
 ```bash
-ping -c 3 10.10.0.1
-ping -c 3 10.10.0.11
+nmap -n -sT -Pn -p22,502,4840,8080 --max-retries 1 --host-timeout 20s --scan-delay 100ms 10.10.0.11
 ```
 
-**Hinweis**: In segmentierter Topologie kann die Firewall einigen Verkehr blockieren.
+Das sind begrenzte TCP-Verbindungsversuche ohne Anmeldung oder PLC-Schreibbefehle. Notiere **STATE** getrennt von **SERVICE**.
 
-### Aufgabe 2: Host-Erkennung
+| Port | Übliche Verwendung; noch zu verifizieren |
+| --- | --- |
+| 22/tcp | SSH |
+| 502/tcp | Modbus TCP |
+| 4840/tcp | OPC UA |
+| 8080/tcp | WebVisu-HTTP im Lab |
 
-1. VLAN 10 (Hygiene) nach aktiven Hosts scannen:
+**Kontrollpunkt:** Im Ausgangszustand waren alle vier offen. Ohne Versionserkennung stammt Nmaps SERVICE-Spalte hauptsächlich aus einer Port-Datenbank. `http-proxy` bei 8080 beweist keinen Proxy. Ein offener TCP-Port beweist weder eine Schwachstelle noch fehlende Anwendungsauthentifizierung.
+
+## Aufgabe 4: Eine Anwendung bestätigen
 
 ```bash
-nmap -sn 10.10.0.0/24
+curl -sS --max-time 5 -D - -o /dev/null http://10.10.0.11:8080/webvisu.htm
 ```
 
-`-sn` führt Ping-Scan durch (kein Port-Scan)
+Die Anfrage lädt die Seite, zeigt Header und verwirft den Inhalt. Lies Status und Inhaltstyp ab. Gib keine Zugangsdaten ein und bediene keine Prozesssteuerung.
 
-**Erwartete Ausgabe**:
+**Kontrollpunkt:** Der Durchgang lieferte HTTP `200 OK`, `Content-type: text/html` und das CODESYS-Banner `3S_WebServer`. Das belegt HTTP besser als die Port-Bezeichnung. Ein Banner allein beweist weder Softwareversion noch Patchstand oder Ausnutzbarkeit.
 
-```text
-Nmap scan report for 10.10.0.1
-Host is up.
+??? info "Hinweis: Verbindung möglich, Seite fehlerhaft"
+    Halte den HTTP-Status fest. 404 bedeutet: HTTP antwortet, aber der Pfad fehlt. Ein Timeout ist ein anderes Ergebnis. Prüfe `/webvisu.htm`, Ziel und Port. Startet die Runtime gerade neu, warte und wiederhole diese eine Anfrage.
 
-Nmap scan report for 10.10.0.11
-Host is up.
+## Aufgabe 5: Einen reproduzierbaren Befund schreiben
 
-Nmap scan report for 10.10.0.12
-Host is up.
-```
+Ergänze in deinen eigenen Notizen:
 
-2. Andere VLANs versuchen:
+| Feld | Dein Beleg |
+| --- | --- |
+| Zeit und Quelle | Zeitstempel, Hostname, gewählte Quell-IP |
+| Ziel und Umfang | Genau geprüfte IPs und Ports |
+| Beobachtung | Portzustände, HTTP-Status und Banner |
+| Auswirkung | Welcher DMZ-zu-OT-Zugriff wurde nachgewiesen? |
+| Grenze | Nicht geprüft: Login, Berechtigungen, Verschlüsselung, Schwachstellen |
+| Empfehlung | Ein notwendiger Geschäftsfluss und eine unnötige Freigabe zur Prüfung |
+| Nachprüfung | Genaue Quelle, Ziel, Befehl und Soll-Ergebnis nach einer späteren Regeländerung |
 
-```bash
-nmap -sn 10.20.0.0/24
-nmap -sn 10.40.0.0/24
-```
-
-**Frage**: Welche VLANs sind vom Jumphost aus erreichbar?
-
-### Aufgabe 3: Service-Identifikation
-
-1. Gängige OT-Ports auf entdeckter SPS scannen:
-
-```bash
-nmap -sV -p22,80,502,8080,2455 10.10.0.11
-```
-
-Port-Referenz:
-
-- 22: SSH
-- 80: HTTP
-- 502: Modbus TCP
-- 8080: CODESYS WebVisu
-- 2455: CODESYS Runtime
-
-**Erwartete Ausgabe**:
-
-```text
-PORT     STATE SERVICE VERSION
-22/tcp   open  ssh     OpenSSH 8.x
-8080/tcp open  http    nginx
-```
-
-2. Alle SPSen in VLAN 10 scannen:
-
-```bash
-nmap -p8080 10.10.0.11-12
-```
-
-**Fragen**:
-
-- Welche Dienste sind exponiert?
-- Laufen Dienste, die nicht laufen sollten?
-- Was können Sie aus den Service-Bannern über die Geräte ableiten?
-
-### Aufgabe 4: Zugriffstest
-
-1. SSH-Zugriff auf SPS testen:
-
-```bash
-ssh admin@10.10.0.11
-```
-
-Passwort versuchen: `admin`
-
-**Frage**: Ist dies erfolgreich? Sollten SPSen direkt per SSH vom Jumphost erreichbar sein?
-
-2. Web-Interface-Zugriff testen:
-
-```bash
-curl -I http://10.10.0.11:8080
-```
-
-**Beobachtung**: HTTP-Response-Header auf Versionsinformationen prüfen.
-
-3. Falls `nc` verfügbar, Modbus-Port testen:
-
-```bash
-nc -zv 10.10.0.11 502
-```
-
-### Aufgabe 5: Ergebnisse dokumentieren
-
-Einfachen Bericht der Ergebnisse erstellen:
-
-```bash
-cat > assessment_findings.txt << 'EOF'
-OT-Netzwerk-Sicherheitsbewertung
-
-Datum: $(date)
-Bewerter: $(whoami)
-
-ERGEBNISSE:
-
-1. Erreichbare Netzwerke:
-   - VLAN 10: [Liste entdeckter Hosts]
-   - VLAN 20: [erreichbar? ja/nein]
-
-2. Exponierte Dienste:
-   - Host 10.10.0.11:
-     * Port 22 (SSH): OFFEN
-     * Port 8080 (HTTP): OFFEN
-     * Port 502 (Modbus): [Status]
-
-3. Sicherheitsprobleme:
-   - [Bedenken auflisten]
-
-4. Empfehlungen:
-   - [Vorgeschlagene Abhilfemassnahmen]
-EOF
-
-cat assessment_findings.txt
-```
-
-## Überprüfung
-
-Erfolgsindikatoren:
-
-- Host-Erkennung identifiziert aktive SPSen
-- Service-Scans zeigen offene Ports
-- SSH-Zugriff getestet (kann je nach Firewall erfolgreich sein oder fehlschlagen)
-- HTTP-Interfaces entdeckt
-- Ergebnisse dokumentiert
-
-## Zu überlegende Fragen
-
-1. Welche Dienste sollten niemals direkt von der DMZ aus erreichbar sein?
-2. Wie würden Sie den Jumphost-Zugriff in der Produktion einschränken?
-3. Welche zusätzlichen Sicherheitskontrollen würden diese Architektur verbessern?
-4. Wie könnten diese Fernzugriff-Aktivitäten erkannt werden?
-
-## Häufige Probleme
-
-- **Problem**: nmap-Befehl nicht gefunden
-  - **Lösung**: Verwenden Sie `apt-get update && apt-get install nmap` oder Tool ist vorinstalliert
-
-- **Problem**: Alle Hosts erscheinen als down
-  - **Lösung**: In segmentierter Topologie kann Firewall ICMP blockieren. Verwenden Sie `-Pn`-Flag, um Ping zu überspringen.
-
-- **Problem**: Keine 10.x-Netzwerke erreichbar
-  - **Lösung**: Routing mit `ip route` prüfen. Überprüfen, ob Lab korrekt bereitgestellt wurde.
-
-## Erweiterte Herausforderung
-
-1. Shell-Skript schreiben zur Automatisierung der Erkennung aller VLANs
-2. CSV-Bericht aller entdeckten Dienste generieren
-3. Auf Standard-Anmeldedaten auf entdeckten Diensten testen
-4. Netzwerkdiagramm basierend auf entdeckter Topologie erstellen
-
----
+**Kontrollpunkt:** Eine andere Person kann die Beobachtung ohne Raten reproduzieren. Schreibe «aus der DMZ erreichbar», wenn du genau das gemessen hast. Behaupte keine erfolgreichen Standardpasswörter; diese Übung probiert keine aus. Schliesse anschliessend das Terminal.
 
 ## Lösung
 
-??? success "Zum Anzeigen der Lösung klicken"
-    ### Host-Erkennungsergebnisse
+??? success "Vergleiche deinen Befund"
+    Der DMZ-Jumphost routet über `2.2.2.1` ins flache OT-Netz. Vier bestimmte Ziele antworten. WAGO A akzeptiert im Ausgangszustand TCP auf 22, 502, 4840 und 8080. Die HTTP-Antwort bestätigt eine Anwendung auf 8080.
 
-    Vom Jumphost:
+    Ein tragfähiger Befund lautet: «Die DMZ-Quelle kann diese OT-Dienste erreichen; notwendige Verbindungen bestätigen und unnötige Initiierungen einschränken.» Er lautet nicht «alle PLCs sind verwundbar». `open`, `closed` und `filtered` beschreiben die Sicht dieses Scans, keine Sicherheitsbewertung.
 
-    ```bash
-    nmap -sn 10.10.0.0/24
-    ```
+## Extra 1: Zwei Ausgangspunkte vergleichen
 
-    Erwartete Entdeckungen in flacher Topologie:
+**Optional, 10 Minuten.** Wiederhole zuerst auf dem **Jumphost**, danach im [WAGO-B-Terminal](/network/terminal?node=wago-plc2b-vlan10):
 
-    ```text
-    10.10.0.1 (Gateway)
-    10.10.0.11 (wago-plc2a-vlan10)
-    10.10.0.12 (wago-plc2b-vlan10)
-    ```
+```bash
+ip route get 10.10.0.11
+nmap -n -sT -Pn -p22,8080 --max-retries 1 --host-timeout 10s --scan-delay 100ms 10.10.0.11
+```
 
-    Segmentierte Topologie kann weniger Hosts aufgrund von Firewall-Regeln zeigen.
+Erstelle zwei Tabellenzeilen mit Quelle, nächstem Hop und Portzuständen.
 
-    ### Service-Scan-Ergebnisse
+**Kontrollpunkt:** Beide Ports sind im Ausgangszustand von beiden Quellen erreichbar. WAGO B erreicht A direkt über `eth1`, der Jumphost über ein Gateway. Gleiche Port-Ergebnisse bedeuten weder gleiche Wege noch, dass eine Gateway-Firewall den direkten VLAN-Verkehr filtern könnte. Schliesse B's Terminal.
 
-    ```bash
-    nmap -sV -p22,80,502,8080,2455 10.10.0.11
-    ```
+## Extra 2: Offen und geschlossen mit Paketen beweisen
 
-    Erwartete Ausgabe:
+**Optional, 10 Minuten.** [Zeichne WAGO A's Datenport auf](/network/capture?node=wago-plc2a-vlan10&interface=eth1), wähle **Start Capture** und führe auf dem **Jumphost** aus:
 
-    ```text
-    PORT     STATE SERVICE  VERSION
-    22/tcp   open  ssh      OpenSSH 8.2p1 Ubuntu
-    8080/tcp open  http     nginx 1.18.0
-    ```
+```bash
+nmap -n -sT -Pn -p8080,65000 --max-retries 1 --host-timeout 10s --scan-delay 100ms 10.10.0.11
+```
 
-    Andere Ports können je nach SPS-Konfiguration gefiltert oder geschlossen sein.
+Warte einige Sekunden und filtere in Wireshark:
 
-    ### Zugriffstest
+```wireshark
+ip.addr == 2.2.2.2 && (tcp.port == 8080 || tcp.port == 65000)
+```
 
-    SSH zur SPS:
+Finde je den initialen SYN und die Antwort des Ziels. Prüfe **TCP → Flags**.
 
-    ```bash
-    ssh admin@10.10.0.11
-    ```
+**Kontrollpunkt:** Im Ausgangszustand antwortet 8080 mit SYN/ACK und 65000 mit RST/ACK, passend zu `open` und `closed`. Wird 65000 später genutzt, notiere das tatsächliche Ergebnis. Ein gefiltertes Ergebnis benötigt andere Belege; Schweigen identifiziert keine konkrete Firewall-Regel. Schliesse Capture und Terminals. Weiter mit [Übung 6](ex6-protocol-discovery.md).
 
-    In flacher Topologie: Wahrscheinlich erfolgreich mit Passwort `admin`.
-    In segmentierter Topologie: Kann durch Firewall-Regeln blockiert werden.
+## Weiterforschen
 
-    Web-Interface:
-
-    ```bash
-    curl -I http://10.10.0.11:8080
-    ```
-
-    Gibt HTTP-Header zurück, die CODESYS-WebVisu-Interface zeigen.
-
-    ### Sicherheitsergebnisse
-
-    Typische entdeckte Probleme:
-
-    1. SPSen per SSH mit Standard-Anmeldedaten erreichbar
-    2. Web-Interfaces ohne Authentifizierung exponiert
-    3. Modbus TCP ohne Authentifizierung erreichbar
-    4. Keine Netzwerksegmentierung (flache Topologie)
-    5. Standard-Passwörter im Einsatz
-    6. Unnötige Dienste laufen
-
-    ### Empfohlene Abhilfemassnahmen
-
-    1. Zero-Trust-Netzwerksegmentierung implementieren
-    2. Multi-Faktor-Authentifizierung für Remote-Zugriff verlangen
-    3. Ungenutzte Dienste auf SPSen deaktivieren
-    4. Standard-Anmeldedaten ändern
-    5. Anwendungsbewusste Firewall-Regeln implementieren
-    6. IDS/IPS für Anomalieerkennung einsetzen
-    7. VPN für Remote-Zugriff verlangen
-    8. Jumphost-Härtung implementieren
+- [Nmaps Portzustände](https://nmap.org/book/man-port-scanning-basics.html): Vergleiche `closed` und `filtered`.
+- [Nmap Host Discovery](https://nmap.org/book/host-discovery-controls.html): Suche `-sn` und `-Pn`.
+- [Nmap TCP Connect Scan](https://nmap.org/book/man-port-scanning-techniques.html): Suche **TCP connect scan**.
