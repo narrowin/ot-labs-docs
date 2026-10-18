@@ -23,6 +23,13 @@ Walkthrough environment: VM222, `ot-student-lab.int.narrowin.com`, current flat 
 - **Validation:** WAGO gateway and DMZ pings succeeded. Access captures showed untagged lengths 74/170 bytes for 32/128-byte payloads; tagged uplink frames showed 78/174 bytes. Requests to gateway and DMZ used the gateway's destination MAC on the access link. Both language sites built successfully.
 - **Review:** Commands match between translations; exactly two extras follow the solution. Hostname, discovery membership and captured tagging are distinguished. No switch configuration change is required.
 
+## Exercise 2
+
+- **Plan:** Preserve ARP interception, cleartext inspection, detection and mitigation objectives while bounding the target pair and making recovery observable.
+- **Implementation:** Named terminals/capture, a harmless TCP marker, timed helper, exact cleanup, standalone navigation and two evidence extensions in both languages.
+- **Validation:** The victim gateway mapping changed to WAGO A's MAC. Captured requests and the received `LAB-ARP-DEMO` marker established interception. The direct CtrlX path remained distinct. Corrective ARP plus the targeted neighbor refresh restored the original gateway MAC; no arpspoof process remained and forwarding retained its original value. All four reader links resolved in the selected live network; both MkDocs builds passed.
+- **Review:** The lesson accounts for observed ICMP redirects and ping loss, distinguishes ARP claims from authenticated identity, and does not promise decryption of encrypted traffic. The extras follow the solution and the EN/DE commands agree.
+
 ## Documentation checks
 
 Run from this repository with the existing environment:

