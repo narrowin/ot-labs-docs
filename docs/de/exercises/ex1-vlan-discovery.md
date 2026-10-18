@@ -18,13 +18,15 @@ Die folgenden Links öffnen das passende Lab-Werkzeug. Klicke in einem Werkzeug-
 Diese Übung verwendet das unveränderte Flat-Lab: WAGO `10.10.0.11`, Gateway `10.10.0.1`, VLAN 10. Wurde dein Lab umkonfiguriert, können die Ergebnisse abweichen.
 
 ??? info "Liest du diese Anleitung ausserhalb von Network Explorer?"
-    Die Werkzeug-Links funktionieren im Übungsreader von Network Explorer. Öffne in der veröffentlichten Dokumentation das genannte Werkzeug und wähle den in der Aufgabe beschriebenen Host oder Port aus.
+    Öffne dein zugewiesenes Lab, wähle dessen Live-Netzwerk und **Netmap**. Finde den Knoten mit der Suche. Sein Aktionsmenü bietet **Open terminal** und **Capture packets**; wähle das in der Aufgabe genannte Interface. Für die VLAN-Ansicht wählst du **VLAN** im Netmap-Ansichtsmenü und VLAN **10**. Reader-Links wählen diese Ziele automatisch und behalten Netzwerk und Snapshot bei.
 
 ## Aufgabe 1: Den Pfad finden
 
 [Das WAGO-Gerät auf Netmap finden](/network/?search=wago-plc2a-vlan10).
 
 Suche `wago-plc2a-vlan10`, seinen Access-Switch `sw-acc1`, den Distribution-Switch `sw-dist` und das Gateway `gw`. Verfolge ihre Verbindungen.
+
+[VLAN 10 auf Netmap untersuchen](/network/?viewMode=vlan&vlanIds=10). Vergleiche die erkannte Zugehörigkeit mit den historischen Namen. Kehre für die Port-Prüfung zum WAGO-Netmap-Link oben zurück; die Paketaufgaben prüfen das Tagging auf dem Draht.
 
 Wähle `sw-acc1` aus und öffne **Ports** in seinem Detailbereich. Finde den Port zu WAGO anhand seiner Beschreibung. Wähle `sw-dist` aus und öffne **Neighbors**, um den Port zu `gw` zu finden.
 
@@ -62,6 +64,8 @@ Dieser Befehl sendet vier Ping-Anfragen an das Gateway.
 2. Wähle **Start Capture** und warte, bis Wireshark angezeigt wird.
 3. Wechsle zum WAGO-Terminal und führe denselben Ping mit vier Anfragen erneut aus.
 4. Wechsle zurück zum Capture-Tab. Gib in Wiresharks Anzeigefilter oberhalb der Paketliste `icmp` ein und drücke Enter. Wähle ein Ping-Paket aus. Klappe in den Paketdetails darunter **802.1Q Virtual LAN** auf und lies die VLAN-ID ab.
+
+Warte nach dem Ping einige Sekunden, bis die Capture-Anzeige nachgezogen hat.
 
 **Beobachte:** Gibt es einen 802.1Q-Header? Welche VLAN-ID enthält er?
 
@@ -105,3 +109,60 @@ Schliesse den Capture-Tab und den Tab mit dem WAGO-Terminal.
 Du hast denselben Datenverkehr an einem Uplink und einem Access-Port verglichen. Prüfe, ob du erklären kannst, wo das VLAN-Tag auftauchte und warum ein leerer `vlan`-Filter mit erfolgreichen Pings vereinbar ist.
 
 Öffne bei Fragen den vorhandenen Assistenten in einem beliebigen Lab-Tab. Er kennt diese Übung. Nenne die Aufgabennummer und bei Fragen zu Paketmitschnitten deinen Filter oder die Frame-Nummer. Warte auf seine Antwort, bevor du aus einem anderen Tab eine weitere Frage stellst.
+
+## Lösung
+
+??? success "Vergleiche deine Belege"
+    Der WAGO-Access-Port ist sw-acc1 `ether2`, der Gateway-Uplink sw-dist `ether12`. Vier erfolgreiche Pings erzeugen vier Anfragen und vier Antworten. Am Gateway-Uplink tragen diese Pakete VLAN-ID 10; am Access-Port fehlt der 802.1Q-Header. Ein Anzeigefilter verändert die Aufzeichnung nicht.
+
+    Notiere je eine Frame-Nummer mit Interface, Filter und VLAN-ID beziehungsweise fehlendem Tag. Beim gleichen Standard-Ping ist der getaggte Frame vier Bytes länger. Erreichbarkeit und Hostname beweisen keine Isolation.
+
+## Extra 1: Löse das Vier-Byte-Rätsel
+
+**Optional, 10 Minuten.** Sage die Frame-Längen vor dem Mitschnitt voraus.
+
+1. Öffne den Access-Port-Mitschnitt aus Aufgabe 4 erneut und starte ihn.
+2. Öffne das WAGO-Terminal und führe aus:
+
+    ```bash
+    ping -c 2 -s 32 10.10.0.1
+    ping -c 2 -s 128 10.10.0.1
+    ```
+
+3. Filtere mit `icmp && ip.addr == 10.10.0.11`. Vergleiche **Length**. Schliesse den Mitschnitt und wiederhole die Messung am Gateway-Uplink aus Aufgabe 3.
+
+**Kontrollpunkt:** 96 Bytes mehr Nutzlast ergeben 96 Bytes mehr Frame-Länge. Bei gleicher Nutzlast ist der getaggte Frame vier Bytes länger. Vergleiche dieselbe Richtung und Nutzlast; je nach Aufzeichnung kann die Ethernet-FCS enthalten sein oder fehlen.
+
+??? success "Erwartetes Ergebnis"
+    Die Lab-Mitschnitte zeigen bei 32 und 128 Bytes Nutzlast ungetaggte Frames mit 74 und 170 Bytes sowie getaggte Frames mit 78 und 174 Bytes. Die Differenz von vier Bytes ist der 802.1Q-Header.
+
+Schliesse anschliessend den Capture-Tab.
+
+## Extra 2: Verfolge die MAC-Adresse des nächsten Hops
+
+**Optional, 10 Minuten.** Ändert eine andere Ziel-IP immer auch die Ethernet-Zieladresse?
+
+1. Starte einen neuen WAGO-Access-Port-Mitschnitt aus Aufgabe 4.
+2. Führe im WAGO-Terminal aus:
+
+    ```bash
+    ip route get 2.2.2.2
+    ping -c 2 10.10.0.1
+    ping -c 2 2.2.2.2
+    ip neigh show 10.10.0.1 dev eth1
+    ```
+
+3. Filtere mit `icmp.type == 8 && ip.src == 10.10.0.11`. Vergleiche in den Anfragen **Internet Protocol → Destination Address** mit **Ethernet II → Destination**.
+
+**Kontrollpunkt:** Beide Ziele antworten. Die IP-Ziele unterscheiden sich, beide Anfragen gehen auf diesem Access-Link aber an die Gateway-MAC. Die Route zu `2.2.2.2` führt über `10.10.0.1`. `2.2.2.2` ist hier der simulierte DMZ-Jumphost innerhalb des Labs.
+
+??? success "Erklärung"
+    Der Ethernet-Frame adressiert den nächsten Hop auf dem lokalen Link. Das IP-Paket adressiert das endgültige Ziel. Das Gateway baut für die Weiterleitung einen neuen Ethernet-Frame.
+
+Schliesse Capture- und Terminal-Tab. Weiter mit [Übung 2](ex2-arp-spoofing.md).
+
+## Weiterforschen
+
+- [Wireshark-VLAN-Felder](https://www.wireshark.org/docs/dfref/v/vlan.html): Suche nach `vlan.id` und `vlan.priority`.
+- [Wireshark-Anzeigefilter](https://www.wireshark.org/docs/man-pages/wireshark-filter): Probiere die Filter deiner Beobachtungen aus.
+- [MikroTik Bridge VLAN Table](https://help.mikrotik.com/docs/spaces/ROS/pages/28606465/Bridge+VLAN+Table): Vergleiche Access-PVID und getaggte Mitgliedschaft.
