@@ -1,197 +1,107 @@
-# Übung 1: VLAN-Erkennung und Verkehrsanalyse
+# Übung 1: Getaggten und ungetaggten Datenverkehr vergleichen
 
-**Zeitschätzung**: 20-30 Minuten  
-**Lab-Topologie**: `ot-sec-flat` oder `ot-sec-segmented`  
-**Schwierigkeit**: :material-signal: Anfänger
+**Zeitbedarf:** 20–30 Minuten
 
-## Lernziele
+**Lab:** Studentenlab `ot-sec-flat`
 
-- 802.1Q-VLAN-Tagging auf Trunk-Ports verstehen
-- Unterschied zwischen Trunk- und Access-Port-Verhalten erkennen
-- VLAN-Isolation in Paket-Captures identifizieren
-- Sicherheitsimplikationen von VLAN-Segmentierung verstehen
+**Schwierigkeit:** Anfänger
 
-## Voraussetzungen
+Vergleiche denselben Ping-Datenverkehr an zwei Switch-Ports: am Access-Port des WAGO-Geräts und am Uplink zum Gateway. Finde heraus, wo ein Ethernet-Frame ein VLAN-Tag trägt.
 
-- Bereitgestelltes und laufendes Lab
-- Grundlegende Wireshark-Kenntnisse
-- Verständnis des ping-Befehls
+## Bevor du beginnst
 
-## Szenario
+- Wähle das aktive Netzwerk deines Studentenlabs aus.
+- Die Terminal-Zugangsdaten des Labs müssen bereits eingerichtet sein.
 
-Industrielle Netzwerke verwenden VLANs zur logischen Segmentierung verschiedener Betriebszonen. In diesem Lab trennen VLANs Hygienesysteme (VLAN 10), Prozesssteuerung (VLAN 20), Entsorgungssysteme (VLAN 30), Leitwarte (VLAN 40) und Engineering-Workstations (VLAN 50). Das Verständnis, wie VLANs funktionieren und wie man sie im Datenverkehr identifiziert, ist für die OT-Sicherheitsüberwachung unerlässlich.
+Die folgenden Links öffnen das passende Lab-Werkzeug. Klicke in einem Werkzeug-Tab neben **Aktive Übung** auf den Übungstitel, um diese Anleitung wieder zu öffnen. Deine Leseposition, geöffneten Hinweise und das Gespräch mit dem Assistenten bleiben beim Wechsel zwischen den Werkzeugen erhalten.
 
-## Aufgaben
+Diese Übung verwendet das unveränderte Flat-Lab: WAGO `10.10.0.11`, Gateway `10.10.0.1`, VLAN 10. Wurde dein Lab umkonfiguriert, können die Ergebnisse abweichen.
 
-### Aufgabe 1: PLC-Konnektivität innerhalb desselben VLANs überprüfen
+??? info "Liest du diese Anleitung ausserhalb von Network Explorer?"
+    Die Werkzeug-Links funktionieren im Übungsreader von Network Explorer. Öffne in der veröffentlichten Dokumentation das genannte Werkzeug und wähle den in der Aufgabe beschriebenen Host oder Port aus.
 
-1. SSH-Verbindung zu `wago-plc2a-vlan10`:
+## Aufgabe 1: Den Pfad finden
 
-```bash
-ssh admin@192.168.100.53
-```
+[Das WAGO-Gerät auf Netmap finden](/network/?search=wago-plc2a-vlan10).
 
-!!! info "Standard-Anmeldedaten"
-    Passwort: `admin`
+Suche `wago-plc2a-vlan10`, seinen Access-Switch `sw-acc1`, den Distribution-Switch `sw-dist` und das Gateway `gw`. Verfolge ihre Verbindungen.
 
-2. Konnektivität zu einem anderen Gerät in VLAN 10 testen:
+Wähle `sw-acc1` aus und öffne **Ports** in seinem Detailbereich. Finde den Port zu WAGO anhand seiner Beschreibung. Wähle `sw-dist` aus und öffne **Neighbors**, um den Port zu `gw` zu finden.
 
-```bash
-ping -c 4 10.10.0.12
-```
+**Beobachte:** Welcher Port von sw-acc1 führt zum WAGO-Gerät? Welcher Port von sw-dist führt zum Gateway?
 
-3. Konnektivität zu Gerät in anderem VLAN testen:
+??? info "Hinweis: Die Ports zuordnen"
+    Suche unter **Ports** nach `wago-plc2a` in der Beschreibung. Scrolle die Tabelle seitwärts, falls diese Spalte nicht sichtbar ist. Suche unter **Neighbors** nach `gw` und lies das lokale Interface ab.
 
-```bash
-ping -c 4 10.20.0.11
-```
+??? success "Erklärung: Ein Name ist keine Konfiguration"
+    Im unveränderten Lab führt sw-acc1 `ether2` zu WAGO und sw-dist `ether12` zu `gw`. Hostnamen sind Bezeichnungen und kein Beweis für eine VLAN-Zugehörigkeit. Die Paketmitschnitte zeigen, ob ein Frame ein Tag trägt.
 
-**Frage**: Sind beide Pings erfolgreich? Warum oder warum nicht?
+## Aufgabe 2: Datenverkehr erzeugen
 
-### Aufgabe 2: Datenverkehr auf Trunk-Port zwischen Switches erfassen
+[Das WAGO-Terminal öffnen](/network/terminal?node=wago-plc2a-vlan10). Warte auf **Connected**. Lass diesen Tab für beide Paketmitschnitte geöffnet.
 
-1. Klicken Sie in der Containerlab-Erweiterung TopoViewer mit der rechten Maustaste auf die Verbindung zwischen `sw-dist` und `sw-acc1`
-2. Wählen Sie "Capture" von der `sw-dist`-Seite
-3. Wireshark öffnet sich über Edgeshark
-
-4. Wireshark-Filter anwenden:
-
-```wireshark
-vlan
-```
-
-5. Datenverkehr generieren durch Ping von einer SPS (verwenden Sie bestehende SSH-Sitzung):
+Gib im WAGO-Terminal ein:
 
 ```bash
-ping -c 10 10.10.0.1
+ping -c 4 10.10.0.1
 ```
 
-**Fragen**:
+Dieser Befehl sendet vier Ping-Anfragen an das Gateway.
 
-- Welche VLANs sehen Sie in den Captures?
-- Schauen Sie sich die Ethernet-Frame-Details an - wo befindet sich das VLAN-Tag?
-- Was ist der Wert des VLAN-ID-Feldes?
+**Beobachte:** Wurden alle vier Anfragen beantwortet?
 
-### Aufgabe 3: Datenverkehr auf Access-Port erfassen
+??? info "Hinweis: Probleme mit Terminal oder Ping"
+    Prüfe den ausgewählten Host und die Zugangsdaten, falls sich das Terminal nicht verbindet. Bleiben Ping-Antworten aus, kontrolliere, ob das Lab läuft, und prüfe den Pfad auf Netmap, bevor du fortfährst.
 
-1. Stoppen Sie die vorherige Erfassung
-2. Klicken Sie mit der rechten Maustaste auf die Verbindung zwischen `sw-acc1` und `wago-plc2a-vlan10`
-3. Wählen Sie "Capture" von der Switch-Seite
-4. Generieren Sie erneut Datenverkehr:
+??? success "Erklärung: Was Ping nachweist"
+    Antworten belegen die IP-Erreichbarkeit. Sie beweisen weder VLAN-Isolation noch die Durchsetzung von Firewall-Regeln. Unterschiedliche IP-Subnetze oder Endungen im Hostnamen belegen keine unterschiedlichen VLANs.
 
-```bash
-ping -c 10 10.10.0.1
-```
+## Aufgabe 3: Den getaggten Uplink untersuchen
 
-5. Wenden Sie denselben Filter an:
+1. [Den Paketmitschnitt am Gateway-Uplink öffnen](/network/capture?node=sw-dist&interface=ether12). Der Link wählt `sw-dist`, Port `ether12` zu `gw-firewall` aus, das auf Netmap als `gw` erscheint.
+2. Wähle **Start Capture** und warte, bis Wireshark angezeigt wird.
+3. Wechsle zum WAGO-Terminal und führe denselben Ping mit vier Anfragen erneut aus.
+4. Wechsle zurück zum Capture-Tab. Gib in Wiresharks Anzeigefilter oberhalb der Paketliste `icmp` ein und drücke Enter. Wähle ein Ping-Paket aus. Klappe in den Paketdetails darunter **802.1Q Virtual LAN** auf und lies die VLAN-ID ab.
 
-```wireshark
-vlan
-```
+**Beobachte:** Gibt es einen 802.1Q-Header? Welche VLAN-ID enthält er?
 
-**Fragen**:
+??? info "Hinweis: Keine Ping-Pakete sichtbar"
+    Prüfe, ob du den Mitschnitt vor dem erneuten Ping gestartet hast und ob der Ping Antworten erhalten hat. Ausgewählt sein muss sw-dist `ether12` zu `gw-firewall`. Leere den Anzeigefilter, um zu prüfen, ob überhaupt Datenverkehr aufgezeichnet wurde.
 
-- Sehen Sie jetzt VLAN-Tags?
-- Was ist der Unterschied zwischen Trunk- und Access-Ports bezüglich VLAN-Tags?
-- Warum entfernt der Switch VLAN-Tags auf Access-Ports?
+    In den Ergebnissen der Paketanalyse heisst dieser Port `eth11`; die RouterOS-Bezeichnung in der Auswahl lautet `ether12`.
 
-## Überprüfung
+??? info "Hinweis: Getaggte Pakete eingrenzen"
+    Verwende `icmp && ip.addr == 10.10.0.11`, falls weitere Pings sichtbar sind. Der Filter `vlan` zeigt getaggte Pakete. Ein Anzeigefilter verändert die sichtbare Auswahl, nicht die aufgezeichneten Daten.
 
-Erfolgsindikatoren:
+??? success "Erklärung: Erwartete Beobachtung am Uplink"
+    Der Ping durchquert den getaggten VLAN-10-Uplink. Sein Ethernet-Frame enthält einen 802.1Q-Header mit VLAN-ID 10.
 
-- Pings innerhalb desselben VLANs sind erfolgreich
-- Pings über VLANs hinweg sind erfolgreich (flat) oder schlagen fehl (segmentiert mit Firewall)
-- Trunk-Port-Captures zeigen 802.1Q-Header
-- Access-Port-Captures zeigen ungetaggte Frames
-- Mehrere VLAN-IDs auf Trunk sichtbar (10, 20, 30, 40, 50)
+Wähle **Stop Capture**, bevor du fortfährst.
 
-## Zu überlegende Fragen
+## Aufgabe 4: Mit dem ungetaggten Access-Port vergleichen
 
-1. Wenn ein Angreifer Zugang zu einem Trunk-Port erhält, welche zusätzliche Angriffsfläche entsteht dadurch?
-2. Wie würden Sie unbefugten VLAN-Zugriff erkennen?
-3. Was ist VLAN-Hopping und wie könnte es verhindert werden?
+1. [Den Paketmitschnitt am WAGO-Access-Port öffnen](/network/capture?node=sw-acc1&interface=ether2). Derselbe Capture-Tab wählt nun `sw-acc1`, Port `ether2` zu `wago-plc2a-vlan10` aus.
+2. Wähle **Start Capture** und warte, bis Wireshark angezeigt wird.
+3. Wiederhole im WAGO-Terminal `ping -c 4 10.10.0.1`.
+4. Wechsle zurück zum Capture-Tab. Wende `icmp` an, wähle ein Ping-Paket aus und vergleiche seine Paketdetails mit denen des Uplink-Pakets.
+5. Probiere den Anzeigefilter `vlan` aus. Leere ihn danach oder kehre zu `icmp` zurück.
 
-## Häufige Probleme
+**Beobachte:** Wie unterscheidet sich der Ethernet-Header dieses Pakets vom Uplink-Paket? Was geschah, als du `vlan` angewendet hast?
 
-- **Problem**: VLAN-Tags in Capture nicht sichtbar
-  - **Lösung**: Stellen Sie sicher, dass Sie auf dem Trunk-Port zwischen Switches erfassen, nicht auf dem Access-Port zum Gerät
+??? info "Hinweis: Eine leere gefilterte Ansicht"
+    Der Filter `vlan` blendet ungetaggte Frames aus. Leere den Filter, um zu prüfen, ob Pakete aufgezeichnet wurden. Kontrolliere, ob du den Port zum Endgerät statt eines Uplinks oder Management-Interfaces ausgewählt hast.
 
-- **Problem**: Wireshark öffnet sich nicht
-  - **Lösung**: Beim ersten Mal muss möglicherweise die Edgeshark-Eingabeaufforderung akzeptiert werden. Schliessen und erneut versuchen.
+    In den Ergebnissen der Paketanalyse heisst dieser Access-Port von sw-acc1 `eth1`; die RouterOS-Bezeichnung in der Auswahl lautet `ether2`.
 
-- **Problem**: Pings schlagen innerhalb desselben VLANs fehl
-  - **Lösung**: Überprüfen Sie, ob das Lab vollständig bereitgestellt ist. Führen Sie `scripts/lab-test.py ot-sec-flat` zur Überprüfung aus.
+??? success "Erklärung: Erwartete Beobachtung am Access-Port"
+    WAGO sendet und empfängt auf dieser Access-Verbindung ungetaggte Ethernet-Frames. Der Switch ordnet sie VLAN 10 zu und fügt auf dem getaggten Uplink ein 802.1Q-Tag hinzu.
 
----
+Wähle **Stop Capture**. Gib im WAGO-Terminal `exit` ein, um die SSH-Verbindung zu schliessen.
 
-## Lösung
+## Abschluss
 
-??? success "Zum Anzeigen der Lösung klicken"
-    ### Aufgabe 1: Konnektivitätstest
+Übung 1 endet nach Aufgabe 4. Es gibt keine Aufgabe 5 und keine Switch-Konfiguration zu ändern.
 
-    SSH zu wago-plc2a-vlan10:
+Du hast denselben Datenverkehr an einem Uplink und einem Access-Port verglichen. Prüfe, ob du erklären kannst, wo das VLAN-Tag auftauchte und warum ein leerer `vlan`-Filter mit erfolgreichen Pings vereinbar ist.
 
-    ```bash
-    ssh admin@192.168.100.53
-    ```
-
-    Ping innerhalb von VLAN 10 - ERFOLGREICH:
-
-    ```bash
-    ping -c 4 10.10.0.12
-    ```
-
-    Erwartete Ausgabe:
-
-    ```text
-    PING 10.10.0.12 (10.10.0.12) 56(84) bytes of data.
-    64 bytes from 10.10.0.12: icmp_seq=1 ttl=64 time=0.521 ms
-    64 bytes from 10.10.0.12: icmp_seq=2 ttl=64 time=0.389 ms
-    64 bytes from 10.10.0.12: icmp_seq=3 ttl=64 time=0.412 ms
-    64 bytes from 10.10.0.12: icmp_seq=4 ttl=64 time=0.398 ms
-
-    --- 10.10.0.12 ping statistics ---
-    4 packets transmitted, 4 received, 0% packet loss
-    ```
-
-    Ping zu VLAN 20 - ERFOLG (flat) oder FEHLSCHLAG (segmentiert mit Firewall):
-
-    ```bash
-    ping -c 4 10.20.0.11
-    ```
-
-    In `ot-sec-flat`: Erfolgreich, da keine Firewall den Inter-VLAN-Verkehr blockiert.
-    In `ot-sec-segmented`: Kann fehlschlagen, wenn Firewall-Regeln diese Kommunikation blockieren.
-
-    ### Aufgabe 2: Trunk-Port-Capture
-
-    In Wireshark auf Trunk-Link zwischen Switches, mit Filter `vlan`:
-
-    **Beobachtet**: 802.1Q-Header sichtbar mit VLAN-ID 10 für Datenverkehr von VLAN 10-Geräten.
-
-    Frame-Struktur:
-
-    ```text
-    Ethernet II
-        Destination: [MAC]
-        Source: [MAC]
-        Type: 802.1Q (0x8100)
-    802.1Q Virtual LAN
-        Priority: 0
-        CFI: 0
-        ID: 10
-        Type: IPv4 (0x0800)
-    ```
-
-    ### Aufgabe 3: Access-Port-Capture
-
-    Auf Access-Port zu `wago-plc2a-vlan10` zeigt Filter `vlan` KEINE Ergebnisse.
-
-    Frames sind ungetaggt. Switch fügt VLAN-Tag beim Weiterleiten an Trunk hinzu, entfernt es beim Weiterleiten an Access-Port.
-
-    **Antworten auf die Fragen**:
-
-    - Trunk-Ports zeigen mehrere VLANs: 10, 20, 30, 40, 50
-    - VLAN-Tag wird nach Quell-MAC, vor EtherType eingefügt
-    - Access-Ports haben keine VLAN-Tags - Switch handhabt das Tagging
-    - Dies ermöglicht es Endgeräten, VLAN-unabhängig zu sein
+Öffne bei Fragen den vorhandenen Assistenten in einem beliebigen Lab-Tab. Er kennt diese Übung. Nenne die Aufgabennummer und bei Fragen zu Paketmitschnitten deinen Filter oder die Frame-Nummer. Warte auf seine Antwort, bevor du aus einem anderen Tab eine weitere Frage stellst.
