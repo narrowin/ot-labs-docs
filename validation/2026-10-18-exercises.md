@@ -51,6 +51,13 @@ Walkthrough environment: VM222, `ot-student-lab.int.narrowin.com`, current flat 
 - **Validation:** The jumphost used source 2.2.2.2 via 2.2.2.1; all four listed discovery targets responded. WAGO ports 22/502/4840/8080 were open, HTTP returned 200 and 3S_WebServer, and port 65000 returned closed. The capture showed SYN/ACK for 8080 and RST/ACK for 65000. WAGO B reached the same services through a direct route. Both MkDocs builds passed.
 - **Review:** Port database labels are not application/version proofs. The report does not invent accepted credentials or a vulnerability. No password guessing, broad scans or tool installation are required.
 
+## Exercise 6
+
+- **Plan:** Preserve protocol discovery and security comparison using real decoded exchanges; replace screenshot/menu detours with the deployed named WebVisu link.
+- **Implementation:** Passive hierarchy/discovery, one read-only Modbus poll, direct HTTP and WebVisu, local listeners, a bounded OPC UA Hello, standalone navigation, register-numbering and Layer 2 discovery extensions.
+- **Validation:** Matched Modbus function-3 request/response, address 0 and quantity 2; both mbpoll numbering modes read the same wire address. HTTP GET returned 200. The named WebVisu link rendered its native canvas and repeated application POSTs returned 200. The OPC UA greeting returned ACKF/28 bytes and decoded Hello/Acknowledge frames. DCP frames had EtherType 0x8892, station name pn-device and no IP header. Both MkDocs builds passed.
+- **Review:** Background writes are separated from the student's reads. Steady GUI values are allowed. Port labels and transport greetings do not become claims about session encryption or full PROFINET IO capability. No dependencies were installed and no PLC controls/programs were changed.
+
 ## Documentation checks
 
 Run from this repository with the existing environment:
