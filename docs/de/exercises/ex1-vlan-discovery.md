@@ -76,11 +76,11 @@ Dieser Befehl sendet vier Ping-Anfragen an das Gateway.
 ??? success "Erklärung: Erwartete Beobachtung am Uplink"
     Der Ping durchquert den getaggten VLAN-10-Uplink. Sein Ethernet-Frame enthält einen 802.1Q-Header mit VLAN-ID 10.
 
-Wähle **Stop Capture**, bevor du fortfährst.
+Schliesse den Capture-Tab, bevor du fortfährst. Dadurch wird der Paketmitschnitt beendet.
 
 ## Aufgabe 4: Mit dem ungetaggten Access-Port vergleichen
 
-1. [Den Paketmitschnitt am WAGO-Access-Port öffnen](/network/capture?node=sw-acc1&interface=ether2). Derselbe Capture-Tab wählt nun `sw-acc1`, Port `ether2` zu `wago-plc2a-vlan10` aus.
+1. [Den Paketmitschnitt am WAGO-Access-Port öffnen](/network/capture?node=sw-acc1&interface=ether2). Der Link öffnet einen Capture-Tab mit `sw-acc1`, Port `ether2` zu `wago-plc2a-vlan10`.
 2. Wähle **Start Capture** und warte, bis Wireshark angezeigt wird.
 3. Wiederhole im WAGO-Terminal `ping -c 4 10.10.0.1`.
 4. Wechsle zurück zum Capture-Tab. Wende `icmp` an, wähle ein Ping-Paket aus und vergleiche seine Paketdetails mit denen des Uplink-Pakets.
@@ -96,7 +96,7 @@ Wähle **Stop Capture**, bevor du fortfährst.
 ??? success "Erklärung: Erwartete Beobachtung am Access-Port"
     WAGO sendet und empfängt auf dieser Access-Verbindung ungetaggte Ethernet-Frames. Der Switch ordnet sie VLAN 10 zu und fügt auf dem getaggten Uplink ein 802.1Q-Tag hinzu.
 
-Wähle **Stop Capture**. Gib im WAGO-Terminal `exit` ein, um die SSH-Verbindung zu schliessen.
+Schliesse den Capture-Tab und den Tab mit dem WAGO-Terminal.
 
 ## Abschluss
 

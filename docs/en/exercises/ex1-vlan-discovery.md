@@ -76,11 +76,11 @@ This sends four ping requests to the gateway.
 ??? success "Explanation: expected uplink observation"
     The ping crosses the tagged VLAN 10 uplink. Its Ethernet frame includes an 802.1Q header with VLAN ID 10.
 
-Choose **Stop Capture** before continuing.
+Close the capture tab before continuing. This ends the packet capture.
 
 ## Task 4: Compare the untagged access port
 
-1. [Open the WAGO access-port capture](/network/capture?node=sw-acc1&interface=ether2). The same capture tab now selects `sw-acc1`, port `ether2` facing `wago-plc2a-vlan10`.
+1. [Open the WAGO access-port capture](/network/capture?node=sw-acc1&interface=ether2). The link opens a capture tab with `sw-acc1`, port `ether2` facing `wago-plc2a-vlan10`.
 2. Choose **Start Capture** and wait for Wireshark to appear.
 3. In the WAGO terminal, repeat `ping -c 4 10.10.0.1`.
 4. Return to the capture tab. Apply `icmp`, select a ping packet and compare its packet details with the uplink packet.
@@ -96,7 +96,7 @@ Choose **Stop Capture** before continuing.
 ??? success "Explanation: expected access-port observation"
     WAGO sends and receives untagged Ethernet frames on this access link. The switch associates them with VLAN 10 and adds an 802.1Q tag on the tagged uplink.
 
-Choose **Stop Capture**. In the WAGO terminal, enter `exit` to close the SSH connection.
+Close the capture tab and the WAGO terminal tab.
 
 ## Finish
 
