@@ -1,468 +1,144 @@
-# Exercise 7: Network Segmentation and Firewall Design
+# Exercise 7: Design a policy that reaches the traffic
 
-**Time Estimate**: 35-45 minutes  
-**Lab Topology**: `ot-sec-segmented` (primary), `ot-sec-flat` (comparison)  
-**Difficulty**: :material-signal-cellular-3: Intermediate to Advanced
+**Time:** 35–45 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Intermediate.
 
-## Learning Objectives
+Prove where a flow is forwarded before deciding where to filter it. Build a small, justified communication matrix from your evidence. This lesson inspects the running lab and drafts a design; it does not apply firewall rules to the shared appliance.
 
-- Understand zone-based segmentation (Purdue Model concepts)
-- Create a communication matrix for OT devices
-- Design firewall rules to restrict traffic to necessary protocols
-- Compare security posture of flat vs. segmented networks
+**You will learn to:** distinguish switched and routed paths, build a directional service policy, explain stateful replies and rule order, and specify evidence for a future enforcement test.
 
-## Prerequisites
+## Before you start
 
-- Exercise 1 & 6
-- Basic understanding of firewalls
+Use your observations from [Exercise 5](ex5-reconnaissance.md) and [Exercise 6](ex6-protocol-discovery.md). Open terminals for [ABB](/network/terminal?node=abb-800xa-vlan40), the [DMZ jumphost](/network/terminal?node=proxmox-jumphost) and [gw](/network/terminal?node=gw-firewall). Open [VLAN 10 in Netmap](/network/?viewMode=vlan&vlanIds=10).
 
-## Scenario
+**Standalone documentation:** Open your assigned LNE, select the student network and live snapshot, then Explorer → Netmap → VLAN view → VLAN 10. Search the stable node names above and use their configured SSH actions. Open Toolbox from the product launcher. Reader links carry the selected network and snapshot automatically.
 
-In the `ot-sec-flat` topology, all devices were in the same broadcast domain. If one device was compromised, the attacker could access everything. In `ot-sec-segmented`, we have VLANs separating functions:
-- **VLAN 10 (Hygiene)**: PLCs
-- **VLAN 20 (Process)**: PLCs
-- **VLAN 40 (Control Room)**: HMI
-- **VLAN 50 (Engineering)**: Workstations
+The baseline OT prefix is `10.0.0.0/8` in VLAN 10. DMZ is `2.2.2.0/24` in VLAN 60. Hostname suffixes do not create VLANs 20–50. Keep your proposed policy in your own notes: Toolbox's saved LNE workspace is shared with other students.
 
-However, segmentation alone isn't enough if the firewall allows all traffic between zones. We need to implement "Least Privilege".
+## Task 1: Find the actual enforcement path
 
-## Tasks
+On **ABB**:
 
-### Task 1: Map Communication Flows
+```bash
+ip route get 10.10.0.11
+```
 
-1.  Identify the legitimate communication paths needed for the plant to operate:
-    *   **HMI (VLAN 40)** needs to read/write data to **PLCs (VLAN 10, 20, 30)**.
-    *   **Engineering Station (VLAN 50)** needs to program **PLCs**.
-    *   **PLCs** usually do *not* need to talk to the Internet.
-    *   **PLCs** might need to talk to each other (inter-controller communication).
+On the **jumphost**:
 
-2.  **Question**: Does the HMI need to SSH into the PLC? Does it need to ping it? Does it need to access the web server?
-    *   *Answer*: Typically, HMI only needs Modbus TCP (502) or a proprietary protocol (e.g., 1217/2455 for CODESYS). WebVisu uses HTTP (80/8080).
+```bash
+ip route get 10.10.0.11
+```
 
-### Task 2: Create a Communication Matrix
+On **gw**:
 
-A communication matrix defines allowed traffic. Fill in the table below (mentally or on paper):
+```routeros
+/interface vlan print
+/ip address print
+```
 
-| Source | Destination | Protocol | Port | Action |
-| :--- | :--- | :--- | :--- | :--- |
-| HMI (10.40.0.12) | PLC (10.10.0.11) | Modbus TCP | 502 | Allow |
-| HMI (10.40.0.12) | PLC (10.10.0.11) | HTTP (WebVisu) | 8080 | Allow |
-| HMI (10.40.0.12) | PLC (10.10.0.11) | SSH | 22 | **Block** |
-| Any | Any | Any | Any | **Block** |
+**Checkpoint:** ABB's route to WAGO A is direct on `eth1`; the jumphost's route is via `2.2.2.1`. ABB `10.40.0.11/8` and WAGO A `10.10.0.11/8` are on the same OT VLAN in this baseline. A gateway forward-chain rule cannot restrict a flow that stays on that switched path. Gateway-destined traffic uses `input`; routed transit traffic uses `forward`.
 
-### Task 3: Analyze Current Firewall Rules
+## Task 2: Separate the baseline matrix from the desired matrix
 
-1.  SSH into the `gw-firewall` (Mikrotik):
-    ```bash
-    ssh admin@192.168.100.11
-    ```
-    (Password: `admin`)
+Open **Toolbox** from the product launcher. In the **Network segmentation / Netzwerksegmentierung** card, choose **Policies** to open the communication matrix. Inspect the selected network's existing zones and direction of each policy. Return to these instructions in the original tab.
 
-2.  View the current forwarding rules:
-    ```bash
-    /ip firewall filter print where chain=forward
-    ```
+The original **Student Lab Flat Starting Project** has OT Network and DMZ with both directions allowed. A saved design may already contain student edits. Record what is there; do not clear, import over, edit or save the shared project during this observation task.
 
-3.  Look for the rule allowing Control Room (VLAN 40) to Hygiene (VLAN 10).
-    *   It likely looks like: `action=accept chain=forward in-interface=vlan40 out-interface=vlan10`
-    *   **Analysis**: This rule allows *all* protocols. This is too permissive.
+Draft this **proposed policy** in your own notes, adapting its justifications to what you actually observed:
 
-### Task 4: Design and Implement Restrictive Rules (Optional/Advanced)
+| Initiator | Destination | Service | Proposed action | Reason / evidence |
+| --- | --- | --- | --- | --- |
+| DMZ jumphost | WAGO A | TCP 8080 | Allow | Operator WebVisu access, if approved |
+| DMZ jumphost | WAGO A | TCP 22 | Deny new initiation | No maintenance need established |
+| DMZ jumphost | WAGO A | TCP 502 | Deny new initiation | No DMZ Modbus client requirement established |
+| ABB/HMI | WAGO A | TCP 502 | Allow after creating an enforcement boundary | Observed application flow; confirm required read/write functions |
+| PLCs | Simulated external network | Any | Deny new initiation unless justified | An exception needs an owner and purpose |
 
-*Note: This task requires familiarity with RouterOS syntax. Proceed with caution.*
+**Checkpoint:** Every allow has a business reason, initiator and destination. The reverse row represents a new connection in the opposite direction, not the reply to an allowed stateful connection. Treat services such as DNS and time synchronization as separately justified dependencies.
 
-We want to replace the broad "Allow VLAN 40 to VLAN 10" rule with specific rules for Modbus and HTTP.
+## Task 3: Read the rules in their real order
 
-#### Expert View: Complexity vs. Maintainability
+On **gw**:
 
-**Warning**: With firewall rule sets, granularity can get very complex very fast. It's tempting to create extremely fine-grained rules (e.g., separate rules for every single device, every port, every protocol variant), but this leads to rule sets with hundreds of entries that nobody understands or can maintain anymore.
+```routeros
+/ip firewall filter print detail where chain=forward
+/ip firewall filter print stats where chain=forward
+/ip firewall address-list print where list=mgmt
+```
 
-**Common Pitfalls**:
+Locate the established/related accept, broad DMZ-to-VLAN10 accept, private-source accept and final drop. Use comments and match conditions to identify rules; displayed row numbers can change.
 
-- Too many specific host-to-host rules instead of zone-based rules
-- Multiple overlapping rules where it's unclear which one applies
-- Missing documentation or outdated comments
-- "Emergency" rules that were supposed to be temporary but become permanent
-- Rules that nobody dares to delete because it's unknown what they do
+**Checkpoint:** The baseline's final drop is enabled, but earlier accepts still permit the measured DMZ/OT access. The list named `mgmt` includes all of `10.0.0.0/8`, `172.16.0.0/12` and `192.168.0.0/16`; its name does not mean it contains only management hosts. The earlier `action=log` FIN/RST rules observe flags and continue processing; they are not accept verdicts.
 
-**Recommendation: Keep It Simple and Manageable**:
+??? info "Hint: adding a deny at the bottom would not help"
+    Follow the first packet of a new jumphost-to-WAGO TCP connection. Find the first matching terminal verdict. A deny after an earlier broad accept cannot reverse that verdict. Established sessions may continue through the earlier state rule, so future retests must create fresh connections.
 
-1. **Prefer zone-based policies** over individual hosts (e.g., "VLAN 40 to VLAN 10" instead of "Host A to Host B")
-2. **Group service objects** (e.g., "OT-Base-Services" = Modbus + OPC-UA + HTTP)
-3. **Clear naming conventions** (e.g., "ALLOW_ControlRoom_to_Hygiene_OT-Services")
-4. **Regular cleanup** - Remove unused rules
-5. **Document** - Record business justification in comments
-6. **Test** - Validate in test environment before production
+## Task 4: Verify the baseline and specify the future retest
 
-**Rule of thumb**: If your rule set has more than 50 rules without clear structure, it's time to simplify. A well-designed rule set with 20 understandable rules is safer than a chaotic one with 200 rules.
+On the **jumphost**, repeat only this bounded check:
 
-1.  **Add specific rules** (placed at the top or before the drop rule):
+```bash
+nmap -n -sT -Pn -p22,8080 --max-retries 1 --host-timeout 10s --scan-delay 100ms 10.10.0.11
+curl -sS --max-time 5 -D - -o /dev/null http://10.10.0.11:8080/webvisu.htm
+```
 
-    ```bash
-    # Allow Modbus TCP from HMI to PLC
-    /ip firewall filter add chain=forward action=accept src-address=10.40.0.12 dst-address=10.10.0.11 protocol=tcp dst-port=502 comment="Allow HMI to PLC Modbus" place-before=0
-    
-    # Allow HTTP (WebVisu) from HMI to PLC
-    /ip firewall filter add chain=forward action=accept src-address=10.40.0.12 dst-address=10.10.0.11 protocol=tcp dst-port=8080 comment="Allow HMI to PLC Web" place-before=0
-    ```
+Write a before/desired-after row for each test. The **current** expected result is open SSH and working HTTP. Under your **proposed** policy, a fresh HTTP connection should still work while a new DMZ SSH connection should be denied. No policy was applied here, so do not report the desired result as measured.
 
-2.  **Disable the broad rule**:
-    Find the number of the rule `allow Control Room to Hygiene` using `/ip firewall filter print`. Let's assume it is number `X`.
-    ```bash
-    /ip firewall filter disable X
-    ```
+**Checkpoint:** Your retest identifies the source, destination, protocol, expected application result, enforcement device and matching rule/log evidence. Shared counters include other students' traffic; a counter delta alone cannot attribute a packet to your probe. Toolbox is a design tool; saving a matrix does not configure the gateway.
 
-3.  **Verify**:
-    *   Can you still access the WebVisu from the HMI? (Should be YES)
-    *   Can you SSH from the HMI to the PLC? (Should be NO, if the default policy is drop or if no other rule matches).
-    *   *Note*: The current lab config has a `default forward drop` rule that is `disabled=yes`. To fully enforce this, you would need to enable that drop rule at the end.
-
-    ```bash
-    # Enable the default drop rule at the bottom
-    /ip firewall filter enable [find comment="default forward drop"]
-    ```
-
-### Task 5: Compare Flat vs. Segmented
-
-1.  **Flat Network**:
-    *   Attacker on HMI can ARP spoof the PLC.
-    *   Attacker can access any port on the PLC.
-    *   No central point to filter traffic.
-
-2.  **Segmented Network (with Firewall)**:
-    *   ARP spoofing is contained within the VLAN.
-    *   Firewall enforces policy (e.g., "Only Modbus allowed").
-    *   Central logging of denied attempts (if logging is enabled).
-
-## Conclusion
-
-Segmentation is the foundation of OT security, but it must be accompanied by strict firewall rules. By moving from "Allow Any" to "Allow Specific Ports", we significantly reduce the attack surface.
-
----
+Close the Toolbox and terminal tabs when done.
 
 ## Solution
 
-??? success "Click to view solution"
-    ### Task 1: Map Communication Flows
+??? success "Compare your reasoning"
+    The DMZ-to-OT test crosses gw and is currently broadly allowed. The ABB-to-WAGO application flow stays inside VLAN 10 and needs a real enforcement boundary before a gateway policy can control it. Different IP ranges inside the current `/8` do not supply that boundary.
 
-    **Legitimate Communication Paths:**
+    A useful design allows documented initiations, permits appropriate established/related replies and denies unapproved new flows at a device the traffic actually traverses. It also protects access to the gateway itself. Neither a final drop nor an attractive matrix proves enforcement without path, ordering and fresh-connection evidence.
 
-    1. **HMI (VLAN 40) → PLCs (VLAN 10, 20, 30)**
-        - Modbus TCP (Port 502): YES - for process control
-        - HTTP/WebVisu (Port 8080): YES - for visualization
-        - OPC UA (Port 4840): YES - modern alternative
-        - SSH (Port 22): NO - only for engineering, not HMI
+## Extra 1: Predict an established reply versus a new connection
 
-    2. **Engineering Station (VLAN 50) → PLCs**
-        - CODESYS Runtime (Port 2455, 1217): YES - for programming
-        - SSH (Port 22): YES - for maintenance
-        - HTTP (Port 8080): YES - for WebVisu access
+**Optional, 10 minutes.** Draw two packet conversations in your notes using the proposed DMZ-to-WAGO HTTP allow:
 
-    3. **PLCs → Internet**
-        - NO - PLCs should not have direct Internet access
-        - Exception: NTP for time synchronization (controlled via firewall)
+1. Jumphost ephemeral port → WAGO TCP 8080, followed by the response from 8080 → that ephemeral port.
+2. WAGO initiates a separate TCP connection to jumphost port 8080.
 
-    4. **PLCs to Each Other**
-        - YES - Inter-controller communication possible
-        - Protocols: Modbus TCP, OPC UA, proprietary protocols
+Use the existing forward-chain output to identify which kind of rule handles each packet. Explain why permitting conversation 1's reply need not permit conversation 2's new initiation. Compare this with the two directions in Toolbox; inspect without saving changes.
 
-    **Answer to the Question:**
+**Checkpoint:** You distinguish connection direction, response traffic and the two independent initiators. You also explain why an already-open session is a poor test of a newly tightened policy. No connection tracking table or live rules need to be cleared.
 
-    - **Must HMI SSH into PLC?** NO - SSH is for engineering/maintenance, not normal HMI functions
-    - **Must HMI ping PLC?** YES - ICMP is useful for availability checks
-    - **Must HMI access web server?** YES - WebVisu runs on HTTP (Port 8080)
+## Extra 2: Design a complete new VLAN path
 
-    ### Task 2: Create Communication Matrix
+**Optional, 15–20 minutes.** Prepare a build sheet for a future isolated configuration lab. Do not apply it to this shared appliance.
 
-    **Extended Communication Matrix:**
+Use **VLAN 70**, client **hirschmann-edge1-vlan50**, proposed data address **172.22.70.12/24**, gateway **172.22.70.1**. The existing hostname can remain a label. On [WAGO A](/network/terminal?node=wago-plc2a-vlan10), compare:
 
-    | Source | Destination | Protocol | Port | Action | Justification |
-    |--------|-------------|----------|------|--------|---------------|
-    | HMI (10.40.0.12) | PLC (10.10.0.11) | Modbus TCP | 502 | ALLOW | Read/write process data |
-    | HMI (10.40.0.12) | PLC (10.10.0.11) | HTTP | 8080 | ALLOW | WebVisu access |
-    | HMI (10.40.0.12) | PLC (10.10.0.11) | OPC UA | 4840 | ALLOW | Alternative to Modbus |
-    | HMI (10.40.0.12) | PLC (10.10.0.11) | ICMP | - | ALLOW | Availability check |
-    | HMI (10.40.0.12) | PLC (10.10.0.11) | SSH | 22 | BLOCK | Not needed for HMI operation |
-    | EWS (10.50.0.11) | PLC (10.10.0.11) | SSH | 22 | ALLOW | Engineering/maintenance |
-    | EWS (10.50.0.11) | PLC (10.10.0.11) | CODESYS | 2455, 1217 | ALLOW | Programming |
-    | EWS (10.50.0.11) | PLC (10.10.0.11) | HTTP | 8080 | ALLOW | WebVisu configuration |
-    | PLC (10.10.0.11) | Internet | Any | Any | BLOCK | No direct Internet connection |
-    | Any | Any | Any | Any | BLOCK | Default-deny policy |
+```bash
+ip route get 10.70.0.12
+ip route get 172.22.70.12
+```
 
-    ### Task 3: Analyze Current Firewall Rules
+**Checkpoint:** `10.70.0.12` is direct inside WAGO's existing `/8`; `172.22.70.12` is routed through its gateway. This is why the proposed VLAN needs a non-overlapping subnet.
 
-    **SSH to Firewall:**
+Complete every row before calling the design connected:
 
-    ```bash
-    ssh admin@192.168.100.11
-    ```
+| Component | Required change in the isolated lab |
+| --- | --- |
+| Endpoint | New `/24` data address and gateway; replace explicit old-gateway routes; preserve management `eth0` |
+| sw-acc1 access | `ether5` assigns untagged ingress to PVID 70; VLAN 70 membership includes this access port |
+| sw-acc1 uplink | Carry VLAN 70 tagged on `bond-sw-dist`, preserving VLAN 10 |
+| sw-dist | Carry VLAN 70 tagged between `bond-sw-acc1` and gateway-facing `ether12` |
+| Gateway | Tagged VLAN 70 membership includes `ether12` **and bridge CPU**; a VLAN interface on `bridge` owns `172.22.70.1/24` |
+| Firewall and return path | Permit client → WAGO A TCP 8080; deny fresh TCP 22 to the same known-open server. Scope rules to the new interface, retain established replies and protect gateway input before broad accepts |
+| Evidence and undo | Untagged access capture, tagged VLAN 70 uplink capture, successful allowed flow, denied new flow, original values and reverse-order restoration |
 
-    Password: `admin`
+The current `172.16.0.0/12` private-source accept also covers this proposed subnet. A new VLAN would therefore not automatically isolate it. WAGO A already routes replies to `172.22.70.12` through `10.10.0.1`. Using the DMZ jumphost as a server instead would also require its return route through `2.2.2.1`; its default route uses management. Do not add VLAN 70 to every port or attach individual LACP members to the bridge.
 
-    Alternatively with sshpass (for automation):
-    ```bash
-    sshpass -p admin ssh admin@192.168.100.11
-    ```
+**Deliverable:** Describe the path and the failure symptom if any one row is omitted. A future build should prove local gateway reachability first, then an explicitly allowed cross-zone TCP exchange, then denial of an unapproved fresh connection, followed by restoration. This extension is design analysis; configuration and connectivity of VLAN 70 have not been trialled on the shared lab.
 
-    **Display Firewall Rules:**
+Close tool tabs. You have finished the seven lessons.
 
-    ```bash
-    /ip firewall filter print where chain=forward
-    ```
+## Explore the topic
 
-    **Expected Output (ot-sec-flat):**
-
-    ```text
-    Flags: X - disabled, I - invalid; D - dynamic 
-     0    ;;; allow established,related connections
-          chain=forward action=accept connection-state=established,related 
-
-     1    ;;; allow forwarding ICMP
-          chain=forward action=accept protocol=icmp 
-
-     2    ;;; allow SSH to the jumphost from internet
-          chain=forward action=accept protocol=tcp dst-address=2.2.2.2 
-          in-interface-list=ext dst-port=22 
-
-     3    ;;; allow all traffic from DMZ to VLAN10
-          chain=forward action=accept in-interface=dmz-ext out-interface=vlan10 
-
-     4    ;;; default forward drop
-          chain=forward action=accept log=yes log-prefix="default forward drop"
-    ```
-
-    **Expected Output (ot-sec-segmented):**
-
-    ```text
-    Flags: X - disabled, I - invalid; D - dynamic 
-     0    ;;; allow established,related connections
-          chain=forward action=accept connection-state=established,related
-
-     1    ;;; allow forwarding ICMP
-          chain=forward action=accept protocol=icmp
-
-     2    ;;; allow SSH to the jumphost from internet
-          chain=forward action=accept protocol=tcp dst-address=2.2.2.2
-          in-interface-list=ext dst-port=22
-
-     3    ;;; allow Control Room to Hygiene
-          chain=forward action=accept in-interface=vlan40 out-interface=vlan10
-
-     4    ;;; allow Control Room to Process
-          chain=forward action=accept in-interface=vlan40 out-interface=vlan20
-
-     5    ;;; allow Control Room to Disposal
-          chain=forward action=accept in-interface=vlan40 out-interface=vlan30
-
-     6    ;;; allow Parameterization to Hygiene
-          chain=forward action=accept in-interface=vlan50 out-interface=vlan10
-
-     ... more rules ...
-    ```
-
-    **Analysis:**
-
-    - **Flat Topology**: Rule 3 allows ALL traffic from DMZ to VLAN 10 - too permissive
-    - **Segmented Topology**: Rule 3 allows ALL traffic from VLAN 40 to VLAN 10 - too permissive
-    - **Problem**: No port restrictions, no protocol specification
-    - **Risk**: SSH, unnecessary services are reachable
-
-    ### Task 4: Implement Restrictive Rules
-
-    **WARNING**: These changes can break network connectivity. Always perform in production during maintenance window with rollback plan.
-
-    **Step 1: Add Specific Rule for Modbus TCP**
-
-    ```bash
-    /ip firewall filter add chain=forward action=accept \
-        src-address=10.40.0.12 dst-address=10.10.0.11 \
-        protocol=tcp dst-port=502 \
-        comment="Allow HMI to PLC Modbus" place-before=0
-    ```
-
-    **Step 2: Add Specific Rule for WebVisu HTTP**
-
-    ```bash
-    /ip firewall filter add chain=forward action=accept \
-        src-address=10.40.0.12 dst-address=10.10.0.11 \
-        protocol=tcp dst-port=8080 \
-        comment="Allow HMI to PLC WebVisu" place-before=0
-    ```
-
-    **Step 3: Add Specific Rule for OPC UA**
-
-    ```bash
-    /ip firewall filter add chain=forward action=accept \
-        src-address=10.40.0.12 dst-address=10.10.0.11 \
-        protocol=tcp dst-port=4840 \
-        comment="Allow HMI to PLC OPC-UA" place-before=0
-    ```
-
-    **Step 4: Verify Rules**
-
-    ```bash
-    /ip firewall filter print where chain=forward
-    ```
-
-    You should now see the new specific rules at the top.
-
-    **Step 5: Identify Broad "Allow Any" Rule**
-
-    Find the rule number of the broad rule:
-
-    ```bash
-    /ip firewall filter print where chain=forward
-    ```
-
-    In `ot-sec-segmented`: Look for "allow Control Room to Hygiene" (e.g. rule #3)
-    In `ot-sec-flat`: Look for "allow all traffic from DMZ to VLAN10" (e.g. rule #3)
-
-    **Step 6: Disable Broad Rule**
-
-    ```bash
-    /ip firewall filter disable [find comment="allow Control Room to Hygiene"]
-    ```
-
-    Or for flat:
-    ```bash
-    /ip firewall filter disable [find comment="allow all traffic from DMZ to VLAN10"]
-    ```
-
-    **Step 7: Enable Default-Drop (Optional)**
-
-    In `ot-sec-flat` the default-drop rule is actually set to "accept". For real security:
-
-    ```bash
-    /ip firewall filter set [find comment="default forward drop"] action=drop
-    ```
-
-    **CAUTION**: This blocks all traffic not explicitly allowed. Ensure all necessary rules are in place!
-
-    **Step 8: Test**
-
-    From another terminal (not via SSH to firewall!):
-
-    ```bash
-    # Test 1: HMI can reach WebVisu (should work)
-    docker exec clab-ot-sec-flat-pilz-hmi01-vlan40 curl -I --connect-timeout 3 http://10.10.0.11:8080
-
-    # Test 2: HMI can reach Modbus (should work)
-    docker exec clab-ot-sec-flat-pilz-hmi01-vlan40 nc -zv 10.10.0.11 502
-
-    # Test 3: HMI cannot reach SSH (should be blocked if default-drop active)
-    docker exec clab-ot-sec-flat-pilz-hmi01-vlan40 nc -zv -w 2 10.10.0.11 22
-    ```
-
-    **Expected Results:**
-
-    Test 1 & 2: Successful
-    Test 3: Connection timed out or refused (if default-drop active)
-
-    **Rollback (if needed):**
-
-    ```bash
-    # Re-enable broad rule
-    /ip firewall filter enable [find comment="allow Control Room to Hygiene"]
-
-    # Set default-drop back to accept
-    /ip firewall filter set [find comment="default forward drop"] action=accept
-    ```
-
-    ### Task 5: Compare Flat vs. Segmented
-
-    **Comparison Table:**
-
-    | Aspect | Flat Network | Segmented Network (with Firewall) |
-    |--------|--------------|-----------------------------------|
-    | **Broadcast Domain** | One large domain | Multiple small VLANs |
-    | **ARP Spoofing Reach** | All devices affected | Limited to VLAN |
-    | **Lateral Movement** | Easy - direct access | Difficult - firewall blocks |
-    | **Attack Surface** | All ports on all devices | Only allowed ports/protocols |
-    | **Traffic Filtering** | None | Central at firewall |
-    | **Monitoring** | Distributed, complex | Central at firewall |
-    | **Incident Response** | Hard to isolate | Can isolate zones |
-    | **Compliance** | IEC 62443 SR 5.1 FAIL | IEC 62443 SR 5.1 PASS |
-
-    **Attack Scenario - Flat Network:**
-
-    1. Attacker compromises HMI (10.40.0.12)
-    2. Performs ARP spoofing → Man-in-the-Middle on entire network
-    3. Direct access to PLC via SSH (Port 22)
-    4. Direct access to all engineering ports
-    5. Can move laterally to all other devices
-    6. No central monitoring of traffic
-
-    **Attack Scenario - Segmented Network:**
-
-    1. Attacker compromises HMI (10.40.0.12 in VLAN 40)
-    2. ARP spoofing only possible in VLAN 40
-    3. Attempts to access PLC (10.10.0.11 in VLAN 10)
-    4. Firewall blocks SSH (Port 22) → Access denied
-    5. Firewall only allows Modbus, HTTP, OPC UA
-    6. Firewall logs all access attempts
-    7. IDS/IPS can detect anomalies
-    8. Security team alerted
-    9. VLAN 10 can be isolated without affecting VLAN 40
-
-    **Conclusion:**
-
-    - **Flat Network**: Easy to manage but catastrophic when compromised
-    - **Segmented Network**: More complex but significantly more secure and IEC 62443 compliant
-    - **Best Practice**: Segmentation + specific firewall rules + monitoring
-
-    ### Additional Best Practices
-
-    **1. Enable Logging:**
-
-    ```bash
-    /ip firewall filter set [find comment="default forward drop"] log=yes log-prefix="fw-drop"
-    ```
-
-    **2. Address Lists for Better Management:**
-
-    ```bash
-    # Define HMI devices
-    /ip firewall address-list add list=hmi-devices address=10.40.0.12
-    /ip firewall address-list add list=hmi-devices address=10.40.0.13
-
-    # Define PLC devices
-    /ip firewall address-list add list=plc-devices address=10.10.0.11
-    /ip firewall address-list add list=plc-devices address=10.10.0.12
-    /ip firewall address-list add list=plc-devices address=10.20.0.11
-
-    # Rule with Address Lists
-    /ip firewall filter add chain=forward action=accept \
-        src-address-list=hmi-devices dst-address-list=plc-devices \
-        protocol=tcp dst-port=502 \
-        comment="Allow HMI to PLCs Modbus"
-    ```
-
-    **3. Regular Audits:**
-
-    ```bash
-    # Show all rules with counters
-    /ip firewall filter print stats
-
-    # Identify unused rules (bytes=0)
-    /ip firewall filter print stats where bytes=0
-    ```
-
-    **4. Change Management:**
-
-    - Document all firewall changes
-    - Create backup before changes:
-      ```bash
-      /system backup save name=before-firewall-change
-      ```
-    - Validate in test environment
-    - Roll out incrementally in production
-
-    ### Summary: Lessons Learned
-
-    1. **Segmentation alone is not enough** - Firewall rules are essential
-    2. **Default-deny is critical** - "Allow any" makes segmentation worthless
-    3. **Enforce least privilege** - Only allow absolutely necessary ports
-    4. **Monitoring is mandatory** - Enable logging and alerting
-    5. **Documentation is crucial** - Know why each rule exists
-    6. **Test, test, test** - Validate before production deployment
-    7. **IEC 62443 SR 5.1** - Network segmentation is fundamental requirement
+- [MikroTik bridge VLAN table](https://help.mikrotik.com/docs/spaces/ROS/pages/28606465/Bridge+VLAN+Table): find PVID, tagged ports and CPU access.
+- [RouterOS firewall filter](https://manual.mikrotik.com/docs/firewall-and-quality-of-service/firewall/filter/): compare input and forward.
+- [RouterOS connection tracking](https://manual.mikrotik.com/docs/firewall-and-quality-of-service/connection-tracking/): find established/related behavior.
+- [NIST SP 800-82r3](https://csrc.nist.gov/pubs/sp/800/82/r3/final): read network segmentation guidance alongside OT availability requirements.

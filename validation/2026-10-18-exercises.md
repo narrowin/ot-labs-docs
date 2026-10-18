@@ -58,6 +58,14 @@ Walkthrough environment: VM222, `ot-student-lab.int.narrowin.com`, current flat 
 - **Validation:** Matched Modbus function-3 request/response, address 0 and quantity 2; both mbpoll numbering modes read the same wire address. HTTP GET returned 200. The named WebVisu link rendered its native canvas and repeated application POSTs returned 200. The OPC UA greeting returned ACKF/28 bytes and decoded Hello/Acknowledge frames. DCP frames had EtherType 0x8892, station name pn-device and no IP header. Both MkDocs builds passed.
 - **Review:** Background writes are separated from the student's reads. Steady GUI values are allowed. Port labels and transport greetings do not become claims about session encryption or full PROFINET IO capability. No dependencies were installed and no PLC controls/programs were changed.
 
+## Exercise 7
+
+- **Plan:** Preserve segmentation, directional policy, stateful firewall and verification objectives; ground the design in the actual flat forwarding path.
+- **Implementation:** Named VLAN view and terminals, observable baseline probes, rule-order analysis, shared Toolbox inspection, standalone steps and two extensions in both languages. The complete VLAN build sheet includes access/trunks, gateway CPU, a non-overlapping subnet, explicit routes, scoped policy and restoration.
+- **Validation:** ABB used a direct eth1 path to WAGO; the jumphost used 2.2.2.1. Fresh TCP 22/8080 were open and HTTP returned 200. The gateway's active final drop followed broad DMZ/private accepts, and established/related replies were accepted earlier. Toolbox retained revision 20 and its two-zone baseline. WAGO routed the proposed 172.22.70.12 through its gateway, while the candidate endpoint had explicit old-gateway routes requiring replacement. Both language builds passed.
+- **Review:** Saving Toolbox does not enforce device rules; same-VLAN traffic bypasses the gateway. The two extras distinguish replies/new initiations and account for the broad 172.16/12 match. No live policy, VLAN, address or link was changed. The isolated configuration/reset prerequisite and acceptance plan are recorded in [the VLAN feasibility analysis](2026-10-18-vlan-build-plan.md).
+- **Specific app gap:** The reader does not interpret `/toolbox/` as an app action. Exercise 7 therefore uses the verified product launcher and Policies card. No new link handler is required for the lesson.
+
 ## Documentation checks
 
 Run from this repository with the existing environment:
