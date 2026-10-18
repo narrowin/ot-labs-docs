@@ -1,216 +1,113 @@
-# Übung 3: Spanning-Tree-Protokoll-Analyse
+# Übung 3: Den aktiven Spanning Tree erklären
 
-**Zeitschätzung**: 25-35 Minuten  
-**Lab-Topologie**: `ot-sec-flat` oder `ot-sec-segmented`  
-**Schwierigkeit**: :material-signal-cellular-2: Fortgeschritten
+**Zeit:** 25–35 Minuten. **Lab:** aktuelles studentisches `ot-sec-flat`. **Niveau:** Fortgeschritten.
 
-## Lernziele
+Bestimme die gewählte Root Bridge aus Betriebsdaten. Erkläre anschliessend, wie RSTP eine Schleife im Switch-Dreieck verhindert. Diese Übung verändert weder Prioritäten noch Ports oder Kabel.
 
-- Spanning-Tree-Protokoll-Betrieb verstehen
-- Root-Bridge und Port-Status identifizieren
-- STP-BPDU-Austausch beobachten
-- (Nur segmentiert) LACP-Bonding mit STP analysieren
+**Lernziele:** Bridge-Mitgliedschaft, gewählte Root und Portrollen bestimmen, BPDUs auswerten und das Zusammenspiel von RSTP und LACP für Redundanz erklären.
 
-## Voraussetzungen
+## Vorbereitung
 
-- Verständnis von Layer-2-Switching
-- Kenntnisse über STP/RSTP-Konzepte
-- Grundlegende MikroTik-RouterOS-Befehle
-- SSH-Zugang zu Switches
+Beende die ARP-Wiederherstellung aus [Übung 2](ex2-arp-spoofing.md). Öffne [Netmap mit hervorgehobenen Switches](/network/?search=sw-) und bei Bedarf die konfigurierten Terminals für [sw-dist](/network/terminal?node=sw-dist), [sw-acc1](/network/terminal?node=sw-acc1), [sw-acc2](/network/terminal?node=sw-acc2) und [gw](/network/terminal?node=gw-firewall). Dort läuft RouterOS, nicht Linux.
 
-## Szenario
+[Spanning-Tree-Instanz 0 öffnen](/network/?viewMode=spanning-tree&stpInstanceId=0&dataType=All). Vergleiche angezeigte Root und Portrollen mit den Betriebsbefehlen unten.
 
-Das Spanning Tree Protocol (STP) verhindert Schleifen in geswitchten Netzwerken durch Blockieren redundanter Pfade. Industrielle Netzwerke verwenden RSTP (Rapid Spanning Tree Protocol) für schnellere Konvergenz. Beide Lab-Topologien führen STP auf allen Switches aus. Das segmentierte Lab verwendet zusätzlich LACP (Link Aggregation Control Protocol) Bonding zwischen Switches, das zur Bereitstellung von Redundanz und erhöhter Bandbreite mit STP zusammenarbeitet.
+??? info "Du verwendest die eigenständige Dokumentation?"
+    Öffne **Netmap** deines zugewiesenen Live-Labs, wähle **Spanning Tree** im Ansichtsmenü und Instanz **0**. Suche den genannten Switch und wähle im Aktionsmenü **Open terminal** oder **Capture packets**. Für Aufgabe 3 wählst du sw-dist **ether8**. Reader-Links behalten Netzwerk und Snapshot automatisch bei.
 
-## Aufgaben
+## Aufgabe 1: Physische Links und Bridge-Ports unterscheiden
 
-### Aufgabe 1: Switch-Topologie identifizieren
-
-1. SSH-Verbindung zum Distribution-Switch:
-
-```bash
-ssh admin@192.168.100.12
-```
-
-!!! info "Standard-Anmeldedaten"
-    Passwort: `admin`
-
-2. Bridge-Konfiguration anzeigen:
-
-```routeros
-/interface bridge print
-```
-
-3. Alle Bridge-Ports auflisten:
-
-```routeros
-/interface bridge port print
-```
-
-**Fragen**:
-
-- Wie lautet der Bridge-Name?
-- Welche Interfaces sind Bridge-Mitglieder?
-- Welche Interfaces haben VLAN-Filterung aktiviert?
-
-### Aufgabe 2: Link-Topologie untersuchen
-
-1. Überprüfen, welche Interfaces mit anderen Switches verbunden sind:
-
-```routeros
-/interface bridge port print
-```
-
-**Erwartete Ausgabe**:
-
-- **Flache Topologie**: ether10, ether12, ether8, ether2 als Bridge-Mitglieder
-- **Segmentierte Topologie**: ether12, ether10, ether8, ether2 als Bridge-Mitglieder
-
-**Fragen**:
-
-- Wie viele Links verbinden sw-dist mit sw-acc1?
-- (Segmentiert) Sind beide Bond-Mitglieder aktiv?
-
-### Aufgabe 3: BPDU-Frames erfassen
-
-1. In TopoViewer Wireshark-Erfassung auf der Verbindung zwischen `sw-dist` und `sw-acc1` starten
-2. Filter anwenden:
-
-```wireshark
-stp
-```
-
-Oder alternativ:
-
-```wireshark
-eth.dst == 01:80:c2:00:00:00
-```
-
-**Beobachtungen**:
-
-- BPDUs werden an Multicast-Adresse `01:80:c2:00:00:00` gesendet
-- Root-Bridge-Identifikator
-- Port-Rollen (designated, root)
-- Bridge-Prioritätswerte
-
-3. Bridge-Einstellungen auf beiden Switches überprüfen:
-
-Auf `sw-dist`:
+Auf **sw-dist**:
 
 ```routeros
 /interface bridge print detail
-```
-
-Auf `sw-acc1` (SSH zu 192.168.100.13):
-
-```routeros
-/interface bridge print detail
-```
-
-**Frage**: Welcher Switch hat niedrigere Priorität und wird Root-Bridge?
-
-### Aufgabe 4: Redundanzansatz verstehen
-
-**In flacher Topologie**:
-
-- Einzelne Verbindung zwischen Switches
-- STP verhindert Schleifen zwischen anderen Switch-Verbindungen
-- Keine Link-Level-Redundanz zwischen sw-dist und sw-acc1
-
-**In segmentierter Topologie**:
-
-- LACP-Bond bietet Link-Redundanz
-- STP läuft weiterhin auf anderen Ports
-- Zwei komplementäre Redundanzmechanismen
-
-Vom Distribution-Switch Konfiguration überprüfen:
-
-```routeros
-/interface ethernet print
 /interface bridge port print
+/interface bonding print detail
 ```
 
-**Frage**: Was passiert, wenn der einzelne Uplink in flacher Topologie ausfällt?
+Notiere `protocol-mode`, `vlan-filtering`, Bridge-Namen und Bridge-Ports. Ordne die Kabel in Netmap den logischen Ports zu.
 
-## Überprüfung
+**Kontrollpunkt:** Die Bridge heisst `bridge`; RSTP und VLAN-Filtering sind aktiv. `bond-sw-acc1` ist ein Bridge-Port. Dessen physische Mitglieder `ether9` und `ether10` bilden eine logische Verbindung, keine zwei unabhängigen Bridge-Ports. `ether12` führt zu gw, `ether8` zu sw-acc2.
 
-Erfolgsindikatoren:
+## Aufgabe 2: Die gewählte Root Bridge bestimmen
 
-- Bridge-Konfiguration zeigt aktivierte VLAN-Filterung
-- BPDU-Frames in Wireshark-Captures sichtbar
-- Root-Bridge aus Bridge-Einstellungen identifiziert
-- (Segmentiert) Bond-Interface existiert mit aktivem LACP
-- (Flat) Einzelne Link-Topologie dokumentiert
-- Verständnis, wie STP Schleifen verhindert
+Auf **jedem Switch** und anschliessend **gw**:
 
-## Zu überlegende Fragen
+```routeros
+/interface bridge monitor bridge once
+```
 
-1. Warum läuft STP auch dann, wenn kein redundanter Pfad vorhanden ist (flat)?
-2. (Segmentiert) Was passiert, wenn ein Bond-Mitglied ausfällt?
-3. Wie schnell konvergiert STP nach einer Topologieänderung?
-4. Welche Sicherheitsrisiken birgt STP (BPDU-Angriffe)?
+Notiere für alle vier Geräte `bridge-id`, `root-bridge`, `root-bridge-id`, `root-port` und `root-path-cost`.
 
-## Häufige Probleme
+**Kontrollpunkt:** Alle Geräte melden dieselbe Root-ID. Die Root selbst meldet `root-bridge: yes`, Kosten 0 und keinen Root-Port. Im unveränderten Lab ist **gw** die Root, nicht sw-dist. Prüfe deine Ausgabe und entscheide nicht nach der Position im Diagramm.
 
-- **Problem**: Kein Bonding-Interface in flat sichtbar
-  - **Lösung**: Korrekt - flache Topologie hat kein Bonding, nur einzelne Links
+??? info "Hinweis: Gleiche Prioritäten"
+    Die Bridge-ID besteht aus Priorität und MAC. Die niedrigere Priorität gewinnt; bei Gleichstand die niedrigere MAC. `print detail` zeigt die Konfiguration, `monitor` das Ergebnis der Wahl.
 
-- **Problem**: SSH zu Switches nicht möglich
-  - **Lösung**: Verwenden Sie Management-IPs 192.168.100.11-14, nicht Datenebenen-IPs
+## Aufgabe 3: BPDU und Betriebszustand vergleichen
 
-- **Problem**: Keine BPDUs im Capture
-  - **Lösung**: BPDUs werden periodisch gesendet (alle 2 Sekunden). Warten oder Topologieänderung erzeugen.
+[Öffne den sw-dist-Link zu sw-acc2](/network/capture?node=sw-dist&interface=ether8). Wähle **Start Capture**, warte etwa zehn Sekunden und filtere in Wireshark `stp`.
 
-- **Problem**: Übung sagt "nur segmentiert", aber ich bin in flat
-  - **Lösung**: Übung 3 funktioniert in beiden Topologien - Bonding-Aufgaben sind innerhalb der Übung als nur-segmentiert markiert
+Wähle ein RSTP-Paket. Klappe **Spanning Tree Protocol** auf und suche **Root Identifier**, **Root Path Cost** und **Bridge Identifier**. Vergleiche die angekündigte Root mit Aufgabe 2. Die Bridge-ID des Senders muss nicht die Root-ID sein.
 
----
+**Kontrollpunkt:** BPDUs sind sichtbar und kündigen dieselbe Root wie `monitor` an. Ihre Ziel-MAC ist `01:80:c2:00:00:00`. Notiere Frame-Nummer und beide IDs. Schliesse den Capture-Tab.
+
+??? info "Hinweis: Keine BPDUs"
+    Leere den Filter und kontrolliere sw-dist `ether8` Richtung sw-acc2. Warte mehrere periodische Übertragungen ab. Erzeuge keine Topologieänderung. Ein falsches Interface oder ein Filter beweist nicht, dass RSTP fehlt.
+
+## Aufgabe 4: Die Schleifenvermeidung finden
+
+Auf **sw-acc1**:
+
+```routeros
+/interface bridge port monitor [find interface=bond-sw-dist] once
+/interface bridge port monitor [find interface=ether10] once
+```
+
+Auf **sw-acc2**:
+
+```routeros
+/interface bridge port monitor [find interface=ether11] once
+/interface bridge port monitor [find interface=ether12] once
+```
+
+**Kontrollpunkt:** Im Ausgangszustand ist sw-acc1's Bond sein Root-Port. sw-acc2 verwendet `ether12` als Root-Port. sw-acc2 `ether11` zu sw-acc1 ist ein **Alternate-Port** mit `forwarding: no`. Das andere Kabelende kann Designated und Forwarding sein. Notiere beide Enden, statt den Link als ausgefallen zu bezeichnen.
+
+Erkläre, welche unterschiedlichen Probleme LACP und RSTP lösen. Schliesse anschliessend die Terminals.
 
 ## Lösung
 
-??? success "Zum Anzeigen der Lösung klicken"
+??? success "Vergleiche deine Belege"
+    gw kündigt die gewinnende Bridge-ID an. Bei der gemeinsamen Priorität `0x8000` gewinnt seine administrative MAC mit Endung `09:11` gegen sw-dist `09:12`, sw-acc1 `09:13` und sw-acc2 `09:14`. Der Live-Monitor muss dies bestätigen; Änderungen können eine andere Root ergeben.
 
+    sw-dist erreicht gw über `ether12`. Die Access-Switches erreichen sw-dist über ihre jeweiligen Root-Ports. Der zusätzliche Link sw-acc1–sw-acc2 würde eine Schleife schliessen. Deshalb leitet sw-acc2's Alternate-Port keine gewöhnlichen Daten weiter. RSTP behandelt den LACP-Bond als einen logischen Port. Ein redundanter Link kann physisch funktionieren und absichtlich nicht weiterleiten.
 
-    ### Bridge-Konfiguration
+## Extra 1: Die Root-Wahl als Detektivaufgabe
 
-    [OT-LAB RSTP Topologie](https://demo.narrowin.ch/network/?network=34&snapshot=1&viewMode=spanning-tree&dataType=All&showDetailsId=edge-01J7Y2D1W00BWT5MZHJGJR5RH9-01J7Y2D1W0244K1AK4HRJAAPDX&stpInstanceId=0)
+**Optional, 10 Minuten.** Verwende die vier Bridge-IDs aus Aufgabe 2.
 
-    SSH zu `sw-dist`:
+1. Sortiere sie aufsteigend. Zeige bei jedem Vergleich, welcher Teil entscheidet.
+2. Sage die Root voraus, falls sw-acc2 Priorität `0x1000` hätte und alles andere unverändert bliebe. Das ist eine Papieraufgabe; ändere kein Gerät.
+3. Vergleiche auf sw-acc2 `/interface bridge print detail` mit dem betrieblichen `root-bridge-id`.
 
-    ```bash
-    ssh admin@192.168.100.12
-    ```
+**Kontrollpunkt:** Du erklärst den aktuellen MAC-Gleichstandsentscheid und warum eine niedrigere Priorität diesen überstimmen würde. Eine konfigurierte Priorität allein beweist keine aktuelle Root-Rolle. [Suche die Wahlregeln](https://help.mikrotik.com/docs/spaces/ROS/pages/21725254/Spanning+Tree+Protocol) unter **(R)STP Election Process**.
 
-    Bridge anzeigen:
+## Extra 2: Einen gesunden, nicht weiterleitenden Link diagnostizieren
 
-    ```
-    /interface bridge print
-    ```
+**Optional, 10 Minuten.** Auf **sw-acc2**:
 
-    Ausgabe:
+```routeros
+/interface ethernet monitor ether11 once
+/interface bridge port monitor [find interface=ether11] once
+```
 
-    ```text
-    Flags: X - disabled, R - running
-     0 R name="bridge" mtu=auto actual-mtu=1500 l2mtu=65535 arp=enabled 
-         arp-timeout=auto mac-address=XX:XX:XX:XX:XX:XX auto-mac=no 
-         protocol-mode=rstp vlan-filtering=yes
-    ```
+Warte zehn Sekunden und wiederhole den Bridge-Port-Befehl. Vergleiche `role`, `forwarding` und `tx-rx-bpdu`.
 
-    Bridge-Ports:
+**Kontrollpunkt:** Der Ethernet-Link läuft, während RSTP Alternate/Non-Forwarding meldet. Die BPDU-Zähler steigen. Steuerverkehr hält die Schleifenvermeidung aktiv; das ist kein abgezogenes Kabel. Ein Mitschnitt kann sogar ankommende Daten am verwerfenden Port zeigen. Ankunft beweist keine Weiterleitung durch die Bridge.
 
-    ```
-    /interface bridge port print
-    ```
+Schreibe zwei Sätze mit physischem Zustand, RSTP-Rolle und einer Zählerbeobachtung. Schliesse die Terminals. Weiter mit [Übung 4](ex4-link-aggregation.md).
 
-    **Flache Topologie** zeigt ether10, ether12, ether8, ether2 als Bridge-Mitglieder mit VLAN-Einstellungen.
-    
-    **Segmentierte Topologie** zeigt ether12, ether10, ether8, ether2 als Bridge-Mitglieder mit VLAN-Einstellungen.
+## Weiterforschen
 
-    !!! info "Bonding nicht konfiguriert"
-        Link-Aggregation (Bonding) ist derzeit in keiner Lab-Topologie konfiguriert. In beiden Topologien verbindet sich jeder Switch über einzelne physische Interfaces.
-
-    ### Root-Bridge-Identifikation
-
-    Priorität auf beiden Switches prüfen. Niedrigere Priorität gewinnt. Standard-Priorität ist 32768.
-
-    BPDU-Captures zeigen Root-Bridge-ID in den Protokollfeldern.
+- [MikroTik RSTP: Monitoring und Wahl](https://help.mikrotik.com/docs/spaces/ROS/pages/21725254/Spanning+Tree+Protocol).
+- [Wireshark-STP-Felder](https://www.wireshark.org/docs/dfref/s/stp.html): Suche `stp.root`, `stp.bridge` und `stp.flags`.

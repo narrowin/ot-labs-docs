@@ -30,6 +30,13 @@ Walkthrough environment: VM222, `ot-student-lab.int.narrowin.com`, current flat 
 - **Validation:** The victim gateway mapping changed to WAGO A's MAC. Captured requests and the received `LAB-ARP-DEMO` marker established interception. The direct CtrlX path remained distinct. Corrective ARP plus the targeted neighbor refresh restored the original gateway MAC; no arpspoof process remained and forwarding retained its original value. All four reader links resolved in the selected live network; both MkDocs builds passed.
 - **Review:** The lesson accounts for observed ICMP redirects and ping loss, distinguishes ARP claims from authenticated identity, and does not promise decryption of encrypted traffic. The extras follow the solution and the EN/DE commands agree.
 
+## Exercise 3
+
+- **Plan:** Preserve operational root/port analysis, BPDU interpretation and LACP/RSTP coordination; replace the fixed external demo URL with the deployed instance-0 view.
+- **Implementation:** Named switch terminals, direct spanning-tree view, interface-selected capture, standalone navigation, root-election and healthy-link diagnosis extensions.
+- **Validation:** All four bridges reported gw as root, ID ending `09:11`. The capture decoded 42 RSTP BPDUs advertising the same root. sw-acc1's bond was a forwarding root port; sw-acc2 ether11 was physically link-ok but alternate/non-forwarding, with increasing BPDU counters. Both MkDocs builds passed.
+- **Review:** Configuration is separated from operational election state; the bond is one logical bridge port. A received frame is not mistaken for proof of forwarding through a discarding port. No topology or priority changes were made.
+
 ## Documentation checks
 
 Run from this repository with the existing environment:
