@@ -64,7 +64,7 @@ ss -lnt
 ss -lnu
 ```
 
-Compare the listening addresses/ports with Exercise 5's scan and this capture. Complete:
+Record the listening addresses and ports for the evidence comparison below.
 
 On **WAGO B**, use its installed `uv` and Python standard library for one bounded OPC UA transport greeting:
 

@@ -64,7 +64,7 @@ ss -lnt
 ss -lnu
 ```
 
-Vergleiche Listener-Adressen und Ports mit Übung 5 und deinem Mitschnitt. Ergänze:
+Notiere die lauschenden Adressen und Ports für den Belegvergleich unten.
 
 Verwende auf **WAGO B** das vorhandene `uv` und die Python-Standardbibliothek für eine begrenzte OPC-UA-Transportbegrüssung:
 
