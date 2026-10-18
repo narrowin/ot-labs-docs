@@ -1,6 +1,8 @@
 # Übungen für das studentische Lab
 
-Bearbeite die sieben Übungen der Reihe nach auf der aktuellen `ot-sec-flat`-Appliance. Plane für die Hauptaufgaben etwa 3½–4½ Stunden. Jede Übung enthält eine ausklappbare Lösung und danach **zwei optionale Zusatzteile**. Alle Extras zusammen benötigen weitere 2–2½ Stunden.
+Bearbeite die sieben Übungen der Reihe nach. Übungen 1–6 verwenden deine zugewiesene flache `ot-sec-flat`-Appliance; Übung 7 verwendet eine separate Kopie, die für deine Praktikumsgruppe reserviert ist. Plane für die Hauptaufgaben etwa 4–5¼ Stunden. Jede Übung enthält eine ausklappbare Lösung und danach **zwei optionale Zusatzteile**. Alle Extras zusammen benötigen weitere 2–2½ Stunden.
+
+Die Zeiten sind Richtwerte. Bearbeite die Hauptprüfungen in deinem Tempo, nutze bei Bedarf die Hinweise und hebe Extras für später auf. Bewahre Befehle, Filter und Ergebnisse auf, damit du nach dem Kurs in deinem Lab weiterarbeiten kannst. Beende vor einer Pause die Bereinigung der Übung und wiederhole beim Fortsetzen ihre Ausgangsprüfungen.
 
 ## Hier beginnen
 
@@ -23,7 +25,7 @@ Werkzeug-Links sind für den Network-Explorer-Reader gedacht. Öffne bei Nutzung
 | 4 | [Datenströme durch LACP verfolgen](ex4-link-aggregation.md) | 25–35 Min. | Paketgrösse und Hash; Actor-/Partner-Prüfung |
 | 5 | [Zugriff aus der DMZ beurteilen](ex5-reconnaissance.md) | 30–40 Min. | Ausgangspunkte vergleichen; TCP-Portzustände beweisen |
 | 6 | [OT-Protokolle erkennen](ex6-protocol-discovery.md) | 35–45 Min. | Registernummerierung; Discovery ohne TCP-Port |
-| 7 | [Eine durchsetzbare Policy entwerfen](ex7-segmentation-firewall.md) | 35–45 Min. | Zustandsbehaftete Antworten; vollständiges VLAN-Arbeitsblatt |
+| 7 | [Ein geroutetes VLAN aufbauen und prüfen](ex7-segmentation-firewall.md) | 60–90 Min. | Eine geroutete Anfrage verfolgen; Antworten und neue Verbindungen |
 
 ## Lab-Fakten gegen falsche Schlüsse
 
@@ -31,11 +33,11 @@ Werkzeug-Links sind für den Network-Explorer-Reader gedacht. Öffne bei Nutzung
 - Die **DMZ verwendet VLAN 60, `2.2.2.0/24`**. Adressen wie `1.1.1.1` und `2.2.2.2` sind innerhalb des Labs simuliert.
 - sw-dist und sw-acc1 haben einen **aktiven LACP-Bond mit zwei Mitgliedern**. Ein stabiler Datenstrom nutzt normalerweise ein Mitglied.
 - Betriebszustand, Pakete und erfolgreiche Anwendungsantworten sind unterschiedliche Belege. Port-Bezeichnung, Diagramm oder Hostname ersetzen sie nicht.
-- Der LNE-Entwurf in Toolbox ist geteilt und konfiguriert keine Geräte. In Übung 7 entwirfst du Änderungen in eigenen Notizen. Der neue VLAN-Zusatz ist bis zu einem isolierten Konfigurationsdurchgang eine Entwurfsaufgabe.
+- Der LNE-Entwurf in Toolbox ist geteilt und konfiguriert keine Geräte. Übung 7 baut VLAN 70 auf einer **zugewiesenen entbehrlichen Kopie** und stellt danach den flachen Ausgangszustand wieder her. Sie ändert einen Endpunkt, zwei Switches und das Gateway. Nutze vor Beginn die [Vorbereitung des praktischen Labs](../lab-practical.md).
 
 ## Jede Übung abschliessen
 
-Schliesse deine Capture- und Terminal-Tabs. Stoppe in Übung 2 zusätzlich Hilfsprogramm und Listener. Prüfe vor dem Weitergehen die ursprüngliche Gateway-MAC und den Forwarding-Wert. Lass geteilte Gerätekonfigurationen und Toolbox-Policies unverändert.
+Schliesse deine Capture- und Terminal-Tabs. Stoppe in Übung 2 zusätzlich Hilfsprogramm und Listener. Prüfe vor dem Weitergehen die ursprüngliche Gateway-MAC und den Forwarding-Wert. Die Bereinigung in Übung 7 ist auch ohne Extras zwingend. Lass die geteilte Appliance und Toolbox-Policies unverändert.
 
 Der vorhandene Assistent kennt die ausgewählte Übung. Nenne Aufgabe, tatsächlichen Befehl/Ausgabe sowie Capture-Filter/Frame-Nummer. Warte auf die Antwort, bevor du aus einem anderen Tab fragst. Vergleiche den Rat mit deinen Belegen und der lokalen Anleitung.
 

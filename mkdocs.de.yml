@@ -29,6 +29,7 @@ plugins:
 nav:
   - Übersicht: "index.md"
   - Labor: "lab.md"
+  - Praktische Vorbereitung: "lab-practical.md"
   - Übungen:
     - Übersicht: "exercises/index.md"
     - "1. Getaggter und ungetaggter Verkehr": "exercises/ex1-vlan-discovery.md"
@@ -37,7 +38,7 @@ nav:
     - "4. Datenströme durch LACP": "exercises/ex4-link-aggregation.md"
     - "5. Zugriff aus der DMZ": "exercises/ex5-reconnaissance.md"
     - "6. OT-Protokolle erkennen": "exercises/ex6-protocol-discovery.md"
-    - "7. Durchsetzbare Segmentierung": "exercises/ex7-segmentation-firewall.md"
+    - "7. Ein geroutetes VLAN aufbauen": "exercises/ex7-segmentation-firewall.md"
     - Anhang: "exercises/appendix.md"
   - Cheatsheet: "cheatsheet.md"
   - Container-Grundlagen: "Container101.md"

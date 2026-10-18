@@ -1,144 +1,253 @@
-# Exercise 7: Design a policy that reaches the traffic
+# Exercise 7: Build and verify a routed VLAN
 
-**Time:** 35–45 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Intermediate.
+**Time:** 60–90 minutes. **Lab:** an instructor-assigned disposable copy of `ot-sec-flat`. **Difficulty:** Intermediate.
 
-Prove where a flow is forwarded before deciding where to filter it. Build a small, justified communication matrix from your evidence. This lesson inspects the running lab and drafts a design; it does not apply firewall rules to the shared appliance.
+Create one new security zone, carry it through the switches, route it at the gateway and enforce a small policy. Prove the application works and an unapproved connection is blocked, then restore the flat baseline.
 
-**You will learn to:** distinguish switched and routed paths, build a directional service policy, explain stateful replies and rule order, and specify evidence for a future enforcement test.
+**You will learn to:** configure an access VLAN and tagged path, include the gateway's bridge CPU, choose a non-overlapping subnet, order stateful firewall rules and verify both directions with packets and application results.
 
 ## Before you start
 
-Use your observations from [Exercise 5](ex5-reconnaissance.md) and [Exercise 6](ex6-protocol-discovery.md). Open terminals for [ABB](/network/terminal?node=abb-800xa-vlan40), the [DMZ jumphost](/network/terminal?node=proxmox-jumphost) and [gw](/network/terminal?node=gw-firewall). Open [VLAN 10 in Netmap](/network/?viewMode=vlan&vlanIds=10).
+Use the **separate copy reserved for you or your practical group**, with no unrelated users. The instructor must have saved its flat checkpoint and confirmed the node bindings. Exercises 1–6 remain on the original flat appliance. If you only have the shared course appliance, ask for the practical copy before entering configuration commands.
 
-**Standalone documentation:** Open your assigned LNE, select the student network and live snapshot, then Explorer → Netmap → VLAN view → VLAN 10. Search the stable node names above and use their configured SSH actions. Open Toolbox from the product launcher. Reader links carry the selected network and snapshot automatically.
+Open terminals for [Hirschmann](/network/terminal?node=hirschmann-edge1-vlan50), [WAGO A](/network/terminal?node=wago-plc2a-vlan10), [sw-acc1](/network/terminal?node=sw-acc1), [sw-dist](/network/terminal?node=sw-dist) and [gw](/network/terminal?node=gw-firewall). Keep the Hirschmann terminal open: its management connection uses `eth0`, while you change only data interface `eth1`.
 
-The baseline OT prefix is `10.0.0.0/8` in VLAN 10. DMZ is `2.2.2.0/24` in VLAN 60. Hostname suffixes do not create VLANs 20–50. Keep your proposed policy in your own notes: Toolbox's saved LNE workspace is shared with other students.
+Complete the practical in one running session. Linux address/route commands below change the current node; its startup configuration remains flat. If a node restarts during the build, have the instructor restore the checkpoint before continuing.
 
-## Task 1: Find the actual enforcement path
+**Standalone documentation:** Open the assigned practical LNE, select its network and live snapshot, then Explorer → Netmap. Search the stable names above and use their configured SSH actions. For captures select the named switch/interface; for VLAN views select VLAN 10 or 70. Reader links retain the selected network/snapshot. Use the site's lesson navigation when reading outside LNE.
 
-On **ABB**:
+The name `hirschmann-edge1-vlan50` stays unchanged. This exercise creates **one new VLAN 70**; it does not create VLANs 20–50 from hostname suffixes. Toolbox is a design tool; saving a matrix does not apply the commands below.
+
+| State | Hirschmann data address | VLAN | Path to WAGO A | Expected access |
+| --- | --- | --- | --- | --- |
+| Start | `10.50.0.12/8` | 10 | Direct, switched | HTTP and SSH open |
+| After build | `172.30.70.12/24` | 70 | Via `172.30.70.1` on gw | HTTP allowed; fresh SSH blocked |
+| After cleanup | `10.50.0.12/8` | 10 | Direct again | Original access restored |
+
+## Task 1: Record the starting state
+
+On **Hirschmann**:
 
 ```bash
+ip -br address
+ip route
 ip route get 10.10.0.11
+nmap -n -sT -Pn -p22,8080 --max-retries 1 --host-timeout 10s --scan-delay 100ms 10.10.0.11
+curl -sS --max-time 5 -o /dev/null -w 'HTTP %{http_code}\n' http://10.10.0.11:8080/webvisu.htm
 ```
 
-On the **jumphost**:
+On **WAGO A**, establish that Hirschmann's SSH service is open before adding policy:
 
 ```bash
-ip route get 10.10.0.11
+nmap -n -sT -Pn -p22 --max-retries 1 --host-timeout 10s 10.50.0.12
+ip route get 172.30.70.12
+```
+
+On **sw-acc1**:
+
+```routeros
+/interface bridge port print detail where interface=ether5
+/interface bridge vlan print detail
+```
+
+On **sw-dist**:
+
+```routeros
+/interface bridge vlan print detail
 ```
 
 On **gw**:
 
 ```routeros
 /interface vlan print
+/interface bridge vlan print detail
 /ip address print
+/ip firewall filter print detail
+/ip firewall address-list print where list=mgmt
+:put [:len [/ip firewall filter find where chain=forward and comment~"^allow HMI"]]
+:put [:len [/ip firewall filter find where chain=input and comment~"^allow DHCP"]]
 ```
 
-**Checkpoint:** ABB's route to WAGO A is direct on `eth1`; the jumphost's route is via `2.2.2.1`. ABB `10.40.0.11/8` and WAGO A `10.10.0.11/8` are on the same OT VLAN in this baseline. A gateway forward-chain rule cannot restrict a flow that stays on that switched path. Gateway-destined traffic uses `input`; routed transit traffic uses `forward`.
+**Checkpoint:** Hirschmann has `10.50.0.12/8` on `eth1`, management `192.168.100.59/24` on `eth0`, and default plus explicit `1.0.0.0/8` and `2.2.2.0/24` routes through `10.10.0.1`. It reaches WAGO directly; ports 22/8080 are open and HTTP returns 200. WAGO reaches Hirschmann SSH and routes `172.30.70.12` through `10.10.0.1`.
 
-## Task 2: Separate the baseline matrix from the desired matrix
+VLAN/interface 70, subnet `172.30.70.0/24` and comments beginning `ex7-` must be unused. Each of the two final gateway queries must print `1`: these are the insertion anchors for Task 2. sw-acc1 ether5 has PVID 10 and joins VLAN 10 dynamically. Its static VLAN 10 row carries `bond-sw-dist,ether10`; sw-dist carries VLAN 10 on `bond-sw-acc1,ether12,ether8`. If these starting values differ, stop and have the instructor restore the assigned flat checkpoint.
 
-Open **Toolbox** from the product launcher. In the **Network segmentation / Netzwerksegmentierung** card, choose **Policies** to open the communication matrix. Inspect the selected network's existing zones and direction of each policy. Return to these instructions in the original tab.
+**Policy to implement:** permit Hirschmann → WAGO A TCP 8080 and Hirschmann → its new gateway ICMP; retain established/related replies; deny other new forwarded connections from/to VLAN 70 and other gateway access from VLAN 70. The existing private-source list includes `172.16.0.0/12`, so it would broadly accept this subnet unless your scoped rules run first.
 
-The original **Student Lab Flat Starting Project** has OT Network and DMZ with both directions allowed. A saved design may already contain student edits. Record what is there; do not clear, import over, edit or save the shared project during this observation task.
+## Task 2: Prepare the gateway and policy
 
-Draft this **proposed policy** in your own notes, adapting its justifications to what you actually observed:
+On **gw**, first create the interface so firewall rules can refer to it:
 
-| Initiator | Destination | Service | Proposed action | Reason / evidence |
-| --- | --- | --- | --- | --- |
-| DMZ jumphost | WAGO A | TCP 8080 | Allow | Operator WebVisu access, if approved |
-| DMZ jumphost | WAGO A | TCP 22 | Deny new initiation | No maintenance need established |
-| DMZ jumphost | WAGO A | TCP 502 | Deny new initiation | No DMZ Modbus client requirement established |
-| ABB/HMI | WAGO A | TCP 502 | Allow after creating an enforcement boundary | Observed application flow; confirm required read/write functions |
-| PLCs | Simulated external network | Any | Deny new initiation unless justified | An exception needs an owner and purpose |
+```routeros
+/interface vlan add name=vlan70 interface=bridge vlan-id=70 comment=ex7-vlan70
+```
 
-**Checkpoint:** Every allow has a business reason, initiator and destination. The reverse row represents a new connection in the opposite direction, not the reply to an allowed stateful connection. Treat services such as DNS and time synchronization as separately justified dependencies.
+Add the rules in this order. The `place-before` expressions identify the first post-state forward/input rules by their baseline comments. Existing established/related accepts stay ahead of your rules; broader ICMP, management and private-source accepts stay behind them.
 
-## Task 3: Read the rules in their real order
+```routeros
+/ip firewall filter add chain=forward action=accept in-interface=vlan70 out-interface=vlan10 src-address=172.30.70.12 dst-address=10.10.0.11 protocol=tcp dst-port=8080 log=yes log-prefix="EX7-HTTP " comment=ex7-http place-before=[find where chain=forward and comment~"^allow HMI"]
+/ip firewall filter add chain=forward action=drop in-interface=vlan70 log=yes log-prefix="EX7-FROM " comment=ex7-deny-from place-before=[find where chain=forward and comment~"^allow HMI"]
+/ip firewall filter add chain=forward action=drop out-interface=vlan70 log=yes log-prefix="EX7-TO " comment=ex7-deny-to place-before=[find where chain=forward and comment~"^allow HMI"]
+/ip firewall filter add chain=input action=accept in-interface=vlan70 src-address=172.30.70.12 dst-address=172.30.70.1 protocol=icmp comment=ex7-gateway-ping place-before=[find where chain=input and comment~"^allow DHCP"]
+/ip firewall filter add chain=input action=drop in-interface=vlan70 log=yes log-prefix="EX7-INPUT " comment=ex7-deny-input place-before=[find where chain=input and comment~"^allow DHCP"]
+/interface bridge vlan add bridge=bridge vlan-ids=70 tagged=bridge,ether12 comment=ex7-vlan70
+/ip address add address=172.30.70.1/24 interface=vlan70 comment=ex7-vlan70
+/ip firewall filter print detail
+```
+
+**Checkpoint:** Forward order is established/related → `ex7-http` → `ex7-deny-from` → `ex7-deny-to` → earlier baseline policies. Input order is established/related → `ex7-gateway-ping` → `ex7-deny-input` → earlier baseline policies. The new VLAN table row includes **bridge CPU and ether12**. Adding only ether12 would omit the explicitly configured CPU path for routing.
+
+New rule rows can briefly show `I` while the interface starts. Wait a few seconds and repeat the last print command. None of the `ex7-` rows should still carry an `I` flag before you continue; the flags legend itself always explains `I`.
+
+## Task 3: Carry VLAN 70 through both switches
+
+On **sw-dist**:
+
+```routeros
+/interface bridge vlan add bridge=bridge vlan-ids=70 tagged=bond-sw-acc1,ether12 comment=ex7-vlan70
+/interface bridge vlan print detail where vlan-ids=70
+```
+
+On **sw-acc1**:
+
+```routeros
+/interface bridge vlan add bridge=bridge vlan-ids=70 tagged=bond-sw-dist untagged=ether5 comment=ex7-vlan70
+/interface bridge port set [find where interface=ether5] pvid=70
+/interface bridge vlan print detail
+```
+
+**Checkpoint:** The new path is Hirschmann → untagged ether5 → tagged `bond-sw-dist` → sw-dist `bond-sw-acc1` → tagged ether12 → gw CPU/vlan70. Changing PVID removes ether5 from the dynamically derived VLAN 10 membership. Existing VLAN 10 tagged rows remain intact. The bond remains one logical bridge port.
+
+## Task 4: Move the endpoint into its new subnet
+
+On **Hirschmann**, remove the old gateway routes before replacing its data address. The new default covers the destinations previously named by the two explicit routes.
+
+```bash
+ip route del 1.0.0.0/8 via 10.10.0.1 dev eth1
+ip route del 2.2.2.0/24 via 10.10.0.1 dev eth1
+ip route del default via 10.10.0.1 dev eth1
+ip address add 172.30.70.12/24 dev eth1
+ip address del 10.50.0.12/8 dev eth1
+ip route add default via 172.30.70.1 dev eth1
+ip -br address
+ip route get 10.10.0.11
+ping -c 4 172.30.70.1
+```
+
+**Checkpoint:** `eth0` retains its management address and your terminal stays connected. `eth1` has only the new data address, its `224.0.0.0/4` and `255.255.255.255` routes remain, the WAGO route uses `172.30.70.1`, and the gateway replies. Adding the new address before removing the old one avoids flushing unrelated interface routes. A `10.70.0.0/24` choice would overlap existing OT `/8` return routes; `172.30.70.0/24` avoids that overlap.
+
+## Task 5: Prove allowed HTTP and blocked SSH
+
+[Open the gateway-uplink capture](/network/capture?node=sw-dist&interface=ether12) and choose **Start Capture**.
+
+If the viewer shows ERF/LEGACY rather than Ethernet, choose **Restart Capture** once before generating traffic. Report a recurring failure to the instructor.
+
+Run on **Hirschmann**:
+
+```bash
+nmap -n -sT -Pn -p22,8080 --max-retries 1 --host-timeout 10s --scan-delay 100ms 10.10.0.11
+curl -sS --max-time 5 -o /dev/null -w 'HTTP %{http_code}\n' http://10.10.0.11:8080/webvisu.htm
+```
 
 On **gw**:
 
 ```routeros
-/ip firewall filter print detail where chain=forward
-/ip firewall filter print stats where chain=forward
-/ip firewall address-list print where list=mgmt
+/ip firewall filter print stats where comment~"^ex7-"
+/log print where message~"EX7-"
 ```
 
-Locate the established/related accept, broad DMZ-to-VLAN10 accept, private-source accept and final drop. Use comments and match conditions to identify rules; displayed row numbers can change.
+Filter the capture with `ip.addr == 172.30.70.12 && (tcp.port == 22 || tcp.port == 8080)`. Match your source/destination and ports with the rule logs. Logs and counters may also contain other probes from your practical group.
 
-**Checkpoint:** The baseline's final drop is enabled, but earlier accepts still permit the measured DMZ/OT access. The list named `mgmt` includes all of `10.0.0.0/8`, `172.16.0.0/12` and `192.168.0.0/16`; its name does not mean it contains only management hosts. The earlier `action=log` FIN/RST rules observe flags and continue processing; they are not accept verdicts.
+Use the newest log entries from your test period; earlier `EX7-` entries can remain after a previous cleanup.
 
-??? info "Hint: adding a deny at the bottom would not help"
-    Follow the first packet of a new jumphost-to-WAGO TCP connection. Find the first matching terminal verdict. A deny after an earlier broad accept cannot reverse that verdict. Established sessions may continue through the earlier state rule, so future retests must create fresh connections.
+**Checkpoint:** TCP 8080 is open and HTTP returns 200. TCP 22 is **filtered**, although the server was proved open before the change. Your SSH SYN is visible on VLAN 70, and `ex7-deny-from` records the matching denial. Successful HTTP and gateway ping establish a working path; a timeout by itself would not identify a firewall rule.
 
-## Task 4: Verify the baseline and specify the future retest
+Open **Data Collector → Devices → Collect new data**. Wait until collection finishes and the **Last poll** values update, then [inspect VLAN 70 in Netmap](/network/?viewMode=vlan&vlanIds=70). Hirschmann and the path through sw-acc1, sw-dist and gw should now carry VLAN 70. Compare reported membership with the configuration and packets; reloading Netmap alone does not poll the switches.
 
-On the **jumphost**, repeat only this bounded check:
+The current VLAN view can leave the collapsed sw-dist–sw-acc1 bond edge gray even when both switches report VLAN 70. Verify that hop with the bond's VLAN table and tagged packets; the edge color does not establish whether traffic passes.
 
-```bash
-nmap -n -sT -Pn -p22,8080 --max-retries 1 --host-timeout 10s --scan-delay 100ms 10.10.0.11
-curl -sS --max-time 5 -D - -o /dev/null http://10.10.0.11:8080/webvisu.htm
-```
+**Main result complete.** Keep VLAN 70 configured for the optional extras below. Afterwards, perform **Cleanup** even if you skip the extras. Stop the capture before changing its target.
 
-Write a before/desired-after row for each test. The **current** expected result is open SSH and working HTTP. Under your **proposed** policy, a fresh HTTP connection should still work while a new DMZ SSH connection should be denied. No policy was applied here, so do not report the desired result as measured.
-
-**Checkpoint:** Your retest identifies the source, destination, protocol, expected application result, enforcement device and matching rule/log evidence. Shared counters include other students' traffic; a counter delta alone cannot attribute a packet to your probe. Toolbox is a design tool; saving a matrix does not configure the gateway.
-
-Close the Toolbox and terminal tabs when done.
+You can do the extras after the course. Arrange continued access to your practical copy and instructor help with its reset before leaving. Clean up now, then start from the flat checkpoint and repeat Tasks 1–5 when you return. Keep your earlier results for comparison.
 
 ## Solution
 
-??? success "Compare your reasoning"
-    The DMZ-to-OT test crosses gw and is currently broadly allowed. The ABB-to-WAGO application flow stays inside VLAN 10 and needs a real enforcement boundary before a gateway policy can control it. Different IP ranges inside the current `/8` do not supply that boundary.
+??? success "Compare your implementation"
+    VLAN 70 needs the access PVID, an untagged client port, tagged membership on both switch uplinks and gateway ether12/CPU, a VLAN interface, a non-overlapping subnet and a working return route. WAGO A sends replies for the new subnet through its existing `10.10.0.1` gateway.
 
-    A useful design allows documented initiations, permits appropriate established/related replies and denies unapproved new flows at a device the traffic actually traverses. It also protects access to the gateway itself. Neither a final drop nor an attractive matrix proves enforcement without path, ordering and fresh-connection evidence.
+    The HTTP initiation matches `ex7-http`. Replies match the earlier established/related accept. Fresh SSH matches `ex7-deny-from` before the broad private-source accept. The input chain permits the selected gateway diagnostic and blocks other VLAN 70 requests to gw. Existing OT-to-OT traffic remains in VLAN 10.
 
-## Extra 1: Predict an established reply versus a new connection
+## Extra 1: Follow one request across the router
 
-**Optional, 10 minutes.** Draw two packet conversations in your notes using the proposed DMZ-to-WAGO HTTP allow:
+**Optional, 10 minutes.** Keep the gateway-uplink capture running and make one more HTTP request from Hirschmann. Filter `ip.src == 172.30.70.12 && tcp.dstport == 8080`.
 
-1. Jumphost ephemeral port → WAGO TCP 8080, followed by the response from 8080 → that ephemeral port.
-2. WAGO initiates a separate TCP connection to jumphost port 8080.
+Find the same request before and after routing: compare TCP sequence number/payload, VLAN ID, Ethernet addresses, IP addresses and TTL.
 
-Use the existing forward-chain output to identify which kind of rule handles each packet. Explain why permitting conversation 1's reply need not permit conversation 2's new initiation. Compare this with the two directions in Toolbox; inspect without saving changes.
+**Checkpoint:** On this one uplink the request arrives tagged VLAN 70 and leaves tagged VLAN 10. Its IP source/destination stay unchanged, Ethernet addresses change and TTL decreases by one. This is routing without source NAT. A successful ping alone would not show those transformations.
 
-**Checkpoint:** You distinguish connection direction, response traffic and the two independent initiators. You also explain why an already-open session is a poor test of a newly tightened policy. No connection tracking table or live rules need to be cleared.
+Recording both sides can make Wireshark label the second copy as duplicate/out-of-order. Compare sequence, VLAN and TTL before interpreting those labels as a network fault.
 
-## Extra 2: Design a complete new VLAN path
+## Extra 2: Prove replies and new initiations differ
 
-**Optional, 15–20 minutes.** Prepare a build sheet for a future isolated configuration lab. Do not apply it to this shared appliance.
-
-Use **VLAN 70**, client **hirschmann-edge1-vlan50**, proposed data address **172.22.70.12/24**, gateway **172.22.70.1**. The existing hostname can remain a label. On [WAGO A](/network/terminal?node=wago-plc2a-vlan10), compare:
+**Optional, 10–15 minutes.** On **WAGO A**, test a fresh reverse SSH connection to the listener proved open in Task 1:
 
 ```bash
-ip route get 10.70.0.12
-ip route get 172.22.70.12
+nmap -n -sT -Pn -p22 --max-retries 1 --host-timeout 10s 172.30.70.12
 ```
 
-**Checkpoint:** `10.70.0.12` is direct inside WAGO's existing `/8`; `172.22.70.12` is routed through its gateway. This is why the proposed VLAN needs a non-overlapping subnet.
+On **Hirschmann**, test gateway protection, then repeat permitted HTTP:
 
-Complete every row before calling the design connected:
+```bash
+nmap -n -sT -Pn -p22 --max-retries 1 --host-timeout 10s 172.30.70.1
+curl -sS --max-time 5 -o /dev/null -w 'HTTP %{http_code}\n' http://10.10.0.11:8080/webvisu.htm
+```
 
-| Component | Required change in the isolated lab |
-| --- | --- |
-| Endpoint | New `/24` data address and gateway; replace explicit old-gateway routes; preserve management `eth0` |
-| sw-acc1 access | `ether5` assigns untagged ingress to PVID 70; VLAN 70 membership includes this access port |
-| sw-acc1 uplink | Carry VLAN 70 tagged on `bond-sw-dist`, preserving VLAN 10 |
-| sw-dist | Carry VLAN 70 tagged between `bond-sw-acc1` and gateway-facing `ether12` |
-| Gateway | Tagged VLAN 70 membership includes `ether12` **and bridge CPU**; a VLAN interface on `bridge` owns `172.22.70.1/24` |
-| Firewall and return path | Permit client → WAGO A TCP 8080; deny fresh TCP 22 to the same known-open server. Scope rules to the new interface, retain established replies and protect gateway input before broad accepts |
-| Evidence and undo | Untagged access capture, tagged VLAN 70 uplink capture, successful allowed flow, denied new flow, original values and reverse-order restoration |
+Read the `ex7-` rule statistics/logs again. The reverse attempt must match `ex7-deny-to`, gateway SSH must match `ex7-deny-input`, and HTTP must still return 200 through stateful replies. The two SSH results are filtered. No existing sessions or global counters need to be cleared.
 
-The current `172.16.0.0/12` private-source accept also covers this proposed subnet. A new VLAN would therefore not automatically isolate it. WAGO A already routes replies to `172.22.70.12` through `10.10.0.1`. Using the DMZ jumphost as a server instead would also require its return route through `2.2.2.1`; its default route uses management. Do not add VLAN 70 to every port or attach individual LACP members to the bridge.
+## Cleanup: restore the flat baseline
 
-**Deliverable:** Describe the path and the failure symptom if any one row is omitted. A future build should prove local gateway reachability first, then an explicitly allowed cross-zone TCP exchange, then denial of an unapproved fresh connection, followed by restoration. This extension is design analysis; configuration and connectivity of VLAN 70 have not been trialled on the shared lab.
+Stop and close the capture. On **Hirschmann**:
 
-Close tool tabs. You have finished the seven lessons.
+```bash
+ip route del default via 172.30.70.1 dev eth1
+ip address add 10.50.0.12/8 dev eth1
+ip address del 172.30.70.12/24 dev eth1
+ip route add default via 10.10.0.1 dev eth1
+ip route add 1.0.0.0/8 via 10.10.0.1 dev eth1
+ip route add 2.2.2.0/24 via 10.10.0.1 dev eth1
+```
+
+On **sw-acc1**:
+
+```routeros
+/interface bridge port set [find where interface=ether5] pvid=10
+/interface bridge vlan remove [find where comment=ex7-vlan70]
+```
+
+On **sw-dist**:
+
+```routeros
+/interface bridge vlan remove [find where comment=ex7-vlan70]
+```
+
+On **gw**:
+
+```routeros
+/ip address remove [find where comment=ex7-vlan70]
+/interface bridge vlan remove [find where comment=ex7-vlan70]
+/interface vlan remove [find where name=vlan70]
+/ip firewall filter remove [find where comment~"^ex7-"]
+```
+
+Repeat Task 1's address, route, service and switch checks. Hirschmann must again use `10.50.0.12/8`, PVID 10 and a direct WAGO route; HTTP and SSH must be open again. WAGO must again reach Hirschmann SSH at `10.50.0.12`. VLAN/interface 70 and the `ex7-` rules must be absent. Original VLAN 10/60 membership and management connectivity must match your notes.
+
+Run **Collect new data** again to refresh reported port membership. Check absence in the actual RouterOS tables; a VLAN number in a catalog alone is not proof that a port still carries it.
+
+If cleanup differs from the recorded baseline, leave the copy reserved and have the instructor restore its saved checkpoint. Close all terminal tabs after verification.
 
 ## Explore the topic
 
-- [MikroTik bridge VLAN table](https://help.mikrotik.com/docs/spaces/ROS/pages/28606465/Bridge+VLAN+Table): find PVID, tagged ports and CPU access.
+- [MikroTik bridge VLAN table](https://help.mikrotik.com/docs/spaces/ROS/pages/28606465/Bridge+VLAN+Table): trace PVID, tagged ports and CPU access.
 - [RouterOS firewall filter](https://manual.mikrotik.com/docs/firewall-and-quality-of-service/firewall/filter/): compare input and forward.
-- [RouterOS connection tracking](https://manual.mikrotik.com/docs/firewall-and-quality-of-service/connection-tracking/): find established/related behavior.
-- [NIST SP 800-82r3](https://csrc.nist.gov/pubs/sp/800/82/r3/final): read network segmentation guidance alongside OT availability requirements.
+- [RouterOS connection tracking](https://manual.mikrotik.com/docs/firewall-and-quality-of-service/connection-tracking/): explain why the earlier state rule permits replies.
+- [NIST SP 800-82r3](https://csrc.nist.gov/pubs/sp/800/82/r3/final): relate enforced boundaries to OT availability.

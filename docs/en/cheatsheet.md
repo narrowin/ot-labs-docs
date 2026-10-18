@@ -57,4 +57,4 @@ These observations do not change a PLC program. Use the exact read-only Modbus c
 /ip firewall filter print detail where chain=forward
 ```
 
-The baseline is OT VLAN 10 with `/8` addresses and DMZ VLAN 60. A hostname, open port or final drop rule alone does not prove segmentation. Keep shared configuration and Toolbox designs unchanged during the observation lessons. Continue in [exercise order](exercises/index.md).
+The baseline is OT VLAN 10 with `/8` addresses and DMZ VLAN 60. A hostname, open port or final drop rule alone does not prove segmentation. Keep shared configuration and Toolbox designs unchanged during the observation lessons. [Exercise 7](exercises/ex7-segmentation-firewall.md) creates VLAN 70 only in its assigned disposable copy and includes mandatory cleanup. Continue in [exercise order](exercises/index.md).

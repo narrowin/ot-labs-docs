@@ -57,4 +57,4 @@ Diese Beobachtungen ändern kein PLC-Programm. Verwende den genauen lesenden Mod
 /ip firewall filter print detail where chain=forward
 ```
 
-Der Ausgangszustand ist OT-VLAN 10 mit `/8`-Adressen und DMZ-VLAN 60. Ein Hostname, offener Port oder abschliessender Drop beweist allein keine Segmentierung. Erhalte während der Beobachtungsübungen geteilte Konfiguration und Toolbox-Entwürfe. Fahre in [Übungsreihenfolge](exercises/index.md) fort.
+Der Ausgangszustand ist OT-VLAN 10 mit `/8`-Adressen und DMZ-VLAN 60. Ein Hostname, offener Port oder abschliessender Drop beweist allein keine Segmentierung. Erhalte während der Beobachtungsübungen geteilte Konfiguration und Toolbox-Entwürfe. [Übung 7](exercises/ex7-segmentation-firewall.md) erstellt VLAN 70 nur auf ihrer zugewiesenen entbehrlichen Kopie und enthält eine zwingende Bereinigung. Fahre in [Übungsreihenfolge](exercises/index.md) fort.

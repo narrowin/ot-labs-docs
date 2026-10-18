@@ -77,7 +77,7 @@ Beobachte die Bedienelemente, ohne sie während der Netzwerkaufgaben zu betätig
 | Toolbox | Zonen und gerichtete Policies entwerfen; Speichern konfiguriert keine Geräte |
 | Assistent | Hilfe mit aktiver Übung, Befehlsausgabe und Paketbelegen |
 
-Toolbox wird im Produktmenü geöffnet. Der gespeicherte Netzwerk-Workspace ist geteilt. Übung 7 untersucht ihn und entwirft eine Policy in eigenen Notizen. Der VLAN-70-Aufbau ist aktuell eine vollständige Entwurfsaufgabe; eine angewendete Version benötigt ein isoliertes Lab und einen Wiederherstellungsplan.
+Toolbox wird im Produktmenü geöffnet. Der gespeicherte Netzwerk-Workspace ist geteilt; Speichern setzt keine Regeln durch. [Übung 7](exercises/ex7-segmentation-firewall.md) baut VLAN 70 über Geräteterminals auf einer zugewiesenen entbehrlichen Kopie auf. Die Kursleitung muss zuerst die [praktische Vorbereitung mit Checkpoint](lab-practical.md) durchführen. Übungen 1–6 nutzen den flachen Ausgangszustand. Übung 7 verschiebt vorübergehend nur Hirschmann und stellt ihn vor Abschluss wieder her.
 
 ## Wenn ein Kontrollpunkt fehlschlägt
 

@@ -77,7 +77,7 @@ Observe controls without operating them during the networking tasks. A steady va
 | Toolbox | Draft zones and directional policies; saving does not configure network devices |
 | Assistant | Help with the active lesson, command output and packet evidence |
 
-Toolbox is opened from the product launcher. Its saved network workspace is shared. Exercise 7 inspects it and drafts a policy in your own notes. Building VLAN 70 is currently an end-to-end design challenge; an applied version needs an isolated lab and restoration plan.
+Toolbox is opened from the product launcher. Its saved network workspace is shared; saving a design does not enforce it. [Exercise 7](exercises/ex7-segmentation-firewall.md) builds VLAN 70 through device terminals on an assigned disposable copy. The instructor must complete the [practical setup and checkpoint](lab-practical.md) first. Exercises 1–6 use the flat baseline; Exercise 7 temporarily moves only Hirschmann and restores it before finishing.
 
 ## If a checkpoint fails
 

@@ -34,6 +34,7 @@ Füge jeweils einen Ausdruck in die **Anzeigefilter**-Leiste ein und drücke Ent
 | SSH verbindet nicht | Konfigurierte **Open terminal**-Aktion verwenden; keine alten Standardpasswörter probieren oder SSH-Server ändern. |
 | Terminal zeigt root statt admin im alten Bild | Verwaltete Linux-Knoten verwenden root, RouterOS sein konfiguriertes Admin-Konto. Aktueller Anleitung folgen. |
 | Kein Ping im Mitschnitt | Zuerst Capture starten, begrenzten Ping wiederholen, Knoten und Port-Nachbar prüfen, Filter leeren und einige Sekunden warten. |
+| Viewer zeigt ERF/LEGACY und unsinnige Zeiten statt Ethernet | Auf der Seite **Restart Capture** wählen, gültige Ethernet/IP-Dekodierung abwarten und Proben wiederholen. Bleibt der Fehler, Knoten/Interface und Screenshot an die Kursleitung melden. |
 | Datenstrom nur auf einem LACP-Mitglied | Bei stabilem Hash erwartet. Gleichen begrenzten Datenstrom am anderen Mitglied wiederholen; Anfragen und Antworten trennen. |
 | `vlan` am Access-Port leer | Filter leeren und ICMP suchen. Ungetaggte Endpunkt-Frames sind erwartet. |
 | ARP-Hilfsprogramm endet mit Code 124 | Sicherheits-Timer abgelaufen; Wiederherstellung durchführen oder begrenzte Aufgabe wie beschrieben wiederholen. |

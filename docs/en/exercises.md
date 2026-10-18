@@ -28,7 +28,7 @@ Start with the [student lab guide](lab.md) and follow the [seven-lesson overview
 
 ## Exercise 7: Network Segmentation and Firewall Design
 
-[Design a policy that reaches the traffic](exercises/ex7-segmentation-firewall.md).
+[Build and verify a routed VLAN](exercises/ex7-segmentation-firewall.md).
 
 ## Appendix: Wireshark Filters Quick Reference
 
