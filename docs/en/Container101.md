@@ -1,332 +1,85 @@
 # Container101
 
-## Why This Page Exists
+The workshop appliance runs simulated PLCs, switches and monitoring tools. Containers package these components so the instructor can provide a repeatable lab. You use the running lab through your browser.
 
-You're an OT professional working with PLCs, HMIs, industrial networks, and protocols like Modbus or PROFINET. You might have heard about Docker and containers but never really needed them. Now, for this workshop, we're using Containerlab, which is built on container technology.
+## Your workshop workflow
 
-This page explains what containers are, why they're perfect for our OT security and networking workshop, and why there's nothing to fear.
+1. Open the assigned LNE URL and sign in.
+2. Follow the [Lab Guide](lab.md) to select the live student network.
+3. Open [Exercise 1](exercises/ex1-vlan-discovery.md). Its links select the named terminal, capture or visualization.
+4. Finish each exercise's cleanup, then close its tool tabs.
 
-## The Simple Truth About Containers
+The instructor has already deployed the appliance and its lab network. Your laptop needs a browser and access to the assigned URL; no local container installation or GitHub account is required. Deployment and appliance resets are instructor operations.
 
-**Containers are just a way to package and run software that makes it easy to start, stop, and repeat the same setup every time.**
+## Images, containers and persistent data
 
-That's it. No magic. No hidden complexity. Everything the software needs is packaged together, and it runs the same way on any system. Like having a ready-to-go appliance instead of assembling components each time.
+| Object | Meaning | Lab example |
+| --- | --- | --- |
+| Image | Packaged application files and defaults used to create a container | Software for a PLC simulator |
+| Container | A running instance with its own processes, filesystem view and network interfaces | The WAGO A lab node |
+| Persistent data | Files kept in a volume or mounted host directory, outside the container's writable layer | Saved device or application state |
 
-## Why Containers Matter for This Workshop
+An image is a starting point. A running container also has current processes, connections and configuration. Restarting it does not automatically restore the exercise's starting state. Persistent data can survive even when a container is recreated. [Docker explains volume persistence](https://docs.docker.com/engine/storage/volumes/).
 
-We're building network security labs with PLCs, HMIs, switches, and security monitoring tools. Here's what containers give us:
+## Containers and virtual machines
 
-**Fast and Repeatable**  
-Instead of installing software manually on each machine, we can start a complete lab in seconds. Need to restart? It takes seconds, not minutes or hours.
+A virtual machine runs a guest operating system and kernel. Linux containers normally share their host's kernel while isolating processes and resources. The workshop can use both: the appliance can be a VM, with lab components running inside it. Some network-device containers start a virtualized network OS internally.
 
-**Clean and Isolated**  
-Each component (PLC simulator, HMI, network tool) runs separately. If something breaks, you just restart that one piece.
+| Question | Container | Virtual machine |
+| --- | --- | --- |
+| What starts? | Isolated application processes | A guest operating system |
+| What is shared? | Host kernel | Physical hardware through a hypervisor |
+| Does restart mean a clean lab? | Depends on stored state and startup configuration | Depends on disks, snapshots and startup configuration |
 
-**Easy to Share**  
-We can give you the exact same lab setup as everyone else. No "it works on my machine" problems.
+Startup time and resource use depend on the component. A running container alone does not prove that its application is ready or its simulated protocol is complete. The exercises check replies, decoded packets and application behavior.
 
-**Lightweight**  
-You can run multiple PLCs, switches, and tools on your laptop without it melting. Containers use much less memory and CPU than traditional virtual machines.
+## What Containerlab contributes
 
-## GitHub Free Plan: What You Get
+Containerlab reads a topology definition describing nodes, their software images and their links. It creates the connections used by the lab. This makes a topology easier to reproduce than manually wiring each virtual device.
 
-This workshop leverages GitHub's free plan, which provides powerful tools for learning and development at no cost.
+A node name identifies a component; it does not enforce a VLAN or firewall policy. For example, `ctrlx-plc3-vlan20` retains its historical name in the current flat baseline. Use the [Lab Guide's network table](lab.md#understand-the-two-network-planes) and the exercise checkpoints to establish the actual configuration.
 
-### GitHub Codespaces
+## Know which terminal you opened
 
-**What are Codespaces?**  
-Cloud-based development environments that run in your browser. Think of it as a complete computer with VS Code, Docker, and all workshop tools pre-installed, accessible from anywhere.
+| Terminal | Where commands run |
+| --- | --- |
+| A node's **Open terminal** action | Inside that named device: Linux on a WAGO endpoint, RouterOS on a switch or gateway |
+| Instructor's appliance console | On the host that runs Docker, the lab nodes and platform services |
 
-**Free Plan Includes:**
+The exercise commands name their target above each block. Keep that node name visible while working. If a terminal disconnects, record the node and error and ask the instructor to inspect it; restarting a lab component can interrupt other students and erase evidence.
 
-- 120 core-hours per month
-- 15 GB storage
-- 4-core machines available
+## Optional instructor demonstration: inspect the running lab
 
-**For this workshop:**  
-A 4-core Codespace runs this entire lab environment. 120 hours means you can run the lab for multiple full days each month at no cost.
+Ask the instructor to demonstrate these read-only commands on the **assigned appliance's console**. They use its existing Docker installation. A PLC or switch terminal is a different context.
 
-### Private Repositories
+List running lab containers:
 
-**What you get for free:**
+```bash
+docker ps --filter label=containerlab=ot-sec-flat --format 'table {{.Names}}\t{{.Status}}'
+```
 
-- Unlimited private repositories
-- Unlimited collaborators
-- Full version control and collaboration features
+Find `clab-ot-sec-flat-wago-plc2a-vlan10` and match it to WAGO A on Netmap. Then inspect only its name and image:
 
-### GitHub Copilot
+```bash
+docker inspect --format '{{.Name}} {{.Config.Image}}' clab-ot-sec-flat-wago-plc2a-vlan10
+```
 
-**What it is:**  
-AI-powered coding assistant that helps you write code, understand configurations, and troubleshoot issues.
+**Checkpoint:** You can distinguish the container's running status, its packaged image and the application's behavior. A successful WAGO ping or WebVisu response provides different evidence from Docker's `Up` status.
 
-**Free for:**
+## What happens to state?
 
-- Students (verified via GitHub Student Developer Pack)
-- Maintainers of popular open-source projects
-- Free trial available for everyone
+Closing a browser tab ends that tool session; it does not reset the appliance. Device configuration and application data may remain between sessions. Follow each exercise's cleanup and verify its checkpoint.
 
-**For this workshop:**  
-Copilot can help you understand topology files, write automation scripts, and debug network configurations. Especially useful when extending labs after the workshop.
+Exercises 1–6 use the flat baseline. Exercise 7 temporarily builds a routed VLAN on an assigned disposable copy, then restores the baseline. Its instructor preparation includes a [private checkpoint and restore procedure](lab-practical.md). A historical snapshot in Explorer displays collected network data; it is not an appliance restore operation.
 
-### Why This Matters for OT Professionals
+## What this lab teaches
 
-You get enterprise-grade development tools without cost. No budget approval needed to start learning and experimenting with OT security labs.
+Virtual links carry real Ethernet frames and protocol messages that your capture tools can inspect. Simulators make it practical to repeat networking and security observations without operating production equipment. Their timing, protocol coverage and firmware behavior still depend on the installed component; they do not establish hard real-time or safety behavior for a physical plant.
 
-Run complete industrial network simulations in the cloud, accessible from any device. Perfect for learning at your own pace, wherever you are.
+## Explore the concepts
 
-### Security Notice: Production Data
+- [Docker: what is a container?](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/): compare a process container with a VM.
+- [Docker volumes](https://docs.docker.com/engine/storage/volumes/): explain why persistent files can outlive a container.
+- [Containerlab topology definition](https://containerlab.dev/manual/topo-def-file/): find the `nodes` and `links` sections. Building another topology belongs in a separate instructor-provided disposable playground.
 
-**Never use production or company data with Codespaces or Copilot.**
-
-GitHub Codespaces runs in the cloud. GitHub Copilot processes code to provide suggestions. While GitHub has security measures in place, your organization's security policies likely prohibit uploading sensitive data to external services.
-
-**Do not use:**
-
-- Real PLC configurations from your plant
-- Actual network diagrams with real IP addresses
-- Production passwords or credentials
-- Company-specific code or configurations
-- Any data covered by NDAs or confidentiality agreements
-
-**This workshop uses only simulated, generic lab data.**  
-Perfect for learning without security concerns.
-
-If you need to work with real company data, use local development environments on company-managed infrastructure, not cloud services.
-
-## Containers vs Virtual Machines: What You Need to Know
-
-You might be familiar with virtual machines (VMs). Containers are similar but much lighter.
-
-### Virtual Machines
-
-- Complete operating system for each VM
-- Takes minutes to start
-- Uses lots of memory and disk space
-- Good isolation but heavy
-
-### Containers
-
-- Share the underlying operating system
-- Start in seconds
-- Use much less memory and disk
-- Light but still isolated enough for labs
-
-**For this workshop:** Think of containers as "lightweight VMs that start instantly." That's close enough.
-
-### Simple Comparison Table
-
-| What You Need | Virtual Machine | Container |
-|---------------|-----------------|-----------|
-| Start a PLC simulator | Wait 2-3 minutes | Ready in 2-3 seconds |
-| Run 10 different devices | Heavy on your laptop | Comfortable on your laptop |
-| Reset to clean state | Slow shutdown and restart | Instant |
-| Share exact setup with colleagues | Large VM images to transfer | Small container images |
-
-## What Happens in This Workshop
-
-You will use Containerlab through a VS Code extension. No complex commands to type. No deep technical knowledge required.
-
-### What You'll Actually Do
-
-1. **Open a topology file** - A simple text file describing your lab network (which PLCs, switches, HMIs you want)
-2. **Click "Deploy"** in VS Code - The extension starts your entire lab
-3. **Use your lab** - Connect to devices, run security tests, capture traffic
-4. **Click "Destroy"** when done - Everything is removed cleanly
-
-That's the complete workflow. Four steps. Simple.
-
-### What's Happening Behind the Scenes (But You Don't Need to Worry About It)
-
-When you click "Deploy", Containerlab:
-
-- Reads your topology file
-- Downloads or uses pre-built container images for your devices
-- Starts each device as a container
-- Connects them together with virtual network cables
-- Gives you access to each device
-
-When you're done and click "Destroy", everything is removed cleanly. No leftover files or configurations.
-
-## Common Questions from OT Professionals
-
-**Q: Is this secure enough for our lab?**  
-Yes. Containers provide good isolation for training and testing. They're used by millions of developers and companies worldwide. For our workshop, they're more than adequate.
-
-**Q: Do I need to learn Docker commands?**  
-No. We're using the Containerlab VS Code extension, which gives you buttons to click instead of commands to type.
-
-**Q: Can containers handle industrial protocols like Modbus, S7, or PROFINET?**  
-Yes. Containers can run any software, including industrial protocol stacks and simulators. The network traffic works exactly as you'd expect.
-
-**Q: What if something crashes?**  
-Just redeploy that component. It's fast and gets you back to a clean state instantly.
-
-**Q: Is this like the "cloud"?**  
-No. Everything runs locally on your laptop. No internet required (after initial setup). You have full control.
-
-**Q: Can I use this after the workshop for my own testing?**  
-Absolutely. That's one of the goals - give you a tool you can use to build your own OT security and networking test labs.
-
-**Q: Will this mess up my computer?**  
-No. Containers are isolated. When you remove them, they're completely gone. Nothing is left behind on your system.
-
-## Why Containerlab Specifically?
-
-Containerlab was designed by network engineers for network engineers. It solves the problem of quickly testing network configurations and topologies.
-
-**Why it's perfect for OT work:**
-
-- Define your entire network topology in a simple text file
-- Supports both network devices (switches, routers) and end devices (PLCs, HMIs)
-- Deploy in seconds, tear down just as fast
-- Works seamlessly with VS Code
-- Share labs easily - just send the topology file to colleagues
-- Free and open source
-
-Network engineers at major vendors like Nokia, Cisco, and Juniper use Containerlab daily. It's battle-tested and reliable.
-
-## Real-World Perspective: Old Way vs New Way
-
-**Traditional approach:**  
-Set up physical lab or configure multiple VMs. Takes hours or days. Breaks easily. Hard to share. Painful to reset.
-
-**Container approach:**  
-Write a text file describing your network. Click deploy. Lab ready in 30 seconds. Break something? Redeploy in 30 seconds. Share the file with colleagues who get the identical setup instantly.
-
-**The difference:**  
-You spend time learning OT security and networking instead of fighting with infrastructure.
-
-## The Truth About Learning Curves
-
-**You don't need to become a container expert.**
-
-What you need to know:
-
-- How to deploy a lab (click a button)
-- How to connect to devices in the lab (same as always)
-- How to destroy the lab when done (click another button)
-
-That's it. The Containerlab VS Code extension handles everything else.
-
-**After this workshop**, if you want to dive deeper, excellent resources exist. But for now, focus on OT security and networking. Container technology is just the tool that makes the labs work.
-
-## What Makes Containers Work for OT Labs
-
-Containers excel at simulating OT environments:
-
-**Network Behavior is Realistic**  
-Virtual network connections behave exactly like real Ethernet cables. Industrial protocols work identically. Network traffic looks the same to your monitoring tools.
-
-**Performance is Sufficient**  
-A modern laptop comfortably runs 10-20 containerized devices. That's enough for realistic OT network topologies with multiple zones.
-
-**State Can Be Preserved**  
-Keep your PLC configuration between sessions or start fresh each time. Your choice.
-
-**Timing is Predictable**  
-Not suitable for hard real-time control, but perfect for testing network protocols, security monitoring, and attack scenarios.
-
-## Important Limitations (Being Honest)
-
-Let's be clear about what this is and isn't:
-
-**Not for production**  
-These are simulations and test environments. Never put this in your actual plant network.
-
-**Not real-time control**  
-Perfect for testing protocols and security. Not suitable for safety-critical control systems that require hard real-time guarantees.
-
-**Not identical to real devices**  
-We use simulators that behave like your PLCs and HMIs, but they're not running your exact production firmware.
-
-**Bottom line:**  
-For training and testing - perfect.  
-For production control - use real, certified hardware.
-
-## Your Workshop Learning Path
-
-**Before the workshop:**
-
-- Don't stress about containers. They're just a tool.
-- Ensure Docker Desktop and VS Code are installed (we'll guide you).
-- Trust that millions of people use this daily.
-
-**During the workshop:**
-
-- Focus on OT security and networking, not container technology.
-- Use the VS Code extension - point and click interface.
-- Ask questions anytime something's unclear.
-
-**After the workshop:**
-
-- You'll confidently build your own test labs.
-- Explore more advanced features if interested.
-- Understand why containers are popular in OT security and networking testing.
-
-## Want to Learn More? (Optional)
-
-If you want to dive deeper after the workshop, these resources have helped millions of people understand containers. All are beginner-friendly:
-
-### Highly Recommended Videos (Start Here)
-
-**Docker in 100 Seconds** by Fireship  
-[https://www.youtube.com/watch?v=Gjnup-PuquQ](https://www.youtube.com/watch?v=Gjnup-PuquQ)  
-Quick, visual, and perfect for understanding the basics.
-
-**you need to learn Docker RIGHT NOW** by NetworkChuck  
-[https://www.youtube.com/watch?v=eGz9DS-aIeY](https://www.youtube.com/watch?v=eGz9DS-aIeY)  
-Fun, practical, and beginner-friendly introduction.
-
-### Official Docker Resources
-
-**Docker Get Started Guide**  
-[https://docs.docker.com/get-started/](https://docs.docker.com/get-started/)  
-Official Docker documentation, well-structured and clear.
-
-**Docker 101 Interactive Tutorial**  
-[https://www.docker.com/101-tutorial](https://www.docker.com/101-tutorial)  
-Hands-on tutorial you can do in your browser or on your machine.
-
-**What is a Container? (Docker's explanation)**  
-[https://www.docker.com/resources/what-container/](https://www.docker.com/resources/what-container/)  
-Docker's own beginner-friendly explanation.
-
-### Containerlab Specific
-
-**Containerlab Quick Start**  
-[https://containerlab.dev/quickstart/](https://containerlab.dev/quickstart/)  
-The official quick start guide - very accessible.
-
-**Containerlab VS Code Extension**  
-[https://containerlab.dev/manual/vsc-extension/](https://containerlab.dev/manual/vsc-extension/)  
-Documentation for the extension we'll use in the workshop.
-
-**Containerlab YouTube Channel**  
-[https://www.youtube.com/@containerlab](https://www.youtube.com/@containerlab)  
-Video tutorials and demonstrations.
-
-### For Visual Learners
-
-**Play with Docker**  
-[https://labs.play-with-docker.com/](https://labs.play-with-docker.com/)  
-Free online environment to try Docker commands without installing anything.
-
-**Docker Curriculum by Prakhar Srivastav**  
-[https://docker-curriculum.com/](https://docker-curriculum.com/)  
-Beginner-friendly tutorial with clear explanations and examples.
-
-### If You Want to Compare with VMs
-
-**Containers vs Virtual Machines (IBM Technology)**  
-[https://www.youtube.com/watch?v=cjXI-yxqGTI](https://www.youtube.com/watch?v=cjXI-yxqGTI)  
-Clear video explanation of the differences.
-
-## Bottom Line for This Workshop
-
-You don't need to be a container expert. You just need to know that containers are mature, proven technology used by millions of developers and companies worldwide.
-
-The VS Code extension does the heavy lifting. You focus on OT security and networking.
-
-Containers are simply the tool that lets us build fast, repeatable, shareable OT security and networking labs. That's their purpose here. They do it well.
-
-Ready to dive into OT security and networking? Let's go.
+Continue with the [Lab Guide](lab.md) or [Exercise 1](exercises/ex1-vlan-discovery.md).
