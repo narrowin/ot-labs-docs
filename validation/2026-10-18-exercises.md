@@ -1,5 +1,7 @@
 # Student exercise review, 18 October 2026
 
+This records the initial review and deployment. The subsequent executed VLAN build, ARP/osquery repeat, command-copy repair and final course qualification are recorded in [the follow-up validation](2026-10-18-vlan-practical.md). Exercise 7 below describes the earlier design-only version.
+
 Walkthrough environment: VM222, `ot-student-lab.int.narrowin.com`, current flat student lab. Checks use its standard installation account, configured terminals, actual endpoint commands and the deployed capture service. This account has system-administrator permissions; these results do not qualify a separate read-only role.
 
 ## Approach
