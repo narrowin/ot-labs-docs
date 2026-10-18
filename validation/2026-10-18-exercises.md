@@ -72,6 +72,15 @@ Walkthrough environment: VM222, `ot-student-lab.int.narrowin.com`, current flat 
 - Readiness check: WAGO A reported 10.10.0.11/8 and four gateway replies. Browser actions offered WAGO A, CtrlX, Schneider and ABB; their proxy pages were checked. WAGO B TCP 8080 refused a direct lab request and no browser action was offered, so it is explicitly absent from the visualization task.
 - The reader currently supports the seven canonical lessons, not arbitrary setup/cheatsheet pages. Those pages are available in the standalone site with manual navigation. Toolbox also needs the product launcher. An isolated VLAN configuration/reset exercise is not provisioned by the app; Exercise 7 supplies the complete design and acceptance plan.
 - The course contains fourteen optional sections, two after each solution. No new automated test infrastructure, dependencies or broad/failure traffic was introduced.
+- Replaced the searchable English monolith with canonical lesson links while retaining its main exercise headings, so standalone search cannot send students to contradictory instructions.
+
+## Final deployed review
+
+- All fourteen English/German API documents returned 200 with revisions matching the committed source. Both active controller and assistant resolved the same fourteen hashes from `/opt/ot-labs-docs`; the two course images also matched all 27 packaged page hashes.
+- Reviewed every lesson in both languages in the deployed reader: two extras each, no blocked links. A final visual check found the Markdown renderer blocking bare relative lesson URLs; the reader now normalizes those specific destinations to its existing scoped routes. Actual German prerequisite and English next-lesson clicks retained network 1 / live snapshot 1. The generic outdated-content banner is removed.
+- The complete frontend build, lint and existing 144 test files / 1,006 tests plus 14 script checks passed. The full pre-commit gate passed with existing per-service environments. Its initial default attempt could not resolve uncached dependencies offline; no packages were installed.
+- Course-only activation preserved the other 22 container identities. The subsequent controller-only link correction preserved the course fingerprint and all 23 other containers, including the assistant. Both activated services reported healthy. Guarded rollback inputs are under `/nw/data/exercise-course-review-20261018/` and `/nw/data/exercise-course-links-20261018/`; revert the later link layer first.
+- Final cleanup found no arpspoof process; WAGO B's gateway mapping was the original `4c:5e:0c:09:09:11`. Review tool tabs were closed and the reader was left at English Exercise 1. Shared switch/firewall configuration and Toolbox revision 20 were preserved.
 
 ## Documentation checks
 
