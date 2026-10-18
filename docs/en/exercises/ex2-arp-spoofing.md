@@ -2,7 +2,7 @@
 
 **Time:** 30–40 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Intermediate.
 
-Prove a change in the victim's IP-to-MAC mapping, follow the resulting traffic, and restore the original path. Use only the three named lab nodes below. These addresses refer to the simulated network inside this appliance.
+Prove a change in the victim's IP-to-MAC mapping, follow the resulting traffic, and restore the original path. Run the interception from WAGO A against only B and its gateway. Use the named lab targets for connectivity checks. These addresses refer to the simulated network inside this appliance.
 
 **Learning objectives:** Explain ARP's trust problem, execute and prove a bounded Layer 2 interception, identify readable application data, and explain detection and mitigation.
 
@@ -38,9 +38,16 @@ cat /proc/sys/net/ipv4/ip_forward
 command -v arp_spoofing-simple.sh timeout
 ```
 
-Record A's MAC and forwarding value. The helper preserves the previous forwarding setting.
+Record A's MAC and forwarding value. The last command must print one path for `arp_spoofing-simple.sh` and one for `timeout`. The helper preserves the previous forwarding setting.
 
-**Checkpoint:** The real gateway MAC differs from A's MAC. Both commands exist. If this is already a changed mapping, finish cleanup in Task 5 before proceeding.
+**Checkpoint:** The real gateway MAC differs from A's MAC. Both commands exist. If this is already a changed mapping, complete the three cleanup steps in Task 5 before proceeding.
+
+??? info "Also inspect the mapping in Explorer"
+    Open [WAGO B's host details](/network/inventory/host?node=wago-plc2b-vlan10) and expand **ARP Cache**. Find **address** `10.10.0.1` on **interface** `eth1`; compare **mac** with your gateway MAC. On [WAGO A](/network/inventory/host?node=wago-plc2a-vlan10), **Interface Details** shows the `eth1` MAC and **Network Interfaces** shows `10.10.0.11` with mask `255.0.0.0`. **Interface ether2** in the header is the switch port, not Linux `eth1`. B's header MAC identifies B itself and stays unchanged; the gateway's **ARP Cache** row is the mapping you are testing.
+
+    These are collected endpoint reports. ARP is collected about every 60 seconds; reloading shows the latest received report, not a new query. An early-stopped experiment can fall between reports, and delivery can lag. Use the terminal and capture for immediate proof; an unchanged Explorer row does not rule out interception. Missing panels: tell the instructor and continue with terminal/capture evidence.
+
+    Standalone: **Inventory → Hosts**, search the stable node name, press **Enter**, then click its name.
 
 ## Task 2: Establish the normal path
 
@@ -54,15 +61,23 @@ In Wireshark use `icmp && ip.addr == 10.10.0.12`. Wait a few seconds for the vie
 
 **Checkpoint:** The pings reply, but their unicast requests and replies normally do not cross A's switched access link. Background ARP broadcasts can still appear. If victim unicast is already present, inspect the ARP mapping and selected interface before interpreting the experiment.
 
+Read Tasks 3–5 before starting the timer. Keep A, B, the receiver and the capture ready. On the **DMZ jumphost**, prepare the marker receiver:
+
+```bash
+timeout 300 nc -l 2323
+```
+
+Leave it waiting. It exits after one connection or at most five minutes. Now switch to A. Complete the short commands in Tasks 3–4 first; inspect the recorded packets after cleanup.
+
 ## Task 3: Redirect the selected pair
 
 On **WAGO A**, run in the foreground:
 
 ```bash
-timeout -s INT 60 arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
+timeout -s INT 120 arp_spoofing-simple.sh eth1 10.10.0.12 10.10.0.1
 ```
 
-The helper targets only B and its gateway and stops automatically after 60 seconds. You can stop it earlier with **Ctrl+C**. Leave this terminal running while using B.
+The helper targets only B and its gateway and stops automatically after 120 seconds. Once you have the mapping and marker evidence, stop it earlier with **Ctrl+C**. Leave this terminal running while using B.
 
 After about five seconds, on **WAGO B**:
 
@@ -74,28 +89,22 @@ ping -c 3 2.2.2.2
 **Checkpoint:** B now associates `10.10.0.1` with A's MAC. The capture on A contains B's ICMP traffic. A packet may appear twice on A's interface as it arrives and is forwarded. ICMP redirects and some ping loss are possible; they do not invalidate the MAC and payload evidence. Ping replies alone would not prove interception.
 
 ??? info "Hint: the timer expired or nothing changed"
-    Check the helper's terminal for an error. If it has stopped, repeat the bounded command and then the victim commands. Keep the filter specific to B. Do not broaden the attack to other nodes. Exit status 124 after the timeout is normal.
+    Check the helper terminal for errors. Exit status 124 means the 120-second limit expired. If you need another attempt, complete Task 5's cleanup first. Restart the receiver from Task 2, then repeat Tasks 3–5 when ready. Keep the same three nodes and capture filter. There is no need to rush packet analysis while the helper runs.
 
 ## Task 4: Find a harmless cleartext marker
 
-While the helper is running, start a bounded listener on the **DMZ jumphost**:
-
-```bash
-timeout 45 nc -l 2323
-```
-
-Leave it waiting. On **WAGO B** send a marker, using no real credentials:
+While the helper is running and the prepared receiver is still waiting, send this marker on **WAGO B**, using no real credentials:
 
 ```bash
 printf 'LAB-ARP-DEMO\n' | nc -N -w 3 2.2.2.2 2323
 ```
 
-The receiver should print `LAB-ARP-DEMO`. In the capture, filter `tcp.port == 2323`, select a data packet, then right-click **Follow → TCP Stream**. Find the same marker. Close the stream window afterwards.
+The receiver should print `LAB-ARP-DEMO`. Record the changed neighbor mapping, then go straight to Task 5. The capture retains the packets for analysis after the helper stops.
 
-**Checkpoint:** Record a packet number containing the marker and the changed neighbor mapping. Seeing an open port alone would not establish that application data was intercepted.
+**Checkpoint:** The receiver got the marker while B's gateway mapping pointed at A. Packet evidence is checked after cleanup below.
 
 ??? info "Hint: no marker"
-    Start the listener before the sender. Repeat Task 3 if its timer expired. Use `tcp.port == 2323 && tcp.len > 0` to isolate data. If only SYN packets appear, check the listener and route rather than claiming payload capture.
+    If the receiver or helper exited, complete Task 5's cleanup, restart the receiver from Task 2 and repeat Tasks 3–5. Use `tcp.port == 2323 && tcp.len > 0` to isolate data. If only SYN packets appear, check the listener and route rather than claiming payload capture.
 
 ## Task 5: Restore and verify
 
@@ -118,6 +127,10 @@ The receiver should print `LAB-ARP-DEMO`. In the capture, filter `tcp.port == 23
 
 **Checkpoint:** No `arpspoof` process remains, forwarding equals your initial value, and B again uses the original gateway MAC with successful pings. A silent `pgrep` with exit status 1 means no matching process. If the mapping remains wrong, stop here and ask the instructor; do not leave an active interception behind.
 
+Now inspect the retained capture. Filter `tcp.port == 2323`, select a data packet and right-click **Follow → TCP Stream**. Find `LAB-ARP-DEMO`, record its packet number and close the stream window.
+
+**Checkpoint:** The receiver and captured TCP payload contain the same marker. This, together with the changed neighbor mapping, proves the interception. Seeing an open port alone would not establish that application data was intercepted.
+
 Keep the capture open for Extra 1 if desired. Otherwise close the capture and terminal tabs.
 
 ## Solution
@@ -134,6 +147,7 @@ Keep the capture open for Extra 1 if desired. Otherwise close the capture and te
 1. Apply `arp.opcode == 2 && arp.src.proto_ipv4 == 10.10.0.1`.
 2. Expand **Address Resolution Protocol** and record **Sender IP address**, **Sender MAC address** and a frame number before, during and after the experiment. If one phase is missing, label it unobserved; use your recorded neighbor table as separate evidence.
 3. Compare the claimed IP with A's known MAC. Explain why a changed mapping is stronger evidence than simply counting ARP packets.
+4. Reopen B's **ARP Cache** in Explorer. Compare the latest available row with your recorded phases. Explorer retains the latest report, not this packet timeline; label any phase it did not collect as unobserved.
 
 **Checkpoint:** Your timeline distinguishes the real gateway mapping, the forged claim and recovery. A normal gratuitous ARP is not by itself proof of an attack. [Search the ARP field reference](https://www.wireshark.org/docs/dfref/a/arp.html) for `arp.src.hw_mac` and `arp.isgratuitous`.
 
@@ -154,10 +168,11 @@ Keep the capture open for Extra 1 if desired. Otherwise close the capture and te
 
 **Checkpoint:** The route to CtrlX `10.20.0.11` is direct on `eth1` in this `/8` flat baseline. Spoofing the gateway pair does not redirect that direct neighbor mapping; the routed jumphost traffic does cross A. Both pings can succeed while taking different Ethernet paths. The `vlan20` hostname does not create a separate VLAN.
 
-Repeat **all of Task 5**, then close captures and terminals. Continue with [Exercise 3](ex3-spanning-tree.md).
+Repeat **Task 5’s three cleanup steps and its recovery checkpoint**, then close captures and terminals. This ping-only extra has no TCP marker to inspect. Continue with [Exercise 3](ex3-spanning-tree.md).
 
 ## Explore the topic
 
 - [ARP specification, RFC 826](https://www.rfc-editor.org/rfc/rfc826.html): find the receive algorithm's mapping update.
 - [arpspoof manual](https://manpages.debian.org/bullseye/dsniff/arpspoof.8.en.html): compare forwarding and target selection with the helper.
 - [Cisco Dynamic ARP Inspection](https://www.cisco.com/c/en/us/support/docs/switches/lan-switch-software/222274-troubleshoot-dynamic-arp-inspection-dai.html): identify what a switch needs to validate an ARP claim.
+- [osquery ARP table fields](https://github.com/osquery/osquery/blob/master/specs/arp_cache.table): compare the reported `address`, `mac` and `interface` with the live neighbor table.
