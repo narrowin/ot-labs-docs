@@ -41,7 +41,7 @@ Each exercise specifies which topology to use.
 
 | # | Exercise | Time | Topology | Difficulty | Link |
 |---|----------|------|----------|------------|------|
-| 1 | VLAN Discovery | 20-30 min | Both | Beginner | [Start :material-arrow-right:](ex1-vlan-discovery.md) |
+| 1 | Compare tagged and untagged traffic | 20-30 min | Current student flat baseline | Beginner | [Start :material-arrow-right:](ex1-vlan-discovery.md) |
 | 2 | ARP Spoofing Attack | 30-40 min | Both (flat easier) | Intermediate | [Start :material-arrow-right:](ex2-arp-spoofing.md) |
 | 3 | Spanning Tree Analysis | 25-35 min | Both | Intermediate | [Start :material-arrow-right:](ex3-spanning-tree.md) |
 | 4 | Link Aggregation | 20-30 min | Segmented only | Intermediate | [Start :material-arrow-right:](ex4-link-aggregation.md) |
