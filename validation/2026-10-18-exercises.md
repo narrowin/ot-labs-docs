@@ -37,6 +37,13 @@ Walkthrough environment: VM222, `ot-student-lab.int.narrowin.com`, current flat 
 - **Validation:** All four bridges reported gw as root, ID ending `09:11`. The capture decoded 42 RSTP BPDUs advertising the same root. sw-acc1's bond was a forwarding root port; sw-acc2 ether11 was physically link-ok but alternate/non-forwarding, with increasing BPDU counters. Both MkDocs builds passed.
 - **Review:** Configuration is separated from operational election state; the bond is one logical bridge port. A received frame is not mistaken for proof of forwarding through a discarding port. No topology or priority changes were made.
 
+## Exercise 4
+
+- **Plan:** Use the flat lab's actual LACP bond, bounded traffic and separate request-direction evidence; retain redundancy reasoning without interrupting the shared links.
+- **Implementation:** Named member captures and correct source endpoints, reciprocal system-ID checks, payload/hash and actor/partner extensions, standalone steps in both languages.
+- **Validation:** Both switches reported two active members, 802.3ad and layer-2-and-3 hashing. Captures showed synchronized/collecting/distributing LACP with reciprocal actor/partner identities. CtrlX requests used ether9 and WAGO requests ether10; WAGO payloads 32/128 produced tagged lengths 78/174 on the same member. Both MkDocs builds passed.
+- **Review:** WAGO B is not incorrectly used as a source behind sw-acc1. Return-direction hashing is treated separately. Counters and pings do not become a throughput or failover measurement. A manual outage trial requires an operator-approved isolated lab and was not performed here.
+
 ## Documentation checks
 
 Run from this repository with the existing environment:

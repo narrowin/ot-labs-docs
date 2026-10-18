@@ -1,217 +1,131 @@
-# Übung 4: Link-Aggregation und Lastverteilung
+# Übung 4: Datenströme durch einen LACP-Bond verfolgen
 
-**Zeitschätzung**: 20-30 Minuten  
-**Lab-Topologie**: Nur `ot-sec-segmented`  
-**Schwierigkeit**: :material-signal-cellular-2: Fortgeschritten
+**Zeit:** 25–35 Minuten. **Lab:** aktuelles studentisches `ot-sec-flat`. **Niveau:** Fortgeschritten.
 
-!!! warning "Übung noch nicht verfügbar"
-    Link-Aggregation ist derzeit in keiner Lab-Topologie konfiguriert. Diese Übung ist für eine zukünftige Lab-Version geplant.
+Weise nach, dass zwei physische Links einen aktiven LACP-Bond bilden. Finde danach das Mitglied, über das ein bestimmter Datenstrom läuft. Das aktuelle flache Lab besitzt LACP; eine separate segmentierte Topologie ist nicht nötig. Lass in diesem gemeinsam genutzten Lab alle Mitgliedsports aktiviert.
 
-## Lernziele
+**Lernziele:** LACP-Aushandlung prüfen, Verteilung von Datenströmen beobachten, den Sende-Hash erklären sowie Redundanz und benötigte Belege für einen begrenzten Umschalttest beurteilen.
 
-- LACP-Link-Aggregation-Betrieb analysieren
-- Verkehrsverteilung über gebondete Links beobachten
-- Link-Failover-Verhalten testen
-- Lastverteilungsalgorithmen verstehen
+## Vorbereitung
 
-## Voraussetzungen
+Schliesse [Übung 3](ex3-spanning-tree.md) ab. Öffne die Terminals von [sw-dist](/network/terminal?node=sw-dist) und [sw-acc1](/network/terminal?node=sw-acc1). Erzeuge Verkehr auf [WAGO A](/network/terminal?node=wago-plc2a-vlan10) und [CtrlX](/network/terminal?node=ctrlx-plc3-vlan20). Beide hängen an sw-acc1. WAGO B hängt an sw-acc2 und eignet sich deshalb nicht als zweite Quelle für diesen Bond-Test.
 
-- Übung 3 abgeschlossen (STP-Analyse)
-- Verständnis von LACP-Konzepten
-- Wireshark-Erfahrung
-- Grundlegende MikroTik-Befehle
+| Ende | Logischer Bond | Physische Mitglieder |
+| --- | --- | --- |
+| sw-dist | `bond-sw-acc1` | `ether9`, `ether10` |
+| sw-acc1 | `bond-sw-dist` | `ether11`, `ether12` |
 
-## Szenario
+Die Kabel verbinden sw-dist ether9 mit sw-acc1 ether11 sowie ether10 mit ether12. Zeichne jeweils ein Mitglied auf und wiederhole dieselben Befehle am zweiten. Die Capture-Links verwenden einen gemeinsamen Tab.
 
-Link-Aggregation kombiniert mehrere physische Links zu einem logischen Link für erhöhte Bandbreite und Redundanz. LACP (802.3ad) verhandelt Bonding dynamisch. Der Datenverkehr wird über Mitglied-Links verteilt, wobei ein Hash-Algorithmus basierend auf Quell-/Ziel-MAC, IP oder Ports verwendet wird. Das Verständnis der Funktionsweise ist wichtig für Kapazitätsplanung und Troubleshooting in OT-Netzwerken.
+??? info "Du verwendest die eigenständige Dokumentation?"
+    Suche in **Netmap** deines zugewiesenen Live-Labs nach den stabilen Switch-/Endpunktnamen oben. Wähle im Aktionsmenü **Open terminal**. Wähle für **Capture packets** auf sw-dist zuerst **ether9**, dann **ether10**, wie beschrieben. Reader-Links behalten Netzwerk und Snapshot bei und wählen Knoten/Port vor.
 
-## Aufgaben
+## Aufgabe 1: Beide Enden prüfen
 
-### Aufgabe 1: LACP-Verhandlung überprüfen
-
-1. SSH zu `sw-dist`:
-
-```bash
-ssh admin@192.168.100.12
-```
-
-!!! info "Standard-Anmeldedaten"
-    Passwort: `admin`
-
-2. LACP-Protokollbetrieb überwachen:
-
-```routeros
-/interface bonding monitor bond-sw-acc1 once
-```
-
-**Erwartete Ausgabe enthält**:
-
-- `lacp-partner-system-id` - MAC des Partner-Switches
-- `active-ports` - Anzahl aktiver Links
-- `lacp-negotiated` - True/False
-
-3. Detaillierte Bonding-Konfiguration überprüfen:
+Auf **sw-dist**:
 
 ```routeros
 /interface bonding print detail where name=bond-sw-acc1
-```
-
-**Fragen**:
-
-- Was ist der Bonding-Modus?
-- Welche physischen Interfaces sind Slaves?
-- Was ist die Transmit-Hash-Policy?
-
-### Aufgabe 2: Verkehrsverteilung beobachten
-
-1. Wireshark-Captures auf BEIDEN Bond-Mitglied-Links starten:
-   - Capture-Link `sw-dist` ether9 zu `sw-acc1`
-   - Zweites Wireshark für ether10 öffnen
-
-2. SSH zu `wago-plc2a-vlan10`:
-
-```bash
-ssh admin@192.168.100.53
-```
-
-3. Kontinuierlichen Verkehr mit variierenden Quellen generieren:
-
-```bash
-ping -f 1.1.1.1
-```
-
-Verwenden Sie `-f` (flood) für hohe Paketrate, um Verteilung zu sehen.
-
-4. Beide Wireshark-Captures beobachten
-
-**Fragen**:
-
-- Ist der Verkehr gleichmässig über beide Links verteilt?
-- Sehen Sie Verkehr auf beiden Links oder nur auf einem?
-- Was bestimmt, welcher Link für bestimmte Flows verwendet wird?
-
-### Aufgabe 3: Hash-Algorithmus testen
-
-1. Flood-Ping stoppen
-2. Verkehr von mehreren Quellen generieren:
-
-Terminal 1 - `wago-plc2a-vlan10`:
-
-```bash
-ping -i 0.2 1.1.1.1
-```
-
-Terminal 2 - `wago-plc2b-vlan10`:
-
-```bash
-ssh admin@192.168.100.54
-ping -i 0.2 1.1.1.1
-```
-
-3. Paketzähler auf Bond-Mitgliedern überprüfen:
-
-```routeros
-/interface monitor-traffic ether9,ether10
-```
-
-**Frage**: Werden verschiedene Quell-IPs auf verschiedene Links verteilt?
-
-### Aufgabe 4: Link-Failover testen
-
-1. Pings aus vorherigem Schritt weiter laufen lassen
-2. Auf `sw-dist` ein Bond-Mitglied deaktivieren:
-
-```routeros
-/interface ethernet disable ether9
-```
-
-3. Beobachten:
-   - Setzen sich Pings ohne Unterbrechung fort?
-   - Wie schnell erfolgt das Failover?
-   - Wireshark auf verbleibendem aktivem Link überprüfen
-
-4. Interface wieder aktivieren:
-
-```routeros
-/interface ethernet enable ether9
-```
-
-5. Bond-Status überprüfen:
-
-```routeros
 /interface bonding monitor bond-sw-acc1 once
 ```
 
-**Frage**: Kehren beide Links automatisch in den aktiven Zustand zurück?
+Auf **sw-acc1**:
 
-## Überprüfung
+```routeros
+/interface bonding print detail where name=bond-sw-dist
+/interface bonding monitor bond-sw-dist once
+```
 
-Erfolgsindikatoren:
+Notiere Modus, Mitglieder, Hash-Verfahren, aktive/inaktive Ports sowie lokale und Partner-System-ID.
 
-- LACP zeigt verhandelten Status
-- Beide Bond-Mitglieder aktiv
-- Verkehr auf Mitglied-Links sichtbar
-- Failover erfolgt in unter 1 Sekunde
-- Deaktivierter Link tritt automatisch wieder bei, wenn aktiviert
-- Paketzahl steigt auf beiden Interfaces
+**Kontrollpunkt:** Modus `802.3ad`, beide Mitglieder aktiv, `transmit-hash-policy=layer-2-and-3`. Jede Partner-ID entspricht der lokalen System-ID des anderen Endes. Lies die tatsächlichen IDs ab; sie müssen nicht den festen Bridge-MACs aus Übung 3 entsprechen.
 
-## Zu überlegende Fragen
+??? info "Hinweis: Bond konfiguriert, Mitglied inaktiv"
+    Stoppe den Verkehrsvergleich und zeige die Monitor-Ausgabe der Kursleitung. Konfiguration allein beweist keine erfolgreiche Aushandlung. Setze keinen Switch zurück und importiere keine Startkonfiguration erneut.
 
-1. Warum könnte Verkehr nur einen Link für einen bestimmten Flow verwenden?
-2. Was sind Vor- und Nachteile verschiedener Hash-Algorithmen?
-3. Wie vergleicht sich LACP mit statischem Bonding?
-4. Was passiert, wenn LACP-Hello-Pakete verloren gehen?
+## Aufgabe 2: LACP am ersten Mitglied untersuchen
 
-## Häufige Probleme
+[Zeichne sw-dist ether9 auf](/network/capture?node=sw-dist&interface=ether9). Wähle **Start Capture**, warte etwa zehn Sekunden und filtere `lacp` in Wireshark.
 
-- **Problem**: Verkehr verwendet nur einen Link
-  - **Lösung**: Hash-Algorithmus trifft Flow-basierte Entscheidungen. Einzelne Quelle/Ziel verwendet einen Link. Mehrere Quellen verwenden, um Verteilung zu sehen.
+Klappe **Link Aggregation Control Protocol** auf. Vergleiche die **Actor**- und **Partner**-System-IDs mit Aufgabe 1. Prüfe die Zustandsflags **Synchronization**, **Collecting** und **Distributing**.
 
-- **Problem**: Verkehr auf Interface kann nicht überwacht werden
-  - **Lösung**: Verwenden Sie Befehlsformat `/interface monitor-traffic ether9,ether10`
+**Kontrollpunkt:** LACP-Frames sind sichtbar. Ein gesund ausgehandeltes Mitglied meldet synchronisiert, empfangend und sendend. Die Ethernet-Zieladresse ist `01:80:c2:00:00:02`. Notiere eine Frame-Nummer.
 
-- **Problem**: Failover dauert mehrere Sekunden
-  - **Lösung**: Dies ist normal für LACP. RSTP muss ebenfalls neu konvergieren.
+## Aufgabe 3: Zwei kleine Datenströme zuordnen
 
----
+Lass den ersten Mitschnitt laufen. Auf **WAGO A**:
+
+```bash
+ping -c 4 10.10.0.1
+```
+
+Auf **CtrlX**:
+
+```bash
+ping -c 4 10.10.0.1
+```
+
+Warte einige Sekunden und filtere nur Anfragen:
+
+```wireshark
+icmp.type == 8 && (ip.src == 10.10.0.11 || ip.src == 10.20.0.11)
+```
+
+Notiere die Zahl der Anfragen pro Quelle und das aufgezeichnete Mitglied. Schliesse den ersten Capture-Tab. [Zeichne sw-dist ether10 auf](/network/capture?node=sw-dist&interface=ether10), starte den Mitschnitt und wiederhole beide Ping-Befehle und den Filter.
+
+**Kontrollpunkt:** Bei stabilem Bond bleiben die Anfragen einer Quelle normalerweise auf einem Mitglied. Die Quellen können verschiedene oder dasselbe Mitglied treffen. Erwarte keine gleiche Verteilung und keinen Wechsel nach jedem Paket. Trenne Anfragen und Antworten: Jeder sendende Switch trifft seine eigene Auswahl.
+
+## Aufgabe 4: Raten richtig einordnen
+
+Auf **sw-dist**:
+
+```routeros
+/interface monitor-traffic ether9,ether10 once
+/interface bridge port monitor [find interface=bond-sw-acc1] once
+```
+
+Vergleiche die momentanen Raten mit deinem gefilterten Testverkehr. Warum können beide Zähler durch Hintergrundverkehr steigen, obwohl dein Datenstrom nur ein Mitglied nutzt?
+
+**Kontrollpunkt:** Der Bond leitet als ein Bridge-Port weiter. Mehrere Datenströme können die Gesamtkapazität nutzen; diese Pings messen aber keinen Durchsatz. Ein einzelner Datenstrom erhält nicht garantiert die doppelte Link-Bandbreite. Aktive Mitglieder messen auch keine Umschaltzeit. Diese Übung verspricht weder unterbrechungsfreie noch subsekundenschnelle Umschaltung.
+
+Lies `link-monitoring`, `mii-interval` und `lacp-rate` in der Bond-Konfiguration. Erkläre den erwarteten Unterschied beim Verlust eines Mitglieds beziehungsweise beider. Ein verbleibendes Mitglied kann den logischen Bond ohne RSTP-Topologieänderung weiterleiten lassen. Der Verlust des ganzen Bonds kann einen alternativen RSTP-Weg erfordern. Lege für einen von der Kursleitung genehmigten isolierten Umschalttest begrenzten Ping, aktive Mitglieder vorher/während/nachher, beobachteten Verlust und Wiederherstellung beider Mitglieder fest. Leite aus Timern keine gemessene Ausfallzeit ab und deaktiviere keine Links im geteilten Lab.
+
+Schliesse Capture und Terminals, sofern du kein Extra bearbeitest.
 
 ## Lösung
 
-??? success "Zum Anzeigen der Lösung klicken"
-    ### Verkehrsverteilungsbeobachtung
+??? success "Vergleiche deine Belege"
+    Der Bond ist an beiden Enden aktiv; die gegenseitigen System-IDs stimmen überein. LACP beschreibt die Eignung der Mitglieder, der Sende-Hash wählt das Datenmitglied. Die aktuelle Einstellung verwendet MAC- und IP-Informationen. Bei unverändertem Bond bleiben Anfragen desselben Endpunktpaars auf einem Mitglied. Eine zusätzliche Quelle kann anders zugeordnet werden, garantiert aber keine gleichmässige Verteilung.
 
-    Mit einzelner Quell-Ping verwendet Verkehr typischerweise konsistent einen Link aufgrund des Hash-Algorithmus, der Quell-/Ziel-IPs verwendet.
+    Beim Durchgang liefen CtrlX-Anfragen über sw-dist ether9 und WAGO-A-Anfragen über ether10. Notiere dein Ergebnis; diese Zuordnung ist nicht dauerhaft garantiert. RSTP betrachtet den logischen Bond, LACP dessen physische Mitglieder.
 
-    Mit mehreren Quellen (verschiedene Quell-IPs) verteilt sich Verkehr über Links.
+## Extra 1: Ändert die Paketgrösse das Mitglied?
 
-    Hash-Policy `layer-2-and-3` verwendet Quell-/Ziel-MAC- und IP-Adressen.
+**Optional, 10 Minuten.** Sage die Wirkung einer anderen Nutzlast bei `layer-2-and-3` voraus.
 
-    ### Paketzahl-Überprüfung
+1. Zeichne ether9 auf und führe auf **WAGO A** aus:
 
-    ```routeros
-    /interface monitor-traffic ether9,ether10
+    ```bash
+    ping -c 2 -s 32 10.10.0.1
+    ping -c 2 -s 128 10.10.0.1
     ```
 
-    Zeigt rx-packets-per-second und tx-packets-per-second für jedes Interface.
+2. Schliesse den Mitschnitt, wiederhole ihn an ether10 und filtere `icmp.type == 8 && ip.src == 10.10.0.11`.
+3. Vergleiche Mitglied und Frame-Länge für beide Grössen.
 
-    Mit diversem Verkehr zeigen beide Interfaces steigende Paketzahlen.
+**Kontrollpunkt:** Die Nutzlast ändert die Frame-Länge, aber nicht die MAC-/IP-Eingaben dieses Hash-Verfahrens. Beide Grössen sollten bei stabilem Bond dasselbe Anfragemitglied verwenden. Topologie- oder Mitgliedszustandsänderungen machen den Vergleich ungültig. Vergleiche bei gleicher Nutzlast mit dem Access-Frame aus Übung 1, um das vier Byte lange VLAN-Tag zu finden.
 
-    ### Failover-Test
+## Extra 2: Beide Enden genauer als nur anhand einer grünen Anzeige prüfen
 
-    Ein Mitglied deaktivieren:
+**Optional, 10 Minuten.** Verwende beide Monitor-Ausgaben und je ein LACP-Paket von beiden Mitgliedern.
 
-    ```
-    /interface ethernet disable ether9
-    ```
+1. Erstelle eine Tabelle mit lokaler System-ID, Partner-ID, Mitglied, Actor-Key und Partner-Key.
+2. Prüfe die gegenseitigen System-IDs. Mitglieder desselben Aggregats sollen auf einem Switch einen konsistenten Actor-Key ankündigen. Die Gegenseite hat ihren eigenen Key; lokale und entfernte Key-Nummern müssen allgemein nicht gleich sein.
+3. Prüfe Synchronization, Collecting und Distributing. Wie könnte eine falsche Partner-ID ein falsch verbundenes Kabel verraten, obwohl Ethernet Link-up meldet?
 
-    Pings setzen sich ohne Unterbrechung fort. Aller Verkehr wechselt zu ether10.
+**Kontrollpunkt:** Du unterscheidest physischen Link, LACP-Einigung und tatsächliche Datenweiterleitung anhand dreier Belege. Interface-Änderungen sind nicht nötig. Schliesse die Werkzeug-Tabs. Weiter mit [Übung 5](ex5-reconnaissance.md).
 
-    Wieder aktivieren:
+## Weiterforschen
 
-    ```
-    /interface ethernet enable ether9
-    ```
-
-    LACP verhandelt neu (dauert einige Sekunden), dann sind beide Links wieder aktiv.
-
-    Failover erfolgt in Subsekunden für bestehende Flows.
+- [MikroTik Bonding und Sende-Hashes](https://help.mikrotik.com/docs/spaces/ROS/pages/8323193/Bonding): Suche `layer-2-and-3` und die Monitoring-Beispiele.
+- [Wireshark-LACP-Felder](https://www.wireshark.org/docs/dfref/l/lacp.html): Suche `lacp.actor.sysid`, `lacp.actor.key` und `lacp.actor.state.collecting`.
