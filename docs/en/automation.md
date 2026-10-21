@@ -10,7 +10,7 @@ For sw-acc1 ether2, write the desired facts separately from your observations:
 
 | Intended fact | Evidence to compare |
 | --- | --- |
-| The port serves `wago-plc2a-vlan10` | Port description, topology and endpoint identity |
+| The port serves `wago-plc2a` | Port description, topology and endpoint identity |
 | Untagged endpoint traffic enters VLAN 10 | PVID and actual untagged membership |
 | The path carries VLAN 10 to the gateway | Uplink membership and tagged ping capture |
 | The application is available | A successful, approved application request |

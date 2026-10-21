@@ -6,11 +6,11 @@ Use your assigned, already-running student LNE. Select the live network. Tool li
 
 | Action | Destination |
 | --- | --- |
-| [terminal on `wago-plc2a-vlan10`](/network/terminal?node=wago-plc2a-vlan10) | Main observation source, `10.10.0.11/8` |
-| [terminal on `wago-plc2b-vlan10`](/network/terminal?node=wago-plc2b-vlan10) | Second source, `10.10.0.12/8` |
+| [terminal on `wago-plc2a`](/network/terminal?node=wago-plc2a-vlan10) | Main observation source, `10.10.0.11/8` |
+| [terminal on `wago-plc2b`](/network/terminal?node=wago-plc2b-vlan10) | Second source, `10.10.0.12/8` |
 | [`proxmox-jumphost` terminal](/network/terminal?node=proxmox-jumphost) | Routed source, `2.2.2.2/24` |
 | [Gateway-uplink capture](/network/capture?node=sw-dist&interface=ether12) | Tagged VLAN 10 traffic |
-| [access-port capture for `wago-plc2a-vlan10`](/network/capture?node=sw-acc1&interface=ether2) | Untagged endpoint traffic |
+| [access-port capture for `wago-plc2a`](/network/capture?node=sw-acc1&interface=ether2) | Untagged endpoint traffic |
 | [VLAN view](/network/?viewMode=vlan&vlanIds=10) | VLAN 10 in the selected network/snapshot |
 | [Spanning-tree view](/network/?viewMode=spanning-tree&stpInstanceId=0&dataType=All) | Instance 0, all data |
 
@@ -20,11 +20,11 @@ Wait for **Connected** in the terminal. Start a capture before generating traffi
 
 | Runtime | Reader link |
 | --- | --- |
-| `wago-plc2a-vlan10` | [WebVisu](/network/webvisu?node=wago-plc2a-vlan10) |
-| `wago-plc2b-vlan10` | Not currently offered by the lab's approved browser actions; use `wago-plc2a-vlan10` for the visualization task |
-| `ctrlx-plc3-vlan20` | [WebVisu](/network/webvisu?node=ctrlx-plc3-vlan20) |
-| `schneider-plc4-vlan30` | [WebVisu](/network/webvisu?node=schneider-plc4-vlan30) |
-| `abb-800xa-vlan40` | [WebVisu](/network/webvisu?node=abb-800xa-vlan40) |
+| `wago-plc2a` | [WebVisu](/network/webvisu?node=wago-plc2a-vlan10) |
+| `wago-plc2b` | Not currently offered by the lab's approved browser actions; use `wago-plc2a` for the visualization task |
+| `ctrlx-plc3` | [WebVisu](/network/webvisu?node=ctrlx-plc3-vlan20) |
+| `schneider-plc4` | [WebVisu](/network/webvisu?node=schneider-plc4-vlan30) |
+| `abb-800xa` | [WebVisu](/network/webvisu?node=abb-800xa-vlan40) |
 
 Only approved, responding runtimes in the live network are offered. In standalone documentation open the PLC's WebVisu action in LNE. Direct `http://<data-IP>:8080/webvisu.htm` is an inside-lab address; it is not a laptop port-forwarding instruction.
 

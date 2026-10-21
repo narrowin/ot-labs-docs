@@ -16,7 +16,7 @@ Die Kursleitung hat Appliance und Lab-Netz bereits bereitgestellt. Dein Laptop b
 | Objekt | Bedeutung | Lab-Beispiel |
 | --- | --- | --- |
 | Image | Verpackte Anwendungsdateien und Vorgaben zum Erstellen eines Containers | Software für einen SPS-Simulator |
-| Container | Laufende Instanz mit eigenen Prozessen, Dateisystemansicht und Netzwerkschnittstellen | Der Lab-Knoten `wago-plc2a-vlan10` |
+| Container | Laufende Instanz mit eigenen Prozessen, Dateisystemansicht und Netzwerkschnittstellen | Der Lab-Knoten `wago-plc2a` |
 | Persistente Daten | Dateien in einem Volume oder eingebundenen Host-Verzeichnis ausserhalb der beschreibbaren Container-Schicht | Gespeicherter Geräte- oder Anwendungszustand |
 
 Ein Image ist ein Ausgangspunkt. Ein laufender Container besitzt zusätzlich aktuelle Prozesse, Verbindungen und Konfiguration. Ein Neustart stellt den Ausgangszustand der Übung nicht automatisch wieder her. Persistente Daten können auch das Neuerstellen eines Containers überleben. [Docker erklärt die Volume-Persistenz](https://docs.docker.com/engine/storage/volumes/).
@@ -43,7 +43,7 @@ In der [Netzwerktabelle der Laboranleitung](lab.md#die-beiden-netzebenen-versteh
 
 | Terminal | Ausführungskontext |
 | --- | --- |
-| **Open terminal** bei einem Knoten | Im benannten Gerät: Linux auf `wago-plc2a-vlan10`, RouterOS auf Switch oder Gateway |
+| **Open terminal** bei einem Knoten | Im benannten Gerät: Linux auf `wago-plc2a`, RouterOS auf Switch oder Gateway |
 | Appliance-Konsole der Kursleitung | Auf dem Host, der Docker, Lab-Knoten und Plattformdienste betreibt |
 
 Die Übungen nennen das Zielgerät über jedem Befehlsblock. Behalte dessen Namen beim Arbeiten im Blick. Wird ein Terminal getrennt, notiere Knoten und Fehler vor einem Neustart: Dieser kann Diagnosebelege und temporäre Konfiguration in deinem Lab löschen.
@@ -58,13 +58,13 @@ Laufende Lab-Container auflisten:
 docker ps --filter label=containerlab=ot-sec-flat --format 'table {{.Names}}\t{{.Status}}'
 ```
 
-Finde `clab-ot-sec-flat-wago-plc2a-vlan10` und ordne ihn `wago-plc2a-vlan10` in Netmap zu. Prüfe dann ausschliesslich dessen Namen und Image:
+Finde `clab-ot-sec-flat-wago-plc2a-vlan10` und ordne ihn `wago-plc2a` in Netmap zu. Prüfe dann ausschliesslich dessen Namen und Image:
 
 ```bash
 docker inspect --format '{{.Name}} {{.Config.Image}}' clab-ot-sec-flat-wago-plc2a-vlan10
 ```
 
-**Kontrollpunkt:** Du unterscheidest den Laufstatus des Containers, sein verpacktes Image und das Anwendungsverhalten. Ein erfolgreicher Ping von `wago-plc2a-vlan10` oder eine WebVisu-Antwort liefert andere Belege als Dockers Status `Up`.
+**Kontrollpunkt:** Du unterscheidest den Laufstatus des Containers, sein verpacktes Image und das Anwendungsverhalten. Ein erfolgreicher Ping von `wago-plc2a` oder eine WebVisu-Antwort liefert andere Belege als Dockers Status `Up`.
 
 ## Was passiert mit dem Zustand?
 

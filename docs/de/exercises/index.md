@@ -2,11 +2,11 @@
 
 ## Anlagenübersicht und SPS-Namen
 
-- **PLC1**: `abb-800xa-vlan40`
-- **PLC2A**: `wago-plc2a-vlan10`
-- **PLC2B**: `wago-plc2b-vlan10`
-- **PLC3**: `ctrlx-plc3-vlan20`
-- **PLC4**: `schneider-plc4-vlan30`
+- **PLC1**: `abb-800xa`
+- **PLC2A**: `wago-plc2a`
+- **PLC2B**: `wago-plc2b`
+- **PLC3**: `ctrlx-plc3`
+- **PLC4**: `schneider-plc4`
 
 ![Übersicht der Wasseraufbereitung aus der Lab-Visualisierung](../img/water-treatment-overview.png)
 
@@ -41,7 +41,7 @@ Werkzeug-Links sind für die Übungsansicht in Network Explorer gedacht. Öffne 
 
 ## Verbindung zum Kurs
 
-Die Kursanlage ist ein Beispiel zur Wasseraufbereitung. `abb-800xa-vlan40` übernimmt die Leitfunktion, `wago-plc2a-vlan10` und `wago-plc2b-vlan10` die Aufbereitungsfunktionen und `ctrlx-plc3-vlan20` die Pumpen. `schneider-plc4-vlan30` umfasst auch Prozess- und Entsorgungsfunktionen. Dies sind die Lehrrollen des Handouts. Prüfe einen Netzwerkfluss, bevor du ihn als belegte Steuerungsabhängigkeit bezeichnest.
+Die Kursanlage ist ein Beispiel zur Wasseraufbereitung. `abb-800xa` übernimmt die Leitfunktion, `wago-plc2a` und `wago-plc2b` die Aufbereitungsfunktionen und `ctrlx-plc3` die Pumpen. `schneider-plc4` umfasst auch Prozess- und Entsorgungsfunktionen. Dies sind die Lehrrollen des Handouts. Prüfe einen Netzwerkfluss, bevor du ihn als belegte Steuerungsabhängigkeit bezeichnest.
 
 | Thema im Kurshandout | Lab-Ergebnis |
 | --- | --- |

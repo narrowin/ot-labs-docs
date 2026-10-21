@@ -2,11 +2,11 @@
 
 ## Plant overview and PLC names
 
-- **PLC1**: `abb-800xa-vlan40`
-- **PLC2A**: `wago-plc2a-vlan10`
-- **PLC2B**: `wago-plc2b-vlan10`
-- **PLC3**: `ctrlx-plc3-vlan20`
-- **PLC4**: `schneider-plc4-vlan30`
+- **PLC1**: `abb-800xa`
+- **PLC2A**: `wago-plc2a`
+- **PLC2B**: `wago-plc2b`
+- **PLC3**: `ctrlx-plc3`
+- **PLC4**: `schneider-plc4`
 
 ![Water-treatment process overview from the lab visualization](../img/water-treatment-overview.png)
 
@@ -41,7 +41,7 @@ Tool links are designed for the Network Explorer reader. In this published docum
 
 ## Connect the work to the course
 
-The course plant is a water-treatment example. `abb-800xa-vlan40` provides supervision; `wago-plc2a-vlan10` and `wago-plc2b-vlan10` control treatment functions; `ctrlx-plc3-vlan20` controls pumps; `schneider-plc4-vlan30` also spans process and disposal functions. Treat these as the handout's teaching roles. Verify a network flow before calling it a proven control dependency.
+The course plant is a water-treatment example. `abb-800xa` provides supervision; `wago-plc2a` and `wago-plc2b` control treatment functions; `ctrlx-plc3` controls pumps; `schneider-plc4` also spans process and disposal functions. Treat these as the handout's teaching roles. Verify a network flow before calling it a proven control dependency.
 
 | Course handout topic | Lab result |
 | --- | --- |

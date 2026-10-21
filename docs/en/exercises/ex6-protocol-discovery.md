@@ -16,12 +16,12 @@ A **protocol** defines the messages applications exchange. A Modbus **register**
 
 ## Before you start
 
-Open [`wago-plc2b-vlan10`'s terminal](/network/terminal?node=wago-plc2b-vlan10) for the client commands and [`wago-plc2a-vlan10`'s terminal](/network/terminal?node=wago-plc2a-vlan10) for local listener inspection. The target is `wago-plc2a-vlan10` `10.10.0.11`; `wago-plc2b-vlan10` is `10.10.0.12`.
+Open [`wago-plc2b`'s terminal](/network/terminal?node=wago-plc2b-vlan10) for the client commands and [`wago-plc2a`'s terminal](/network/terminal?node=wago-plc2a-vlan10) for local listener inspection. The target is `wago-plc2a` `10.10.0.11`; `wago-plc2b` is `10.10.0.12`.
 
-[Open `wago-plc2a-vlan10`'s data-port capture](/network/capture?node=wago-plc2a-vlan10&interface=eth1) and choose **Start Capture**. Keep it running through the main tasks. Use the exercise title to read beside the capture.
+[Open `wago-plc2a`'s data-port capture](/network/capture?node=wago-plc2a-vlan10&interface=eth1) and choose **Start Capture**. Keep it running through the main tasks. Use the exercise title to read beside the capture.
 
 ??? info "Using standalone documentation?"
-    Open your assigned live lab's **Netmap** and search for `wago-plc2a-vlan10` and `wago-plc2b-vlan10`. Use **Open terminal** for the client/server checks. On `wago-plc2a-vlan10` use **Capture packets**, interface **eth1**, or **Open WebVisu** for the visualization. Reader links make those selections and retain network/snapshot; only approved responding WebVisu runtimes in the live view are available.
+    Open your assigned live lab's **Netmap** and search for `wago-plc2a` and `wago-plc2b`. Use **Open terminal** for the client/server checks. On `wago-plc2a` use **Capture packets**, interface **eth1**, or **Open WebVisu** for the visualization. Reader links make those selections and retain network/snapshot; only approved responding WebVisu runtimes in the live view are available.
 
 ## Task 1: Discover before probing
 
@@ -31,11 +31,11 @@ Try `modbus` and `pn_dcp` separately. For one message, record source, destinatio
 
 **Checkpoint:** The baseline has background Modbus traffic and lab-generated PROFINET DCP Identify messages. Background Modbus can include reads and writes from other lab applications; observing them does not mean you issued them. If a protocol is absent in your observation window, record “not observed”, not “not installed”.
 
-Before generating your own traffic, find one background request and its response if present. Record the client, server and function. In the course plant, `abb-800xa-vlan40` is the supervisory system; `wago-plc2a-vlan10` and `wago-plc2b-vlan10` are the treatment-controller endpoints. Verify the actual source against Netmap; do not assume every Modbus client is `abb-800xa-vlan40`. Your `wago-plc2b-vlan10` → `wago-plc2a-vlan10` read below is a diagnostic transaction, not proof of the plant's normal control relationship. An unexplained write needs an owner and purpose, not automatic blocking.
+Before generating your own traffic, find one background request and its response if present. Record the client, server and function. In the course plant, `abb-800xa` is the supervisory system; `wago-plc2a` and `wago-plc2b` are the treatment-controller endpoints. Verify the actual source against Netmap; do not assume every Modbus client is `abb-800xa`. Your `wago-plc2b` → `wago-plc2a` read below is a diagnostic transaction, not proof of the plant's normal control relationship. An unexplained write needs an owner and purpose, not automatic blocking.
 
 ## Task 2: Make and trace one Modbus read
 
-On **`wago-plc2b-vlan10`**, check the installed tool and run exactly this command:
+On **`wago-plc2b`**, check the installed tool and run exactly this command:
 
 ```bash
 command -v mbpoll
@@ -53,7 +53,7 @@ In Wireshark use `modbus && ip.addr == 10.10.0.12` to separate your request from
 
 ## Task 3: Verify HTTP and view the live application
 
-On **`wago-plc2b-vlan10`**:
+On **`wago-plc2b`**:
 
 ```bash
 curl -sS --max-time 5 -D - -o /dev/null http://10.10.0.11:8080/webvisu.htm
@@ -61,13 +61,13 @@ curl -sS --max-time 5 -D - -o /dev/null http://10.10.0.11:8080/webvisu.htm
 
 In Wireshark apply `http.request && ip.src == 10.10.0.12`. Find the GET path, then inspect its response with `http && ip.addr == 10.10.0.12`.
 
-[Open `wago-plc2a-vlan10`'s WebVisu](/network/webvisu?node=wago-plc2a-vlan10). Observe the page and record a displayed value or status twice, a few seconds apart, without pressing its controls. A steady process value is valid. Close the visualization afterwards.
+[Open `wago-plc2a`'s WebVisu](/network/webvisu?node=wago-plc2a-vlan10). Observe the page and record a displayed value or status twice, a few seconds apart, without pressing its controls. A steady process value is valid. Close the visualization afterwards.
 
-**Checkpoint:** The direct request returns HTTP 200 and the trace contains GET `/webvisu.htm`. The visualization renders process controls/status and continues exchanging application data. Stable values alone do not establish a frozen page. Browser-proxied WebVisu and `wago-plc2b-vlan10`'s direct request have different source paths; do not expect the browser request to originate from `wago-plc2b-vlan10`.
+**Checkpoint:** The direct request returns HTTP 200 and the trace contains GET `/webvisu.htm`. The visualization renders process controls/status and continues exchanging application data. Stable values alone do not establish a frozen page. Browser-proxied WebVisu and `wago-plc2b`'s direct request have different source paths; do not expect the browser request to originate from `wago-plc2b`.
 
 ## Task 4: Distinguish listeners, protocols and security
 
-On **`wago-plc2a-vlan10`**:
+On **`wago-plc2a`**:
 
 ```bash
 ss -lnt
@@ -76,7 +76,7 @@ ss -lnu
 
 Record the listening addresses and ports. This baseline includes TCP 502, 4840, 8080 and 11740, plus CODESYS UDP 1740.
 
-On **`wago-plc2b-vlan10`**, check the TCP connection to port 4840:
+On **`wago-plc2b`**, check the TCP connection to port 4840:
 
 ```bash
 nc -vz -w 3 10.10.0.11 4840
@@ -87,7 +87,7 @@ Filter the capture with `ip.addr == 10.10.0.12 && tcp.port == 4840`. Find the SY
 | Check | What the result establishes |
 | --- | --- |
 | Local listener on TCP 4840 | A service is listening on that address and port |
-| `wago-plc2b-vlan10`'s TCP connection succeeds | That listener is reachable from `wago-plc2b-vlan10` |
+| `wago-plc2b`'s TCP connection succeeds | That listener is reachable from `wago-plc2b` |
 | Decoded Modbus request and response | The requested Modbus read was processed |
 | HTTP request and response, plus live WebVisu | The web application responds; inspect ongoing exchanges for live updates |
 | OPC UA authentication or encryption | Not checked by this TCP connection |
@@ -109,7 +109,7 @@ For Modbus, HTTP and OPC UA, record source → target, service, actual message/r
 
 ## Extra 1: Check an HMI register mapping
 
-**Optional, 10 minutes.** A replacement HMI labels the first register “0”; the maintenance sheet calls it “1”. Determine whether that alone means the HMI reads the wrong process value. Start a fresh data-port capture on `wago-plc2a-vlan10` if needed. On **`wago-plc2b-vlan10`**, run these two reads:
+**Optional, 10 minutes.** A replacement HMI labels the first register “0”; the maintenance sheet calls it “1”. Determine whether that alone means the HMI reads the wrong process value. Start a fresh data-port capture on `wago-plc2a` if needed. On **`wago-plc2b`**, run these two reads:
 
 ```bash
 mbpoll -m tcp -a 1 -t 4 -r 1 -c 2 -1 -o 2 10.10.0.11
@@ -122,7 +122,7 @@ Filter `modbus && ip.addr == 10.10.0.12`. Compare the starting addresses and qua
 
 ## Extra 2: Explain why remote device discovery can fail
 
-**Optional, 10 minutes.** A remote engineer can reach a PLC by IP but cannot find it with local PROFINET discovery. Would opening another TCP port solve that? In `wago-plc2a-vlan10`'s capture apply `pn_dcp`. Select an Identify message and inspect its Ethernet destination, EtherType and DCP service fields. Use [the DCP field reference](https://www.wireshark.org/docs/dfref/p/pn_dcp.html) to find `pn_dcp.service_id` and the station-name field.
+**Optional, 10 minutes.** A remote engineer can reach a PLC by IP but cannot find it with local PROFINET discovery. Would opening another TCP port solve that? In `wago-plc2a`'s capture apply `pn_dcp`. Select an Identify message and inspect its Ethernet destination, EtherType and DCP service fields. Use [the DCP field reference](https://www.wireshark.org/docs/dfref/p/pn_dcp.html) to find `pn_dcp.service_id` and the station-name field.
 
 Now try `pn_dcp && ip` and compare it with `pn_dcp` alone.
 

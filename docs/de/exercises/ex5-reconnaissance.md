@@ -2,13 +2,13 @@
 
 **Zeitbedarf:** 35–45 Minuten. **Lab:** dein eigenes `ot-sec-flat`-Lab. **Niveau:** angeleitete praktische Übung.
 
-Prüfe, welche Ziele aus der DMZ erreichbar sind, und dokumentiere die Ergebnisse mit Belegen. Begrenze die Erkennung auf die vier genannten Lab-IPs und die Dienstprüfung auf `wago-plc2a-vlan10`. Breite Subnetz-Scans, Passwortversuche und Softwareinstallation sind nicht nötig.
+Prüfe, welche Ziele aus der DMZ erreichbar sind, und dokumentiere die Ergebnisse mit Belegen. Begrenze die Erkennung auf die vier genannten Lab-IPs und die Dienstprüfung auf `wago-plc2a`. Breite Subnetz-Scans, Passwortversuche und Softwareinstallation sind nicht nötig.
 
 **Lernziele:** Den Ausgangspunkt des Fernzugriffs bestimmen, begrenzte Lab-Ziele erkennen, erreichbare Dienste identifizieren, Beobachtungen von Schwachstellen unterscheiden und einen reproduzierbaren Befund mit Empfehlungen schreiben.
 
 ## Dein Auftrag zum Fernzugriff
 
-Ein Lieferant braucht für eine vereinbarte Diagnose Zugang zur WebVisu von `wago-plc2a-vlan10`. Der Anlagenverantwortliche möchte wissen, ob der bestehende `proxmox-jumphost` auch Engineering- oder Steuerungsdienste erreicht, die dafür nicht nötig sind. Prüfe die tatsächliche Erreichbarkeit und formuliere eine Empfehlung für den benötigten Zugriff.
+Ein Lieferant braucht für eine vereinbarte Diagnose Zugang zur WebVisu von `wago-plc2a`. Der Anlagenverantwortliche möchte wissen, ob der bestehende `proxmox-jumphost` auch Engineering- oder Steuerungsdienste erreicht, die dafür nicht nötig sind. Prüfe die tatsächliche Erreichbarkeit und formuliere eine Empfehlung für den benötigten Zugriff.
 
 Eine **DMZ** ist eine Netzwerkzone zwischen Vertrauensbereichen. Ein **`proxmox-jumphost`** ist ein zwischengeschalteter Rechner für den Zugriff auf andere Systeme. Seine Bezeichnung allein sagt nichts darüber aus, welche Verbindungen erlaubt sind. Ein TCP-**Port** bezeichnet einen Dienst-Endpunkt. Eine erfolgreiche Verbindung belegt die Erreichbarkeit des Dienstes. Sie sagt nichts darüber aus, ob jemand sich anmelden oder den Prozess verändern darf.
 
@@ -16,19 +16,19 @@ Dieses Szenario umfasst ausschliesslich die genannten Simulatorziele. Stimme bei
 
 ## Vorbereitung
 
-Öffne das konfigurierte [`proxmox-jumphost`-Terminal](/network/terminal?node=proxmox-jumphost). Alle Hauptaufgaben laufen dort. Finde das Ziel und seinen Gateway-Weg mit der [Suche nach `wago-plc2a-vlan10` in Netmap](/network/?search=wago-plc2a-vlan10).
+Öffne das konfigurierte [`proxmox-jumphost`-Terminal](/network/terminal?node=proxmox-jumphost). Alle Hauptaufgaben laufen dort. Finde das Ziel und seinen Gateway-Weg mit der [Suche nach `wago-plc2a` in Netmap](/network/?search=wago-plc2a-vlan10).
 
 | Ziel | Rolle |
 | --- | --- |
 | `10.10.0.1` | OT-Gateway |
-| `10.10.0.11` | `wago-plc2a-vlan10`, Ziel der Dienstprüfung |
-| `10.10.0.12` | `wago-plc2b-vlan10` |
-| `10.20.0.11` | `ctrlx-plc3-vlan20` |
+| `10.10.0.11` | `wago-plc2a`, Ziel der Dienstprüfung |
+| `10.10.0.12` | `wago-plc2b` |
+| `10.20.0.11` | `ctrlx-plc3` |
 
 Diese IPs sind die Ziele dieser Übung innerhalb deines Labs.
 
 ??? info "Du verwendest die eigenständige Dokumentation?"
-    Öffne **Netmap** deines zugewiesenen Live-Labs, suche **proxmox-jumphost** und wähle im Aktionsmenü **Open terminal**. Wähle für Extra 1 **wago-plc2b-vlan10**. Wähle für Extra 2 **wago-plc2a-vlan10**, **Capture packets**, Interface **eth1**. Links in der Übungsansicht behalten Netzwerk und Snapshot bei und wählen diese Ziele automatisch.
+    Öffne **Netmap** deines zugewiesenen Live-Labs, suche **proxmox-jumphost** und wähle im Aktionsmenü **Open terminal**. Wähle für Extra 1 **wago-plc2b**. Wähle für Extra 2 **wago-plc2a**, **Capture packets**, Interface **eth1**. Links in der Übungsansicht behalten Netzwerk und Snapshot bei und wählen diese Ziele automatisch.
 
 ## Aufgabe 1: Den eigenen Ausgangspunkt bestimmen
 
@@ -40,7 +40,7 @@ ip route get 10.10.0.11
 command -v nmap curl
 ```
 
-**Kontrollpunkt:** `proxmox-jumphost` hat Datenadresse `2.2.2.2/24`. Die Route zu `wago-plc2a-vlan10` verwendet Gateway `2.2.2.1`, Interface `eth1` und Quelladresse `2.2.2.2`. Das Management-Interface ist ein separater Weg. Notiere die tatsächlich gewählte Route zum Ziel.
+**Kontrollpunkt:** `proxmox-jumphost` hat Datenadresse `2.2.2.2/24`. Die Route zu `wago-plc2a` verwendet Gateway `2.2.2.1`, Interface `eth1` und Quelladresse `2.2.2.2`. Das Management-Interface ist ein separater Weg. Notiere die tatsächlich gewählte Route zum Ziel.
 
 ## Aufgabe 2: Nur die genannten Hosts erkennen
 
@@ -103,13 +103,13 @@ Empfiehl, welche Quelle welches Ziel über welchen Dienst erreichen soll. Benenn
 ## Lösung
 
 ??? success "Vergleiche deinen Befund"
-    Der `proxmox-jumphost` routet über `2.2.2.1` ins flache OT-Netz. Die vier geprüften Ziele antworten. `wago-plc2a-vlan10` akzeptiert im Ausgangszustand TCP auf 22, 502, 4840 und 8080. Die HTTP-Antwort bestätigt eine Anwendung auf 8080.
+    Der `proxmox-jumphost` routet über `2.2.2.1` ins flache OT-Netz. Die vier geprüften Ziele antworten. `wago-plc2a` akzeptiert im Ausgangszustand TCP auf 22, 502, 4840 und 8080. Die HTTP-Antwort bestätigt eine Anwendung auf 8080.
 
     Ein tragfähiger Befund lautet: «Die DMZ-Quelle kann diese OT-Dienste erreichen; notwendige Verbindungen bestätigen und unnötige Verbindungen unterbinden.» Er lautet nicht «alle SPS sind verwundbar». `open`, `closed` und `filtered` beschreiben die Sicht dieses Scans, keine Sicherheitsbewertung.
 
 ## Extra 1: Zwei Ausgangspunkte vergleichen
 
-**Optional, 10 Minuten.** Wiederhole zuerst auf dem **`proxmox-jumphost`**, danach im [Terminal von `wago-plc2b-vlan10`](/network/terminal?node=wago-plc2b-vlan10):
+**Optional, 10 Minuten.** Wiederhole zuerst auf dem **`proxmox-jumphost`**, danach im [Terminal von `wago-plc2b`](/network/terminal?node=wago-plc2b-vlan10):
 
 ```bash
 ip route get 10.10.0.11
@@ -118,11 +118,11 @@ nmap -n -sT -Pn -p22,8080 --max-retries 1 --host-timeout 10s --scan-delay 100ms 
 
 Erstelle zwei Tabellenzeilen mit Quelle, nächstem Hop und Portzuständen.
 
-**Kontrollpunkt:** Beide Ports sind im Ausgangszustand von beiden Quellen erreichbar. `wago-plc2b-vlan10` erreicht `wago-plc2a-vlan10` direkt über `eth1`, `proxmox-jumphost` über ein Gateway. Gleiche Portzustände bedeuten weder gleiche Wege noch, dass eine Gateway-Firewall den direkten VLAN-Verkehr filtern könnte. Schliesse das Terminal von `wago-plc2b-vlan10`.
+**Kontrollpunkt:** Beide Ports sind im Ausgangszustand von beiden Quellen erreichbar. `wago-plc2b` erreicht `wago-plc2a` direkt über `eth1`, `proxmox-jumphost` über ein Gateway. Gleiche Portzustände bedeuten weder gleiche Wege noch, dass eine Gateway-Firewall den direkten VLAN-Verkehr filtern könnte. Schliesse das Terminal von `wago-plc2b`.
 
 ## Extra 2: Offen und geschlossen mit Paketen beweisen
 
-**Optional, 10 Minuten.** [Zeichne den Datenport von `wago-plc2a-vlan10` auf](/network/capture?node=wago-plc2a-vlan10&interface=eth1), wähle **Start Capture** und führe auf dem **`proxmox-jumphost`** aus:
+**Optional, 10 Minuten.** [Zeichne den Datenport von `wago-plc2a` auf](/network/capture?node=wago-plc2a-vlan10&interface=eth1), wähle **Start Capture** und führe auf dem **`proxmox-jumphost`** aus:
 
 ```bash
 nmap -n -sT -Pn -p8080,65000 --max-retries 1 --host-timeout 10s --scan-delay 100ms 10.10.0.11

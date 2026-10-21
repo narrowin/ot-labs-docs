@@ -15,13 +15,13 @@ Die Appliance ist bereits bereitgestellt. Verwende konfigurierte Terminal-Aktion
 
 | Aktion im Reader | Beobachtbarer Kontrollpunkt |
 | --- | --- |
-| [`wago-plc2a-vlan10` finden](/network/?search=wago-plc2a-vlan10) | Netmap hebt den Endpunkt hervor; verfolge den Weg über sw-acc1 und sw-dist zu `gw-firewall` |
-| [Terminal von `wago-plc2a-vlan10` öffnen](/network/terminal?node=wago-plc2a-vlan10) | Status Connected; die Befehle unten zeigen Datenadresse und vier Gateway-Antworten |
+| [`wago-plc2a` finden](/network/?search=wago-plc2a-vlan10) | Netmap hebt den Endpunkt hervor; verfolge den Weg über sw-acc1 und sw-dist zu `gw-firewall` |
+| [Terminal von `wago-plc2a` öffnen](/network/terminal?node=wago-plc2a-vlan10) | Status Connected; die Befehle unten zeigen Datenadresse und vier Gateway-Antworten |
 | [VLAN 10 untersuchen](/network/?viewMode=vlan&vlanIds=10) | Netmap zeigt die VLAN-Ansicht mit VLAN 10 |
-| [`wago-plc2a-vlan10` WebVisu öffnen](/network/webvisu?node=wago-plc2a-vlan10) | Ein separater Tab zeigt die native CODESYS-Visualisierung; konstante Werte sind möglich |
+| [`wago-plc2a` WebVisu öffnen](/network/webvisu?node=wago-plc2a-vlan10) | Ein separater Tab zeigt die native CODESYS-Visualisierung; konstante Werte sind möglich |
 | [Gateway-Uplink mitschneiden](/network/capture?node=sw-dist&interface=ether12) | sw-dist ether12 ist gewählt; Start Capture starten, Ping wiederholen und `icmp` filtern |
 
-Auf **`wago-plc2a-vlan10`** ausführen:
+Auf **`wago-plc2a`** ausführen:
 
 ```bash
 ip -br addr show eth1
@@ -43,18 +43,18 @@ Der Ausgangszustand hat zwei OT-/DMZ-Broadcast-Domänen:
 | Flaches OT-Netz | 10 | `10.0.0.0/8` | `10.10.0.1` |
 | DMZ | 60 | `2.2.2.0/24` | `2.2.2.1` |
 
-Namen mit `vlan20`, `vlan30`, `vlan40` oder `vlan50` beschreiben vorgesehene Rollen. Diese Endpunkte sind aktuell mit `/8`-Adressen in VLAN 10 und nicht bereits in `/24`-Sicherheitszonen getrennt. Das simulierte externe Paar `1.1.1.1` / `1.1.1.2` befindet sich innerhalb der Appliance.
+Die SPS und Zellenrechner starten in VLAN 10 mit `/8`-Adressen. Das simulierte externe Paar verwendet `1.1.1.1` / `1.1.1.2` innerhalb dieser Appliance.
 
-| Stabiler Knotenname | Datenadresse / Rolle |
+| Gerätename in den Übungen | Datenadresse / Rolle |
 | --- | --- |
-| `wago-plc2a-vlan10` | `10.10.0.11/8`, PLC2A |
-| `wago-plc2b-vlan10` | `10.10.0.12/8`, PLC2B |
-| `ctrlx-plc3-vlan20` | `10.20.0.11/8`, Prozess-PLC |
-| `schneider-plc4-vlan30` | `10.30.0.11/8`, Entsorgungs-PLC |
-| `abb-800xa-vlan40` | `10.40.0.11/8`, Leitstand-Anwendung |
-| `pilz-hmi01-vlan40` | `10.40.0.12/8`, HMI-Browser |
-| `dell-ews1-vlan50` | `10.50.0.11/8`, Engineering-Workstation |
-| `hirschmann-edge1-vlan50` | `10.50.0.12/8`, Edge-Endpunkt |
+| `wago-plc2a` | `10.10.0.11/8`, PLC2A |
+| `wago-plc2b` | `10.10.0.12/8`, PLC2B |
+| `ctrlx-plc3` | `10.20.0.11/8`, Prozess-PLC |
+| `schneider-plc4` | `10.30.0.11/8`, Entsorgungs-PLC |
+| `abb-800xa` | `10.40.0.11/8`, Leitstand-Anwendung |
+| `pilz-hmi01` | `10.40.0.12/8`, HMI-Browser |
+| `dell-ews1` | `10.50.0.11/8`, Engineering-Workstation |
+| `hirschmann-edge1` | `10.50.0.12/8`, Edge-Endpunkt |
 | `proxmox-jumphost` | `2.2.2.2/24`, DMZ-Testquelle |
 | `panasonic-toughbook-internet` | `1.1.1.1/24`, externe Simulation |
 
@@ -77,7 +77,7 @@ Beobachte die Bedienelemente, ohne sie während der Netzwerkaufgaben zu betätig
 | Toolbox | Zonen und gerichtete Policies entwerfen; Speichern konfiguriert keine Geräte |
 | Assistent | Hilfe mit aktiver Übung, Befehlsausgabe und Paketbelegen |
 
-Toolbox wird im Produktmenü geöffnet. Der gespeicherte Netzwerk-Workspace enthält deinen Entwurf; Speichern setzt keine Regeln durch. [Übung 7](exercises/ex7-segmentation-firewall.md) baut VLAN 70 über Geräteterminals in deinem eigenen Lab auf. Die [praktische Vorbereitung](lab-practical.md) richtet einen Checkpoint für die Wiederherstellung ein. Übungen 1–6 nutzen den flachen Ausgangszustand. Übung 7 verschiebt vorübergehend nur `hirschmann-edge1-vlan50` und stellt ihn vor Abschluss wieder her.
+Toolbox wird im Produktmenü geöffnet. Der gespeicherte Netzwerk-Workspace enthält deinen Entwurf; Speichern setzt keine Regeln durch. [Übung 7](exercises/ex7-segmentation-firewall.md) baut VLAN 70 über Geräteterminals in deinem eigenen Lab auf. Die [praktische Vorbereitung](lab-practical.md) richtet einen Checkpoint für die Wiederherstellung ein. Übungen 1–6 nutzen den flachen Ausgangszustand. Übung 7 verschiebt vorübergehend nur `hirschmann-edge1` und stellt ihn vor Abschluss wieder her.
 
 ## Wenn ein Kontrollpunkt fehlschlägt
 

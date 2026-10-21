@@ -15,13 +15,13 @@ The appliance is already deployed. Use the configured terminal action rather tha
 
 | Action in the reader | Observable checkpoint |
 | --- | --- |
-| [Find `wago-plc2a-vlan10`](/network/?search=wago-plc2a-vlan10) | Netmap highlights the endpoint; follow its path through sw-acc1 and sw-dist to `gw-firewall` |
-| [Open terminal on `wago-plc2a-vlan10`](/network/terminal?node=wago-plc2a-vlan10) | Status becomes Connected; the commands below show the data address and four gateway replies |
+| [Find `wago-plc2a`](/network/?search=wago-plc2a-vlan10) | Netmap highlights the endpoint; follow its path through sw-acc1 and sw-dist to `gw-firewall` |
+| [Open terminal on `wago-plc2a`](/network/terminal?node=wago-plc2a-vlan10) | Status becomes Connected; the commands below show the data address and four gateway replies |
 | [Inspect VLAN 10](/network/?viewMode=vlan&vlanIds=10) | Netmap is in VLAN view with VLAN 10 selected |
-| [Open `wago-plc2a-vlan10` WebVisu](/network/webvisu?node=wago-plc2a-vlan10) | A separate tab renders the native CODESYS visualization; steady values are possible |
+| [Open `wago-plc2a` WebVisu](/network/webvisu?node=wago-plc2a-vlan10) | A separate tab renders the native CODESYS visualization; steady values are possible |
 | [Open the gateway-uplink capture](/network/capture?node=sw-dist&interface=ether12) | sw-dist ether12 is selected; choose Start Capture, repeat the ping and filter `icmp` |
 
-Run on **`wago-plc2a-vlan10`**:
+Run on **`wago-plc2a`**:
 
 ```bash
 ip -br addr show eth1
@@ -43,18 +43,18 @@ The current baseline has two OT/DMZ broadcast domains:
 | Flat OT | 10 | `10.0.0.0/8` | `10.10.0.1` |
 | DMZ | 60 | `2.2.2.0/24` | `2.2.2.1` |
 
-Names ending in `vlan20`, `vlan30`, `vlan40` or `vlan50` describe intended roles; those endpoints are currently in VLAN 10 with `/8` addresses. They are not already separated into `/24` security zones. The simulated external pair is `1.1.1.1` / `1.1.1.2` inside this appliance.
+The PLCs and cell workstations start in VLAN 10 with `/8` addresses. The simulated external pair is `1.1.1.1` / `1.1.1.2` inside this appliance.
 
-| Stable node name | Data address / role |
+| Device name in the exercises | Data address / role |
 | --- | --- |
-| `wago-plc2a-vlan10` | `10.10.0.11/8`, PLC2A |
-| `wago-plc2b-vlan10` | `10.10.0.12/8`, PLC2B |
-| `ctrlx-plc3-vlan20` | `10.20.0.11/8`, process PLC |
-| `schneider-plc4-vlan30` | `10.30.0.11/8`, disposal PLC |
-| `abb-800xa-vlan40` | `10.40.0.11/8`, control-room application |
-| `pilz-hmi01-vlan40` | `10.40.0.12/8`, HMI browser |
-| `dell-ews1-vlan50` | `10.50.0.11/8`, engineering workstation |
-| `hirschmann-edge1-vlan50` | `10.50.0.12/8`, edge endpoint |
+| `wago-plc2a` | `10.10.0.11/8`, PLC2A |
+| `wago-plc2b` | `10.10.0.12/8`, PLC2B |
+| `ctrlx-plc3` | `10.20.0.11/8`, process PLC |
+| `schneider-plc4` | `10.30.0.11/8`, disposal PLC |
+| `abb-800xa` | `10.40.0.11/8`, control-room application |
+| `pilz-hmi01` | `10.40.0.12/8`, HMI browser |
+| `dell-ews1` | `10.50.0.11/8`, engineering workstation |
+| `hirschmann-edge1` | `10.50.0.12/8`, edge endpoint |
 | `proxmox-jumphost` | `2.2.2.2/24`, DMZ test source |
 | `panasonic-toughbook-internet` | `1.1.1.1/24`, external simulation |
 
@@ -77,7 +77,7 @@ Observe controls without operating them during the networking tasks. A steady va
 | Toolbox | Draft zones and directional policies; saving does not configure network devices |
 | Assistant | Help with the active lesson, command output and packet evidence |
 
-Toolbox is opened from the product launcher. Its saved network workspace holds your design; saving does not enforce it. [Exercise 7](exercises/ex7-segmentation-firewall.md) builds VLAN 70 through device terminals in your own lab. The [practical setup](lab-practical.md) prepares a recovery checkpoint. Exercises 1–6 use the flat baseline; Exercise 7 temporarily moves only `hirschmann-edge1-vlan50` and restores it before finishing.
+Toolbox is opened from the product launcher. Its saved network workspace holds your design; saving does not enforce it. [Exercise 7](exercises/ex7-segmentation-firewall.md) builds VLAN 70 through device terminals in your own lab. The [practical setup](lab-practical.md) prepares a recovery checkpoint. Exercises 1–6 use the flat baseline; Exercise 7 temporarily moves only `hirschmann-edge1` and restores it before finishing.
 
 ## If a checkpoint fails
 

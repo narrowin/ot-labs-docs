@@ -108,9 +108,9 @@ Entscheide für sw-acc2 ether11 zwischen «wie vorgesehen belassen» und «unter
 
 ## Extra 2: Wiederherstellung nach einem Uplink-Ausfall prüfen
 
-**Optional, 15–20 Minuten.** Prüfe, ob `wago-plc2b-vlan10` `gw-firewall` und `wago-plc2a-vlan10` weiterhin erreicht, wenn sw-acc2 seinen direkten Uplink verliert. Verwende nur dein eigenes Lab. Lies zuerst alle vier Schritte und halte beide Terminals bereit. Öffne das [Management-Terminal von sw-acc2](/network/terminal?node=sw-acc2) und lasse es für die Wiederherstellung geöffnet.
+**Optional, 15–20 Minuten.** Prüfe, ob `wago-plc2b` `gw-firewall` und `wago-plc2a` weiterhin erreicht, wenn sw-acc2 seinen direkten Uplink verliert. Verwende nur dein eigenes Lab. Lies zuerst alle vier Schritte und halte beide Terminals bereit. Öffne das [Management-Terminal von sw-acc2](/network/terminal?node=sw-acc2) und lasse es für die Wiederherstellung geöffnet.
 
-1. Bestätige auf **sw-acc2** die Ausgangsrollen aus Aufgabe 4: ether12 ist Root/Forwarding, ether11 Alternate/Non-Forwarding. Starte auf [`wago-plc2b-vlan10`](/network/terminal?node=wago-plc2b-vlan10):
+1. Bestätige auf **sw-acc2** die Ausgangsrollen aus Aufgabe 4: ether12 ist Root/Forwarding, ether11 Alternate/Non-Forwarding. Starte auf [`wago-plc2b`](/network/terminal?node=wago-plc2b-vlan10):
 
     ```bash
     ping -D -i 0.5 -c 120 10.10.0.1
@@ -127,7 +127,7 @@ Entscheide für sw-acc2 ether11 zwischen «wie vorgesehen belassen» und «unter
 
     Wiederhole den Monitor-Befehl nach einigen Sekunden. Ether11 soll Root/Forwarding werden. Der Ersatzpfad führt über sw-acc2 → sw-acc1 → sw-dist → `gw-firewall`.
 
-3. Warte bei weiterhin deaktiviertem ether12 auf das Ende des begrenzten Pings. Notiere fehlende Sequenznummern und die Verluststatistik. Prüfe auf **`wago-plc2b-vlan10`** zusätzlich die SPS-Anwendung:
+3. Warte bei weiterhin deaktiviertem ether12 auf das Ende des begrenzten Pings. Notiere fehlende Sequenznummern und die Verluststatistik. Prüfe auf **`wago-plc2b`** zusätzlich die SPS-Anwendung:
 
     ```bash
     curl -sS --max-time 5 -o /dev/null -w 'HTTP %{http_code}\n' http://10.10.0.11:8080/webvisu.htm
@@ -142,7 +142,7 @@ Entscheide für sw-acc2 ether11 zwischen «wie vorgesehen belassen» und «unter
     /interface bridge port monitor [find interface=ether12] once
     ```
 
-    Nach der Umschaltung muss ether12 wieder Running/Root/Forwarding und ether11 Alternate/Non-Forwarding sein. Wiederhole auf **`wago-plc2b-vlan10`** `ping -c 4 10.10.0.1` und die HTTP-Anfrage; beides muss funktionieren. Kehren Rollen oder Kommunikation nicht zurück, lasse das Terminal offen und hole die Kursleitung für die Wiederherstellung dazu.
+    Nach der Umschaltung muss ether12 wieder Running/Root/Forwarding und ether11 Alternate/Non-Forwarding sein. Wiederhole auf **`wago-plc2b`** `ping -c 4 10.10.0.1` und die HTTP-Anfrage; beides muss funktionieren. Kehren Rollen oder Kommunikation nicht zurück, lasse das Terminal offen und hole die Kursleitung für die Wiederherstellung dazu.
 
 **Kontrollpunkt:** Während des Uplink-Ausfalls wurde der Reservepfad aktiv und die HTTP-Anfrage lieferte 200. Notiere die beobachteten Ping-Verluste. Null beobachtete Verluste bedeuten nur, dass diese Testpakete beantwortet wurden; sie belegen keine unterbrechungsfreie Funktion jeder Anwendung. Nach der Wiederherstellung kehren ursprüngliche Portrollen und Kommunikation zurück. Schliesse die Terminals. Weiter mit [Übung 4](ex4-link-aggregation.md).
 

@@ -108,9 +108,9 @@ Write “leave as designed” or “investigate” for sw-acc2 ether11. Support 
 
 ## Extra 2: Test recovery after one uplink fails
 
-**Optional, 15–20 minutes.** Verify that `wago-plc2b-vlan10` can still reach `gw-firewall` and `wago-plc2a-vlan10` when sw-acc2 loses its direct uplink. Use only your own lab. Read all four steps first and keep both terminals ready. Open the [sw-acc2 management terminal](/network/terminal?node=sw-acc2) and keep it open for restoration.
+**Optional, 15–20 minutes.** Verify that `wago-plc2b` can still reach `gw-firewall` and `wago-plc2a` when sw-acc2 loses its direct uplink. Use only your own lab. Read all four steps first and keep both terminals ready. Open the [sw-acc2 management terminal](/network/terminal?node=sw-acc2) and keep it open for restoration.
 
-1. Confirm Task 4's starting roles on **sw-acc2**: ether12 is root/forwarding; ether11 is alternate/non-forwarding. On [`wago-plc2b-vlan10`](/network/terminal?node=wago-plc2b-vlan10), start:
+1. Confirm Task 4's starting roles on **sw-acc2**: ether12 is root/forwarding; ether11 is alternate/non-forwarding. On [`wago-plc2b`](/network/terminal?node=wago-plc2b-vlan10), start:
 
     ```bash
     ping -D -i 0.5 -c 120 10.10.0.1
@@ -127,7 +127,7 @@ Write “leave as designed” or “investigate” for sw-acc2 ether11. Support 
 
     Repeat the monitor command after a few seconds. Ether11 should become root/forwarding, providing the path sw-acc2 → sw-acc1 → sw-dist → `gw-firewall`.
 
-3. While ether12 remains disabled, wait for the bounded ping to finish. Record any missing sequence numbers and its loss summary. On **`wago-plc2b-vlan10`**, also check the PLC application:
+3. While ether12 remains disabled, wait for the bounded ping to finish. Record any missing sequence numbers and its loss summary. On **`wago-plc2b`**, also check the PLC application:
 
     ```bash
     curl -sS --max-time 5 -o /dev/null -w 'HTTP %{http_code}\n' http://10.10.0.11:8080/webvisu.htm
@@ -142,7 +142,7 @@ Write “leave as designed” or “investigate” for sw-acc2 ether11. Support 
     /interface bridge port monitor [find interface=ether12] once
     ```
 
-    After convergence, ether12 must be running/root/forwarding again and ether11 alternate/non-forwarding. On **`wago-plc2b-vlan10`**, repeat `ping -c 4 10.10.0.1` and the HTTP command; both must succeed. If the roles or communication do not recover, keep the terminal open and ask the instructor to restore the baseline.
+    After convergence, ether12 must be running/root/forwarding again and ether11 alternate/non-forwarding. On **`wago-plc2b`**, repeat `ping -c 4 10.10.0.1` and the HTTP command; both must succeed. If the roles or communication do not recover, keep the terminal open and ask the instructor to restore the baseline.
 
 **Checkpoint:** During the uplink loss, the alternate path became active and the HTTP request returned 200. Record observed ping loss; zero observed loss means only that these probes missed no replies, not that every application experienced zero interruption. After restoration, the original roles and communication return. Close terminals. Continue with [Exercise 4](ex4-link-aggregation.md).
 

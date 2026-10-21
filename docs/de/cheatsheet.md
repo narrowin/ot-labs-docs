@@ -6,11 +6,11 @@ Verwende dein zugewiesenes, bereits laufendes studentisches LNE und wähle das L
 
 | Aktion | Ziel |
 | --- | --- |
-| [Terminal von `wago-plc2a-vlan10`](/network/terminal?node=wago-plc2a-vlan10) | Hauptbeobachtungsquelle, `10.10.0.11/8` |
-| [Terminal von `wago-plc2b-vlan10`](/network/terminal?node=wago-plc2b-vlan10) | Zweite Quelle, `10.10.0.12/8` |
+| [Terminal von `wago-plc2a`](/network/terminal?node=wago-plc2a-vlan10) | Hauptbeobachtungsquelle, `10.10.0.11/8` |
+| [Terminal von `wago-plc2b`](/network/terminal?node=wago-plc2b-vlan10) | Zweite Quelle, `10.10.0.12/8` |
 | [`proxmox-jumphost`-Terminal](/network/terminal?node=proxmox-jumphost) | Geroutete Quelle, `2.2.2.2/24` |
 | [Gateway-Uplink-Mitschnitt](/network/capture?node=sw-dist&interface=ether12) | Getaggter VLAN-10-Verkehr |
-| [Mitschnitt am Access-Port von `wago-plc2a-vlan10`](/network/capture?node=sw-acc1&interface=ether2) | Ungetaggter Endpunktverkehr |
+| [Mitschnitt am Access-Port von `wago-plc2a`](/network/capture?node=sw-acc1&interface=ether2) | Ungetaggter Endpunktverkehr |
 | [VLAN-Ansicht](/network/?viewMode=vlan&vlanIds=10) | VLAN 10 in gewähltem Netz/Snapshot |
 | [Spanning-Tree-Ansicht](/network/?viewMode=spanning-tree&stpInstanceId=0&dataType=All) | Instanz 0, alle Daten |
 
@@ -20,11 +20,11 @@ Warte im Terminal auf **Connected**. Starte den Mitschnitt vor dem Testverkehr u
 
 | Runtime | Reader-Link |
 | --- | --- |
-| `wago-plc2a-vlan10` | [WebVisu](/network/webvisu?node=wago-plc2a-vlan10) |
-| `wago-plc2b-vlan10` | Aktuell nicht in den freigegebenen Browseraktionen; für die Visualisierungsaufgabe `wago-plc2a-vlan10` verwenden |
-| `ctrlx-plc3-vlan20` | [WebVisu](/network/webvisu?node=ctrlx-plc3-vlan20) |
-| `schneider-plc4-vlan30` | [WebVisu](/network/webvisu?node=schneider-plc4-vlan30) |
-| `abb-800xa-vlan40` | [WebVisu](/network/webvisu?node=abb-800xa-vlan40) |
+| `wago-plc2a` | [WebVisu](/network/webvisu?node=wago-plc2a-vlan10) |
+| `wago-plc2b` | Aktuell nicht in den freigegebenen Browseraktionen; für die Visualisierungsaufgabe `wago-plc2a` verwenden |
+| `ctrlx-plc3` | [WebVisu](/network/webvisu?node=ctrlx-plc3-vlan20) |
+| `schneider-plc4` | [WebVisu](/network/webvisu?node=schneider-plc4-vlan30) |
+| `abb-800xa` | [WebVisu](/network/webvisu?node=abb-800xa-vlan40) |
 
 Angeboten werden nur freigegebene, antwortende Runtimes im Live-Netz. Öffne in eigenständiger Dokumentation die WebVisu-Aktion der PLC im LNE. `http://<Daten-IP>:8080/webvisu.htm` ist eine Adresse innerhalb des Labs und keine Portweiterleitungsanleitung für den Laptop.
 

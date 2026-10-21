@@ -2,13 +2,13 @@
 
 **Time:** 35–45 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Guided practice.
 
-Find what a DMZ source can reach and produce an evidence-based finding. Limit discovery to the four listed lab IPs and service checks to `wago-plc2a-vlan10`. No broad subnet scans, password guessing or software installation are needed.
+Find what a DMZ source can reach and produce an evidence-based finding. Limit discovery to the four listed lab IPs and service checks to `wago-plc2a`. No broad subnet scans, password guessing or software installation are needed.
 
 **Learning objectives:** Establish remote-access position, discover scoped lab hosts, identify reachable services, distinguish observations from vulnerabilities, and document a reproducible assessment with recommendations.
 
 ## Your remote-maintenance task
 
-A supplier needs access to `wago-plc2a-vlan10`'s WebVisu for an agreed diagnostic task. The site owner asks whether the existing DMZ jump server can also reach engineering or controller services that this task does not need. Check the actual exposure and prepare a narrowly scoped access recommendation.
+A supplier needs access to `wago-plc2a`'s WebVisu for an agreed diagnostic task. The site owner asks whether the existing DMZ jump server can also reach engineering or controller services that this task does not need. Check the actual exposure and prepare a narrowly scoped access recommendation.
 
 A **DMZ** is a network zone between trust areas. A **jump server** is an intermediate access host; its name alone does not restrict where it can connect. A TCP **port** identifies a service endpoint. An open connection proves reachability, not permission to log in or change a process.
 
@@ -16,19 +16,19 @@ This scenario approves checking the listed simulator targets only. On real OT eq
 
 ## Before you start
 
-Open the configured [`proxmox-jumphost` terminal](/network/terminal?node=proxmox-jumphost). All main-task commands run there. Use [Netmap search for `wago-plc2a-vlan10`](/network/?search=wago-plc2a-vlan10) to locate the target and its gateway path.
+Open the configured [`proxmox-jumphost` terminal](/network/terminal?node=proxmox-jumphost). All main-task commands run there. Use [Netmap search for `wago-plc2a`](/network/?search=wago-plc2a-vlan10) to locate the target and its gateway path.
 
 | Target | Role |
 | --- | --- |
 | `10.10.0.1` | OT gateway |
-| `10.10.0.11` | `wago-plc2a-vlan10`, service-check target |
-| `10.10.0.12` | `wago-plc2b-vlan10` |
-| `10.20.0.11` | `ctrlx-plc3-vlan20` |
+| `10.10.0.11` | `wago-plc2a`, service-check target |
+| `10.10.0.12` | `wago-plc2b` |
+| `10.20.0.11` | `ctrlx-plc3` |
 
 The listed IPs are the targets for this exercise inside your lab.
 
 ??? info "Using standalone documentation?"
-    Open your assigned live lab's **Netmap**, search **proxmox-jumphost** and use **Open terminal** in its action menu. For Extra 1 select **wago-plc2b-vlan10**. For Extra 2 select **wago-plc2a-vlan10**, **Capture packets**, interface **eth1**. Reader links retain your network and snapshot and select these targets automatically.
+    Open your assigned live lab's **Netmap**, search **proxmox-jumphost** and use **Open terminal** in its action menu. For Extra 1 select **wago-plc2b**. For Extra 2 select **wago-plc2a**, **Capture packets**, interface **eth1**. Reader links retain your network and snapshot and select these targets automatically.
 
 ## Task 1: Establish your vantage point
 
@@ -40,7 +40,7 @@ ip route get 10.10.0.11
 command -v nmap curl
 ```
 
-**Checkpoint:** `proxmox-jumphost` has data address `2.2.2.2/24`. The selected route to `wago-plc2a-vlan10` uses gateway `2.2.2.1`, interface `eth1` and source `2.2.2.2`. The management interface is a separate path; record the route actually selected for the target.
+**Checkpoint:** `proxmox-jumphost` has data address `2.2.2.2/24`. The selected route to `wago-plc2a` uses gateway `2.2.2.1`, interface `eth1` and source `2.2.2.2`. The management interface is a separate path; record the route actually selected for the target.
 
 ## Task 2: Discover only the listed hosts
 
@@ -103,13 +103,13 @@ Recommend the source, target and service to allow for this task, and identify th
 ## Solution
 
 ??? success "Compare your finding"
-    The `proxmox-jumphost` routes through `2.2.2.1` to the flat OT network. Four specified targets respond; `wago-plc2a-vlan10` accepts TCP connections on 22, 502, 4840 and 8080 in the baseline. The HTTP response confirms an application on 8080.
+    The `proxmox-jumphost` routes through `2.2.2.1` to the flat OT network. Four specified targets respond; `wago-plc2a` accepts TCP connections on 22, 502, 4840 and 8080 in the baseline. The HTTP response confirms an application on 8080.
 
     A defensible finding is “The DMZ source can initiate connections to these OT services; confirm which are required and restrict unnecessary initiation.” It is not “all PLCs are vulnerable.” `open`, `closed` and `filtered` describe what this scan could establish from this source; they are not security ratings.
 
 ## Extra 1: Compare two vantage points
 
-**Optional, 10 minutes.** Repeat this small scan from the **`proxmox-jumphost`**, then from [`wago-plc2b-vlan10`'s terminal](/network/terminal?node=wago-plc2b-vlan10):
+**Optional, 10 minutes.** Repeat this small scan from the **`proxmox-jumphost`**, then from [`wago-plc2b`'s terminal](/network/terminal?node=wago-plc2b-vlan10):
 
 ```bash
 ip route get 10.10.0.11
@@ -118,11 +118,11 @@ nmap -n -sT -Pn -p22,8080 --max-retries 1 --host-timeout 10s --scan-delay 100ms 
 
 Make a two-row table of source, next hop and port states.
 
-**Checkpoint:** The baseline exposes both ports from both sources. `wago-plc2b-vlan10`'s route is direct on `eth1`; the route from `proxmox-jumphost` is via a gateway. Identical port results do not imply identical paths or that a gateway firewall can filter the direct same-VLAN flow. Close `wago-plc2b-vlan10`'s terminal.
+**Checkpoint:** The baseline exposes both ports from both sources. `wago-plc2b`'s route is direct on `eth1`; the route from `proxmox-jumphost` is via a gateway. Identical port results do not imply identical paths or that a gateway firewall can filter the direct same-VLAN flow. Close `wago-plc2b`'s terminal.
 
 ## Extra 2: Prove open versus closed with packets
 
-**Optional, 10 minutes.** [Capture `wago-plc2a-vlan10`'s data port](/network/capture?node=wago-plc2a-vlan10&interface=eth1), choose **Start Capture**, then run on the **`proxmox-jumphost`**:
+**Optional, 10 minutes.** [Capture `wago-plc2a`'s data port](/network/capture?node=wago-plc2a-vlan10&interface=eth1), choose **Start Capture**, then run on the **`proxmox-jumphost`**:
 
 ```bash
 nmap -n -sT -Pn -p8080,65000 --max-retries 1 --host-timeout 10s --scan-delay 100ms 10.10.0.11
