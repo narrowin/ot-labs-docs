@@ -359,7 +359,7 @@ Das Risiko aus der Folie besteht auch in Gegenrichtung: Ein ungepatchter Rechner
 
 Entferne für eine abschliessende Isolationsprüfung Dells **allowed source**. Lass beide Richtungen auf **Default deny**. Wende die Änderung an und warte auf die Bestätigung. Neue HTTP- und TCP-22-Prüfungen beider Clients müssen nun scheitern. Das verwaltete Linux-Terminal bleibt über den separaten Management-Weg erreichbar.
 
-### A5: Kann ARP-Spoofing den geschützten Endpunkt weiterhin betreffen?
+### A5: Kann der VLAN-10-Verkehr der Diode weiterhin abgefangen werden?
 
 Vergleiche diese Grenze mit Übung 2. Prüfe auf **Protected Linux** die Route zurück zu Dell und die Zuordnung des lokalen Gateways:
 
@@ -372,16 +372,16 @@ Die Route führt über `192.168.254.254`. Dell erreicht dagegen die WAN-Adresse 
 
 Beantworte vor dem Öffnen der Lösung:
 
-1. Kann ein Angreifer in VLAN 10 mit einer gefälschten ARP-Antwort direkt die Gateway-Zuordnung von Protected Linux ersetzen?
-2. Könnte dieser Angreifer während der Dell-Freigabe in A3 weiterhin Dells unverschlüsselten HTTP-Verkehr zu `10.10.0.21` abfangen, indem er Dell über die MAC-Adresse der Diode täuscht?
-3. Würde das Weiterleiten von Dells Paketen automatisch die Quell-IP-Regel verletzen? Was ändert sich, wenn ein Angreifer Zugang zum geschützten LAN selbst erhält?
+1. Warum können gefälschte ARP-Antworten aus VLAN 10 die lokale Gateway-Zuordnung von Protected Linux nicht direkt ersetzen?
+2. Welche ARP-Einträge auf Dell und auf der VLAN-10-Seite der Diode könnte ein Angreifer während der Dell-Freigabe aus A3 manipulieren, um deren Kommunikation abzufangen?
+3. Würde das Weiterleiten von Dells Paketen mit ihrer ursprünglichen Quell-IP die Freigaberegel verletzen? Würden abgefangene SSH-Pakete deren verschlüsselten Inhalt lesbar machen?
 
 ??? success "Lösung: ARP-Grenze und Anwendungsweg unterscheiden"
     **Direkte Manipulation aus VLAN 10: nein.** Protected Linux und VLAN 10 liegen in unterschiedlichen Ethernet-Segmenten. Diese geroutete Diode leitet ARP-Frames aus VLAN 10 nicht in ihr LAN weiter. Linux ermittelt die MAC-Adresse seines lokalen Gateways `192.168.254.254`, nicht die des externen Gateways aus Übung 2. Der Schutz entsteht durch die Routing-Grenze, nicht durch die `/32`-Regel.
 
-    **Abfangen vor der Diode: weiterhin möglich.** Ein Angreifer in VLAN 10 könnte Dells Zuordnung für `10.10.0.21` manipulieren und dessen erlaubten Verkehr an die echte Diode weiterleiten. Eine manipulierte Dell-Zuordnung auf der Diode kann auch Antworten umleiten. Bleibt die Quell-IP beim Weiterleiten Dells erlaubte Adresse, trifft die Quell-IP-Regel weiterhin zu. Der ARP-Cache des Endpunkts kann korrekt bleiben, während sein unverschlüsselter HTTP-Verkehr vor der Diode abgefangen wird. ARP-Spoofing allein macht aus einer gesperrten Quelle keine erlaubte Quelle.
+    **Der VLAN-10-Verkehr der Diode kann weiterhin abgefangen werden.** Ihr WAN-Interface teilt VLAN 10 mit Dell und einem möglichen Angreifer. Ein manipulierter ARP-Eintrag für Dell (`10.50.0.11`) auf der Diode kann deren Antworten zum Angreifer umleiten. Ein manipulierter Eintrag für die Diode (`10.10.0.21`) auf Dell kann Anfragen umleiten. Leitet der Angreifer die Kommunikation weiter, kann er zwischen Dell und der Diode sitzen. Diese gefälschten ARP-Antworten bleiben in VLAN 10: Sie müssen weder den geschützten Endpunkt erreichen noch dessen ARP-Cache verändern.
 
-    **Ein Angreifer im geschützten LAN ändert die Antwort.** Dort könnte er versuchen, die lokale Gateway-Zuordnung des Endpunkts zu manipulieren. Die geschützte Datenverbindung dieses Labs enthält nur Linux und die Diode; diese Seite muss exklusiv bleiben.
+    **Die Quell-IP-Regel ist kein ARP-Schutz.** Bleibt die Quell-IP beim Weiterleiten Dells erlaubte Adresse, trifft die Freigaberegel weiterhin zu. Der erlaubte HTTP-Verkehr lässt sich auf diesem Weg mitlesen. Abgefangene SSH-Pakete bleiben bei korrekter SSH-Authentifizierung und Host-Key-Prüfung verschlüsselt; siehe [SSH-Host-Key-Prüfung](https://www.rfc-editor.org/rfc/rfc4251.html#section-9.3.4). ARP-Spoofing allein macht aus einer gesperrten Quelle keine erlaubte Quelle. Das verbleibende Risiko ist das Abfangen oder Unterbrechen von Verkehr auf der VLAN-10-Seite der Diode.
 
     Wähle einen Schutz für das verbleibende Risiko: ARP-Prüfung am Switch mit gepflegten IP/MAC-Zuordnungen in VLAN 10 sowie authentifizierte Verschlüsselung, etwa HTTPS oder SSH mit Zertifikats- beziehungsweise Host-Key-Prüfung. Verschlüsselung schützt Anwendungsdaten; sie verhindert nicht, dass ein Angreifer die Verbindung unterbricht. Siehe [RFC 826](https://www.rfc-editor.org/rfc/rfc826.html) und [die Erklärung zur ARP-Prüfung](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst9400/software/release/17-13/configuration_guide/sec/b_1713_sec_9400_cg/configuring_dynamic_arp_inspection.html).
 
