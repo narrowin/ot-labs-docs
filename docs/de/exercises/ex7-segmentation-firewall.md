@@ -359,7 +359,35 @@ Das Risiko aus der Folie besteht auch in Gegenrichtung: Ein ungepatchter Rechner
 
 Entferne für eine abschliessende Isolationsprüfung Dells **allowed source**. Lass beide Richtungen auf **Default deny**. Wende die Änderung an und warte auf die Bestätigung. Neue HTTP- und TCP-22-Prüfungen beider Clients müssen nun scheitern. Das verwaltete Linux-Terminal bleibt über den separaten Management-Weg erreichbar.
 
-### A5: Wiederherstellen und übergeben
+### A5: Kann ARP-Spoofing den geschützten Endpunkt weiterhin betreffen?
+
+Vergleiche diese Grenze mit Übung 2. Prüfe auf **Protected Linux** die Route zurück zu Dell und die Zuordnung des lokalen Gateways:
+
+```bash
+ip route get 10.50.0.11
+ip neigh show 192.168.254.254 dev eth1
+```
+
+Die Route führt über `192.168.254.254`. Dell erreicht dagegen die WAN-Adresse `10.10.0.21` der Diode direkt in VLAN 10, wie in A2 notiert. Eine leere Nachbartabelle bedeutet, dass gerade kein Eintrag gespeichert ist; sie beweist keinen Schutz.
+
+Beantworte vor dem Öffnen der Lösung:
+
+1. Kann ein Angreifer in VLAN 10 mit einer gefälschten ARP-Antwort direkt die Gateway-Zuordnung von Protected Linux ersetzen?
+2. Könnte dieser Angreifer während der Dell-Freigabe in A3 weiterhin Dells unverschlüsselten HTTP-Verkehr zu `10.10.0.21` abfangen, indem er Dell über die MAC-Adresse der Diode täuscht?
+3. Würde das Weiterleiten von Dells Paketen automatisch die Quell-IP-Regel verletzen? Was ändert sich, wenn ein Angreifer Zugang zum geschützten LAN selbst erhält?
+
+??? success "Lösung: ARP-Grenze und Anwendungsweg unterscheiden"
+    **Direkte Manipulation aus VLAN 10: nein.** Protected Linux und VLAN 10 liegen in unterschiedlichen Ethernet-Segmenten. Diese geroutete Diode leitet ARP-Frames aus VLAN 10 nicht in ihr LAN weiter. Linux ermittelt die MAC-Adresse seines lokalen Gateways `192.168.254.254`, nicht die des externen Gateways aus Übung 2. Der Schutz entsteht durch die Routing-Grenze, nicht durch die `/32`-Regel.
+
+    **Abfangen vor der Diode: weiterhin möglich.** Ein Angreifer in VLAN 10 könnte Dells Zuordnung für `10.10.0.21` manipulieren und dessen erlaubten Verkehr an die echte Diode weiterleiten. Eine manipulierte Dell-Zuordnung auf der Diode kann auch Antworten umleiten. Bleibt die Quell-IP beim Weiterleiten Dells erlaubte Adresse, trifft die Quell-IP-Regel weiterhin zu. Der ARP-Cache des Endpunkts kann korrekt bleiben, während sein unverschlüsselter HTTP-Verkehr vor der Diode abgefangen wird. ARP-Spoofing allein macht aus einer gesperrten Quelle keine erlaubte Quelle.
+
+    **Ein Angreifer im geschützten LAN ändert die Antwort.** Dort könnte er versuchen, die lokale Gateway-Zuordnung des Endpunkts zu manipulieren. Die geschützte Datenverbindung dieses Labs enthält nur Linux und die Diode; diese Seite muss exklusiv bleiben.
+
+    Wähle einen Schutz für das verbleibende Risiko: ARP-Prüfung am Switch mit gepflegten IP/MAC-Zuordnungen in VLAN 10 sowie authentifizierte Verschlüsselung, etwa HTTPS oder SSH mit Zertifikats- beziehungsweise Host-Key-Prüfung. Verschlüsselung schützt Anwendungsdaten; sie verhindert nicht, dass ein Angreifer die Verbindung unterbricht. Siehe [RFC 826](https://www.rfc-editor.org/rfc/rfc826.html) und [die Erklärung zur ARP-Prüfung](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst9400/software/release/17-13/configuration_guide/sec/b_1713_sec_9400_cg/configuring_dynamic_arp_inspection.html).
+
+Dies ist eine Aufgabe zur Topologie und zur Einschätzung des Angriffswegs. Die Routen- und Nachbarprüfungen belegen die beiden Seiten; sie weisen kein erfolgreiches Abfangen nach. Notiere, wessen ARP-Eintrag angegriffen würde und welcher Verkehr betroffen wäre.
+
+### A6: Wiederherstellen und übergeben
 
 Stelle das notierte Ausgangsprofil wieder her: **From Network = Default allow**, **From Endpoint = Default allow**, keine Ausnahmen in beiden Richtungen. Speichere, bestätige **Save & apply** und warte auf die Bestätigung. Wiederhole HTTP/TCP 22 von beiden Clients sowie die HTTP-Anfrage des geschützten Endpunkts an WAGO. Alles muss wieder funktionieren. Profilzuordnung, DNS, NTP und Logging müssen den in A2 notierten Einstellungen entsprechen.
 

@@ -53,6 +53,25 @@ The observed rejects were connection refusals: HTTP returned curl exit 7 and TCP
 
 ## Content checks and limits
 
-The addon has three fenced shell blocks. They match between English and German; shell syntax passes. The original 18 VLAN practical blocks remain unchanged, and both files remain below the reader's 65,536-byte limit. Both strict MkDocs builds pass. Rendered English and German addon pages were inspected in the existing preview browser.
+The addon has four fenced shell blocks, including the ARP-boundary inspection in A5. They match between English and German; shell syntax passes. The original 18 VLAN practical blocks remain unchanged, and both files remain below the reader's 65,536-byte limit. Both strict MkDocs builds pass. Rendered English and German addon pages were inspected in the existing preview browser.
 
 Live policy results qualify the tested address-based enforcement, not port-specific rules, authentication, patching, IEC 62443 certification or protection against all address spoofing. No reboot-persistence trial or ARP attack was added to this addon validation. The new lesson text has not yet been published to the running reader, and 35–45 minutes is a planning estimate rather than a student-pilot measurement.
+
+## ARP boundary and remaining interception risk
+
+**Reversibility:** Two-way door; bilingual lesson text and read-only endpoint inspection.
+
+**Problem:** Saying that a routed boundary blocks ARP could incorrectly teach that all communication with the protected endpoint is immune to ARP interception.
+
+**Desired outcome:** Students distinguish direct poisoning of the endpoint's cache from interception of an allowed application's upstream path.
+
+**Options:**
+
+- Add a route/neighbor inspection and a worked threat-analysis question to the diode addon. Impact 9: connects Exercise 2 to the actual protection boundary and its limits. Confidence 9: the lab topology and both live next-hop mappings were checked; RFC 826 and Cisco's ARP inspection documentation support the Ethernet-local mechanism. Ease 9: uses existing terminals without changing policy or adding an interception setup. **ICE 729.**
+- Add another active interception practical. Impact 7: could demonstrate the upstream attack directly. Confidence 5: that particular interception has not been qualified against this diode. Ease 4: needs additional capture, forwarding, poisoning and cleanup steps alongside the existing policy lesson. **ICE 140.**
+
+**Recommendation applied:** Add A5 with three questions, a route/neighbor check and a collapsed solution; move restoration to A6. Keep the direct-cache, upstream-path and protected-LAN cases separate. Explain that relaying the allowed client's packets can preserve its source IP, so the address policy can remain effective as configured while unencrypted traffic is intercepted. Identify ARP validation and authenticated encryption as complementary controls, without claiming the installed switch currently enforces them.
+
+The exact A5 commands ran successfully on Protected Linux through the existing guest transport. Its route to Dell uses `192.168.254.254` on `eth1`, source `192.168.254.1`, with gateway MAC `0c:00:c0:7d:63:02`. Dell's route to `10.10.0.21` is directly on `eth1`, source `10.50.0.11`, with diode WAN MAC `0c:00:46:c2:bb:01`. Both neighbor entries were `STALE`, a cache state rather than evidence of spoofing. No active ARP interception or policy change was performed for this addition; the upstream attack is explained from topology and protocol behavior, not reported as a completed live attack.
+
+Primary references: [RFC 826](https://www.rfc-editor.org/rfc/rfc826.html), on next-hop address resolution and mapping updates; [Cisco ARP inspection documentation](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst9400/software/release/17-13/configuration_guide/sec/b_1713_sec_9400_cg/configuring_dynamic_arp_inspection.html), on local broadcast-domain poisoning, interception and trusted bindings for static addressing.

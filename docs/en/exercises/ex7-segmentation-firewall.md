@@ -359,7 +359,35 @@ The slide's risk also runs in the other direction: an unpatched computer could i
 
 For one final isolation check, remove Dell's **allowed source** while keeping both directions at **Default deny**. Apply and wait for confirmation. Fresh HTTP and TCP 22 checks from both clients must now fail. The managed Linux terminal remains available through its separate management path.
 
-### A5: Restore and hand over
+### A5: Can ARP spoofing still affect the protected endpoint?
+
+Compare this boundary with Exercise 2. On **Protected Linux**, inspect the route back to Dell and the local gateway mapping:
+
+```bash
+ip route get 10.50.0.11
+ip neigh show 192.168.254.254 dev eth1
+```
+
+The route uses `192.168.254.254`. Dell, in contrast, reaches the diode's WAN address `10.10.0.21` directly on VLAN 10, as recorded in A2. An empty neighbor row means no entry is currently cached; it does not prove protection.
+
+Before opening the solution, answer:
+
+1. Can an attacker on VLAN 10 directly replace Protected Linux's gateway mapping with a forged ARP reply?
+2. While Dell is allowed in A3, could that attacker still intercept Dell's unencrypted HTTP traffic to `10.10.0.21` by misleading Dell about the diode's MAC?
+3. Would relaying Dell's packets automatically violate the source-IP rule? What changes if an attacker gains access to the protected LAN itself?
+
+??? success "Solution: separate the ARP boundary from the application path"
+    **Direct poisoning from VLAN 10: no.** Protected Linux and VLAN 10 are on different Ethernet segments. This routed diode does not forward VLAN 10 ARP frames to its LAN. Linux resolves its local gateway `192.168.254.254`, not the external gateway used in Exercise 2. The protection comes from the routing boundary, not from the `/32` rule.
+
+    **Interception upstream: still possible.** An attacker on VLAN 10 could poison Dell's mapping for `10.10.0.21` and relay its permitted traffic to the real diode. Poisoning the diode's mapping for Dell can also redirect replies. If the relayed IP source remains Dell's allowed address, the source-IP rule still matches. The endpoint's own ARP cache can remain correct while its unencrypted HTTP traffic is intercepted before it reaches the diode. ARP spoofing alone does not turn a blocked source into an allowed one.
+
+    **An attacker on the protected LAN changes the answer.** They could attempt to poison the endpoint's local gateway mapping. This lab's protected data link contains only Linux and the diode; keeping that side exclusive matters.
+
+    Choose a control for the remaining risk: switch ARP validation with maintained IP/MAC bindings on VLAN 10, and authenticated encryption such as HTTPS or SSH with certificate/host-key verification. Encryption protects application data; it does not prevent an attacker from interrupting the connection. See [RFC 826](https://www.rfc-editor.org/rfc/rfc826.html) and [the ARP inspection explanation](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst9400/software/release/17-13/configuration_guide/sec/b_1713_sec_9400_cg/configuring_dynamic_arp_inspection.html).
+
+This is a topology and threat-analysis task. The route and neighbor checks establish the two sides; they do not demonstrate a successful interception. Record whose ARP entry would be targeted and which traffic could be exposed.
+
+### A6: Restore and hand over
 
 Restore the recorded baseline profile: **From Network = Default allow**, **From Endpoint = Default allow**, no exceptions in either direction. Save, confirm **Save & apply**, and wait for confirmation. Repeat both clients' HTTP/TCP 22 checks and the protected endpoint's WAGO HTTP check. All must work again. Keep profile assignment, DNS, NTP and logging settings as recorded in A2.
 
