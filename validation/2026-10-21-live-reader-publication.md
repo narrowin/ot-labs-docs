@@ -1,6 +1,6 @@
 # Live bilingual exercise publication
 
-21 October 2026. Target: the existing student lab at `ot-student-lab.int.narrowin.com`, VM222.
+21 October 2026. Target: the existing student lab at `ot-student-lab.int.narrowin.com`, VM222. This records the first publication. The current reader release and subsequent student-facing corrections are documented in [the clarity report](2026-10-21-student-clarity-fixes.md).
 
 ## Publication decision
 

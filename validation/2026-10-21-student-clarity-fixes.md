@@ -96,7 +96,19 @@ Removed the Container101 naming-history paragraph, the obsolete screenshot/accou
 - All seven English/German pairs have matching command blocks, exactly two numbered extras and files below the reader's 65,536-byte limit.
 - Both strict MkDocs builds pass. The installed theme emits its existing emoji-extension deprecation notice; this course change does not alter the theme.
 - The exact five PLC mappings and original supplied PNG are retained.
-- Actual lab: WAGO B's `nc -vz -w 3 10.10.0.11 4840` succeeded.
+- Actual lab: WAGO B's `nc -vz -w 3 10.10.0.11 4840` succeeded. A bounded capture on its eth1 recorded SYN, SYN/ACK, ACK and connection teardown: six packets with zero application payload, matching the lesson's TCP-only claim.
 - Actual RSTP trial: ether11 changed from alternate/non-forwarding to root/forwarding when ether12 was disabled. The bounded ping completed with 120/120 replies over 60.287 seconds; PLC2A HTTP returned 200 while the uplink was disabled. After re-enabling ether12, ether11 returned to alternate/non-forwarding and ether12 to root/forwarding. The subsequent four pings and HTTP request succeeded; all 16 nodes were healthy.
 
-Publication evidence will be added after activation and inspection of the live reader. This pass does not rerun the unchanged ARP attack or the complete VLAN 70 build, and makes no student-learning measurement claim.
+Published source: `db4a87b62ef77fe0e7571046943031f85f35cb02`.
+
+- Target: [live student reader](https://ot-student-lab.int.narrowin.com/network/exercises/ex1-vlan-discovery?network=1&snapshot=1), VM222, network 1/live snapshot 1.
+- Archive: 33 source files, including all seven lessons in each language, supporting pages and supplied image; 510,677 bytes; SHA-256 `ae1af6a61355926ebf735bcc522a4248f2b0e820510ecaaa2cfd3d5252bbb766`.
+- Persistent course directory: `/nw/data/ot-student/course-releases/db4a87b/docs`. The controller and assistant-agent both mount it read-only at `/opt/ot-labs-docs`; all release checksums pass independently in each service.
+- Only controller and assistant-agent were recreated. Their deployed image identities are unchanged; every other service and all 16 lab nodes retain their original container identities.
+- The active Compose overlay retains its other entries. SHA-256 before: `b40aa6ae1a1c277c70909ab6bb9bd12a4c32f411db4f7c88a342a09a549e74d3`; after: `d0982e90dc39fbe1abadf1479ba35fdc8d1cf3b8ab9126618262822d6cd621f6`.
+- The established Chrome/UI driver opened all 14 lesson/language combinations in the real reader. Every view had the correct title, language and two extras, and the exercise-specific revised text. The obsolete task wording and binary Python construction were absent.
+- The rendered German recovery extra was visually inspected; both switch-restoration commands render correctly and its tool links are available. Exercise 1 retains the exact separate PLC2A/PLC2B mapping, and its original image loads at 1365 by 1284 pixels. The corrected diode A5 remains in both served Exercise 7 files.
+
+Rollback: the previous overlay is retained at `/nw/data/ot-student/course-releases/db4a87b/backup/compose.ot-student-release.before.yml`. Restore that overlay and use the existing lab helper's two-service Compose activation to return both services to the previous `e276eca` course mount. Container and image identity records are in the same backup directory. No appliance reboot or image rebuild was required.
+
+This pass does not rerun the unchanged ARP attack or the complete VLAN 70 build, and makes no student-learning measurement claim.
