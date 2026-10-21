@@ -27,4 +27,4 @@ PLC2A and PLC2B have separate entries. The introduction does not assign them a s
 
 ## Limits
 
-The picture records an example process state; its alarms, communication indicators and actuator states are not acceptance criteria for the networking lessons. This change updates course sources, not the running appliance's published reader content.
+The picture records an example process state; its alarms, communication indicators and actuator states are not acceptance criteria for the networking lessons. The list and image are now available in English and German through the [live reader publication](2026-10-21-live-reader-publication.md).

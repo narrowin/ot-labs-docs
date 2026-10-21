@@ -261,7 +261,7 @@ Validation performed:
 - All 54 fenced command/filter blocks and all 91 Markdown link destinations match the working-tree snapshot taken immediately before this language revision. Command blocks also match between English and German for every lesson.
 - The German MkDocs build passed. It still reports the existing Material emoji configuration deprecation. `git diff --check` passed for the revised exercises.
 
-Limits: This is an editorial review supported by independent spelling software and language references, not certification by a native technical editor or a full external grammar check. LanguageTool is not installed; Java is also absent. Its [public API rules](https://dev.languagetool.org/public-http-api.html) prohibit automated requests, so it was not used. Installation was offered separately and has not been performed. No exercise text was submitted to an external checking service. Changes remain local and unpublished.
+Limits: This is an editorial review supported by independent spelling software and language references, not certification by a native technical editor or a full external grammar check. LanguageTool is not installed; Java is also absent. Its [public API rules](https://dev.languagetool.org/public-http-api.html) prohibit automated requests, so it was not used. Installation was offered separately and has not been performed. No exercise text was submitted to an external checking service. The wording revisions were subsequently committed and included in the [live bilingual publication](2026-10-21-live-reader-publication.md).
 
 ### Follow-up: reversible LanguageTool trial
 
@@ -275,7 +275,7 @@ The checker processed the nine exercise files, with fenced commands excluded and
 
 Reviewed the remaining grammar, punctuation, casing, typography and style flags. Examples of rejected suggestions were changing the imperative “lies” to “ließ”, treating feminine network “Bridge” as the card game, altering hexadecimal literals into multiplication expressions, and lowercasing actual interface labels. No additional exercise correction was clearly justified by these findings.
 
-**Assessment:** Useful as a secondary mechanical check, insufficient to certify natural German or accurate teaching instructions. The earlier recommendation as the best choice was not supported by a comparative accuracy benchmark. Retaining a permanent installation is unnecessary for this task. Results are preserved separately from the temporary programs; the trial programs and archives are moved to the user's Trash. The prior wording edits remain local and unpublished.
+**Assessment:** Useful as a secondary mechanical check, insufficient to certify natural German or accurate teaching instructions. The earlier recommendation as the best choice was not supported by a comparative accuracy benchmark. Retaining a permanent installation is unnecessary for this task. Results are preserved separately from the temporary programs; the trial programs and archives are moved to the user's Trash. The wording edits were subsequently committed and published with the updated course.
 
 ## Diode microsegmentation addon
 
@@ -283,4 +283,4 @@ Added a 35–45 minute optional practical after Exercise 7's VLAN cleanup in bot
 
 The real routed diode protects Linux behind `10.10.0.21`. Students retain Dell engineering access with one `/32` exception, block Hirschmann, deny new endpoint-initiated connections while retaining replies, then remove the incoming exception and restore the baseline. The task uses the existing Diodes profile GUI, configured terminals and installed tools. It distinguishes address policy from user authentication, per-service filtering and a physical one-way diode.
 
-The addon remains inside the existing Exercise 7 reader entry because the deployed course reader allowlists seven lesson IDs. It introduces three shell blocks; the original 18 VLAN blocks are unchanged. Both overviews and agendas point to the addon. See [the addon validation](2026-10-21-diode-addon.md) for the live policy checks and cleanup evidence.
+The addon remains inside the existing Exercise 7 reader entry because the deployed course reader allowlists seven lesson IDs. It introduces four shell blocks, including the ARP-boundary check; the original 18 VLAN blocks are unchanged. Both overviews and agendas point to the addon. See [the addon validation](2026-10-21-diode-addon.md) for the live policy checks and cleanup evidence, and [the publication record](2026-10-21-live-reader-publication.md) for the served English/German versions.

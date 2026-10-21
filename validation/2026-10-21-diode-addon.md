@@ -55,7 +55,7 @@ The observed rejects were connection refusals: HTTP returned curl exit 7 and TCP
 
 The addon has four fenced shell blocks, including the ARP-boundary inspection in A5. They match between English and German; shell syntax passes. The original 18 VLAN practical blocks remain unchanged, and both files remain below the reader's 65,536-byte limit. Both strict MkDocs builds pass. Rendered English and German addon pages were inspected in the existing preview browser.
 
-Live policy results qualify the tested address-based enforcement, not port-specific rules, authentication, patching, IEC 62443 certification or protection against all address spoofing. No reboot-persistence trial or ARP attack was added to this addon validation. The new lesson text has not yet been published to the running reader, and 35–45 minutes is a planning estimate rather than a student-pilot measurement.
+Live policy results qualify the tested address-based enforcement, not port-specific rules, authentication, patching, IEC 62443 certification or protection against all address spoofing. No reboot-persistence trial or ARP attack was added to this addon validation. The addon and corrected ARP question are now available in the [live bilingual reader publication](2026-10-21-live-reader-publication.md). The 35–45 minutes remains a planning estimate rather than a student-pilot measurement.
 
 ## ARP boundary and remaining interception risk
 
