@@ -1,5 +1,15 @@
 # Student lab exercises
 
+## Plant overview and PLC names
+
+- **PLC1**: `abb-800xa-vlan40`
+- **PLC2A**: `wago-plc2a-vlan10`
+- **PLC2B**: `wago-plc2b-vlan10`
+- **PLC3**: `ctrlx-plc3-vlan20`
+- **PLC4**: `schneider-plc4-vlan30`
+
+![Water-treatment process overview from the lab visualization](../img/water-treatment-overview.png)
+
 Work through these seven lessons in your own student `ot-sec-flat` lab. Exercises 1–6 start from its flat baseline; Exercise 7 builds a routed VLAN and then restores that baseline. Allow about 5–6½ hours for the main tasks, discussion and handovers. Each lesson has a collapsed solution followed by **two optional extra sections**; allow another 2–2½ hours if you do all extras.
 
 Times are guides. Complete the core checks at your own pace; use the hints when needed and save the extras for later if you prefer. Keep your commands, filters and results so you can resume in your lab after the course. Finish each lesson's cleanup before taking a break; repeat its baseline checks when returning.

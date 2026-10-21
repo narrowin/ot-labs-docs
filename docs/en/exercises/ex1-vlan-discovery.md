@@ -8,6 +8,16 @@
 
 Compare the same ping traffic on two switch ports: the WAGO endpoint's access port and the uplink to the gateway. Find where an Ethernet frame carries a VLAN tag.
 
+## Plant overview and PLC names
+
+- **PLC1**: `abb-800xa-vlan40`
+- **PLC2A**: `wago-plc2a-vlan10`
+- **PLC2B**: `wago-plc2b-vlan10`
+- **PLC3**: `ctrlx-plc3-vlan20`
+- **PLC4**: `schneider-plc4-vlan30`
+
+![Water-treatment process overview from the lab visualization](../img/water-treatment-overview.png)
+
 ## Your maintenance task
 
 A replacement PLC has been connected. Its port is up, but the team is unsure whether it is in the intended network. Establish the normal path before anyone changes the PLC or switch. You will compare a small diagnostic exchange at the PLC port and at the gateway uplink.

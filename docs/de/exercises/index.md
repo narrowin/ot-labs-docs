@@ -1,5 +1,15 @@
 # Übungen für das studentische Lab
 
+## Anlagenübersicht und SPS-Namen
+
+- **PLC1**: `abb-800xa-vlan40`
+- **PLC2A**: `wago-plc2a-vlan10`
+- **PLC2B**: `wago-plc2b-vlan10`
+- **PLC3**: `ctrlx-plc3-vlan20`
+- **PLC4**: `schneider-plc4-vlan30`
+
+![Übersicht der Wasseraufbereitung aus der Lab-Visualisierung](../img/water-treatment-overview.png)
+
 Bearbeite die sieben Übungen in deinem eigenen studentischen `ot-sec-flat`-Lab der Reihe nach. Übungen 1–6 beginnen im flachen Ausgangszustand; Übung 7 baut ein geroutetes VLAN auf und stellt danach diesen Zustand wieder her. Plane für Hauptaufgaben, Diskussion und Übergaben etwa 5–6½ Stunden. Jede Übung enthält eine ausklappbare Lösung und danach **zwei optionale Zusatzteile**. Alle Extras zusammen benötigen weitere 2–2½ Stunden.
 
 Die Zeiten sind Richtwerte. Bearbeite die Hauptprüfungen in deinem Tempo, nutze bei Bedarf die Hinweise und hebe Extras für später auf. Bewahre Befehle, Filter und Ergebnisse auf, damit du nach dem Kurs in deinem Lab weiterarbeiten kannst. Beende vor einer Pause die Bereinigung der Übung und wiederhole beim Fortsetzen ihre Ausgangsprüfungen.

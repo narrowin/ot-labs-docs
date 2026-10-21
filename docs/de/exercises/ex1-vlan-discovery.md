@@ -8,6 +8,16 @@
 
 Vergleiche denselben Ping-Datenverkehr an zwei Switch-Ports: am Access-Port des WAGO-Geräts und am Uplink zum Gateway. Finde heraus, wo ein Ethernet-Frame ein VLAN-Tag trägt.
 
+## Anlagenübersicht und SPS-Namen
+
+- **PLC1**: `abb-800xa-vlan40`
+- **PLC2A**: `wago-plc2a-vlan10`
+- **PLC2B**: `wago-plc2b-vlan10`
+- **PLC3**: `ctrlx-plc3-vlan20`
+- **PLC4**: `schneider-plc4-vlan30`
+
+![Übersicht der Wasseraufbereitung aus der Lab-Visualisierung](../img/water-treatment-overview.png)
+
 ## Dein Instandhaltungsauftrag
 
 Eine Ersatz-SPS wurde angeschlossen. Der Port ist aktiv, aber das Team ist unsicher, ob die SPS im vorgesehenen Netzwerk liegt. Prüfe zuerst den normalen Pfad, bevor jemand SPS oder Switch umkonfiguriert. Vergleiche einen kleinen Diagnoseaustausch am SPS-Port und am Gateway-Uplink.
