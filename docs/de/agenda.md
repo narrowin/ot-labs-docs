@@ -14,7 +14,8 @@ Nutze das Handout **OT Network Security – Design and Defend** für die Theorie
 1. Lebenszyklus des Fernzugriffs erklären, danach [Übung 5](exercises/ex5-reconnaissance.md): Lieferantenbedarf mit tatsächlicher DMZ-Erreichbarkeit vergleichen.
 2. Monitoring-Platzierung und Protokollbelege diskutieren, danach [Übung 6](exercises/ex6-protocol-discovery.md): Anlagenkommunikation und einen kontrollierten Lesezugriff dokumentieren.
 3. [Übung 7](exercises/ex7-segmentation-firewall.md) für den Zonenentwurf der Wasseraufbereitung verwenden, selbstständig oder mit Diskussion. Gemischte SPS-Zuständigkeiten vor dem Zeichnen von Zonengrenzen prüfen. Jede Person setzt im eigenen Lab einen kleinen Conduit um, prüft ihn und stellt anschliessend den Ausgangszustand wieder her.
-4. Ergebnisse mit Logging, Roadmap und [Automatisierungsausblick](automation.md) des Handouts verbinden. Jede Person benennt eine Verbesserung, Verantwortlichen, Abhängigkeit und Abnahmeprüfung.
+4. Mit installierter gerouteter Diode die optionale **Zusatzübung zur Mikrosegmentierung** in Übung 7 durchführen (35–45 Minuten). Eine Engineering-Quelle zulassen, eine andere sperren und neue Verbindungen des Endpunkts begrenzen; mit der VLAN-Grenze vergleichen und den Ausgangszustand wiederherstellen.
+5. Ergebnisse mit Logging, Roadmap und [Automatisierungsausblick](automation.md) des Handouts verbinden. Jede Person benennt eine Verbesserung, Verantwortlichen, Abhängigkeit und Abnahmeprüfung.
 
 ## Auswahl für einen kurzen Workshop
 

@@ -287,6 +287,99 @@ Run **Collect new data** again to refresh reported port membership. Check absenc
 
 If cleanup differs from the recorded baseline, use the saved checkpoint recovery procedure with the instructor and repeat Task 1. Close all terminal tabs after verification.
 
+## Addon: Microsegment a legacy endpoint with the diode
+
+**Optional, 35–45 minutes.** Use your own lab with the routed `vlan10-diode` and `protected-linux` endpoint. Start from the flat baseline; finish the VLAN 70 cleanup above if you performed it. The other two extras are not prerequisites.
+
+**Your task:** The handout's disposal-system example has an unpatched asset that creates risk for the rest of its zone (PDF pages 149–152, printed slides 158–161). Here, `protected-linux` represents a legacy computer in that system. Keep maintenance access from the Dell engineering workstation, block access from another cell computer, and contain new connections initiated by the legacy computer.
+
+**You will learn:** enforce a boundary around one endpoint, choose a single-address exception, test both directions and verify that an allowed application's replies still work.
+
+The lab uses a **routed diode** with configurable firewall policy. It is not a physical one-way data diode. Its profile filters addresses/subnets rather than individual service ports. Linux is the stand-in for this task; the diode does not patch it or establish an IEC 62443 security level.
+
+### A1: Find the boundary in the GUI
+
+1. Open the product launcher → **Diodes**, then `vlan10-diode`. Record its assigned **Microsegmentation - baseline** profile. Before taking baseline measurements, wait for **Production current** and a **Last confirmed** time under **Configuration Apply Status**. Record the **Config Revision** and compare it with **ASSIGNED REV**.
+2. In **Inventory**, inspect the diode interfaces; in **Netmap**, follow the path from sw-acc2 to the diode and protected Linux. The dotted switch link is a saved wiring annotation. Interface and ARP reports provide additional evidence; a line on the drawing alone does not prove filtering.
+3. Identify the two sides: WAN `10.10.0.21` faces VLAN 10; LAN `192.168.254.254/24` faces protected Linux `192.168.254.1`. The two clients below both remain in VLAN 10. They connect to **`10.10.0.21`**, which forwards permitted traffic to Linux.
+
+| Role | Terminal | Baseline data address |
+| --- | --- | --- |
+| Approved engineering workstation | [Dell](/network/terminal?node=dell-ews1-vlan50) | `10.50.0.11/8` |
+| Other cell computer | [Hirschmann](/network/terminal?node=hirschmann-edge1-vlan50) | `10.50.0.12/8` |
+| Legacy endpoint stand-in | [Protected Linux](/network/terminal?node=protected-linux) | `192.168.254.1/24` |
+
+Use these configured management terminals throughout. An open management terminal is a recovery path, not proof that the diode's data policy permits a connection. Do not use management addresses to test the policy.
+
+### A2: Establish the application baseline
+
+On **Dell**, then **Hirschmann**, record the actual address and selected route:
+
+```bash
+ip -4 -br address show dev eth1
+ip route get 10.10.0.21
+```
+
+On **each client**, run:
+
+```bash
+curl --interface eth1 --connect-timeout 3 --max-time 5 -sS http://10.10.0.21/
+nc -vz -w 3 10.10.0.21 22
+```
+
+Both must receive the **Diode protected Linux endpoint** page and establish the TCP 22 connection. `nc` checks the connection; it does not authenticate an SSH user.
+
+On **Protected Linux**, establish an outgoing application check using WAGO A:
+
+```bash
+curl --interface eth1 --connect-timeout 3 --max-time 5 -sS -o /dev/null -w 'HTTP %{http_code}\n' http://10.10.0.11:8080/webvisu.htm
+```
+
+**Checkpoint:** HTTP returns `200`. In **Diodes → Profiles → Microsegmentation - baseline**, record both policy directions: **From Network** and **From Endpoint** are **Default allow**, with no address exceptions. Preserve the profile's other settings. If this starting state differs, reconcile your previous work before continuing; a missing service cannot demonstrate a newly enforced block.
+
+### A3: Permit only the engineering workstation
+
+1. Open the assigned profile and choose **Edit**.
+2. Under **From Network**, select **Default deny**. Choose **Add allowed source**, enter Dell's observed data address and select **/32**. In this baseline the entry is `10.50.0.11/32`; `/32` means one IPv4 address. Leave **From Endpoint** at **Default allow** for now.
+3. Choose **Save**, then confirm **Save & apply**. Return to the diode details and wait for the changed configuration to be confirmed/in sync. Saving a profile is not yet proof that the device applied it.
+4. Predict each client's result, then repeat both fresh HTTP and TCP 22 commands from A2.
+
+**Checkpoint:** Dell still reaches HTTP and TCP 22. Hirschmann reaches neither. The clients did not need different VLANs; their access differs because the diode enforces policy at the protected endpoint's boundary. A failed request alone is insufficient: compare it with the permitted client's success and the confirmed configuration.
+
+Why not `10.50.0.0/24`? It includes both clients and would admit Hirschmann too. Why not call this a user allowlist? An IP address identifies a source for this rule; it does not authenticate the person or make a compromised allowed workstation trustworthy. HTTP and SSH follow the same source policy; this profile cannot express “HTTP allowed, SSH denied” for that same source.
+
+### A4: Contain new connections from the legacy computer
+
+The slide's risk also runs in the other direction: an unpatched computer could initiate connections to the rest of the plant.
+
+1. Edit the profile again. Keep **From Network** at **Default deny** with Dell's `/32` exception. Set **From Endpoint** to **Default deny**, with no allowed destinations. Save, confirm **Save & apply**, and wait for configuration confirmation.
+2. Repeat the outgoing WAGO HTTP command on **Protected Linux**. Then repeat Dell's HTTP and TCP 22 checks.
+
+**Checkpoint:** The new Protected Linux → WAGO request fails, while new Dell → Protected Linux requests and their replies still work. This separates a new connection initiated by the endpoint from replies belonging to an allowed incoming connection. Do not claim that the hardware passes packets in only one direction.
+
+For one final isolation check, remove Dell's **allowed source** while keeping both directions at **Default deny**. Apply and wait for confirmation. Fresh HTTP and TCP 22 checks from both clients must now fail. The managed Linux terminal remains available through its separate management path.
+
+### A5: Restore and hand over
+
+Restore the recorded baseline profile: **From Network = Default allow**, **From Endpoint = Default allow**, no exceptions in either direction. Save, confirm **Save & apply**, and wait for confirmation. Repeat both clients' HTTP/TCP 22 checks and the protected endpoint's WAGO HTTP check. All must work again. Keep profile assignment, DNS, NTP and logging settings as recorded in A2.
+
+Record this evidence table with actual results and times:
+
+| Policy state | Dell → endpoint HTTP / TCP 22 | Hirschmann → endpoint HTTP / TCP 22 | Endpoint → WAGO HTTP |
+| --- | --- | --- | --- |
+| Baseline | Works / works | Works / works | HTTP 200 |
+| Dell-only incoming | Works / works | Blocked / blocked | HTTP 200 |
+| Dell-only incoming; no new outgoing | Works / works | Blocked / blocked | Blocked |
+| No incoming exceptions; no new outgoing | Blocked / blocked | Blocked / blocked | Blocked |
+| Restored baseline | Works / works | Works / works | HTTP 200 |
+
+Each command creates a fresh connection. An existing SSH session can retain connection-tracking state and is unsuitable evidence for a newly applied block. If a result differs, record the source address, target, time, applied revision and actual error before changing more settings.
+
+??? success "Addon solution and operational conclusion"
+    The diode places an enforceable boundary around the legacy endpoint while the rest of the cell keeps its existing VLANs. The Dell `/32` exception preserves the chosen maintenance path. Restricting new endpoint-initiated connections reduces one route for lateral movement. Stateful replies allow the permitted incoming application to keep working. Removing the exception demonstrates containment, and restoring the recorded profile proves recovery.
+
+    The protection depends on the traffic passing through this boundary. A separate unfiltered interface, a compromised allowed source or forged address identity can undermine the assumptions. The lab's management path is a deliberate platform exception. A production design must account for all paths, required process dependencies and real application authorization. The evidence demonstrates this lab policy, not immunity from exploitation or a certified security level.
+
 ## Explore the topic
 
 - [MikroTik bridge VLAN table](https://help.mikrotik.com/docs/spaces/ROS/pages/28606465/Bridge+VLAN+Table): trace PVID, tagged ports and CPU access.

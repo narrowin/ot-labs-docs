@@ -14,7 +14,8 @@ Use the **OT Network Security – Design and Defend** handout for the teaching s
 1. Teach the remote-access lifecycle, then [Exercise 5](exercises/ex5-reconnaissance.md): compare supplier requirements with actual DMZ exposure.
 2. Discuss monitoring placement and protocol evidence, then [Exercise 6](exercises/ex6-protocol-discovery.md): record observed plant communication and one controlled read.
 3. Use [Exercise 7](exercises/ex7-segmentation-firewall.md) for the water-treatment zone design, individually or with discussion. Check the mixed controller responsibilities before drawing zone boundaries. Each student implements and verifies one small conduit in their own lab, then restores the baseline.
-4. Relate results to the handout's logging, roadmap and [automation outlook](automation.md). Each student selects one improvement, an owner, a dependency and an acceptance check.
+4. With the routed diode installed, use Exercise 7's optional **microsegmentation addon** (35–45 minutes). Preserve one engineering source, block another and contain new endpoint-initiated connections; compare with the VLAN boundary and restore the baseline.
+5. Relate results to the handout's logging, roadmap and [automation outlook](automation.md). Each student selects one improvement, an owner, a dependency and an acceptance check.
 
 ## Short workshop selection
 

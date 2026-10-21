@@ -249,3 +249,11 @@ For each exercise, agree the OT situation, intended skill, core student actions,
 | 6 | Pending | Pending |
 | 7 | Pending | Pending |
 | Automation outlook | Separate scope decision | Pending |
+
+## Diode microsegmentation addon
+
+Added a 35–45 minute optional practical after Exercise 7's VLAN cleanup in both languages. It can also be attempted directly from the flat baseline. The source is the supplied handout's microsegmentation section: PDF pages 149–152, printed slides 158–161, particularly the unpatched disposal-system example.
+
+The real routed diode protects Linux behind `10.10.0.21`. Students retain Dell engineering access with one `/32` exception, block Hirschmann, deny new endpoint-initiated connections while retaining replies, then remove the incoming exception and restore the baseline. The task uses the existing Diodes profile GUI, configured terminals and installed tools. It distinguishes address policy from user authentication, per-service filtering and a physical one-way diode.
+
+The addon remains inside the existing Exercise 7 reader entry because the deployed course reader allowlists seven lesson IDs. It introduces three shell blocks; the original 18 VLAN blocks are unchanged. Both overviews and agendas point to the addon. See [the addon validation](2026-10-21-diode-addon.md) for the live policy checks and cleanup evidence.

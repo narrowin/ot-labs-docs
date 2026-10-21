@@ -27,6 +27,8 @@ Werkzeug-Links sind für den Network-Explorer-Reader gedacht. Öffne bei Nutzung
 | 6 | [OT-Protokolle erkennen](ex6-protocol-discovery.md) | 40–50 Min. | HMI-Registerzuordnung; Grenzen der Fernerkennung |
 | 7 | [Ein geroutetes VLAN aufbauen und prüfen](ex7-segmentation-firewall.md) | 90–120 Min. | Eine geroutete Anfrage verfolgen; Antworten und neue Verbindungen |
 
+**Optionale Diode-Zusatzübung, 35–45 Minuten:** Fahre in [Übung 7](ex7-segmentation-firewall.md) mit **Zusatzübung: Ein Altsystem mit der Diode mikrosegmentieren** fort. Verwende die neu ergänzte geroutete Diode, um den Engineering-Zugriff zu erhalten, einen anderen Client zu sperren und neue Verbindungen des Endpunkts zu begrenzen. Die Aufgabe beginnt im flachen Ausgangszustand und enthält eine eigene Bereinigung; der Aufbau von VLAN 70 ist keine Voraussetzung.
+
 ## Verbindung zum Kurs
 
 Die Kursanlage ist ein Beispiel zur Wasseraufbereitung. ABB übernimmt die Leitfunktion, WAGO Aufbereitungsfunktionen und CtrlX die Pumpen. Schneider umfasst auch Prozess- und Entsorgungsfunktionen. Dies sind die Lehrrollen des Handouts. Prüfe einen Netzwerkfluss, bevor du ihn als belegte Steuerungsabhängigkeit bezeichnest.
@@ -40,6 +42,7 @@ Die Kursanlage ist ein Beispiel zur Wasseraufbereitung. ABB übernimmt die Leitf
 | Fernzugriff (S. 100–104) | Übung 5: Den benötigten Lieferantenzugriff begrenzen |
 | Protokollschichten und lokale Erkennung (S. 36–41, 50) | Übung 6: Netzwerk-, Dienst- und Prozessbelege trennen |
 | Anlagenzonen, Steuerungsabhängigkeiten und Logs (S. 128–148, 162–164) | Übung 7: Zonen begründen, einen Conduit umsetzen und Bereinigung belegen |
+| Mikrosegmentierung eines ungepatchten Entsorgungssystems (S. 149–152) | Diode-Zusatzübung: Zugriff an der Grenze eines Endpunkts begrenzen und beide Richtungen prüfen |
 
 Die Seiten zählen PDF-Seiten in **OT Network Security – Design and Defend handout**; aufgedruckte Foliennummern weichen später ab. Nutze beim Selbststudium die nummerierte Reihenfolge. Im Präsenzkurs kann die Kursleitung LACP vor RSTP einführen und Übungen 3–4 zusammen bearbeiten, sobald beide Begriffe bekannt sind.
 

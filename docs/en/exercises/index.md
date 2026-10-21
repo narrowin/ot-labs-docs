@@ -27,6 +27,8 @@ Tool links are designed for the Network Explorer reader. In this published docum
 | 6 | [Identify OT protocols](ex6-protocol-discovery.md) | 40–50 min | HMI register mapping; remote discovery limits |
 | 7 | [Build and verify a routed VLAN](ex7-segmentation-firewall.md) | 90–120 min | Follow a routed request; replies versus fresh connections |
 
+**Optional diode addon, 35–45 minutes:** In [Exercise 7](ex7-segmentation-firewall.md), continue to **Addon: Microsegment a legacy endpoint with the diode**. Use the newly added routed diode to preserve engineering access, block another client and contain new endpoint-initiated connections. It starts from the flat baseline and has its own cleanup; the VLAN 70 build is not a prerequisite.
+
 ## Connect the work to the course
 
 The course plant is a water-treatment example. ABB provides supervision; WAGO controls treatment functions; CtrlX controls pumps; Schneider also spans process and disposal functions. Treat these as the handout's teaching roles. Verify a network flow before calling it a proven control dependency.
@@ -40,6 +42,7 @@ The course plant is a water-treatment example. ABB provides supervision; WAGO co
 | Remote access (pp. 100–104) | Exercise 5: bound a supplier's required access |
 | Protocol layers and local discovery (pp. 36–41, 50) | Exercise 6: separate network, service and process evidence |
 | Plant zones, controller dependencies and logs (pp. 128–148, 162–164) | Exercise 7: justify a zone design, enforce one conduit and prove cleanup |
+| Microsegmentation of an unpatched disposal system (pp. 149–152) | Diode addon: restrict access at one endpoint's boundary and test both directions |
 
 Page numbers count PDF pages in **OT Network Security – Design and Defend handout**; printed slide numbers later differ. Keep the numbered lab order for independent study. In the taught course, the instructor can introduce the LACP concept before RSTP, then use Exercises 3–4 together once both terms are known.
 
