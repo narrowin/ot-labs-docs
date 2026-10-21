@@ -1,10 +1,10 @@
 # Übung 2: Eine ARP-Umleitung nachweisen
 
-**Zeit:** 40–50 Minuten. **Lab:** aktuelles studentisches `ot-sec-flat`. **Niveau:** Geführte Praxis.
+**Zeitbedarf:** 40–50 Minuten. **Lab:** dein eigenes `ot-sec-flat`-Lab. **Niveau:** angeleitete praktische Übung.
 
 Weise eine veränderte IP-MAC-Zuordnung nach, verfolge den umgeleiteten Verkehr und stelle den ursprünglichen Zustand wieder her. Führe die Umleitung nur von WAGO A gegen B und dessen Gateway aus. Verwende für Verbindungstests die genannten Lab-Ziele. Die Adressen gehören zum simulierten Netz dieser Appliance.
 
-**Lernziele:** ARPs Vertrauensproblem erklären, eine begrenzte Layer-2-Umleitung durchführen und nachweisen, lesbare Anwendungsdaten erkennen sowie Erkennung und Gegenmassnahmen erklären.
+**Lernziele:** Erklären, warum gefälschte ARP-Antworten akzeptiert werden können, eine begrenzte Layer-2-Umleitung durchführen und nachweisen, lesbare Anwendungsdaten erkennen sowie Erkennung und Gegenmassnahmen erklären.
 
 ## Dein Auftrag bei einer Meldung
 
@@ -12,7 +12,7 @@ Das Monitoring meldet eine geänderte Gateway-MAC in einer Produktionszelle. Ist
 
 **ARP einfach erklärt:** Für ein IPv4-Paket über Ethernet braucht ein Host die MAC-Adresse des nächsten Hops. ARP fragt, wem diese IP gehört, und speichert die Antwort. Eine gefälschte Antwort kann die Frames an ein anderes Gerät lenken. Die IP-Zieladresse muss sich dabei nicht ändern.
 
-Der TCP-Marker unten ist eine entbehrliche Testnachricht, kein Industrieprotokoll und kein entwendetes Passwort. Er zeigt die Umleitung, ohne einen Prozess zu beeinflussen. Übung 6 untersucht tatsächliche OT-Protokollnachrichten des Labs.
+Die Testnachricht `LAB-ARP-DEMO` ist weder ein Industrieprotokoll noch ein echtes Passwort. Du sendest sie über TCP, um die Umleitung nachzuweisen, ohne in die Prozesssteuerung einzugreifen. Übung 6 untersucht tatsächliche OT-Protokollnachrichten des Labs.
 
 ## Vorbereitung
 
@@ -24,10 +24,10 @@ Schliesse [Übung 1](ex1-vlan-discovery.md) ab. Öffne die konfigurierten Termin
 | Opfer | [WAGO B](/network/terminal?node=wago-plc2b-vlan10) | `10.10.0.12` |
 | Empfänger | [DMZ-Jumphost](/network/terminal?node=proxmox-jumphost) | `2.2.2.2` |
 
-Lass die Tabs offen. Die Terminals verwenden Management-Verbindungen; das Experiment läuft über Dateninterface `eth1`. Führe jeden Block auf dem genannten Knoten aus. Der Übungstitel im Werkzeug-Tab öffnet diese Anleitung erneut.
+Lass die Tabs offen. Die Terminals verwenden Management-Verbindungen; das Experiment läuft über das Dateninterface `eth1`. Führe jeden Block auf dem genannten Knoten aus. Der Übungstitel im Werkzeug-Tab öffnet diese Anleitung erneut.
 
 ??? info "Du verwendest die eigenständige Dokumentation?"
-    Suche in **Netmap** deines zugewiesenen Live-Labs nach jedem stabilen Knotennamen aus der Tabelle. Wähle im Aktionsmenü **Open terminal**. Wähle für den Mitschnitt WAGO A, **Capture packets**, Interface **eth1**. Reader-Links treffen diese Auswahl automatisch und behalten Netzwerk und Snapshot bei.
+    Suche in **Netmap** deines zugewiesenen Live-Labs nach jedem stabilen Knotennamen aus der Tabelle. Wähle im Aktionsmenü **Open terminal**. Wähle für den Mitschnitt WAGO A, **Capture packets**, Interface **eth1**. Links in der Übungsansicht treffen diese Auswahl automatisch und behalten Netzwerk und Snapshot bei.
 
 ## Aufgabe 1: Die echte Gateway-Zuordnung festhalten
 
@@ -38,7 +38,7 @@ ping -c 2 10.10.0.1
 ip neigh show 10.10.0.1 dev eth1
 ```
 
-Notiere die Gateway-MAC, nicht nur den Nachbarzustand (`REACHABLE` oder `STALE`). Auf **WAGO A**:
+Notiere die Gateway-MAC, nicht nur den Zustand des Nachbareintrags (`REACHABLE` oder `STALE`). Auf **WAGO A**:
 
 ```bash
 cat /sys/class/net/eth1/address
@@ -46,28 +46,28 @@ cat /proc/sys/net/ipv4/ip_forward
 command -v arp_spoofing-simple.sh timeout
 ```
 
-Notiere A's MAC und den Forwarding-Wert. Der letzte Befehl muss je einen Pfad für `arp_spoofing-simple.sh` und `timeout` ausgeben. Das Hilfsprogramm bewahrt den vorherigen Forwarding-Zustand.
+Notiere die MAC-Adresse von A und den Forwarding-Wert. Der letzte Befehl muss je einen Pfad für `arp_spoofing-simple.sh` und `timeout` ausgeben. Das Hilfsprogramm bewahrt den vorherigen Forwarding-Zustand.
 
-**Kontrollpunkt:** Gateway-MAC und A's MAC unterscheiden sich. Beide Befehle sind vorhanden. Ist die Zuordnung bereits verändert, führe zuerst die drei Aufräumschritte aus Aufgabe 5 aus.
+**Kontrollpunkt:** Gateway-MAC und die MAC-Adresse von A unterscheiden sich. Beide Befehle sind vorhanden. Ist die Zuordnung bereits verändert, führe zuerst die drei Aufräumschritte aus Aufgabe 5 aus.
 
 ??? info "Die Zuordnung auch im Explorer ansehen"
-    Öffne [die Host-Details von WAGO B](/network/inventory/host?node=wago-plc2b-vlan10) und klappe **ARP Cache** auf. Suche **address** `10.10.0.1` auf **interface** `eth1`; vergleiche **mac** mit deiner Gateway-MAC. Bei [WAGO A](/network/inventory/host?node=wago-plc2a-vlan10) zeigt **Interface Details** die MAC von `eth1` und **Network Interfaces** die Adresse `10.10.0.11` mit Maske `255.0.0.0`. **Interface ether2** im Kopfbereich bezeichnet den Switch-Port, nicht Linux-`eth1`. B's MAC im Kopfbereich identifiziert B selbst und bleibt unverändert; untersucht wird die Gateway-Zuordnung in **ARP Cache**.
+    Öffne [die Host-Details von WAGO B](/network/inventory/host?node=wago-plc2b-vlan10) und klappe **ARP Cache** auf. Suche **address** `10.10.0.1` auf **interface** `eth1`; vergleiche **mac** mit deiner Gateway-MAC. Bei [WAGO A](/network/inventory/host?node=wago-plc2a-vlan10) zeigt **Interface Details** die MAC von `eth1` und **Network Interfaces** die Adresse `10.10.0.11` mit Maske `255.0.0.0`. **Interface ether2** im Kopfbereich bezeichnet den Switch-Port, nicht Linux-`eth1`. Die MAC-Adresse von B im Kopfbereich identifiziert B selbst und bleibt unverändert; untersucht wird die Gateway-Zuordnung in **ARP Cache**.
 
-    Das sind gesammelte Endpunktdaten. ARP wird etwa alle 60 Sekunden erfasst; Neuladen zeigt die zuletzt empfangene Meldung und startet keine neue Abfrage. Ein früh gestoppter Versuch kann zwischen zwei Erfassungen liegen; die Übermittlung kann verzögert sein. Verwende Terminal und Mitschnitt für den unmittelbaren Nachweis; eine unveränderte Explorer-Zeile schliesst ein Abfangen nicht aus. Fehlende Bereiche: Melde sie der Kursleitung und nutze Terminal-/Capture-Belege.
+    Das sind gesammelte Endpunktdaten. ARP wird etwa alle 60 Sekunden erfasst; Neuladen zeigt die zuletzt empfangene Meldung und startet keine neue Abfrage. Ein früh gestoppter Versuch kann zwischen zwei Erfassungen liegen; die Übermittlung kann verzögert sein. Verwende das Terminal und den Mitschnitt für den unmittelbaren Nachweis. Eine unveränderte Explorer-Zeile schliesst eine Umleitung nicht aus. Fehlen Bereiche in der Anzeige, melde dies der Kursleitung und verwende die Terminalausgaben und aufgezeichneten Pakete.
 
-    Ohne Reader: **Inventory → Hosts**, stabilen Knotennamen suchen, **Enter** drücken und den Namen anklicken.
+    Ausserhalb der Übungsansicht: **Inventory → Hosts**, stabilen Knotennamen suchen, **Enter** drücken und den Namen anklicken.
 
 ## Aufgabe 2: Den normalen Weg beobachten
 
-[Öffne einen Mitschnitt an WAGO A's Datenport](/network/capture?node=wago-plc2a-vlan10&interface=eth1), wähle **Start Capture** und führe auf **WAGO B** aus:
+[Öffne einen Mitschnitt am Datenport von WAGO A](/network/capture?node=wago-plc2a-vlan10&interface=eth1), wähle **Start Capture** und führe auf **WAGO B** aus:
 
 ```bash
 ping -c 3 2.2.2.2
 ```
 
-Verwende in Wireshark `icmp && ip.addr == 10.10.0.12`. Warte einige Sekunden, bis die Anzeige nachgezogen hat.
+Verwende in Wireshark `icmp && ip.addr == 10.10.0.12`. Warte einige Sekunden, bis die Anzeige aktualisiert ist.
 
-**Kontrollpunkt:** Die Pings antworten, ihre Unicast-Pakete durchqueren A's geswitchten Access-Link normalerweise aber nicht. ARP-Broadcasts können trotzdem sichtbar sein. Ist Opfer-Unicast bereits sichtbar, kontrolliere Zuordnung und Capture-Interface.
+**Kontrollpunkt:** Die Pings werden beantwortet. Ihre Unicast-Pakete laufen normalerweise aber nicht über den Access-Link von A, weil der Switch sie direkt zum Gateway weiterleitet. ARP-Broadcasts können trotzdem sichtbar sein. Siehst du bereits Unicast-Verkehr von B, kontrolliere die ARP-Zuordnung und das ausgewählte Mitschnitt-Interface.
 
 Lies Aufgaben 3–5 vor dem Start des Timers. Halte A, B, Empfänger und Mitschnitt bereit. Bereite auf dem **DMZ-Jumphost** den Marker-Empfänger vor:
 
@@ -94,10 +94,10 @@ ip neigh show 10.10.0.1 dev eth1
 ping -c 3 2.2.2.2
 ```
 
-**Kontrollpunkt:** B ordnet `10.10.0.1` jetzt A's MAC zu. Der Mitschnitt auf A enthält B's ICMP-Verkehr. Ein Paket kann beim Empfang und bei der Weiterleitung zweimal erscheinen. ICMP-Redirects und einzelne verlorene Pings sind möglich; sie widerlegen die MAC- und Nutzlastbelege nicht. Ping allein beweist keine Umleitung.
+**Kontrollpunkt:** B ordnet `10.10.0.1` jetzt die MAC-Adresse von A zu. Der Mitschnitt auf A enthält den ICMP-Verkehr von B. Ein Paket kann beim Empfang und bei der Weiterleitung zweimal erscheinen. ICMP-Redirects und einzelne verlorene Pings sind möglich; sie widerlegen die MAC- und Nutzlastbelege nicht. Ping allein beweist keine Umleitung.
 
 ??? info "Hinweis: Timer abgelaufen oder keine Änderung"
-    Prüfe das Hilfsprogramm-Terminal auf Fehler. Exit-Code 124 bedeutet: Das 120-Sekunden-Limit ist abgelaufen. Räume vor einem neuen Versuch zuerst mit Aufgabe 5 auf. Starte den Empfänger aus Aufgabe 2 erneut und wiederhole Aufgaben 3–5, sobald du bereit bist. Verwende dieselben drei Knoten und denselben Capture-Filter. Die Paketanalyse muss nicht während des laufenden Hilfsprogramms geschehen.
+    Prüfe das Hilfsprogramm-Terminal auf Fehler. Exit-Code 124 bedeutet: Das 120-Sekunden-Limit ist abgelaufen. Räume vor einem neuen Versuch zuerst mit Aufgabe 5 auf. Starte den Empfänger aus Aufgabe 2 erneut und wiederhole Aufgaben 3–5, sobald du bereit bist. Verwende dieselben drei Knoten und denselben Mitschnittfilter. Die Paketanalyse muss nicht während des laufenden Hilfsprogramms geschehen.
 
 ## Aufgabe 4: Einen harmlosen Klartext-Marker finden
 
@@ -107,16 +107,16 @@ Sende diesen Marker auf **WAGO B**, während das Hilfsprogramm läuft und der vo
 printf 'LAB-ARP-DEMO\n' | nc -N -w 3 2.2.2.2 2323
 ```
 
-Der Empfänger soll `LAB-ARP-DEMO` anzeigen. Notiere die veränderte Nachbarzuordnung und gehe direkt zu Aufgabe 5. Der Mitschnitt behält die Pakete zur Analyse nach dem Stoppen des Hilfsprogramms.
+Der Empfänger soll `LAB-ARP-DEMO` anzeigen. Notiere die veränderte Nachbarzuordnung und gehe direkt zu Aufgabe 5. Die aufgezeichneten Pakete bleiben für die Analyse nach dem Stoppen des Hilfsprogramms erhalten.
 
-**Kontrollpunkt:** Der Empfänger hat den Marker erhalten, während B's Gateway-Zuordnung auf A zeigte. Die Paketbelege prüfst du nach dem Aufräumen unten.
+**Kontrollpunkt:** Der Empfänger hat den Marker erhalten, während B der Gateway-IP die MAC-Adresse von A zuordnete. Die Paketbelege prüfst du nach dem Aufräumen unten.
 
 ??? info "Hinweis: Kein Marker"
     Ist der Empfänger oder das Hilfsprogramm beendet, räume zuerst mit Aufgabe 5 auf, starte den Empfänger aus Aufgabe 2 erneut und wiederhole Aufgaben 3–5. `tcp.port == 2323 && tcp.len > 0` zeigt Datenpakete. Sind nur SYN-Pakete sichtbar, kontrolliere Listener und Route.
 
 ## Aufgabe 5: Wiederherstellen und prüfen
 
-1. Stoppe das Hilfsprogramm auf A gegebenenfalls mit **Ctrl+C**. Warte auf den Prompt und einige Sekunden auf korrigierende ARP-Antworten. Stoppe auch den Listener mit **Ctrl+C**, falls er noch wartet.
+1. Stoppe das Hilfsprogramm auf A gegebenenfalls mit **Ctrl+C**. Warte, bis die Eingabeaufforderung wieder erscheint. Warte anschliessend einige Sekunden auf korrigierende ARP-Antworten. Stoppe auch den Listener mit **Ctrl+C**, falls er noch wartet.
 2. Aktualisiere auf **WAGO B** nur diesen dynamischen Gateway-Eintrag:
 
     ```bash
@@ -133,24 +133,24 @@ Der Empfänger soll `LAB-ARP-DEMO` anzeigen. Notiere die veränderte Nachbarzuor
     cat /proc/sys/net/ipv4/ip_forward
     ```
 
-**Kontrollpunkt:** Kein `arpspoof`-Prozess bleibt übrig, Forwarding hat den Ausgangswert und B verwendet bei erfolgreichen Pings wieder die ursprüngliche Gateway-MAC. Ein stilles `pgrep` mit Exit-Code 1 bedeutet: kein Treffer. Bleibt die Zuordnung falsch, stoppe hier und hole die Kursleitung dazu.
+**Kontrollpunkt:** Kein `arpspoof`-Prozess bleibt übrig, Forwarding hat den Ausgangswert und B verwendet bei erfolgreichen Pings wieder die ursprüngliche Gateway-MAC. Gibt `pgrep` nichts aus und endet mit Exit-Code 1, wurde kein passender Prozess gefunden. Bleibt die Zuordnung falsch, stoppe hier und hole die Kursleitung dazu.
 
 Untersuche jetzt den gespeicherten Mitschnitt. Filtere `tcp.port == 2323`, wähle ein Datenpaket und öffne per Rechtsklick **Follow → TCP Stream**. Finde `LAB-ARP-DEMO`, notiere die Paketnummer und schliesse das Stream-Fenster wieder.
 
 **Kontrollpunkt:** Empfänger und aufgezeichnete TCP-Nutzdaten enthalten denselben Marker. Zusammen mit der veränderten Nachbarzuordnung belegt dies die Umleitung. Ein offener Port allein beweist keine abgefangenen Anwendungsdaten.
 
-Lass den Mitschnitt für Extra 1 offen, falls du weitermachen möchtest. Schliesse sonst Capture- und Terminal-Tabs.
+Lass den Mitschnitt für Extra 1 offen, falls du weitermachen möchtest. Schliesse sonst die Mitschnitt- und Terminal-Tabs.
 
 ## Deine Übergabe zur Meldung
 
-Schreibe vier Zeilen: ursprüngliche Gateway-MAC mit Zeitpunkt; geänderte Zuordnung mit aufgezeichnetem Marker; wiederhergestellte Zuordnung mit Bereinigungsbelegen; nächste betriebliche Prüfung. Prüfe genehmigten Gateway-Tausch oder Failover und den Besitzer der beobachteten MAC, bevor du eine reale Meldung als Angriff einstufst. Eskaliere mit diesen Belegen; ein geänderter ARP-Eintrag allein rechtfertigt nicht das Abtrennen einer laufenden SPS.
+Schreibe vier Zeilen: ursprüngliche Gateway-MAC mit Zeitpunkt; geänderte Zuordnung mit aufgezeichnetem Marker; wiederhergestellte Zuordnung mit Bereinigungsbelegen; nächste betriebliche Prüfung. Prüfe, ob ein Gateway-Tausch oder eine automatische Umschaltung genehmigt war und zu welchem Gerät die beobachtete MAC-Adresse gehört, bevor du eine reale Meldung als Angriff einstufst. Gib diese Belege an die zuständige Stelle weiter; ein geänderter ARP-Eintrag allein rechtfertigt nicht das Abtrennen einer laufenden SPS.
 
 ## Lösung
 
 ??? success "Vergleiche deine Belege"
-    Vorher sendet B gerouteten Verkehr an die echte Gateway-MAC. Gefälschte ARP-Antworten ersetzen diese Zuordnung durch A's MAC. B's geroutete Pakete laufen deshalb über A. Empfänger und Mitschnitt zeigen denselben Klartext-Marker. Nach dem Stoppen und Aktualisieren kehrt die ursprüngliche Zuordnung zurück.
+    Vor dem Versuch sendet B gerouteten Verkehr an die echte Gateway-MAC. Gefälschte ARP-Antworten ersetzen diese Zuordnung durch die MAC-Adresse von A. Die gerouteten Pakete von B laufen deshalb über A. Empfänger und Mitschnitt zeigen denselben Klartext-Marker. Nach dem Stoppen und Aktualisieren kehrt die ursprüngliche Zuordnung zurück.
 
-    Das belegt eine nicht authentifizierte ARP-Zuordnung und lesbare TCP-Anwendungsdaten im Lab. Es beweist keine Entschlüsselung verschlüsselter Inhalte. Port Security allein validiert keine IP-MAC-Zuordnung. Dynamic ARP Inspection benötigt vertrauenswürdige Bindings und einen Plan für statisch adressierte OT-Geräte.
+    Das belegt eine nicht authentifizierte ARP-Zuordnung und lesbare TCP-Anwendungsdaten im Lab. Es beweist keine Entschlüsselung verschlüsselter Inhalte. Port Security allein prüft keine IP-MAC-Zuordnung. Dynamic ARP Inspection benötigt vertrauenswürdige Zuordnungen und ein Verfahren für statisch adressierte OT-Geräte.
 
 ## Extra 1: Eine ARP-Vorfall-Zeitleiste erstellen
 
@@ -158,8 +158,8 @@ Schreibe vier Zeilen: ursprüngliche Gateway-MAC mit Zeitpunkt; geänderte Zuord
 
 1. Filtere `arp.opcode == 2 && arp.src.proto_ipv4 == 10.10.0.1`.
 2. Klappe **Address Resolution Protocol** auf. Notiere **Sender IP address**, **Sender MAC address** und je eine Frame-Nummer vor, während und nach dem Experiment. Fehlt eine Phase, kennzeichne sie als unbeobachtet; deine Nachbartabelle ist ein separater Beleg.
-3. Vergleiche die behauptete IP-Zuordnung mit A's bekannter MAC. Warum ist eine geänderte Zuordnung aussagekräftiger als die Zahl der ARP-Pakete?
-4. Öffne B's **ARP Cache** im Explorer erneut. Vergleiche die neueste verfügbare Zeile mit deinen aufgezeichneten Phasen. Explorer behält den neuesten Bericht, nicht diese Paket-Zeitleiste; kennzeichne dort nicht erfasste Phasen als unbeobachtet.
+3. Vergleiche die gemeldete Zuordnung der Gateway-IP mit der bekannten MAC-Adresse von A. Warum ist eine geänderte Zuordnung aussagekräftiger als die Zahl der ARP-Pakete?
+4. Öffne den **ARP Cache** von B im Explorer erneut. Vergleiche die neueste verfügbare Zeile mit deinen aufgezeichneten Phasen. Der Explorer zeigt den neuesten Bericht, nicht den gesamten zeitlichen Verlauf. Kennzeichne dort nicht erfasste Phasen als unbeobachtet.
 
 **Kontrollpunkt:** Deine Zeitleiste unterscheidet echte Gateway-Zuordnung, gefälschte Behauptung und Wiederherstellung. Gratuitous ARP allein ist kein Angriffsbeweis. [Suche in den ARP-Feldern](https://www.wireshark.org/docs/dfref/a/arp.html) nach `arp.src.hw_mac` und `arp.isgratuitous`.
 
@@ -171,12 +171,12 @@ Schreibe vier Zeilen: ursprüngliche Gateway-MAC mit Zeitpunkt; geänderte Zuord
 | --- | --- |
 | Pro Switch-Port nur die MAC der jeweiligen SPS erlauben | Musste A seine Quell-MAC ändern, um die Gateway-IP zu beanspruchen? |
 | Auf B einen festen Gateway-ARP-Eintrag setzen | Was muss sich beim legitimen Wechsel der Gateway-MAC ändern? |
-| ARP-Aussagen am Switch validieren | Woher kommen vertrauenswürdige IP-/MAC-Zuordnungen für statische SPS-Adressen? |
+| ARP-Zuordnungen am Switch prüfen | Woher kommen vertrauenswürdige IP-/MAC-Zuordnungen für statische SPS-Adressen? |
 | Änderungen nur melden | Wer prüft den Wartungsauftrag und entscheidet über die Reaktion? |
 
-**Kontrollpunkt:** A kann mit seiner eigenen erlaubten MAC eine falsche Gateway-IP-Zuordnung behaupten. Einfache Quell-MAC-Port-Security reicht deshalb nicht. Ein fester ARP-Eintrag braucht einen gepflegten Austauschprozess. Dynamic ARP Inspection benötigt Plattformunterstützung und vertrauenswürdige Zuordnungen; eine reine DHCP-Datenbank deckt statische Geräte nicht automatisch ab. Monitoring liefert Belege, blockiert aber nicht selbst die falsche Aussage.
+**Kontrollpunkt:** A kann mit seiner eigenen erlaubten MAC eine falsche Zuordnung zur Gateway-IP verbreiten. Eine Port-Security-Regel, die nur die Quell-MAC prüft, reicht deshalb nicht aus. Bei einem festen ARP-Eintrag muss geregelt sein, wer ihn beim Gateway-Tausch aktualisiert. Dynamic ARP Inspection benötigt Plattformunterstützung und vertrauenswürdige Zuordnungen; eine reine DHCP-Datenbank deckt statische Geräte nicht automatisch ab. Monitoring liefert Belege, verhindert die falsche Zuordnung aber nicht.
 
-Wähle eine vorbeugende und eine Erkennungs-/Reaktionsmassnahme. Benenne Verantwortlichen und Abnahmeprüfung am Austauschtag einschliesslich wiederhergestellter Anwendungskommunikation. Aktiviere keinen ungeprüften Schutzmechanismus in einer laufenden Zelle. Schliesse die Werkzeuge; weiter mit [Übung 3](ex3-spanning-tree.md).
+Wähle eine vorbeugende Massnahme und eine Massnahme zur Erkennung und Reaktion. Halte fest, wer verantwortlich ist und wie die Funktion am Austauschtag geprüft wird. Dazu gehört auch der Nachweis, dass die Anwendung wieder kommunizieren kann. Aktiviere keinen ungeprüften Schutzmechanismus in einer laufenden Zelle. Schliesse die Werkzeuge; weiter mit [Übung 3](ex3-spanning-tree.md).
 
 ## Weiterforschen
 

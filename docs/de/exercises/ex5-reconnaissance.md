@@ -1,16 +1,16 @@
 # Übung 5: Zugriff aus der DMZ beurteilen
 
-**Zeit:** 35–45 Minuten. **Lab:** aktuelles studentisches `ot-sec-flat`. **Niveau:** Geführte Praxis.
+**Zeitbedarf:** 35–45 Minuten. **Lab:** dein eigenes `ot-sec-flat`-Lab. **Niveau:** angeleitete praktische Übung.
 
-Ermittle die Erreichbarkeit aus der DMZ und schreibe einen belegbaren Befund. Begrenze die Erkennung auf die vier genannten Lab-IPs und die Dienstprüfung auf WAGO A. Breite Subnetz-Scans, Passwortversuche und Softwareinstallation sind nicht nötig.
+Prüfe, welche Ziele aus der DMZ erreichbar sind, und dokumentiere die Ergebnisse mit Belegen. Begrenze die Erkennung auf die vier genannten Lab-IPs und die Dienstprüfung auf WAGO A. Breite Subnetz-Scans, Passwortversuche und Softwareinstallation sind nicht nötig.
 
 **Lernziele:** Den Ausgangspunkt des Fernzugriffs bestimmen, begrenzte Lab-Ziele erkennen, erreichbare Dienste identifizieren, Beobachtungen von Schwachstellen unterscheiden und einen reproduzierbaren Befund mit Empfehlungen schreiben.
 
 ## Dein Auftrag zum Fernzugriff
 
-Ein Lieferant braucht für eine vereinbarte Diagnose Zugang zu WAGO A's WebVisu. Der Anlagenverantwortliche möchte wissen, ob der bestehende DMZ-Jumphost auch Engineering- oder Steuerungsdienste erreicht, die dafür nicht nötig sind. Prüfe die tatsächliche Erreichbarkeit und formuliere eine eng begrenzte Zugriffsempfehlung.
+Ein Lieferant braucht für eine vereinbarte Diagnose Zugang zur WebVisu von WAGO A. Der Anlagenverantwortliche möchte wissen, ob der bestehende DMZ-Jumphost auch Engineering- oder Steuerungsdienste erreicht, die dafür nicht nötig sind. Prüfe die tatsächliche Erreichbarkeit und formuliere eine Empfehlung für den benötigten Zugriff.
 
-Eine **DMZ** ist eine Netzwerkzone zwischen Vertrauensbereichen. Ein **Jumphost** ist ein zwischengeschalteter Zugriffshost; sein Name begrenzt keine Verbindungen. Ein TCP-**Port** bezeichnet einen Dienst-Endpunkt. Eine offene Verbindung belegt Erreichbarkeit, nicht die Berechtigung zur Anmeldung oder Prozessänderung.
+Eine **DMZ** ist eine Netzwerkzone zwischen Vertrauensbereichen. Ein **Jumphost** ist ein zwischengeschalteter Rechner für den Zugriff auf andere Systeme. Seine Bezeichnung allein sagt nichts darüber aus, welche Verbindungen erlaubt sind. Ein TCP-**Port** bezeichnet einen Dienst-Endpunkt. Eine erfolgreiche Verbindung belegt die Erreichbarkeit des Dienstes. Sie sagt nichts darüber aus, ob jemand sich anmelden oder den Prozess verändern darf.
 
 Dieses Szenario umfasst ausschliesslich die genannten Simulatorziele. Stimme bei realen OT-Geräten Erkennungsmethoden und Zeitpunkt zuerst mit Betrieb und Geräteverantwortlichen ab; selbst Verbindungsprüfungen können empfindliche Dienste beeinträchtigen. Beginne, wo verfügbar, mit Inventar und passiven Beobachtungen.
 
@@ -28,7 +28,7 @@ Dieses Szenario umfasst ausschliesslich die genannten Simulatorziele. Stimme bei
 Das sind Lab-Adressen. Historische Namen wie `vlan20` beweisen keine getrennten VLANs im aktuellen flachen OT-Netz.
 
 ??? info "Du verwendest die eigenständige Dokumentation?"
-    Öffne **Netmap** deines zugewiesenen Live-Labs, suche **proxmox-jumphost** und wähle im Aktionsmenü **Open terminal**. Wähle für Extra 1 **wago-plc2b-vlan10**. Wähle für Extra 2 **wago-plc2a-vlan10**, **Capture packets**, Interface **eth1**. Reader-Links behalten Netzwerk und Snapshot bei und wählen diese Ziele automatisch.
+    Öffne **Netmap** deines zugewiesenen Live-Labs, suche **proxmox-jumphost** und wähle im Aktionsmenü **Open terminal**. Wähle für Extra 1 **wago-plc2b-vlan10**. Wähle für Extra 2 **wago-plc2a-vlan10**, **Capture packets**, Interface **eth1**. Links in der Übungsansicht behalten Netzwerk und Snapshot bei und wählen diese Ziele automatisch.
 
 ## Aufgabe 1: Den eigenen Ausgangspunkt bestimmen
 
@@ -53,7 +53,7 @@ nmap -n -sn --max-retries 1 --host-timeout 10s 10.10.0.1 10.10.0.11 10.10.0.12 1
 **Kontrollpunkt:** Beim Durchgang im unveränderten Lab antworteten alle vier. Dein Ergebnis gilt für diese Quelle und diesen Zeitpunkt. Eine fehlende Antwort beweist weder einen fehlenden Host noch ein blockiertes VLAN.
 
 ??? info "Hinweis: Erkennung und Diensterreichbarkeit unterscheiden"
-    Kontrolliere zuerst die Route. Die nächste Aufgabe verwendet `-Pn` für ein bekanntes Lab-Ziel und benötigt deshalb keinen erfolgreichen Discovery-Probe. Erweitere bei der Fehlersuche nicht den Zielbereich.
+    Kontrolliere zuerst die Route. Die nächste Aufgabe verwendet `-Pn` für ein bekanntes Lab-Ziel und benötigt deshalb keine erfolgreiche Antwort auf die vorherige Host-Erkennung. Erweitere bei der Fehlersuche nicht den Zielbereich.
 
 ## Aufgabe 3: Erreichbare TCP-Ports messen
 
@@ -61,7 +61,7 @@ nmap -n -sn --max-retries 1 --host-timeout 10s 10.10.0.1 10.10.0.11 10.10.0.12 1
 nmap -n -sT -Pn -p22,502,4840,8080 --max-retries 1 --host-timeout 20s --scan-delay 100ms 10.10.0.11
 ```
 
-Das sind begrenzte TCP-Verbindungsversuche ohne Anmeldung oder PLC-Schreibbefehle. Notiere **STATE** getrennt von **SERVICE**.
+Der Befehl führt eine begrenzte Anzahl von TCP-Verbindungsversuchen aus. Er meldet sich nicht an und sendet keine SPS-Schreibbefehle. Notiere **STATE** getrennt von **SERVICE**.
 
 | Port | Übliche Verwendung; noch zu verifizieren |
 | --- | --- |
@@ -96,21 +96,21 @@ Ergänze in deinen eigenen Notizen:
 | Beobachtung | Portzustände, HTTP-Status und Banner |
 | Auswirkung | Welcher DMZ-zu-OT-Zugriff wurde nachgewiesen? |
 | Grenze | Nicht geprüft: Login, Berechtigungen, Verschlüsselung, Schwachstellen |
-| Empfehlung | Ein notwendiger Geschäftsfluss und eine unnötige Freigabe zur Prüfung |
-| Nachprüfung | Genaue Quelle, Ziel, Befehl und Soll-Ergebnis nach einer späteren Regeländerung |
+| Empfehlung | Eine für den Diagnoseauftrag benötigte Verbindung und eine unnötige Freigabe, die geprüft werden soll |
+| Nachprüfung | Genaue Angaben zu Quelle, Ziel, Befehl und erwartetem Ergebnis nach einer späteren Regeländerung |
 
 **Kontrollpunkt:** Eine andere Person kann die Beobachtung ohne Raten reproduzieren. Schreibe «aus der DMZ erreichbar», wenn du genau das gemessen hast. Behaupte keine erfolgreichen Standardpasswörter; diese Übung probiert keine aus. Schliesse anschliessend das Terminal.
 
 ## Deine Zugriffsentscheidung
 
-Unterscheide für diesen Diagnoseauftrag WebVisu TCP 8080 von SSH 22, Modbus 502 und OPC UA 4840. Notiere, was erreichbar ist und was der Auftrag tatsächlich benötigt. Empfiehl Einschränkungen nach Quelle, Ziel und Dienst sowie Verantwortlichen und Ablaufdatum für temporären Zugriff. Anwendungsberechtigungen, Identitätsprüfung und MFA des Fernzugangs brauchen eigene Belege; dieser Scan prüft sie nicht.
+Unterscheide für diesen Diagnoseauftrag WebVisu TCP 8080 von SSH 22, Modbus 502 und OPC UA 4840. Notiere, was erreichbar ist und was der Auftrag tatsächlich benötigt. Empfiehl Einschränkungen nach Quelle, Ziel und Dienst. Halte fest, wer den temporären Zugriff verantwortet und wann er abläuft. Anwendungsberechtigungen, Identitätsprüfung und MFA des Fernzugangs brauchen eigene Belege; dieser Scan prüft sie nicht.
 
 ## Lösung
 
 ??? success "Vergleiche deinen Befund"
-    Der DMZ-Jumphost routet über `2.2.2.1` ins flache OT-Netz. Vier bestimmte Ziele antworten. WAGO A akzeptiert im Ausgangszustand TCP auf 22, 502, 4840 und 8080. Die HTTP-Antwort bestätigt eine Anwendung auf 8080.
+    Der DMZ-Jumphost routet über `2.2.2.1` ins flache OT-Netz. Die vier geprüften Ziele antworten. WAGO A akzeptiert im Ausgangszustand TCP auf 22, 502, 4840 und 8080. Die HTTP-Antwort bestätigt eine Anwendung auf 8080.
 
-    Ein tragfähiger Befund lautet: «Die DMZ-Quelle kann diese OT-Dienste erreichen; notwendige Verbindungen bestätigen und unnötige Initiierungen einschränken.» Er lautet nicht «alle PLCs sind verwundbar». `open`, `closed` und `filtered` beschreiben die Sicht dieses Scans, keine Sicherheitsbewertung.
+    Ein tragfähiger Befund lautet: «Die DMZ-Quelle kann diese OT-Dienste erreichen; notwendige Verbindungen bestätigen und unnötige Verbindungen unterbinden.» Er lautet nicht «alle SPS sind verwundbar». `open`, `closed` und `filtered` beschreiben die Sicht dieses Scans, keine Sicherheitsbewertung.
 
 ## Extra 1: Zwei Ausgangspunkte vergleichen
 
@@ -123,11 +123,11 @@ nmap -n -sT -Pn -p22,8080 --max-retries 1 --host-timeout 10s --scan-delay 100ms 
 
 Erstelle zwei Tabellenzeilen mit Quelle, nächstem Hop und Portzuständen.
 
-**Kontrollpunkt:** Beide Ports sind im Ausgangszustand von beiden Quellen erreichbar. WAGO B erreicht A direkt über `eth1`, der Jumphost über ein Gateway. Gleiche Port-Ergebnisse bedeuten weder gleiche Wege noch, dass eine Gateway-Firewall den direkten VLAN-Verkehr filtern könnte. Schliesse B's Terminal.
+**Kontrollpunkt:** Beide Ports sind im Ausgangszustand von beiden Quellen erreichbar. WAGO B erreicht A direkt über `eth1`, der Jumphost über ein Gateway. Gleiche Portzustände bedeuten weder gleiche Wege noch, dass eine Gateway-Firewall den direkten VLAN-Verkehr filtern könnte. Schliesse das Terminal von B.
 
 ## Extra 2: Offen und geschlossen mit Paketen beweisen
 
-**Optional, 10 Minuten.** [Zeichne WAGO A's Datenport auf](/network/capture?node=wago-plc2a-vlan10&interface=eth1), wähle **Start Capture** und führe auf dem **Jumphost** aus:
+**Optional, 10 Minuten.** [Zeichne den Datenport von WAGO A auf](/network/capture?node=wago-plc2a-vlan10&interface=eth1), wähle **Start Capture** und führe auf dem **Jumphost** aus:
 
 ```bash
 nmap -n -sT -Pn -p8080,65000 --max-retries 1 --host-timeout 10s --scan-delay 100ms 10.10.0.11
@@ -139,9 +139,9 @@ Warte einige Sekunden und filtere in Wireshark:
 ip.addr == 2.2.2.2 && (tcp.port == 8080 || tcp.port == 65000)
 ```
 
-Finde je den initialen SYN und die Antwort des Ziels. Prüfe **TCP → Flags**.
+Finde für jeden der beiden Ports das erste SYN-Paket und die Antwort des Ziels. Prüfe **TCP → Flags**.
 
-**Kontrollpunkt:** Im Ausgangszustand antwortet 8080 mit SYN/ACK und 65000 mit RST/ACK, passend zu `open` und `closed`. Wird 65000 später genutzt, notiere das tatsächliche Ergebnis. Ein gefiltertes Ergebnis benötigt andere Belege; Schweigen identifiziert keine konkrete Firewall-Regel. Schliesse Capture und Terminals. Weiter mit [Übung 6](ex6-protocol-discovery.md).
+**Kontrollpunkt:** Im Ausgangszustand antwortet 8080 mit SYN/ACK und 65000 mit RST/ACK, passend zu `open` und `closed`. Wird 65000 später genutzt, notiere das tatsächliche Ergebnis. Für den Zustand `filtered` sind weitere Belege nötig: Eine ausbleibende Antwort lässt sich keiner bestimmten Firewall-Regel zuordnen. Schliesse den Mitschnitt und die Terminals. Weiter mit [Übung 6](ex6-protocol-discovery.md).
 
 ## Weiterforschen
 

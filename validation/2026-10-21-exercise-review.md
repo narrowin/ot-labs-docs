@@ -250,6 +250,33 @@ For each exercise, agree the OT situation, intended skill, core student actions,
 | 7 | Pending | Pending |
 | Automation outlook | Separate scope decision | Pending |
 
+## German language revision — 21 October 2026
+
+Reviewed all seven German exercises, their overview and the appendix. Replaced English possessives, literal translations and compressed noun phrases with direct instructions. Examples include “A's MAC” → “die MAC-Adresse von A”, “Geschäftsfluss” → a connection needed for the diagnostic task, and “Anwendungserholung” → “Wiederherstellung der Anwendungskommunikation”. Preserved Swiss spelling, technical identifiers and interface labels. Added plain-language explanations for listener and transaction ID. Compared learning objectives, checkpoints and access/recovery requirements with the English lessons.
+
+Validation performed:
+
+- Ran the macOS German spelling service over prose in all nine files, excluding fenced code, inline code and link destinations. First verified the service with the deliberately misspelled word “Rechtschreibfeler”. Reviewed the flags and reran after editing. The final run flags 220 distinct terms, including valid German compounds, protocol names, device identifiers and English interface labels; these are not 220 confirmed errors. The available dictionary is `de`, not a dedicated Swiss German dictionary.
+- Consulted the [Swiss Federal Chancellery writing guidance](https://www.bk.admin.ch/de/schreibweisungen) and the official spelling rules at IDS for [hyphenated compounds](https://grammis.ids-mannheim.de/rechtschreibung/6158) and [punctuation](https://grammis.ids-mannheim.de/rechtschreibung/6198).
+- All 54 fenced command/filter blocks and all 91 Markdown link destinations match the working-tree snapshot taken immediately before this language revision. Command blocks also match between English and German for every lesson.
+- The German MkDocs build passed. It still reports the existing Material emoji configuration deprecation. `git diff --check` passed for the revised exercises.
+
+Limits: This is an editorial review supported by independent spelling software and language references, not certification by a native technical editor or a full external grammar check. LanguageTool is not installed; Java is also absent. Its [public API rules](https://dev.languagetool.org/public-http-api.html) prohibit automated requests, so it was not used. Installation was offered separately and has not been performed. No exercise text was submitted to an external checking service. Changes remain local and unpublished.
+
+### Follow-up: reversible LanguageTool trial
+
+Downloaded LanguageTool 6.6 from the [official download directory](https://languagetool.org/download/) and Eclipse Temurin JRE 17.0.20.1 from Eclipse Adoptium into one temporary folder. The runtime SHA-256 matched the publisher's metadata. The LanguageTool ZIP passed its archive integrity check. Used the local command-line checker with `de-DE` and its PICKY level, without remote rules, an account, browser extension, background service or system-wide installation. No exercise text was sent to the checking service.
+
+LanguageTool's commercial operator is [LanguageTooler GmbH](https://languagetool.org/legal/), part of [Learneo following its 2023 acquisition](https://www.learneo.com/news/us-based-learneo-acquires-multilingual-writing-assistant-languagetool). The [open-source project](https://github.com/languagetool-org/languagetool) publishes its engine and checking rules. Its local edition [does not include the cloud service's AI-based rules](https://dev.languagetool.org/http-server). Public source and an identifiable supplier make evaluation possible; they do not establish that a suggestion is correct.
+
+A small control sample contained six deliberately wrong sentences and six correct counterparts. It detected five wrong examples: a misspelling, a missing subordinate-clause comma, ordinary subject/verb disagreement and two article/case agreement errors. It missed “Der Switch sind aktiv.” No correct counterpart was flagged. This tiny sample demonstrates capabilities and a failure; it is not an accuracy benchmark.
+
+The checker processed the nine exercise files, with fenced commands excluded and Markdown reduced to text: 90,454 characters in the revised copy and 85,273 in the pre-revision snapshot. Both runs reported complete results. The revised text produced 807 matches: 784 in the typo category and 23 in other categories. The pre-revision text produced 856 matches. These totals include technical terms, identifiers, English interface labels and existing Swiss spellings; they are not error counts. No spelling conversion was made because of the selected locale.
+
+Reviewed the remaining grammar, punctuation, casing, typography and style flags. Examples of rejected suggestions were changing the imperative “lies” to “ließ”, treating feminine network “Bridge” as the card game, altering hexadecimal literals into multiplication expressions, and lowercasing actual interface labels. No additional exercise correction was clearly justified by these findings.
+
+**Assessment:** Useful as a secondary mechanical check, insufficient to certify natural German or accurate teaching instructions. The earlier recommendation as the best choice was not supported by a comparative accuracy benchmark. Retaining a permanent installation is unnecessary for this task. Results are preserved separately from the temporary programs; the trial programs and archives are moved to the user's Trash. The prior wording edits remain local and unpublished.
+
 ## Diode microsegmentation addon
 
 Added a 35–45 minute optional practical after Exercise 7's VLAN cleanup in both languages. It can also be attempted directly from the flat baseline. The source is the supplied handout's microsegmentation section: PDF pages 149–152, printed slides 158–161, particularly the unpatched disposal-system example.
