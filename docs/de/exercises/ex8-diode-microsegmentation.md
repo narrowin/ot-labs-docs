@@ -1,6 +1,6 @@
 # Übung 8: Ein Altsystem mit der Diode mikrosegmentieren
 
-**35–45 Minuten.** Verwende dein eigenes Lab mit `vlan10-diode` und `protected-linux`. Beginne im flachen Ausgangszustand. Übung 7 ist keine Voraussetzung; falls du sie durchgeführt hast, schliesse zuerst ihre [VLAN-70-Bereinigung](ex7-segmentation-firewall.md#bereinigung-flachen-ausgangszustand-wiederherstellen) ab. Führe die Bereinigung dieser Übung auch durch, wenn du die beiden optionalen Extras auslässt.
+**35–45 Minuten.** Verwende dein eigenes Lab mit `vlan10-diode` und `protected-linux`. Beginne im flachen Ausgangszustand. Übung 7 ist keine Voraussetzung; falls du sie durchgeführt hast, schliesse zuerst die Bereinigung in [Übung 7](ex7-segmentation-firewall.md) ab. Führe die Bereinigung dieser Übung auch durch, wenn du die beiden optionalen Extras auslässt.
 
 **Dein Auftrag:** Im Entsorgungsbeispiel des Handouts gefährdet ein ungepatchtes System den Rest seiner Zone (PDF-Seiten 149–152, aufgedruckte Folien 158–161). Hier steht `protected-linux` für einen älteren Rechner in diesem Anlagenteil. Erhalte den Wartungszugriff vom `dell-ews1`-Engineering-Arbeitsplatz, blockiere einen anderen Zellenrechner und begrenze neue Verbindungen, die der ältere Rechner selbst aufbaut.
 
@@ -132,4 +132,4 @@ Ergänze tatsächliche Ergebnisse und Zeitpunkte in dieser Tabelle:
 
 Jeder Befehl baut eine neue Verbindung auf. Eine bestehende SSH-Sitzung kann ihren Zustand in der Verbindungsverfolgung behalten und eignet sich nicht als Beleg für eine neu angewendete Sperre. Weicht ein Ergebnis ab, notiere Quelladresse, Ziel, Zeitpunkt, angewendete Revision und tatsächlichen Fehler, bevor du weitere Einstellungen änderst.
 
-Schliesse deine Terminal-Tabs. Zurück zur [Übungsübersicht](index.md).
+Schliesse deine Terminal-Tabs.

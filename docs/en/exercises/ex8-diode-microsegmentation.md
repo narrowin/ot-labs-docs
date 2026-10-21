@@ -1,6 +1,6 @@
 # Exercise 8: Microsegment a legacy endpoint with the diode
 
-**35–45 minutes.** Use your own lab with `vlan10-diode` and `protected-linux`. Start from the flat baseline. Exercise 7 is not a prerequisite; if you performed it, finish its [VLAN 70 cleanup](ex7-segmentation-firewall.md#cleanup-restore-the-flat-baseline) first. Complete this exercise's cleanup even if you skip the two optional extras.
+**35–45 minutes.** Use your own lab with `vlan10-diode` and `protected-linux`. Start from the flat baseline. Exercise 7 is not a prerequisite; if you performed it, finish the cleanup in [Exercise 7](ex7-segmentation-firewall.md) first. Complete this exercise's cleanup even if you skip the two optional extras.
 
 **Your task:** The handout's disposal-system example has an unpatched asset that creates risk for the rest of its zone (PDF pages 149–152, printed slides 158–161). Here, `protected-linux` represents a legacy computer in that system. Keep maintenance access from the `dell-ews1` engineering workstation, block access from another cell computer, and contain new connections initiated by the legacy computer.
 
@@ -132,4 +132,4 @@ Record this evidence table with actual results and times:
 
 Each command creates a fresh connection. An existing SSH session can retain connection-tracking state and is unsuitable evidence for a newly applied block. If a result differs, record the source address, target, time, applied revision and actual error before changing more settings.
 
-Close your terminal tabs. Return to the [exercise overview](index.md).
+Close your terminal tabs.
