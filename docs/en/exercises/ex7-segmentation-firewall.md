@@ -1,14 +1,24 @@
 # Exercise 7: Build and verify a routed VLAN
 
-**Time:** 60–90 minutes. **Lab:** an instructor-assigned disposable copy of `ot-sec-flat`. **Difficulty:** Intermediate.
+**Time:** 90–120 minutes, including zone planning. **Lab:** your student `ot-sec-flat` lab. **Difficulty:** Guided practice.
 
 Create one new security zone, carry it through the switches, route it at the gateway and enforce a small policy. Prove the application works and an unapproved connection is blocked, then restore the flat baseline.
 
 **You will learn to:** configure an access VLAN and tagged path, include the gateway's bridge CPU, choose a non-overlapping subnet, order stateful firewall rules and verify both directions with packets and application results.
 
+## Your change request
+
+A temporary diagnostics station must reach one PLC visualization without gaining general access to the cell. Use the Hirschmann-labelled Linux endpoint as the **test client** and WAGO A as the visualization server. These are exercise roles, not a claim that an industrial switch normally acts as an operator workstation.
+
+The owner authorizes the WebVisu service plus a gateway diagnostic. SSH, other new cross-zone services and new connections initiated back towards the diagnostics station are outside this request. First write that intent as a communication matrix, then implement it and prove both service continuity and restriction.
+
+A **zone** groups assets with shared security requirements. A **conduit** is an approved communication path between zones. A VLAN separates Ethernet traffic; routing and firewall policy control this lab's path between zones. **Stateful** filtering tracks existing connections, so replies need not be allowed as unrelated new initiations.
+
+**Critical limit:** Allowing TCP 8080 permits the WebVisu application, including any controls it exposes. It does **not** enforce read-only viewing. Students do not press controls; a real viewing-only requirement also needs application roles or a suitable application-aware access mechanism. This practical qualifies network access only.
+
 ## Before you start
 
-Use the **separate copy reserved for you or your practical group**, with no unrelated users. The instructor must have saved its flat checkpoint and confirmed the node bindings. Exercises 1–6 remain on the original flat appliance. If you only have the shared course appliance, ask for the practical copy before entering configuration commands.
+Use your own student lab after completing Exercises 1–6 and their cleanup. Its starting state must match Task 1. A flat-baseline checkpoint must be available for recovery; the [setup guide](../lab-practical.md) gives the instructor-console commands.
 
 Open terminals for [Hirschmann](/network/terminal?node=hirschmann-edge1-vlan50), [WAGO A](/network/terminal?node=wago-plc2a-vlan10), [sw-acc1](/network/terminal?node=sw-acc1), [sw-dist](/network/terminal?node=sw-dist) and [gw](/network/terminal?node=gw-firewall). Keep the Hirschmann terminal open: its management connection uses `eth0`, while you change only data interface `eth1`.
 
@@ -23,6 +33,34 @@ The name `hirschmann-edge1-vlan50` stays unchanged. This exercise creates **one 
 | Start | `10.50.0.12/8` | 10 | Direct, switched | HTTP and SSH open |
 | After build | `172.30.70.12/24` | 70 | Via `172.30.70.1` on gw | HTTP allowed; fresh SSH blocked |
 | After cleanup | `10.50.0.12/8` | 10 | Direct again | Original access restored |
+
+## Plan the plant zones before configuring
+
+**Design task, 20–30 minutes.** Use the course handout's water-treatment diagram and controller allocation (PDF pages 33–34 and 130–145). Page numbers here count PDF pages, because printed slide numbers differ later in the deck. Work individually or discuss your design with a colleague before configuring your own lab.
+
+1. Group assets by operational purpose and consequence of loss or manipulation. Start with treatment/hygiene, pumping/process, disposal, supervision and engineering/remote maintenance. These are candidate groups, not a prescribed answer or assigned security level.
+2. Check the **controller boundary**. WAGO PLC2 controls UV/chlorine, mixing and pH functions. Schneider PLC4 controls the first-stage mixer as well as auxiliary/disposal equipment. A VLAN assigned to either PLC's one data interface moves that whole endpoint; it cannot independently separate its physical outputs. Do not draw a firewall between two actuators controlled internally by the same PLC and claim that it enforces the separation.
+3. List required communications. Use Exercise 6's observed client/server/function as evidence, then record purpose, initiator, receiver, protocol, owner and consequence of interruption. Mark a relationship from the plant diagram as **to verify** until observed or confirmed by its owner. A flow currently present is not automatically a necessary flow.
+4. Identify one dependency that crosses your proposed zone boundaries. Choose whether to regroup the controller with the functions it controls or propose an engineering redesign for later qualification. A TCP-port rule cannot resolve an internal controller dependency or turn Modbus into a read-only protocol.
+5. Review your design: which compromise contains a fault without breaking required control? Compare with a colleague if available. Note one remaining risk and the responsible plant owner. This exercise does not assign or certify IEC 62443 security levels.
+
+**Deliverable:** a zone sketch and at least four directional communication rows, including supervisory control, engineering access, supplier access and a local discovery dependency. Use your own notes or the Toolbox zone/communication planner in your lab. In LNE open the product launcher → **Toolbox** → **Policies**; saving a design does not enforce it on devices.
+
+??? success "Check your reasoning"
+    A good answer follows the actual controller allocation, preserves justified control relationships and limits maintenance initiation. It does not split UV/chlorine, mixer or pH functions into independently enforced VLANs while leaving them controlled inside the same WAGO endpoint. It also notices Schneider's mixed process/disposal responsibility. Multiple zone designs are defensible if their dependencies, constraints and residual risks are explicit.
+
+The implementation below is **one small, testable conduit** for a temporary diagnostic client. It does not implement your complete plant design. Keeping the process controllers in place lets you practise routing and enforcement without moving a running control dependency.
+
+| Initiator | Receiver | Service | Intended result and reason |
+| --- | --- | --- | --- |
+| Diagnostics client | WAGO A | TCP 8080 | Allow the approved WebVisu application |
+| Diagnostics client | WAGO A | TCP 22 | Deny unapproved SSH initiation |
+| WAGO A | Diagnostics client | New TCP 22 | Deny unapproved reverse initiation |
+| Diagnostics client | Its gateway | ICMP | Allow the selected reachability diagnostic |
+| Diagnostics client | Its gateway | TCP 22 | Deny gateway administration |
+| Participants in an allowed connection | Each other | Established/related traffic | Permit tracked replies |
+
+Record an owner and end-of-maintenance expiry for the proposed WebVisu access. In this practical, cleanup implements that expiry. Predict the first matching firewall rule for each row before Task 2.
 
 ## Task 1: Record the starting state
 
@@ -156,7 +194,7 @@ On **gw**:
 /log print where message~"EX7-"
 ```
 
-Filter the capture with `ip.addr == 172.30.70.12 && (tcp.port == 22 || tcp.port == 8080)`. Match your source/destination and ports with the rule logs. Logs and counters may also contain other probes from your practical group.
+Filter the capture with `ip.addr == 172.30.70.12 && (tcp.port == 22 || tcp.port == 8080)`. Match your source/destination and ports with the rule logs. Logs and counters may also contain earlier attempts or background traffic in your lab.
 
 Use the newest log entries from your test period; earlier `EX7-` entries can remain after a previous cleanup.
 
@@ -168,7 +206,11 @@ The current VLAN view can leave the collapsed sw-dist–sw-acc1 bond edge gray e
 
 **Main result complete.** Keep VLAN 70 configured for the optional extras below. Afterwards, perform **Cleanup** even if you skip the extras. Stop the capture before changing its target.
 
-You can do the extras after the course. Arrange continued access to your practical copy and instructor help with its reset before leaving. Clean up now, then start from the flat checkpoint and repeat Tasks 1–5 when you return. Keep your earlier results for comparison.
+If you pause before the extras, complete cleanup first. When you return, verify the flat baseline in Task 1 and repeat Tasks 2–5 before continuing with the extras. Keep your earlier results for comparison.
+
+## Your change acceptance record
+
+Record the approved source, target and service; the HTTP result; a matching denied SSH attempt and firewall log; and restored baseline evidence after cleanup. Keep the reverse-direction and gateway checks from Extra 2 if you perform them. Do not claim that every possible flow is blocked or that HTTP permission enforces a read-only HMI.
 
 ## Solution
 
@@ -243,7 +285,7 @@ Repeat Task 1's address, route, service and switch checks. Hirschmann must again
 
 Run **Collect new data** again to refresh reported port membership. Check absence in the actual RouterOS tables; a VLAN number in a catalog alone is not proof that a port still carries it.
 
-If cleanup differs from the recorded baseline, leave the copy reserved and have the instructor restore its saved checkpoint. Close all terminal tabs after verification.
+If cleanup differs from the recorded baseline, use the saved checkpoint recovery procedure with the instructor and repeat Task 1. Close all terminal tabs after verification.
 
 ## Explore the topic
 

@@ -1,12 +1,20 @@
 # Exercise 1: Compare tagged and untagged traffic
 
-**Time estimate:** 20–30 minutes
+**Time estimate:** 30–40 minutes
 
 **Lab:** Student `ot-sec-flat`
 
 **Difficulty:** Beginner
 
 Compare the same ping traffic on two switch ports: the WAGO endpoint's access port and the uplink to the gateway. Find where an Ethernet frame carries a VLAN tag.
+
+## Your maintenance task
+
+A replacement PLC has been connected. Its port is up, but the team is unsure whether it is in the intended network. Establish the normal path before anyone changes the PLC or switch. You will compare a small diagnostic exchange at the PLC port and at the gateway uplink.
+
+**Three terms:** A **VLAN** is a separate Ethernet broadcast domain. An **access port** normally carries one VLAN without a tag for the endpoint. A **trunk** carries tagged VLANs between network devices. An untagged PLC frame can therefore belong to a VLAN; the switch assigns it at ingress.
+
+**Predict:** Should an ordinary PLC have to add VLAN tags itself to use this access port? Write your answer before Task 3.
 
 ## Before you start
 
@@ -104,11 +112,15 @@ Close the capture tab and the WAGO terminal tab.
 
 ## Finish
 
-Exercise 1 ends after Task 4. There is no Task 5 and no switch configuration change to make.
+The main practical ends after Task 4. Complete your handover below, then choose the optional maintenance checks if time permits.
 
 You have compared the same traffic on an uplink and an access port. Check that you can explain where the VLAN tag appeared and why an empty `vlan` filter can coexist with successful ping traffic.
 
 If you get stuck, open the existing assistant in any lab tab. It knows this exercise. Include the task number and, for capture questions, your filter or frame number. Wait for its answer before asking from another tab.
+
+## Your handover
+
+Record the PLC address, endpoint-facing port, uplink port and one frame from each capture. Explain to a colleague why an empty `vlan` filter at the PLC port is normal here. Identify one further check needed before declaring the PLC application operational: a successful application exchange, not only ping.
 
 ## Solution
 
@@ -117,26 +129,29 @@ If you get stuck, open the existing assistant in any lab tab. It knows this exer
 
     Keep one frame number from each capture and record the interface, filter and VLAN ID (or absence of a tag). For the same default ping, the tagged frame is four bytes longer. Neither reachability nor a hostname proves isolation.
 
-## Extra 1: Solve the four-byte puzzle
+## Extra 1: Check a replacement PLC connection
 
-**Optional, 10 minutes.** Predict the frame lengths before capturing.
+**Optional, 10 minutes.** The maintenance note says “WAGO A is in VLAN 10.” Produce the information a colleague needs to reconnect it correctly, without changing any settings.
 
-1. Reopen the access-port capture from Task 4 and start it.
-2. Reopen the WAGO terminal and run:
+1. Open [sw-acc1's terminal](/network/terminal?node=sw-acc1) and run:
 
-    ```bash
-    ping -c 2 -s 32 10.10.0.1
-    ping -c 2 -s 128 10.10.0.1
+    ```routeros
+    /interface bridge port print detail where interface=ether2
+    /interface bridge vlan print detail
     ```
 
-3. Filter with `icmp && ip.addr == 10.10.0.11`. Compare the **Length** values. Then close that capture and repeat on the gateway uplink from Task 3.
+2. On **WAGO A**, run:
 
-**Checkpoint:** Increasing the payload from 32 to 128 bytes adds 96 bytes to the frame. For the same payload, the tagged uplink adds four bytes compared with the access link. Compare the same direction and payload; capture settings can affect whether an Ethernet FCS is included.
+    ```bash
+    ip -br address show eth1
+    ip route get 10.10.0.1
+    ```
 
-??? success "Expected result"
-    In this lab's captures, payloads of 32 and 128 bytes produce untagged frames of 74 and 170 bytes, and tagged frames of 78 and 174 bytes. The four-byte difference is the 802.1Q header.
+3. Record switch/port, **PVID** (the VLAN assigned to incoming untagged traffic), untagged VLAN membership, PLC IP/prefix and whether the PLC sends tags. Compare the configuration with Task 4's packet evidence.
 
-Close the capture tab when finished.
+**Checkpoint:** In this baseline ether2 assigns untagged traffic to VLAN 10, and WAGO uses `10.10.0.11/8` on eth1. The replacement connection needs both the intended switch-port configuration and compatible endpoint addressing. A link light or the suffix in a hostname is insufficient. The `/8` means addresses beginning `10.` are on the same IP subnet here; it is deliberately broad lab addressing, not a plant design recommendation.
+
+Close the switch terminal. Keep your record as a commissioning checklist.
 
 ## Extra 2: Follow the next-hop MAC
 

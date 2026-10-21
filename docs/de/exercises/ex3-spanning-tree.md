@@ -1,10 +1,18 @@
 # Übung 3: Den aktiven Spanning Tree erklären
 
-**Zeit:** 25–35 Minuten. **Lab:** aktuelles studentisches `ot-sec-flat`. **Niveau:** Fortgeschritten.
+**Zeit:** 30–40 Minuten. **Lab:** aktuelles studentisches `ot-sec-flat`. **Niveau:** Geführte Praxis.
 
 Bestimme die gewählte Root Bridge aus Betriebsdaten. Erkläre anschliessend, wie RSTP eine Schleife im Switch-Dreieck verhindert. Diese Übung verändert weder Prioritäten noch Ports oder Kabel.
 
 **Lernziele:** Bridge-Mitgliedschaft, gewählte Root und Portrollen bestimmen, BPDUs auswerten und das Zusammenspiel von RSTP und LACP für Redundanz erklären.
+
+## Dein Instandhaltungsauftrag
+
+Ein Techniker meldet: «Das redundante Kabel steckt, aber ein Port leitet nicht weiter. Soll ich die Weiterleitung aktivieren?» Kläre, ob das ein Fehler oder der Mechanismus für die Verfügbarkeit der Zelle ist. Werden beide Pfade zur Weiterleitung gezwungen, kann eine Switching-Schleife entstehen.
+
+**Status lesen:** **RSTP** (Rapid Spanning Tree Protocol) wählt schleifenfreie Pfade. Die **Root Bridge** ist der Referenz-Switch, nicht zwingend das IP-Gateway. Ein **Root Port** führt zu dieser Referenz; ein **Alternate Port** ist ein Bereitschaftspfad. **BPDUs** sind die Abstimmungsnachrichten der Switches. Bereitschaftsports können Kontrollnachrichten austauschen, ohne normale Anwendungsdaten weiterzuleiten.
+
+**Vorhersage:** Kann ein physisch gesundes Kabel absichtlich keine Anwendungsdaten weiterleiten?
 
 ## Vorbereitung
 
@@ -75,6 +83,10 @@ Auf **sw-acc2**:
 
 Erkläre, welche unterschiedlichen Probleme LACP und RSTP lösen. Schliesse anschliessend die Terminals.
 
+## Deine Übergabe zur Wartung
+
+Entscheide für sw-acc2 ether11 zwischen «wie vorgesehen belassen» und «untersuchen». Begründe mit physischem Zustand, RSTP-Rolle und gemeinsam bestätigter Root-ID. Benenne, was ein Umschalttest messen müsste: tatsächliche Wiederherstellung und Anwendungsunterbrechung bei einem Ausfall. Ein Reservepfad im Diagramm beweist keine gemessene Wiederherstellungszeit.
+
 ## Lösung
 
 ??? success "Vergleiche deine Belege"
@@ -82,15 +94,16 @@ Erkläre, welche unterschiedlichen Probleme LACP und RSTP lösen. Schliesse ansc
 
     sw-dist erreicht gw über `ether12`. Die Access-Switches erreichen sw-dist über ihre jeweiligen Root-Ports. Der zusätzliche Link sw-acc1–sw-acc2 würde eine Schleife schliessen. Deshalb leitet sw-acc2's Alternate-Port keine gewöhnlichen Daten weiter. RSTP behandelt den LACP-Bond als einen logischen Port. Ein redundanter Link kann physisch funktionieren und absichtlich nicht weiterleiten.
 
-## Extra 1: Die Root-Wahl als Detektivaufgabe
+## Extra 1: Einen Switch-Tausch vor dem Ausfall prüfen
 
-**Optional, 10 Minuten.** Verwende die vier Bridge-IDs aus Aufgabe 2.
+**Optional, 10 Minuten.** Ein Ersatz-Switch erhält RSTP-Standardeinstellungen. Der Wartungsplan nimmt an, dass die bisherigen Weiterleitungspfade erhalten bleiben.
 
-1. Sortiere sie aufsteigend. Zeige bei jedem Vergleich, welcher Teil entscheidet.
-2. Sage die Root voraus, falls sw-acc2 Priorität `0x1000` hätte und alles andere unverändert bliebe. Das ist eine Papieraufgabe; ändere kein Gerät.
-3. Vergleiche auf sw-acc2 `/interface bridge print detail` mit dem betrieblichen `root-bridge-id`.
+1. Prüfe mit den vier Bridge-IDs aus Aufgabe 2, ob Priorität oder MAC die aktuelle Root bestimmt hat.
+2. Lies auf **sw-acc2** `/interface bridge print detail`. Vergleiche konfigurierte Priorität und betriebliche Root-ID.
+3. Ersetze auf Papier die heutige Root durch einen Switch mit gleicher Priorität, aber grösserer MAC als die anderen drei. Bleibt derselbe physische Standort Root? Ändere keine Geräte.
+4. Formuliere eine Vorher-/Nachher-Abnahme: vorgesehene Root, tatsächlich von allen Switches gemeldete Root, Root-/Alternate-Ports und Anwendungserreichbarkeit.
 
-**Kontrollpunkt:** Du erklärst den aktuellen MAC-Gleichstandsentscheid und warum eine niedrigere Priorität diesen überstimmen würde. Eine konfigurierte Priorität allein beweist keine aktuelle Root-Rolle. [Suche die Wahlregeln](https://help.mikrotik.com/docs/spaces/ROS/pages/21725254/Spanning+Tree+Protocol) unter **(R)STP Election Process**.
+**Kontrollpunkt:** Gleiche Prioritäten überlassen die Wahl den MAC-Adressen; Ersatzhardware kann diese Wahl ändern. Stimme vorgesehene Root und Ersatz-Root mit dem Netzwerkverantwortlichen ab und verwalte Prioritäten vor einem realen Umbau bewusst. Die Wahl braucht Topologie und Verfügbarkeitsanforderungen, nicht nur die Mitte der Zeichnung. Feste Lab-MACs machen das aktuelle Ergebnis reproduzierbar; reale Ersatzgeräte brauchen eine eigene Prüfung.
 
 ## Extra 2: Einen gesunden, nicht weiterleitenden Link diagnostizieren
 

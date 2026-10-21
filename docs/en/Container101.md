@@ -46,7 +46,7 @@ A node name identifies a component; it does not enforce a VLAN or firewall polic
 | A node's **Open terminal** action | Inside that named device: Linux on a WAGO endpoint, RouterOS on a switch or gateway |
 | Instructor's appliance console | On the host that runs Docker, the lab nodes and platform services |
 
-The exercise commands name their target above each block. Keep that node name visible while working. If a terminal disconnects, record the node and error and ask the instructor to inspect it; restarting a lab component can interrupt other students and erase evidence.
+The exercise commands name their target above each block. Keep that node name visible while working. If a terminal disconnects, record the node and error before restarting anything: a restart can erase diagnostic evidence and temporary configuration in your lab.
 
 ## Optional instructor demonstration: inspect the running lab
 
@@ -70,7 +70,7 @@ docker inspect --format '{{.Name}} {{.Config.Image}}' clab-ot-sec-flat-wago-plc2
 
 Closing a browser tab ends that tool session; it does not reset the appliance. Device configuration and application data may remain between sessions. Follow each exercise's cleanup and verify its checkpoint.
 
-Exercises 1–6 use the flat baseline. Exercise 7 temporarily builds a routed VLAN on an assigned disposable copy, then restores the baseline. Its instructor preparation includes a [private checkpoint and restore procedure](lab-practical.md). A historical snapshot in Explorer displays collected network data; it is not an appliance restore operation.
+Exercises 1–6 use the flat baseline in your own lab. Exercise 7 temporarily builds a routed VLAN in that lab, then restores the baseline. Its instructor preparation includes a [private checkpoint and restore procedure](lab-practical.md). A historical snapshot in Explorer displays collected network data; it is not an appliance restore operation.
 
 ## What this lab teaches
 
@@ -80,6 +80,6 @@ Virtual links carry real Ethernet frames and protocol messages that your capture
 
 - [Docker: what is a container?](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/): compare a process container with a VM.
 - [Docker volumes](https://docs.docker.com/engine/storage/volumes/): explain why persistent files can outlive a container.
-- [Containerlab topology definition](https://containerlab.dev/manual/topo-def-file/): find the `nodes` and `links` sections. Building another topology belongs in a separate instructor-provided disposable playground.
+- [Containerlab topology definition](https://containerlab.dev/manual/topo-def-file/): find the `nodes` and `links` sections that define a lab's devices and connections.
 
 Continue with the [Lab Guide](lab.md) or [Exercise 1](exercises/ex1-vlan-discovery.md).

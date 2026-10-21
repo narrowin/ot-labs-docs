@@ -1,10 +1,18 @@
 # Exercise 5: Assess access from the DMZ
 
-**Time:** 30–40 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Intermediate.
+**Time:** 35–45 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Guided practice.
 
 Find what a DMZ source can reach and produce an evidence-based finding. Limit discovery to the four listed lab IPs and service checks to WAGO A. No broad subnet scans, password guessing or software installation are needed.
 
 **Learning objectives:** Establish remote-access position, discover scoped lab hosts, identify reachable services, distinguish observations from vulnerabilities, and document a reproducible assessment with recommendations.
+
+## Your remote-maintenance task
+
+A supplier needs access to WAGO A's WebVisu for an agreed diagnostic task. The site owner asks whether the existing DMZ jump server can also reach engineering or controller services that this task does not need. Check the actual exposure and prepare a narrowly scoped access recommendation.
+
+A **DMZ** is a network zone between trust areas. A **jump server** is an intermediate access host; its name alone does not restrict where it can connect. A TCP **port** identifies a service endpoint. An open connection proves reachability, not permission to log in or change a process.
+
+This scenario approves checking the listed simulator targets only. On real OT equipment, agree discovery methods and timing with operations and the device owner first; even a connection scan can affect fragile services. Start from inventory and passive observations where available.
 
 ## Before you start
 
@@ -92,6 +100,10 @@ In your own notes, complete:
 | Retest | Exact source, target, command and intended result after a future policy change |
 
 **Checkpoint:** Another student can reproduce the observation without guessing the source or scan range. Say “reachable from the DMZ” if that is what you measured. Do not claim default credentials were accepted: this exercise never tries them. Close the terminal when done.
+
+## Your access decision
+
+For this diagnostic request, distinguish WebVisu TCP 8080 from SSH 22, Modbus 502 and OPC UA 4840. Record which are reachable and which the task actually requires. Recommend source/target/service restrictions with an owner and expiry for temporary access. Application authorization, identity checks and remote-access MFA need separate evidence; this scan does not verify them.
 
 ## Solution
 

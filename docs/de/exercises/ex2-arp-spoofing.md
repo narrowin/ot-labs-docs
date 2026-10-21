@@ -1,10 +1,18 @@
 # Übung 2: Eine ARP-Umleitung nachweisen
 
-**Zeit:** 30–40 Minuten. **Lab:** aktuelles studentisches `ot-sec-flat`. **Niveau:** Fortgeschritten.
+**Zeit:** 40–50 Minuten. **Lab:** aktuelles studentisches `ot-sec-flat`. **Niveau:** Geführte Praxis.
 
 Weise eine veränderte IP-MAC-Zuordnung nach, verfolge den umgeleiteten Verkehr und stelle den ursprünglichen Zustand wieder her. Führe die Umleitung nur von WAGO A gegen B und dessen Gateway aus. Verwende für Verbindungstests die genannten Lab-Ziele. Die Adressen gehören zum simulierten Netz dieser Appliance.
 
 **Lernziele:** ARPs Vertrauensproblem erklären, eine begrenzte Layer-2-Umleitung durchführen und nachweisen, lesbare Anwendungsdaten erkennen sowie Erkennung und Gegenmassnahmen erklären.
+
+## Dein Auftrag bei einer Meldung
+
+Das Monitoring meldet eine geänderte Gateway-MAC in einer Produktionszelle. Ist das eine genehmigte Netzwerkänderung, ein Adressierungsfehler oder eine Umleitung? Stelle im Simulator eine bekannte Ursache nach. Sammle danach die Belege, die der Betrieb für eine Entscheidung braucht.
+
+**ARP einfach erklärt:** Für ein IPv4-Paket über Ethernet braucht ein Host die MAC-Adresse des nächsten Hops. ARP fragt, wem diese IP gehört, und speichert die Antwort. Eine gefälschte Antwort kann die Frames an ein anderes Gerät lenken. Die IP-Zieladresse muss sich dabei nicht ändern.
+
+Der TCP-Marker unten ist eine entbehrliche Testnachricht, kein Industrieprotokoll und kein entwendetes Passwort. Er zeigt die Umleitung, ohne einen Prozess zu beeinflussen. Übung 6 untersucht tatsächliche OT-Protokollnachrichten des Labs.
 
 ## Vorbereitung
 
@@ -133,6 +141,10 @@ Untersuche jetzt den gespeicherten Mitschnitt. Filtere `tcp.port == 2323`, wähl
 
 Lass den Mitschnitt für Extra 1 offen, falls du weitermachen möchtest. Schliesse sonst Capture- und Terminal-Tabs.
 
+## Deine Übergabe zur Meldung
+
+Schreibe vier Zeilen: ursprüngliche Gateway-MAC mit Zeitpunkt; geänderte Zuordnung mit aufgezeichnetem Marker; wiederhergestellte Zuordnung mit Bereinigungsbelegen; nächste betriebliche Prüfung. Prüfe genehmigten Gateway-Tausch oder Failover und den Besitzer der beobachteten MAC, bevor du eine reale Meldung als Angriff einstufst. Eskaliere mit diesen Belegen; ein geänderter ARP-Eintrag allein rechtfertigt nicht das Abtrennen einer laufenden SPS.
+
 ## Lösung
 
 ??? success "Vergleiche deine Belege"
@@ -151,24 +163,20 @@ Lass den Mitschnitt für Extra 1 offen, falls du weitermachen möchtest. Schlies
 
 **Kontrollpunkt:** Deine Zeitleiste unterscheidet echte Gateway-Zuordnung, gefälschte Behauptung und Wiederherstellung. Gratuitous ARP allein ist kein Angriffsbeweis. [Suche in den ARP-Feldern](https://www.wireshark.org/docs/dfref/a/arp.html) nach `arp.src.hw_mac` und `arp.isgratuitous`.
 
-## Extra 2: Die Grenze dieser Umleitung finden
+## Extra 2: Schutz wählen, der auch nach Wartung funktioniert
 
-**Optional, 10 Minuten.** Überlege zuerst: Erfasst eine falsche Gateway-Zuordnung jedes Ziel in `10.0.0.0/8`?
+**Optional, 10 Minuten.** Die Zelle verwendet feste SPS-Adressen. Morgen wird das Gateway durch Hardware mit anderer MAC ersetzt. Prüfe diese Vorschläge anhand deiner notierten Gateway-/Angreifer-Zuordnungen; konfiguriere sie nicht.
 
-1. Starte einen neuen Mitschnitt an A's Datenport und wiederhole das zeitlich begrenzte Hilfsprogramm aus Aufgabe 3.
-2. Während es läuft, auf **WAGO B**:
+| Vorschlag | Zu beantwortende Frage |
+| --- | --- |
+| Pro Switch-Port nur die MAC der jeweiligen SPS erlauben | Musste A seine Quell-MAC ändern, um die Gateway-IP zu beanspruchen? |
+| Auf B einen festen Gateway-ARP-Eintrag setzen | Was muss sich beim legitimen Wechsel der Gateway-MAC ändern? |
+| ARP-Aussagen am Switch validieren | Woher kommen vertrauenswürdige IP-/MAC-Zuordnungen für statische SPS-Adressen? |
+| Änderungen nur melden | Wer prüft den Wartungsauftrag und entscheidet über die Reaktion? |
 
-    ```bash
-    ip route get 10.20.0.11
-    ping -c 2 10.20.0.11
-    ping -c 2 2.2.2.2
-    ```
+**Kontrollpunkt:** A kann mit seiner eigenen erlaubten MAC eine falsche Gateway-IP-Zuordnung behaupten. Einfache Quell-MAC-Port-Security reicht deshalb nicht. Ein fester ARP-Eintrag braucht einen gepflegten Austauschprozess. Dynamic ARP Inspection benötigt Plattformunterstützung und vertrauenswürdige Zuordnungen; eine reine DHCP-Datenbank deckt statische Geräte nicht automatisch ab. Monitoring liefert Belege, blockiert aber nicht selbst die falsche Aussage.
 
-3. Vergleiche auf A `icmp.type == 8 && ip.src == 10.10.0.12 && ip.dst == 10.20.0.11` mit `icmp.type == 8 && ip.src == 10.10.0.12 && ip.dst == 2.2.2.2`.
-
-**Kontrollpunkt:** Die Route zu CtrlX `10.20.0.11` ist im flachen `/8` direkt über `eth1`. Die gefälschte Gateway-Zuordnung verändert diese direkte Nachbarzuordnung nicht; der geroutete Jumphost-Verkehr läuft hingegen über A. Beide Ziele können über unterschiedliche Ethernet-Wege erreichbar sein. Der Hostname `vlan20` erzeugt kein eigenes VLAN.
-
-Wiederhole **die drei Aufräumschritte und den Wiederherstellungs-Kontrollpunkt aus Aufgabe 5** und schliesse die Werkzeug-Tabs. Dieses Ping-Extra enthält keinen TCP-Marker zur Analyse. Weiter mit [Übung 3](ex3-spanning-tree.md).
+Wähle eine vorbeugende und eine Erkennungs-/Reaktionsmassnahme. Benenne Verantwortlichen und Abnahmeprüfung am Austauschtag einschliesslich wiederhergestellter Anwendungskommunikation. Aktiviere keinen ungeprüften Schutzmechanismus in einer laufenden Zelle. Schliesse die Werkzeuge; weiter mit [Übung 3](ex3-spanning-tree.md).
 
 ## Weiterforschen
 

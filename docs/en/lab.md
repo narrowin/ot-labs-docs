@@ -1,6 +1,6 @@
 # Student lab guide
 
-Use the instructor-provided appliance in your browser. It contains the running `ot-sec-flat` network, configured terminals, packet capture, PLC visualizations and the seven exercises. You need your assigned LNE URL and login; no local tool installation is required.
+Each student has their own lab appliance. Open yours in your browser. It contains the running `ot-sec-flat` network, configured terminals, packet capture, PLC visualizations and the seven exercises. You need your assigned LNE URL and login; no local tool installation is required.
 
 ## Getting started
 
@@ -9,7 +9,7 @@ Use the instructor-provided appliance in your browser. It contains the running `
 3. Open Explorer from the lesson. Its links carry your selected network and snapshot. In terminal and capture tabs, choose the **Active exercise** title to reopen the instructions beside your work.
 4. Use the checks below, then work through the [seven exercises](exercises/index.md) in order.
 
-The appliance is already deployed. Starting another topology, restarting runtimes or resetting shared devices would interrupt other students. Use the configured terminal action rather than assuming a device password.
+The appliance is already deployed. Use the configured terminal action rather than assuming a device password.
 
 ## First five minutes
 
@@ -77,11 +77,11 @@ Observe controls without operating them during the networking tasks. A steady va
 | Toolbox | Draft zones and directional policies; saving does not configure network devices |
 | Assistant | Help with the active lesson, command output and packet evidence |
 
-Toolbox is opened from the product launcher. Its saved network workspace is shared; saving a design does not enforce it. [Exercise 7](exercises/ex7-segmentation-firewall.md) builds VLAN 70 through device terminals on an assigned disposable copy. The instructor must complete the [practical setup and checkpoint](lab-practical.md) first. Exercises 1–6 use the flat baseline; Exercise 7 temporarily moves only Hirschmann and restores it before finishing.
+Toolbox is opened from the product launcher. Its saved network workspace holds your design; saving does not enforce it. [Exercise 7](exercises/ex7-segmentation-firewall.md) builds VLAN 70 through device terminals in your own lab. The [practical setup](lab-practical.md) prepares a recovery checkpoint. Exercises 1–6 use the flat baseline; Exercise 7 temporarily moves only Hirschmann and restores it before finishing.
 
 ## If a checkpoint fails
 
-Check the selected live network, node and interface first. A historical snapshot can display topology but cannot run a live terminal, capture or WebVisu. If a tool action is unavailable, ask the instructor to check bindings, credentials, runtime status and permissions. Record the specific node/action/error instead of changing shared configuration.
+Check the selected live network, node and interface first. A historical snapshot can display topology but cannot run a live terminal, capture or WebVisu. If a tool action is unavailable, ask the instructor to check bindings, credentials, runtime status and permissions. Record the specific node/action/error instead of changing unrelated configuration.
 
 For capture problems, clear the display filter, confirm capture has started, repeat the four-packet ping and allow the viewer a few seconds to catch up. See the [filter and troubleshooting reference](exercises/appendix.md).
 

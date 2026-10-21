@@ -55,12 +55,12 @@ Am Ende dieses Workshops werden Sie in der Lage sein:
 
 ## Kursanforderungen
 
-**Niveau:** Fortgeschritten, praxisorientierter Workshop
+**Niveau:** OT-Fachleute; Netzwerkeinstieg mit geführten praktischen Aufgaben
 
 **Was Sie wissen sollten:**
 
-* Netzwerkgrundlagen (IP-Adressierung, VLANs, grundlegendes Routing)
-* Kommandozeilen-Grundkenntnisse (ssh, ping, grundlegende Dateioperationen)
+* Vertrautheit mit Ihrem OT-Prozess, SPS und Instandhaltung; IP-Adressierung, VLANs und Routing werden in den Übungen eingeführt
+* Einen Browser bedienen und Befehle kopieren können; die Übungen erklären die Eingabeorte für Befehle und Filter
 * Container-Konzepte hilfreich, aber nicht erforderlich (wir erklären, was Sie brauchen)
 
 **Laborumgebung:**

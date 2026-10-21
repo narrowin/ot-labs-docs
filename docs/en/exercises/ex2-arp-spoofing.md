@@ -1,10 +1,18 @@
 # Exercise 2: Trace an ARP interception
 
-**Time:** 30–40 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Intermediate.
+**Time:** 40–50 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Guided practice.
 
 Prove a change in the victim's IP-to-MAC mapping, follow the resulting traffic, and restore the original path. Run the interception from WAGO A against only B and its gateway. Use the named lab targets for connectivity checks. These addresses refer to the simulated network inside this appliance.
 
 **Learning objectives:** Explain ARP's trust problem, execute and prove a bounded Layer 2 interception, identify readable application data, and explain detection and mitigation.
+
+## Your incident task
+
+Monitoring reports a changed gateway MAC address in a production cell. Is this an approved network change, an addressing fault or an interception? Reproduce one known cause in the simulator, then build the evidence an operations team would need before taking action.
+
+**ARP in plain language:** To send an IPv4 packet on Ethernet, a host needs the next hop's MAC address. ARP asks who owns that IP and caches the answer. A forged answer can make a different device receive the frames. The IP destination does not have to change.
+
+The TCP marker below is a disposable test message, not an industrial protocol or a stolen credential. It makes the redirection visible without manipulating a process. Exercise 6 examines actual lab OT protocol messages.
 
 ## Before you start
 
@@ -133,6 +141,10 @@ Now inspect the retained capture. Filter `tcp.port == 2323`, select a data packe
 
 Keep the capture open for Extra 1 if desired. Otherwise close the capture and terminal tabs.
 
+## Your incident handover
+
+Write four lines: original gateway MAC and time; changed mapping and captured marker; recovered mapping and cleanup evidence; the next operational check. Verify approved gateway replacement/failover and the owner of the observed MAC before labelling a real alert malicious. Escalate with this evidence; a changed ARP entry alone is not a reason to disconnect a running PLC.
+
 ## Solution
 
 ??? success "Compare your evidence"
@@ -151,24 +163,20 @@ Keep the capture open for Extra 1 if desired. Otherwise close the capture and te
 
 **Checkpoint:** Your timeline distinguishes the real gateway mapping, the forged claim and recovery. A normal gratuitous ARP is not by itself proof of an attack. [Search the ARP field reference](https://www.wireshark.org/docs/dfref/a/arp.html) for `arp.src.hw_mac` and `arp.isgratuitous`.
 
-## Extra 2: Find the boundary of this interception
+## Extra 2: Choose protection that survives maintenance
 
-**Optional, 10 minutes.** Predict whether changing B's gateway mapping intercepts every destination in `10.0.0.0/8`.
+**Optional, 10 minutes.** The cell uses static PLC addresses. Tomorrow the gateway is replaced with hardware that has a different MAC. Use your recorded gateway/attacker mappings to review these proposals; do not configure them.
 
-1. Start a fresh A data-port capture and repeat the bounded helper from Task 3.
-2. While it runs, on **WAGO B**:
+| Proposal | Question to answer |
+| --- | --- |
+| Allow only each PLC's MAC on its switch port | Did A need a different source MAC to claim the gateway IP? |
+| Configure a fixed gateway ARP entry on B | What must change when the legitimate gateway MAC changes? |
+| Validate ARP claims at the switch | Where will trusted IP/MAC bindings for static PLCs come from? |
+| Alert on changes only | Who checks the maintenance record and decides the response? |
 
-    ```bash
-    ip route get 10.20.0.11
-    ping -c 2 10.20.0.11
-    ping -c 2 2.2.2.2
-    ```
+**Checkpoint:** A can lie about the gateway IP while using A's own allowed MAC, so simple source-MAC port security is insufficient. A fixed ARP mapping needs a maintained replacement procedure. Dynamic ARP Inspection needs platform support and trustworthy bindings; a DHCP-only database does not automatically cover static devices. Monitoring detects evidence but does not itself block the forged claim.
 
-3. Compare `icmp.type == 8 && ip.src == 10.10.0.12 && ip.dst == 10.20.0.11` with `icmp.type == 8 && ip.src == 10.10.0.12 && ip.dst == 2.2.2.2` on A.
-
-**Checkpoint:** The route to CtrlX `10.20.0.11` is direct on `eth1` in this `/8` flat baseline. Spoofing the gateway pair does not redirect that direct neighbor mapping; the routed jumphost traffic does cross A. Both pings can succeed while taking different Ethernet paths. The `vlan20` hostname does not create a separate VLAN.
-
-Repeat **Task 5’s three cleanup steps and its recovery checkpoint**, then close captures and terminals. This ping-only extra has no TCP marker to inspect. Continue with [Exercise 3](ex3-spanning-tree.md).
+Choose one preventive measure and one detection/response measure. Name their owner and a replacement-day acceptance check, including restored application communication. Do not enable an unqualified protection feature on a running cell. Close tools; continue with [Exercise 3](ex3-spanning-tree.md).
 
 ## Explore the topic
 

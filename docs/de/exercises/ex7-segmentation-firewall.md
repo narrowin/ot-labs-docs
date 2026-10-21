@@ -1,14 +1,24 @@
 # Übung 7: Ein geroutetes VLAN aufbauen und prüfen
 
-**Zeit:** 60–90 Minuten. **Lab:** eine von den Dozierenden zugewiesene, wegwerfbare Kopie von `ot-sec-flat`. **Niveau:** Fortgeschritten.
+**Zeit:** 90–120 Minuten einschliesslich Zonenplanung. **Lab:** dein studentisches `ot-sec-flat`-Lab. **Niveau:** Geführte Praxis.
 
 Erstelle eine neue Sicherheitszone, transportiere sie durch die Switches, route sie am Gateway und setze eine kleine Policy durch. Weise nach, dass die Anwendung funktioniert und eine unerlaubte Verbindung blockiert wird. Stelle danach den flachen Ausgangszustand wieder her.
 
 **Du lernst:** Access-VLAN und getaggten Weg zu konfigurieren, die Bridge-CPU des Gateways einzubeziehen, ein nicht überlappendes Subnetz zu wählen, zustandsbehaftete Firewall-Regeln anzuordnen und beide Richtungen mit Paketen und Anwendungsergebnissen zu prüfen.
 
+## Dein Änderungsauftrag
+
+Eine temporäre Diagnosestation soll eine SPS-Visualisierung erreichen, ohne allgemeinen Zugriff auf die Zelle zu erhalten. Verwende den Linux-Endpunkt mit Hirschmann-Bezeichnung als **Testclient** und WAGO A als Visualisierungsserver. Das sind Übungsrollen; ein industrieller Switch ist nicht üblicherweise ein Bedienarbeitsplatz.
+
+Der Verantwortliche erlaubt den WebVisu-Dienst und eine Gateway-Diagnose. SSH, andere neue zonenübergreifende Dienste und neue Verbindungen zurück zur Diagnosestation gehören nicht zum Auftrag. Formuliere diese Absicht zuerst als Kommunikationsmatrix. Setze sie danach um und belege sowohl die funktionierende Anwendung als auch die Einschränkung.
+
+Eine **Zone** gruppiert Anlagenbestandteile mit gemeinsamen Sicherheitsanforderungen. Ein **Conduit** ist ein genehmigter Kommunikationspfad zwischen Zonen. Ein VLAN trennt Ethernet-Verkehr; Routing und Firewall-Regeln kontrollieren hier den Pfad zwischen Zonen. Eine **zustandsbehaftete** Firewall verfolgt bestehende Verbindungen: Antworten brauchen keine Freigabe als unabhängige neue Verbindungsaufnahme.
+
+**Wichtige Grenze:** TCP 8080 erlaubt die WebVisu-Anwendung einschliesslich der dort angebotenen Bedienelemente. Das erzwingt **keinen reinen Lesezugriff**. Studierende bedienen die Elemente nicht; eine reale Anforderung «nur ansehen» braucht zusätzlich Anwendungsrollen oder einen geeigneten anwendungsbezogenen Zugriffsschutz. Dieses Praktikum prüft nur den Netzwerkzugriff.
+
 ## Vorbereitung
 
-Verwende die **separate Kopie, die für dich oder deine Übungsgruppe reserviert ist**, ohne andere Nutzer. Die Dozierenden müssen deren flachen Checkpoint gespeichert und die Knoten-Bindings bestätigt haben. Übungen 1–6 bleiben auf der ursprünglichen flachen Appliance. Steht dir nur die gemeinsame Kurs-Appliance zur Verfügung, fordere die Übungskopie an, bevor du Konfigurationsbefehle eingibst.
+Verwende dein eigenes studentisches Lab nach Abschluss und Bereinigung der Übungen 1–6. Der Ausgangszustand muss zu Aufgabe 1 passen. Ein Checkpoint des flachen Ausgangszustands muss für die Wiederherstellung verfügbar sein; die [Vorbereitungsanleitung](../lab-practical.md) enthält die Befehle für die Konsole der Kursleitung.
 
 Öffne Terminals für [Hirschmann](/network/terminal?node=hirschmann-edge1-vlan50), [WAGO A](/network/terminal?node=wago-plc2a-vlan10), [sw-acc1](/network/terminal?node=sw-acc1), [sw-dist](/network/terminal?node=sw-dist) und [gw](/network/terminal?node=gw-firewall). Lasse das Hirschmann-Terminal offen: Die Management-Verbindung verwendet `eth0`, geändert wird nur Dateninterface `eth1`.
 
@@ -23,6 +33,34 @@ Der Name `hirschmann-edge1-vlan50` bleibt bestehen. Die Übung erstellt **ein ne
 | Anfang | `10.50.0.12/8` | 10 | Direkt, geswitcht | HTTP und SSH offen |
 | Nach Aufbau | `172.30.70.12/24` | 70 | Über `172.30.70.1` auf gw | HTTP erlaubt; neues SSH blockiert |
 | Nach Bereinigung | `10.50.0.12/8` | 10 | Wieder direkt | Ursprünglicher Zugriff wiederhergestellt |
+
+## Anlagenzonen vor der Konfiguration planen
+
+**Entwurfsaufgabe, 20–30 Minuten.** Nutze Wasseraufbereitungsdiagramm und SPS-Zuordnung aus dem Kurshandout (PDF-Seiten 33–34 und 130–145). Gemeint sind gezählte PDF-Seiten; die aufgedruckten Foliennummern weichen später ab. Arbeite selbstständig oder besprich deinen Entwurf mit einer Kollegin oder einem Kollegen, bevor du dein eigenes Lab konfigurierst.
+
+1. Gruppiere Anlagenbestandteile nach betrieblichem Zweck und Folgen von Ausfall oder Manipulation. Beginne mit Aufbereitung/Hygiene, Pumpen/Prozess, Entsorgung, Leitwarte und Engineering/Fernwartung. Das sind mögliche Gruppen, keine vorgeschriebene Lösung oder zugewiesenen Security Levels.
+2. Prüfe die **Steuerungsgrenze**. WAGO PLC2 steuert UV/Chlor, Mischen und pH-Funktionen. Schneider PLC4 steuert den Mischer der ersten Stufe sowie Hilfs-/Entsorgungsanlagen. Ein VLAN an der einen Datenschnittstelle einer SPS verschiebt den gesamten Endpunkt; es trennt nicht dessen physische Ausgänge. Eine Firewall zwischen zwei intern von derselben SPS gesteuerten Aktoren im Diagramm erzwingt deren Trennung nicht.
+3. Erfasse notwendige Kommunikation. Verwende beobachtete Clients/Server/Funktionen aus Übung 6 als Beleg und ergänze Zweck, Initiator, Empfänger, Protokoll, Verantwortlichen und Ausfallfolge. Kennzeichne eine Beziehung aus dem Prozessbild als **zu prüfen**, bis sie beobachtet oder vom Verantwortlichen bestätigt wurde. Vorhandener Verkehr ist nicht automatisch notwendiger Verkehr.
+4. Finde eine Abhängigkeit über deine vorgesehenen Zonengrenzen. Entscheide, ob du die SPS mit ihren Funktionen gemeinsam gruppierst oder einen später zu qualifizierenden Engineering-Umbau vorschlägst. Eine TCP-Port-Regel löst weder eine interne Steuerungsabhängigkeit noch macht sie Modbus zu einem reinen Leseprotokoll.
+5. Prüfe deinen Entwurf: Welcher Kompromiss begrenzt Störungen und erhält notwendige Steuerung? Vergleiche bei Gelegenheit mit einer Kollegin oder einem Kollegen. Notiere ein verbleibendes Risiko und den zuständigen Anlagenverantwortlichen. Diese Übung weist keine IEC-62443-Security-Levels zu und zertifiziert sie nicht.
+
+**Ergebnis:** Zonenskizze und mindestens vier gerichtete Kommunikationszeilen, darunter Leitsystemkommunikation, Engineering-Zugriff, Lieferantenzugriff und lokale Geräteerkennung. Nutze eigene Notizen oder den Toolbox-Zonen-/Kommunikationsplaner in deinem Lab. In LNE: Produktmenü → **Toolbox** → **Policies**. Speichern eines Designs setzt keine Gerätekonfiguration um.
+
+??? success "Begründung prüfen"
+    Eine gute Antwort berücksichtigt die reale SPS-Zuordnung, erhält begründete Steuerungsbeziehungen und begrenzt Wartungszugriffe. Sie trennt UV/Chlor, Mischer oder pH nicht als unabhängig durchgesetzte VLANs, solange diese im selben WAGO-Endpunkt gesteuert werden. Sie erkennt auch Schneiders gemischte Prozess-/Entsorgungsaufgabe. Mehrere Zonendesigns sind vertretbar, wenn Abhängigkeiten, Grenzen und Restrisiken ausdrücklich benannt sind.
+
+Die Umsetzung unten realisiert **einen kleinen, prüfbaren Conduit** für einen temporären Diagnoseclient. Sie setzt nicht das ganze Anlagendesign um. Die Prozesssteuerungen bleiben an ihrem Platz; so übst du Routing und Regeldurchsetzung, ohne eine laufende Steuerungsabhängigkeit zu verschieben.
+
+| Initiator | Empfänger | Dienst | Gewünschtes Ergebnis und Grund |
+| --- | --- | --- | --- |
+| Diagnoseclient | WAGO A | TCP 8080 | Genehmigte WebVisu-Anwendung erlauben |
+| Diagnoseclient | WAGO A | TCP 22 | Nicht genehmigten SSH-Aufbau sperren |
+| WAGO A | Diagnoseclient | Neues TCP 22 | Nicht genehmigten umgekehrten Verbindungsaufbau sperren |
+| Diagnoseclient | Sein Gateway | ICMP | Vorgesehene Erreichbarkeitsdiagnose erlauben |
+| Diagnoseclient | Sein Gateway | TCP 22 | Gateway-Administration sperren |
+| Teilnehmer einer erlaubten Verbindung | Gegenseite | Established/related | Zugeordnete Antworten erlauben |
+
+Notiere Verantwortlichen und Ablauf zum Wartungsende für den vorgeschlagenen WebVisu-Zugriff. Die Bereinigung setzt dieses Ablaufdatum im Praktikum um. Sage vor Aufgabe 2 für jede Zeile die erste passende Firewall-Regel voraus.
 
 ## Aufgabe 1: Ausgangszustand festhalten
 
@@ -156,7 +194,7 @@ Auf **gw**:
 /log print where message~"EX7-"
 ```
 
-Filtere den Mitschnitt mit `ip.addr == 172.30.70.12 && (tcp.port == 22 || tcp.port == 8080)`. Ordne Quelle/Ziel und Ports deinen Regellogs zu. Logs und Zähler können auch andere Tests deiner Übungsgruppe enthalten.
+Filtere den Mitschnitt mit `ip.addr == 172.30.70.12 && (tcp.port == 22 || tcp.port == 8080)`. Ordne Quelle/Ziel und Ports deinen Regellogs zu. Logs und Zähler können auch frühere Versuche oder Hintergrundverkehr in deinem Lab enthalten.
 
 Verwende die neuesten Einträge aus deinem Testzeitraum. Frühere `EX7-`-Einträge können nach einer vorherigen Bereinigung erhalten bleiben.
 
@@ -168,7 +206,11 @@ Die aktuelle VLAN-Ansicht kann die zusammengefasste Bond-Kante zwischen sw-dist 
 
 **Hauptergebnis erreicht.** Lasse VLAN 70 für die optionalen Zusatzteile konfiguriert. Führe danach in jedem Fall die **Bereinigung** durch. Stoppe den Mitschnitt vor einem Zielwechsel.
 
-Die Extras kannst du auch nach dem Kurs bearbeiten. Vereinbare vor deiner Abreise den weiteren Zugang zu deiner Praktikumskopie und Unterstützung der Kursleitung beim Zurücksetzen. Bereinige das Lab jetzt und beginne später vom flachen Checkpoint aus erneut mit Aufgaben 1–5. Bewahre deine bisherigen Ergebnisse zum Vergleichen auf.
+Wenn du vor den Extras pausierst, führe zuerst die Bereinigung durch. Prüfe beim Fortsetzen den flachen Ausgangszustand mit Aufgabe 1 und wiederhole Aufgaben 2–5 vor den Extras. Bewahre deine bisherigen Ergebnisse zum Vergleichen auf.
+
+## Dein Abnahmeprotokoll
+
+Notiere genehmigte Quelle, Ziel und Dienst, HTTP-Ergebnis, passende abgewiesene SSH-Anfrage mit Firewall-Log sowie die nach der Bereinigung wiederhergestellte Ausgangslage. Ergänze Gegenrichtungs- und Gateway-Prüfungen aus Extra 2, falls durchgeführt. Behaupte weder eine Prüfung aller denkbaren Datenflüsse noch einen durch HTTP-Freigabe erzwungenen HMI-Lesezugriff.
 
 ## Lösung
 
@@ -243,7 +285,7 @@ Wiederhole die Adress-, Routen-, Dienst- und Switch-Prüfungen aus Aufgabe 1. Hi
 
 Führe **Collect new data** erneut aus, um gemeldete Port-Mitgliedschaften zu aktualisieren. Prüfe das Entfernen in den tatsächlichen RouterOS-Tabellen. Eine VLAN-Nummer im Katalog allein beweist nicht, dass ein Port sie weiterhin führt.
 
-Weicht die Bereinigung vom protokollierten Ausgangszustand ab, lasse die Kopie reserviert und deren gespeicherten Checkpoint durch die Dozierenden wiederherstellen. Schliesse nach der Prüfung alle Terminal-Tabs.
+Weicht die Bereinigung vom protokollierten Ausgangszustand ab, verwende mit der Kursleitung das gespeicherte Checkpoint-Verfahren und wiederhole Aufgabe 1. Schliesse nach der Prüfung alle Terminal-Tabs.
 
 ## Weiterforschen
 

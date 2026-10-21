@@ -1,162 +1,35 @@
-# Netzwerk-Automatisierung
+# Ausblick Automatisierung: Konfigurationsdrift erkennen
 
-## Warum automatisieren?
+Nach einer Wartung wurde eine Ersatz-SPS dem falschen VLAN zugeordnet. Automatisierung soll Soll und Ist des Ports vergleichen und eine vorgeschlagene Korrektur prüfbar machen. Ein erfolgreicher Automatisierungsjob allein beweist nicht, dass die SPS-Anwendung funktioniert.
 
-Netzwerkautomatisierung reduziert manuelle Fehler, spart Zeit und gewährleistet Konsistenz über Ihre Infrastruktur. Nach manueller Exploration dieser Laborumgebung können Sie häufige Aufgaben automatisieren:
+**Optional, 15 Minuten nach den Hauptübungen.** Verwende die Switch-Port-Belege aus Übung 1. Softwareinstallation und Geräteänderungen sind nicht nötig.
 
-- Diagnosebefehle über mehrere Geräte ausführen
-- Konfigurationen regelmässig sichern
-- Systeminformationen für Analysen sammeln
-- Firmware-Updates verwalten
+## Das gewünschte Ergebnis festlegen
 
-Dieser Leitfaden zeigt, wie Sie mit dem Open-Source-Werkzeug [networka](https://narrowin.github.io/networka/) beginnen, einem Multi-Vendor-Netzwerkautomatisierungs-CLI-Toolkit.
+Trenne für sw-acc1 ether2 Soll-Aussagen von Beobachtungen:
 
-## Schritt 1: networka installieren
+| Soll-Aussage | Zu vergleichender Beleg |
+| --- | --- |
+| Der Port bedient WAGO A | Portbeschreibung, Topologie und Endgeräteidentität |
+| Ungetaggter Endgeräteverkehr erhält VLAN 10 | PVID und tatsächliche ungetaggte Mitgliedschaft |
+| Der Pfad transportiert VLAN 10 zum Gateway | Uplink-Mitgliedschaft und getaggter Ping-Mitschnitt |
+| Die Anwendung ist verfügbar | Erfolgreiche, freigegebene Anwendungsanfrage |
 
-Installieren Sie networka mit uv oder pipx:
+Lies im **konfigurierten Terminal von sw-acc1** die ersten beiden Konfigurationsbelege:
 
-```bash
-uv tool install git+https://github.com/narrowin/networka.git
+```routeros
+/interface bridge port print detail where interface=ether2
+/interface bridge vlan print detail
 ```
 
-Installation überprüfen:
+Ein passender Ausgangszustand ist ein gültiges Ergebnis: Melde «keine Änderung nötig». Nimm auf Papier an, die erste Ausgabe zeige stattdessen PVID 20. Beschreibe die Abweichung, den möglicherweise betroffenen Verkehr und warum ein pauschales Zurücksetzen aller Ports keine geeignete Korrektur wäre.
 
-```bash
-nw --version
-```
+## Einen prüfbaren Änderungsvorschlag schreiben
 
-## Schritt 2: Konfiguration initialisieren
+Notiere genaues Ziel, beobachteten Altwert, Sollwert, Grund, Verantwortlichen, erwartete Auswirkung, Anwendungsprüfung und Rollback. Die Automatisierung soll eine Änderung verweigern, wenn sich der beobachtete Altwert seit der Prüfung geändert hat. Trenne Zustandsabfrage, Diff-Vorschau, genehmigte Umsetzung und Ergebnisprüfung.
 
-Initialisierungsbefehl ausführen:
+**Kontrollpunkt:** Dein Vorschlag verwaltet nur das vorgesehene Feld, erhält andere Einstellungen und enthält einen Anwendungsbeleg nach der Änderung. Wiederholung einer bereits korrekten Operation soll nichts mehr ändern; das ist **Idempotenz**.
 
-```bash
-nw config init
-```
+Der Automatisierungskreislauf im Handout lautet Ist-Konfiguration sammeln → mit Soll vergleichen → validieren → anwenden. Diese Übung bereitet die Spezifikation vor; sie installiert kein Werkzeug und behauptet keine ausgeführte automatische Korrektur. Zugangsdaten und Konfigurationssicherungen gehören in den vorgesehenen privaten Speicher der Kursleitung, nicht in Kursnotizen oder Git.
 
-Dies erstellt ein Konfigurationsverzeichnis unter `~/.config/networka` (Linux/macOS):
-
-- `devices/` - Gerätedefinitionen
-- `groups/` - Gerätegruppen und Tags  
-- `sequences/` - Wiederverwendbare Befehlssequenzen
-- `.env` - Anmeldedaten
-
-Folgen Sie den Eingabeaufforderungen für Shell-Vervollständigungen und optionale Herstellersequenzen.
-
-## Schritt 3: Ihre Laborgeräte definieren
-
-Bearbeiten Sie `~/.config/networka/devices/devices.yml`, um die Laborgeräte hinzuzufügen:
-
-```yaml
-devices:
-  router1:
-    host: 192.168.100.11
-    device_type: mikrotik_routeros
-    platform: x86
-    description: "Gateway-Router"
-    tags:
-      - gateway
-      - critical
-
-  switch1:
-    host: 192.168.100.12
-    device_type: mikrotik_routeros
-    platform: x86
-    description: "Access-Switch"
-    tags:
-      - switch
-      - access
-```
-
-Überprüfen Sie, dass Ihre Geräte geladen sind:
-
-```bash
-nw list devices
-```
-
-Sie sollten beide Geräte mit ihren IP-Adressen und Beschreibungen sehen.
-
-## Schritt 4: Ersten Befehl ausführen
-
-Schnittstellenstatus auf dem Router mit vordefinierter Sequenz prüfen:
-
-```bash
-nw run router1 interface_status
-```
-
-Dies verbindet sich mit dem Gerät und zeigt:
-
-- Alle Schnittstellen mit Status und Konfiguration
-- Verkehrsstatistiken (Pakete, Bytes, Fehler, Drops)
-- Ethernet-Port-Details und -Geschwindigkeiten
-- Aktueller Durchsatz für jede Schnittstelle
-
-Die Ausgabe ist formatiert und mit klaren Abschnitten für jedes Befehlsergebnis leicht lesbar.
-
-## Schritt 5: Weitere Sequenzen erkunden
-
-Networka enthält viele eingebaute Sequenzen für häufige Operationen. Verfügbare Sequenzen anzeigen:
-
-```bash
-nw run router1 <TAB>
-```
-
-Probieren Sie diese nützlichen Sequenzen aus:
-
-```bash
-# Schnelle Geräteübersicht
-nw run router1 quick_status
-
-# Detaillierte Systeminformationen
-nw run router1 system_info
-
-# Routing-Tabelle prüfen
-nw run router1 routing_info
-
-# Vollständiger Gesundheitscheck
-nw run router1 health_check
-```
-
-## Schritt 6: Konfigurationen sichern
-
-Erstellen Sie Konfigurationssicherungen mit herstellerbewusster Behandlung:
-
-```bash
-# Konfigurationsexport
-nw backup config router1
-
-# Umfassende Sicherung (Konfiguration + Systemdaten)
-nw backup comprehensive router1
-```
-
-Die Sicherungen werden in Ihrem Ergebnisverzeichnis mit Zeitstempeln gespeichert.
-
-## Schritt 7: Mit mehreren Geräten arbeiten
-
-Befehle gleichzeitig auf mehreren Geräten ausführen:
-
-```bash
-# Kommagetrennte Liste
-nw run router1,switch1 quick_status
-
-# Befehl über Geräte ausführen
-nw run router1,switch1 "/system/resource/print"
-```
-
-Für Produktionseinsatz Gerätegruppen erstellen und Befehle effizient über ganze Gruppen ausführen.
-
-## Was als Nächstes?
-
-Sobald Sie mit diesen Grundlagen vertraut sind:
-
-1. **Benutzerdefinierte Sequenzen erstellen** - Definieren Sie Ihre eigenen Befehls-Workflows in YAML
-2. **Gerätegruppen einrichten** - Organisieren Sie Geräte nach Rolle, Standort oder Funktion
-3. **Sicherungen planen** - Verwenden Sie cron oder systemd-Timer für automatisierte Sicherungen
-4. **Multi-Vendor erkunden** - networka unterstützt MikroTik, Cisco, Arista, Juniper und mehr
-
-Lesen Sie die [vollständige Dokumentation](https://narrowin.github.io/networka/) für erweiterte Funktionen wie:
-
-- Benutzerdefinierte Befehlssequenzen
-- Tag-basierte Gerätefilterung
-- Ergebnisspeicherung und -analyse
-- CI/CD-Integration
-- Multi-Vendor-Workflows
+Weiter zur [Übungsübersicht](exercises/index.md).

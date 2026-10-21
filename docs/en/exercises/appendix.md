@@ -43,7 +43,7 @@ Paste one expression into the **display-filter** bar and press Enter. These are 
 | HTTP returns 404 | A responding HTTP service is different from a missing path. Check `/webvisu.htm` and port 8080. |
 | A GUI value stays constant | A steady process value is possible. Check ongoing application exchange; do not operate controls just to force movement. |
 | A final firewall drop exists, yet access works | Check earlier accepts and the actual packet path. Same-VLAN traffic can bypass the gateway entirely. |
-| Results differ from the walkthrough | Record the actual output and ask whether your lab was changed. Do not reset nodes or replace shared designs. |
+| Results differ from the walkthrough | Record the actual output and compare your lab with the lesson's baseline. Complete earlier cleanup; use the saved recovery checkpoint if the configuration needs restoring. |
 
 ## Additional resources
 

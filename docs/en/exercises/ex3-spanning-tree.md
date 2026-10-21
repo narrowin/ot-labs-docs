@@ -1,10 +1,18 @@
 # Exercise 3: Explain the live spanning tree
 
-**Time:** 25–35 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Intermediate.
+**Time:** 30–40 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Guided practice.
 
 Find the elected root from operational evidence, then explain how RSTP prevents a loop in the triangle of switches. This is an observation exercise: leave priorities, ports and cables unchanged.
 
 **Learning objectives:** Identify bridge membership, elected root and port roles; interpret BPDUs; explain how RSTP and LACP provide complementary redundancy.
+
+## Your maintenance task
+
+A technician reports: “The redundant cable is connected, but one port is not forwarding. Should I enable forwarding?” Determine whether this is a fault or the mechanism keeping the cell available. Forcing both paths to forward can create a switching loop.
+
+**Read the status:** **RSTP** (Rapid Spanning Tree Protocol) selects a loop-free set of paths. The **root bridge** is its reference switch, not necessarily the IP gateway. A **root port** leads towards that reference; an **alternate port** is a standby path. **BPDUs** are the control messages switches use to agree. Standby ports can exchange control messages while not forwarding ordinary application data.
+
+**Predict:** Can a physically healthy cable be intentionally unused for application traffic?
 
 ## Before you start
 
@@ -75,6 +83,10 @@ On **sw-acc2**:
 
 Explain why the LACP bond and RSTP solve different problems. Close terminals when finished.
 
+## Your maintenance handover
+
+Write “leave as designed” or “investigate” for sw-acc2 ether11. Support the decision with its physical state, RSTP role and agreed root ID. State what a failover trial would need to measure: actual recovery and application interruption after a failure. A standby path in a diagram does not prove a measured recovery time.
+
 ## Solution
 
 ??? success "Compare your evidence"
@@ -82,15 +94,16 @@ Explain why the LACP bond and RSTP solve different problems. Close terminals whe
 
     sw-dist reaches gw through `ether12`. Each access switch reaches sw-dist through its chosen root port. The additional sw-acc1–sw-acc2 connection would close a switching loop, so sw-acc2's alternate port does not forward ordinary data. RSTP treats the LACP bond as one logical port. A redundant link can be healthy and deliberately non-forwarding.
 
-## Extra 1: Win the root-election detective challenge
+## Extra 1: Review a switch replacement before the outage
 
-**Optional, 10 minutes.** Use the four bridge IDs from Task 2.
+**Optional, 10 minutes.** A replacement switch will use default RSTP settings. The maintenance plan assumes that the current forwarding paths will stay the same.
 
-1. Rank them from lowest to highest; show which part of each comparison decided the order.
-2. Predict the root if sw-acc2 had priority `0x1000` and all other settings stayed the same. This is a paper prediction; do not change the devices.
-3. Read `/interface bridge print detail` on sw-acc2 and compare its configured priority with its operational `root-bridge-id`.
+1. Use Task 2's four bridge IDs to identify whether priority or MAC decided the current root.
+2. On **sw-acc2**, read `/interface bridge print detail`. Compare configured priority with the operational root ID.
+3. On paper, replace the current root with a switch of the same priority but a MAC greater than the other three. Predict whether the same physical location would still be root. Do not change any device.
+4. Write a pre/post-change acceptance check: intended root, actual root seen by all switches, root/alternate ports and application reachability.
 
-**Checkpoint:** You explain both the current MAC tie-break and why a lower numerical priority would override that tie-break. A configured priority alone does not prove who is currently root. [Find the election rules](https://help.mikrotik.com/docs/spaces/ROS/pages/21725254/Spanning+Tree+Protocol) under **(R)STP Election Process**.
+**Checkpoint:** Equal priorities leave the choice to MAC addresses; replacement hardware can change that choice. Agree the intended root/backup with the network owner and manage priorities deliberately before a real change. Choosing a root requires topology and availability requirements, not simply picking the middle of the drawing. This lab's fixed MACs make the current result reproducible; real replacements need their own check.
 
 ## Extra 2: Diagnose a healthy link that does not forward
 

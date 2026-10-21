@@ -1,10 +1,18 @@
 # Exercise 6: Identify OT protocols from evidence
 
-**Time:** 35–45 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Intermediate.
+**Time:** 40–50 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Guided practice.
 
 Identify actual protocol messages, make one bounded Modbus read, and separate observed application behavior from assumptions based on a port number. Do not change PLC values, download programs or operate process controls.
 
 **Learning objectives:** Discover Modbus, WebVisu/HTTP, CODESYS and OPC UA evidence; distinguish local Ethernet discovery from routed protocols; compare authentication/encryption claims with observed traffic and settings.
+
+## Your commissioning task
+
+After a maintenance change, the team says: “The PLC answers ping, so the network is fine.” Build a more useful check: can the client reach the required service, send the right request and receive an interpretable answer? Also identify which discovery traffic cannot simply cross a router.
+
+A **protocol** defines the messages applications exchange. A Modbus **register** is an addressed data item; the vendor's register map defines its meaning, type and units. A **transaction ID** helps pair a request with its reply within the same TCP conversation. An open port alone answers none of these application questions.
+
+**Predict:** Would a successful TCP connection to port 502 prove that the requested register exists or that its value is a temperature?
 
 ## Before you start
 
@@ -22,6 +30,8 @@ Watch about 15 seconds. Clear the display filter, then open **Statistics → Pro
 Try `modbus` and `pn_dcp` separately. For one message, record source, destination, protocol, time and frame number. For discovery frames without IP, record Ethernet addresses.
 
 **Checkpoint:** The baseline has background Modbus traffic and lab-generated PROFINET DCP Identify messages. Background Modbus can include reads and writes from other lab applications; observing them does not mean you issued them. If a protocol is absent in your observation window, record “not observed”, not “not installed”.
+
+Before generating your own traffic, find one background request and its response if present. Record the client, server and function. In the course plant, ABB is the supervisory system and WAGO controls treatment functions. Verify the actual source against Netmap; do not assume every Modbus client is ABB. Your B → A read below is a diagnostic transaction, not proof of the plant's normal control relationship. An unexplained write needs an owner and purpose, not automatic blocking.
 
 ## Task 2: Make and trace one Modbus read
 
@@ -66,22 +76,27 @@ ss -lnu
 
 Record the listening addresses and ports for the evidence comparison below.
 
-On **WAGO B**, use its installed `uv` and Python standard library for one bounded OPC UA transport greeting:
+Compare these listeners with your captured messages. If no OPC UA transaction is present, record “listener found; application/session security unverified”. That is a complete main-task result. You do not need to write Python or establish an OPC UA session.
 
-```bash
-uv run --offline --no-project python - <<'PY'
-import socket, struct
-url = b'opc.tcp://10.10.0.11:4840'
-hello = b'HELF' + struct.pack('<7I', 32 + len(url), 0, 65536, 65536, 0, 0, len(url)) + url
-with socket.create_connection(('10.10.0.11', 4840), timeout=3) as connection:
-    connection.sendall(hello)
-    reply = connection.recv(8, socket.MSG_WAITALL)
-    print('OPC UA transport response:', reply[:4].decode('ascii', errors='replace'))
-    print('Message bytes:', struct.unpack('<I', reply[4:8])[0])
-PY
-```
+??? info "Optional: inspect OPC UA transport"
+    On **WAGO B**, use its installed `uv` and Python standard library for one bounded OPC UA transport greeting:
 
-Apply `opcua && ip.addr == 10.10.0.12`. Find **Hello** and **Acknowledge** messages. The walkthrough returned `ACKF`, message size 28. This greeting negotiates transport limits and closes before an application session; it sends no PLC read/write operation. Compare the evidence levels below:
+    ```bash
+    uv run --offline --no-project python - <<'PY'
+    import socket, struct
+    url = b'opc.tcp://10.10.0.11:4840'
+    hello = b'HELF' + struct.pack('<7I', 32 + len(url), 0, 65536, 65536, 0, 0, len(url)) + url
+    with socket.create_connection(('10.10.0.11', 4840), timeout=3) as connection:
+        connection.sendall(hello)
+        reply = connection.recv(8, socket.MSG_WAITALL)
+        if len(reply) != 8:
+            raise SystemExit('Incomplete OPC UA transport header; record the capture and stop.')
+        print('OPC UA transport response:', reply[:4].decode('ascii', errors='replace'))
+        print('Message bytes:', struct.unpack('<I', reply[4:8])[0])
+    PY
+    ```
+
+    Apply `opcua && ip.addr == 10.10.0.12`. Find **Hello** and **Acknowledge** messages. The walkthrough returned `ACKF`, message size 28. This greeting negotiates transport limits and closes before an application session; it sends no PLC read/write operation. Compare the evidence levels below:
 
 | Claim | Evidence needed |
 | --- | --- |
@@ -91,9 +106,13 @@ Apply `opcua && ip.addr == 10.10.0.12`. Find **Hello** and **Acknowledge** messa
 | WebVisu is functioning | Live page plus successful ongoing application exchanges |
 | Modbus read succeeded | Request and matching response, function and register data |
 
-**Checkpoint:** This release listens on TCP 502, 4840, 8080 and 11740, with CODESYS UDP 1740 also visible locally. Do not copy the old assumption that all CODESYS traffic uses 1217/2455. Your greeting establishes OPC UA transport behavior; session security remains **unverified**. OPC UA supports `None`, `Sign` and `SignAndEncrypt`; an open port or a Hello/Acknowledge exchange cannot tell you which session mode was negotiated.
+**Checkpoint:** This release listens on TCP 502, 4840, 8080 and 11740, with CODESYS UDP 1740 also visible locally. Do not copy the old assumption that all CODESYS traffic uses 1217/2455. If performed, the greeting establishes OPC UA transport behavior; session security remains **unverified**. OPC UA supports `None`, `Sign` and `SignAndEncrypt`; an open port or a Hello/Acknowledge exchange cannot tell you which session mode was negotiated.
 
 Close the capture and terminals, or keep them for an extra section.
+
+## Your commissioning record
+
+For Modbus, HTTP and OPC UA, record source → target, service, actual message/result and what remains unknown. For Modbus include the request function, address and matching response; leave units unknown without a register map. For HTTP distinguish the direct client test from the browser proxy. For OPC UA, a listener or optional transport greeting does not prove session security. This is the start of a communication matrix you can use in Exercise 7.
 
 ## Solution
 
@@ -102,9 +121,9 @@ Close the capture and terminals, or keep them for an extra section.
 
     The HTTP GET and response establish application behavior on 8080. WebVisu uses its own exchanges; loading a page does not prove that it uses Modbus. A TCP listener is weaker evidence than a decoded protocol transaction. Neither a protocol's advertised security capabilities nor an open port proves the settings of a live session.
 
-## Extra 1: Resolve a register-addressing mystery
+## Extra 1: Check an HMI register mapping
 
-**Optional, 10 minutes.** Start a fresh A data-port capture if needed. On **WAGO B**, run these two reads:
+**Optional, 10 minutes.** A replacement HMI labels the first register “0”; the maintenance sheet calls it “1”. Determine whether that alone means the HMI reads the wrong process value. Start a fresh A data-port capture if needed. On **WAGO B**, run these two reads:
 
 ```bash
 mbpoll -m tcp -a 1 -t 4 -r 1 -c 2 -1 -o 2 10.10.0.11
@@ -115,9 +134,9 @@ Filter `modbus && ip.addr == 10.10.0.12`. Compare the starting addresses and qua
 
 **Checkpoint:** Both request wire address 0 with quantity 2. The first labels its results `[1]` and `[2]`; the second uses `[0]` and `[1]`. Process values may change between reads. Different display numbering does not imply different wire addresses. Do not append values, which would turn the command into a write.
 
-## Extra 2: Find a protocol with no TCP port
+## Extra 2: Explain why remote device discovery can fail
 
-**Optional, 10 minutes.** In A's capture apply `pn_dcp`. Select an Identify message and inspect its Ethernet destination, EtherType and DCP service fields. Use [the DCP field reference](https://www.wireshark.org/docs/dfref/p/pn_dcp.html) to find `pn_dcp.service_id` and the station-name field.
+**Optional, 10 minutes.** A remote engineer can reach a PLC by IP but cannot find it with local PROFINET discovery. Would opening another TCP port solve that? In A's capture apply `pn_dcp`. Select an Identify message and inspect its Ethernet destination, EtherType and DCP service fields. Use [the DCP field reference](https://www.wireshark.org/docs/dfref/p/pn_dcp.html) to find `pn_dcp.service_id` and the station-name field.
 
 Now try `pn_dcp && ip` and compare it with `pn_dcp` alone.
 

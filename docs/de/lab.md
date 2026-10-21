@@ -1,6 +1,6 @@
 # Anleitung zum studentischen Lab
 
-Verwende die von den Dozierenden bereitgestellte Appliance im Browser. Sie enthält das laufende Netz `ot-sec-flat`, konfigurierte Terminals, Paketmitschnitt, PLC-Visualisierungen und die sieben Übungen. Du benötigst deine zugewiesene LNE-URL und Anmeldung; eine lokale Werkzeuginstallation ist nicht nötig.
+Jede Person hat ihre eigene Lab-Appliance. Öffne deine im Browser. Sie enthält das laufende Netz `ot-sec-flat`, konfigurierte Terminals, Paketmitschnitt, PLC-Visualisierungen und die sieben Übungen. Du benötigst deine zugewiesene LNE-URL und Anmeldung; eine lokale Werkzeuginstallation ist nicht nötig.
 
 ## Erste Schritte
 
@@ -9,7 +9,7 @@ Verwende die von den Dozierenden bereitgestellte Appliance im Browser. Sie enth�
 3. Öffne Explorer aus der Übung. Links übernehmen Netz und Snapshot. In Terminal- und Mitschnitt-Tabs öffnet der Titel **Aktive Übung** die Anleitung neben deiner Arbeit.
 4. Führe die folgenden Kontrollen durch und bearbeite danach die [sieben Übungen](exercises/index.md) der Reihe nach.
 
-Die Appliance ist bereits bereitgestellt. Eine zusätzliche Topologie, Runtime-Neustarts oder das Zurücksetzen geteilter Geräte würde andere Studierende unterbrechen. Verwende konfigurierte Terminal-Aktionen, statt ein Gerätepasswort anzunehmen.
+Die Appliance ist bereits bereitgestellt. Verwende konfigurierte Terminal-Aktionen, statt ein Gerätepasswort anzunehmen.
 
 ## Die ersten fünf Minuten
 
@@ -77,11 +77,11 @@ Beobachte die Bedienelemente, ohne sie während der Netzwerkaufgaben zu betätig
 | Toolbox | Zonen und gerichtete Policies entwerfen; Speichern konfiguriert keine Geräte |
 | Assistent | Hilfe mit aktiver Übung, Befehlsausgabe und Paketbelegen |
 
-Toolbox wird im Produktmenü geöffnet. Der gespeicherte Netzwerk-Workspace ist geteilt; Speichern setzt keine Regeln durch. [Übung 7](exercises/ex7-segmentation-firewall.md) baut VLAN 70 über Geräteterminals auf einer zugewiesenen entbehrlichen Kopie auf. Die Kursleitung muss zuerst die [praktische Vorbereitung mit Checkpoint](lab-practical.md) durchführen. Übungen 1–6 nutzen den flachen Ausgangszustand. Übung 7 verschiebt vorübergehend nur Hirschmann und stellt ihn vor Abschluss wieder her.
+Toolbox wird im Produktmenü geöffnet. Der gespeicherte Netzwerk-Workspace enthält deinen Entwurf; Speichern setzt keine Regeln durch. [Übung 7](exercises/ex7-segmentation-firewall.md) baut VLAN 70 über Geräteterminals in deinem eigenen Lab auf. Die [praktische Vorbereitung](lab-practical.md) richtet einen Checkpoint für die Wiederherstellung ein. Übungen 1–6 nutzen den flachen Ausgangszustand. Übung 7 verschiebt vorübergehend nur Hirschmann und stellt ihn vor Abschluss wieder her.
 
 ## Wenn ein Kontrollpunkt fehlschlägt
 
-Prüfe zuerst Live-Netz, Knoten und Interface. Historische Snapshots zeigen Topologie, erlauben aber keine Live-Terminals, Mitschnitte oder WebVisu. Ist eine Aktion nicht verfügbar, lasse Bindings, Zugangsdaten, Runtime-Status und Berechtigungen durch die Dozierenden prüfen. Notiere Knoten/Aktion/Fehler, statt geteilte Konfiguration zu verändern.
+Prüfe zuerst Live-Netz, Knoten und Interface. Historische Snapshots zeigen Topologie, erlauben aber keine Live-Terminals, Mitschnitte oder WebVisu. Ist eine Aktion nicht verfügbar, lasse Bindings, Zugangsdaten, Runtime-Status und Berechtigungen durch die Dozierenden prüfen. Notiere Knoten/Aktion/Fehler, statt sachfremde Konfiguration zu verändern.
 
 Bei Mitschnittproblemen den Anzeigefilter leeren, gestartete Erfassung prüfen, den Vier-Paket-Ping wiederholen und einige Sekunden auf die Anzeige warten. Siehe die [Filter- und Fehlerreferenz](exercises/appendix.md).
 

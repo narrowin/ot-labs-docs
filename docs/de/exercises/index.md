@@ -1,6 +1,6 @@
 # Übungen für das studentische Lab
 
-Bearbeite die sieben Übungen der Reihe nach. Übungen 1–6 verwenden deine zugewiesene flache `ot-sec-flat`-Appliance; Übung 7 verwendet eine separate Kopie, die für deine Praktikumsgruppe reserviert ist. Plane für die Hauptaufgaben etwa 4–5¼ Stunden. Jede Übung enthält eine ausklappbare Lösung und danach **zwei optionale Zusatzteile**. Alle Extras zusammen benötigen weitere 2–2½ Stunden.
+Bearbeite die sieben Übungen in deinem eigenen studentischen `ot-sec-flat`-Lab der Reihe nach. Übungen 1–6 beginnen im flachen Ausgangszustand; Übung 7 baut ein geroutetes VLAN auf und stellt danach diesen Zustand wieder her. Plane für Hauptaufgaben, Diskussion und Übergaben etwa 5–6½ Stunden. Jede Übung enthält eine ausklappbare Lösung und danach **zwei optionale Zusatzteile**. Alle Extras zusammen benötigen weitere 2–2½ Stunden.
 
 Die Zeiten sind Richtwerte. Bearbeite die Hauptprüfungen in deinem Tempo, nutze bei Bedarf die Hinweise und hebe Extras für später auf. Bewahre Befehle, Filter und Ergebnisse auf, damit du nach dem Kurs in deinem Lab weiterarbeiten kannst. Beende vor einer Pause die Bereinigung der Übung und wiederhole beim Fortsetzen ihre Ausgangsprüfungen.
 
@@ -19,13 +19,38 @@ Werkzeug-Links sind für den Network-Explorer-Reader gedacht. Öffne bei Nutzung
 
 | # | Übung | Hauptzeit | Zusatzaufgaben |
 | --- | --- | --- | --- |
-| 1 | [Getaggten und ungetaggten Verkehr vergleichen](ex1-vlan-discovery.md) | 20–30 Min. | Vier-Byte-Rätsel; Next-Hop-MAC |
-| 2 | [Eine ARP-Umleitung nachweisen](ex2-arp-spoofing.md) | 30–40 Min. | Vorfall-Zeitleiste; direkte und geroutete Umleitung |
-| 3 | [Den aktiven Spanning Tree erklären](ex3-spanning-tree.md) | 25–35 Min. | Root-Wahl; gesunder nicht weiterleitender Link |
-| 4 | [Datenströme durch LACP verfolgen](ex4-link-aggregation.md) | 25–35 Min. | Paketgrösse und Hash; Actor-/Partner-Prüfung |
-| 5 | [Zugriff aus der DMZ beurteilen](ex5-reconnaissance.md) | 30–40 Min. | Ausgangspunkte vergleichen; TCP-Portzustände beweisen |
-| 6 | [OT-Protokolle erkennen](ex6-protocol-discovery.md) | 35–45 Min. | Registernummerierung; Discovery ohne TCP-Port |
-| 7 | [Ein geroutetes VLAN aufbauen und prüfen](ex7-segmentation-firewall.md) | 60–90 Min. | Eine geroutete Anfrage verfolgen; Antworten und neue Verbindungen |
+| 1 | [Getaggten und ungetaggten Verkehr vergleichen](ex1-vlan-discovery.md) | 30–40 Min. | Ersatz-SPS prüfen; Next-Hop-MAC |
+| 2 | [Eine ARP-Umleitung nachweisen](ex2-arp-spoofing.md) | 40–50 Min. | Vorfall-Zeitleiste; wartbarer ARP-Schutz |
+| 3 | [Den aktiven Spanning Tree erklären](ex3-spanning-tree.md) | 30–40 Min. | Switch-Tausch; gesunder Reservepfad |
+| 4 | [Datenströme durch LACP verfolgen](ex4-link-aggregation.md) | 30–40 Min. | Capture-Blindspot; gemeinsame Ausfallpunkte |
+| 5 | [Zugriff aus der DMZ beurteilen](ex5-reconnaissance.md) | 35–45 Min. | Ausgangspunkte vergleichen; TCP-Portzustände beweisen |
+| 6 | [OT-Protokolle erkennen](ex6-protocol-discovery.md) | 40–50 Min. | HMI-Registerzuordnung; Grenzen der Fernerkennung |
+| 7 | [Ein geroutetes VLAN aufbauen und prüfen](ex7-segmentation-firewall.md) | 90–120 Min. | Eine geroutete Anfrage verfolgen; Antworten und neue Verbindungen |
+
+## Verbindung zum Kurs
+
+Die Kursanlage ist ein Beispiel zur Wasseraufbereitung. ABB übernimmt die Leitfunktion, WAGO Aufbereitungsfunktionen und CtrlX die Pumpen. Schneider umfasst auch Prozess- und Entsorgungsfunktionen. Dies sind die Lehrrollen des Handouts. Prüfe einen Netzwerkfluss, bevor du ihn als belegte Steuerungsabhängigkeit bezeichnest.
+
+| Thema im Kurshandout | Lab-Ergebnis |
+| --- | --- |
+| Ethernet, VLANs und Grenzen (PDF-S. 38–52) | Übung 1: Den tatsächlichen SPS-Anschluss erklären |
+| ARP-Angriffe und Gegenmassnahmen (S. 61–64) | Übung 2: Belege, Schutz und Wiederherstellung unterscheiden |
+| Schleifenvermeidung und Verfügbarkeit (S. 87–97) | Übung 3: Einen gesunden Reservepfad begründen |
+| Link Aggregation und Monitoring-Abdeckung (S. 85–86, 109, 154–156) | Übung 4: Fehlenden Capture-Verkehr und gemeinsame Ausfälle erklären |
+| Fernzugriff (S. 100–104) | Übung 5: Den benötigten Lieferantenzugriff begrenzen |
+| Protokollschichten und lokale Erkennung (S. 36–41, 50) | Übung 6: Netzwerk-, Dienst- und Prozessbelege trennen |
+| Anlagenzonen, Steuerungsabhängigkeiten und Logs (S. 128–148, 162–164) | Übung 7: Zonen begründen, einen Conduit umsetzen und Bereinigung belegen |
+
+Die Seiten zählen PDF-Seiten in **OT Network Security – Design and Defend handout**; aufgedruckte Foliennummern weichen später ab. Nutze beim Selbststudium die nummerierte Reihenfolge. Im Präsenzkurs kann die Kursleitung LACP vor RSTP einführen und Übungen 3–4 zusammen bearbeiten, sobald beide Begriffe bekannt sind.
+
+Das Praktikum konfiguriert weder MRP, VPN/MFA, 802.1X noch industrielle DPI und qualifiziert keine Echtzeitleistung. Diese Handout-Themen bleiben Diskussion/Entwurf, sofern die Kursleitung keine separat qualifizierte Umgebung bereitstellt.
+
+## Werkzeuge ohne Netzwerk-CLI-Vorkenntnisse nutzen
+
+- Ein **Terminal** führt Befehle auf dem benannten Lab-Gerät aus. Prüfe den Namen vor jedem Block. Linux-Befehle wie `ip` und RouterOS-Befehle mit `/interface` gehören in unterschiedliche Terminals.
+- Gib Befehle zeilenweise ein und lies das Ergebnis. Die Markdown-Begrenzer mit drei Backticks werden nicht eingegeben. Stoppe bei unerwarteten Fehlern, bevor du weitere Konfigurationszeilen ausführst.
+- Ein Wireshark-**Anzeigefilter** gehört in die Filterleiste, nicht ins Terminal. Er begrenzt sichtbare Pakete; er erzeugt keinen Verkehr und ändert kein Netzwerk.
+- Trenne bei jeder Übergabe **Vorhersage → Beobachtung → Erklärung → nächste Handlung**. Notiere Gerät, Interface, Zeitpunkt und Frame/Ausgabe. «Nicht beobachtet» ist mit angegebenem Zeitfenster ein gültiges Ergebnis.
 
 ## Lab-Fakten gegen falsche Schlüsse
 
@@ -33,11 +58,11 @@ Werkzeug-Links sind für den Network-Explorer-Reader gedacht. Öffne bei Nutzung
 - Die **DMZ verwendet VLAN 60, `2.2.2.0/24`**. Adressen wie `1.1.1.1` und `2.2.2.2` sind innerhalb des Labs simuliert.
 - sw-dist und sw-acc1 haben einen **aktiven LACP-Bond mit zwei Mitgliedern**. Ein stabiler Datenstrom nutzt normalerweise ein Mitglied.
 - Betriebszustand, Pakete und erfolgreiche Anwendungsantworten sind unterschiedliche Belege. Port-Bezeichnung, Diagramm oder Hostname ersetzen sie nicht.
-- Der LNE-Entwurf in Toolbox ist geteilt und konfiguriert keine Geräte. Übung 7 baut VLAN 70 auf einer **zugewiesenen entbehrlichen Kopie** und stellt danach den flachen Ausgangszustand wieder her. Sie ändert einen Endpunkt, zwei Switches und das Gateway. Nutze vor Beginn die [Vorbereitung des praktischen Labs](../lab-practical.md).
+- Toolbox speichert deinen LNE-Entwurf und konfiguriert keine Geräte. Übung 7 baut VLAN 70 in **deinem eigenen Lab** auf und stellt danach den flachen Ausgangszustand wieder her. Sie ändert einen Endpunkt, zwei Switches und das Gateway. Die [Vorbereitung des praktischen Labs](../lab-practical.md) richtet den Checkpoint für die Wiederherstellung ein.
 
 ## Jede Übung abschliessen
 
-Schliesse deine Capture- und Terminal-Tabs. Stoppe in Übung 2 zusätzlich Hilfsprogramm und Listener. Prüfe vor dem Weitergehen die ursprüngliche Gateway-MAC und den Forwarding-Wert. Die Bereinigung in Übung 7 ist auch ohne Extras zwingend. Lass die geteilte Appliance und Toolbox-Policies unverändert.
+Schliesse deine Capture- und Terminal-Tabs. Stoppe in Übung 2 zusätzlich Hilfsprogramm und Listener. Prüfe vor dem Weitergehen die ursprüngliche Gateway-MAC und den Forwarding-Wert. Die Bereinigung in Übung 7 ist auch ohne Extras zwingend.
 
 Der vorhandene Assistent kennt die ausgewählte Übung. Nenne Aufgabe, tatsächlichen Befehl/Ausgabe sowie Capture-Filter/Frame-Nummer. Warte auf die Antwort, bevor du aus einem anderen Tab fragst. Vergleiche den Rat mit deinen Belegen und der lokalen Anleitung.
 

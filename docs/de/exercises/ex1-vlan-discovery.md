@@ -1,12 +1,20 @@
 # Übung 1: Getaggten und ungetaggten Datenverkehr vergleichen
 
-**Zeitbedarf:** 20–30 Minuten
+**Zeitbedarf:** 30–40 Minuten
 
 **Lab:** Studentenlab `ot-sec-flat`
 
 **Schwierigkeit:** Anfänger
 
 Vergleiche denselben Ping-Datenverkehr an zwei Switch-Ports: am Access-Port des WAGO-Geräts und am Uplink zum Gateway. Finde heraus, wo ein Ethernet-Frame ein VLAN-Tag trägt.
+
+## Dein Instandhaltungsauftrag
+
+Eine Ersatz-SPS wurde angeschlossen. Der Port ist aktiv, aber das Team ist unsicher, ob die SPS im vorgesehenen Netzwerk liegt. Prüfe zuerst den normalen Pfad, bevor jemand SPS oder Switch umkonfiguriert. Vergleiche einen kleinen Diagnoseaustausch am SPS-Port und am Gateway-Uplink.
+
+**Drei Begriffe:** Ein **VLAN** ist ein eigener Ethernet-Broadcast-Bereich. Ein **Access-Port** transportiert für das Endgerät üblicherweise ein VLAN ohne Tag. Ein **Trunk** transportiert getaggte VLANs zwischen Netzwerkgeräten. Auch ein ungetaggter SPS-Frame kann also zu einem VLAN gehören; der Switch ordnet ihn beim Empfang zu.
+
+**Vorhersage:** Muss eine gewöhnliche SPS an diesem Access-Port selbst VLAN-Tags ergänzen? Notiere deine Antwort vor Aufgabe 3.
 
 ## Bevor du beginnst
 
@@ -104,11 +112,15 @@ Schliesse den Capture-Tab und den Tab mit dem WAGO-Terminal.
 
 ## Abschluss
 
-Übung 1 endet nach Aufgabe 4. Es gibt keine Aufgabe 5 und keine Switch-Konfiguration zu ändern.
+Der Hauptversuch endet nach Aufgabe 4. Erstelle die Übergabe unten; bearbeite danach bei Bedarf die optionalen Wartungsprüfungen.
 
 Du hast denselben Datenverkehr an einem Uplink und einem Access-Port verglichen. Prüfe, ob du erklären kannst, wo das VLAN-Tag auftauchte und warum ein leerer `vlan`-Filter mit erfolgreichen Pings vereinbar ist.
 
 Öffne bei Fragen den vorhandenen Assistenten in einem beliebigen Lab-Tab. Er kennt diese Übung. Nenne die Aufgabennummer und bei Fragen zu Paketmitschnitten deinen Filter oder die Frame-Nummer. Warte auf seine Antwort, bevor du aus einem anderen Tab eine weitere Frage stellst.
+
+## Deine Übergabe
+
+Notiere SPS-Adresse, Anschlussport, Uplink-Port und je einen Frame aus beiden Mitschnitten. Erkläre einer Kollegin oder einem Kollegen, warum ein leerer `vlan`-Filter am SPS-Port hier normal ist. Benenne eine zusätzliche Prüfung vor der Freigabe der SPS-Anwendung: einen erfolgreichen Anwendungsaustausch, nicht nur Ping.
 
 ## Lösung
 
@@ -117,26 +129,29 @@ Du hast denselben Datenverkehr an einem Uplink und einem Access-Port verglichen.
 
     Notiere je eine Frame-Nummer mit Interface, Filter und VLAN-ID beziehungsweise fehlendem Tag. Beim gleichen Standard-Ping ist der getaggte Frame vier Bytes länger. Erreichbarkeit und Hostname beweisen keine Isolation.
 
-## Extra 1: Löse das Vier-Byte-Rätsel
+## Extra 1: Anschluss einer Ersatz-SPS prüfen
 
-**Optional, 10 Minuten.** Sage die Frame-Längen vor dem Mitschnitt voraus.
+**Optional, 10 Minuten.** Die Wartungsnotiz sagt «WAGO A ist in VLAN 10». Erstelle die Angaben, mit denen eine andere Person das Gerät richtig anschliessen kann. Ändere keine Einstellungen.
 
-1. Öffne den Access-Port-Mitschnitt aus Aufgabe 4 erneut und starte ihn.
-2. Öffne das WAGO-Terminal und führe aus:
+1. Öffne [sw-acc1's Terminal](/network/terminal?node=sw-acc1):
 
-    ```bash
-    ping -c 2 -s 32 10.10.0.1
-    ping -c 2 -s 128 10.10.0.1
+    ```routeros
+    /interface bridge port print detail where interface=ether2
+    /interface bridge vlan print detail
     ```
 
-3. Filtere mit `icmp && ip.addr == 10.10.0.11`. Vergleiche **Length**. Schliesse den Mitschnitt und wiederhole die Messung am Gateway-Uplink aus Aufgabe 3.
+2. Auf **WAGO A**:
 
-**Kontrollpunkt:** 96 Bytes mehr Nutzlast ergeben 96 Bytes mehr Frame-Länge. Bei gleicher Nutzlast ist der getaggte Frame vier Bytes länger. Vergleiche dieselbe Richtung und Nutzlast; je nach Aufzeichnung kann die Ethernet-FCS enthalten sein oder fehlen.
+    ```bash
+    ip -br address show eth1
+    ip route get 10.10.0.1
+    ```
 
-??? success "Erwartetes Ergebnis"
-    Die Lab-Mitschnitte zeigen bei 32 und 128 Bytes Nutzlast ungetaggte Frames mit 74 und 170 Bytes sowie getaggte Frames mit 78 und 174 Bytes. Die Differenz von vier Bytes ist der 802.1Q-Header.
+3. Notiere Switch/Port, **PVID** (VLAN-Zuordnung für eingehenden ungetaggten Verkehr), ungetaggte VLAN-Mitgliedschaft, SPS-IP/Präfix und ob die SPS Tags sendet. Vergleiche die Konfiguration mit den Paketen aus Aufgabe 4.
 
-Schliesse anschliessend den Capture-Tab.
+**Kontrollpunkt:** Im Ausgangszustand ordnet ether2 ungetaggten Verkehr VLAN 10 zu. WAGO nutzt `10.10.0.11/8` auf eth1. Beim Ersatz müssen sowohl Switch-Port-Konfiguration als auch Endgeräteadressierung passen. Eine Link-LED oder ein Hostnamensuffix reicht nicht. `/8` bedeutet hier, dass Adressen mit `10.` zum selben IP-Subnetz gehören; diese breite Lab-Adressierung ist keine Empfehlung für eine Anlage.
+
+Schliesse das Switch-Terminal. Behalte deine Notiz als Inbetriebnahme-Checkliste.
 
 ## Extra 2: Verfolge die MAC-Adresse des nächsten Hops
 

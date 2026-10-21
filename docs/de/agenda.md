@@ -1,36 +1,21 @@
-# Agenda des Workshops 2 (ISC-CPH – Mittwoch)
+# Lab-Reihenfolge für den zweitägigen Kurs
 
-Track: Workshop 2
+Nutze das Handout **OT Network Security – Design and Defend** für die Theorie und diese Übungen für die Praxis. Plane über beide Tage etwa 5–6½ Stunden für Hauptaufgaben und Diskussion; Pausen und Theorie kommen hinzu. Optionale Zusatzaufgaben können später bearbeitet werden.
 
-Technical Level: Fortgeschritten
+## Tag 1: Verbindungen, Grenzen und Verfügbarkeit
 
-Dozenten: Martin Scheu (Switch) & Mischa Diehm ([Narrowin](https://narrowin.ch))
+1. Wasseraufbereitungsanlage, Folgen von Kontrollverlust und Unterschied zwischen Prozess- und Netzwerkdiagramm einführen. Den [Lab-Zugriff prüfen](lab.md#die-ersten-funf-minuten).
+2. Ethernet, IP-Adressierung und VLANs erklären, danach [Übung 1](exercises/ex1-vlan-discovery.md): den tatsächlichen SPS-Netzwerkanschluss nachweisen.
+3. ARP und Layer-2-Vertrauen erklären, danach [Übung 2](exercises/ex2-arp-spoofing.md) im eigenen Lab durchführen. Vor dem nächsten Schritt die Bereinigung prüfen.
+4. Link Aggregation und RSTP einführen, danach [Übung 3](exercises/ex3-spanning-tree.md) und [Übung 4](exercises/ex4-link-aggregation.md). Reservepfade, Capture-Abdeckung und gemeinsame Ausfallpunkte diskutieren, ohne einen Ausfall auszulösen.
 
----
+## Tag 2: Fernzugriff, Belege und Zonendesign
 
-## 11:10–11:50 — Teil 1: OT-Netzwerke verstehen
+1. Lebenszyklus des Fernzugriffs erklären, danach [Übung 5](exercises/ex5-reconnaissance.md): Lieferantenbedarf mit tatsächlicher DMZ-Erreichbarkeit vergleichen.
+2. Monitoring-Platzierung und Protokollbelege diskutieren, danach [Übung 6](exercises/ex6-protocol-discovery.md): Anlagenkommunikation und einen kontrollierten Lesezugriff dokumentieren.
+3. [Übung 7](exercises/ex7-segmentation-firewall.md) für den Zonenentwurf der Wasseraufbereitung verwenden, selbstständig oder mit Diskussion. Gemischte SPS-Zuständigkeiten vor dem Zeichnen von Zonengrenzen prüfen. Jede Person setzt im eigenen Lab einen kleinen Conduit um, prüft ihn und stellt anschliessend den Ausgangszustand wieder her.
+4. Ergebnisse mit Logging, Roadmap und [Automatisierungsausblick](automation.md) des Handouts verbinden. Jede Person benennt eine Verbesserung, Verantwortlichen, Abhängigkeit und Abnahmeprüfung.
 
-- Titel: OT-Netzwerke verstehen & den OT-Netzwerkdschungel lichten
-- Inhalte: OT-Protokolle und -Eigenschaften, Tool-Überblick, grundlegende Erkennung und Paketmitschnitt
-- Praktische Übung: [Lab-Zugang prüfen](lab.md#die-ersten-funf-minuten), danach [Übung 1: getaggter und ungetaggter Verkehr](exercises/ex1-vlan-discovery.md)
+## Auswahl für einen kurzen Workshop
 
-## 12:50–13:30 — Teil 2: OT-Netzwerk-Sicherheitsüberwachung
-
-- Titel: OT-Netzwerk-Sicherheitsüberwachung
-- Inhalte: Überwachungspunkte und Transparenzstrategie; zonenübergreifender Verkehr; IT/OT-Brücke; Überwachung validieren und blinde Flecken erkennen
-- Praktische Übung: Ausgewählte Aufgaben aus [Übung 3: Spanning Tree](exercises/ex3-spanning-tree.md) und [Übung 4: LACP](exercises/ex4-link-aggregation.md)
-
-## 13:55–14:30 — Teil 3: Einstieg in die OT-Netzwerk-Sicherheitsüberwachung
-
-- Titel: Einstieg in die OT-Netzwerk-Sicherheitsüberwachung
-- Inhalte: Erkennungszyklus (Use Cases → Erkennung → Alarmierung → Playbook → Tuning); Techniken zur Entdeckung von Assets und Kommunikationsmustern; Testen und Validieren
-- Praktische Übung: Ausgewählte Aufgaben aus [Übung 6: Protokollbelege](exercises/ex6-protocol-discovery.md) und [Übung 7: Segmentierungs-Policy](exercises/ex7-segmentation-firewall.md)
-
----
-
-Hinweise:
-
-- Pausen und Raumlogistik folgen dem Konferenzprogramm (Mittagessen um 11:50, Erfrischungen um 13:30, kurze Pause um 14:30)
-- Fortgeschrittene Aufgaben sind optional und in der Laboranleitung gekennzeichnet
-- Die kurzen Konferenzblöcke verwenden ausgewählte Aufgaben. Der vollständige Kurs mit sieben Übungen benötigt die Zeit aus der [Übersicht](exercises/index.md).
-- Ziel ist es, innerhalb der Zeitfenster zu bleiben; Dozenten rufen Checkpoints auf
+Für kurze Veranstaltungen ein vollständiges Ergebnis auswählen, statt alle sieben Übungen zu überfliegen: die zwei Mitschnitte aus Übung 1, den Monitoring-Blindspot aus Übung 4 oder die einzelne Modbus-Transaktion aus Übung 6. Die Gruppenplanung aus Übung 7 ist eigenständig möglich. Die Konfiguration erst beginnen, wenn Zeit und Zugriff für Prüfung und Bereinigung reichen.

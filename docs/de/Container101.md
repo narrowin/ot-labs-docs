@@ -46,7 +46,7 @@ Ein Knotenname identifiziert eine Komponente; er erzwingt keine VLAN- oder Firew
 | **Open terminal** bei einem Knoten | Im benannten Gerät: Linux auf einem WAGO-Endpunkt, RouterOS auf Switch oder Gateway |
 | Appliance-Konsole der Kursleitung | Auf dem Host, der Docker, Lab-Knoten und Plattformdienste betreibt |
 
-Die Übungen nennen das Zielgerät über jedem Befehlsblock. Behalte dessen Namen beim Arbeiten im Blick. Wird ein Terminal getrennt, notiere Knoten und Fehler und bitte die Kursleitung um Prüfung; ein Neustart kann andere Studierende unterbrechen und Belege löschen.
+Die Übungen nennen das Zielgerät über jedem Befehlsblock. Behalte dessen Namen beim Arbeiten im Blick. Wird ein Terminal getrennt, notiere Knoten und Fehler vor einem Neustart: Dieser kann Diagnosebelege und temporäre Konfiguration in deinem Lab löschen.
 
 ## Optionale Demonstration durch die Kursleitung: Laufendes Lab ansehen
 
@@ -70,7 +70,7 @@ docker inspect --format '{{.Name}} {{.Config.Image}}' clab-ot-sec-flat-wago-plc2
 
 Das Schliessen eines Browser-Tabs beendet die Werkzeugsitzung; es setzt die Appliance nicht zurück. Gerätekonfiguration und Anwendungsdaten können zwischen Sitzungen erhalten bleiben. Räume gemäss jeder Übung auf und prüfe deren Kontrollpunkt.
 
-Übungen 1–6 verwenden den flachen Ausgangszustand. Übung 7 baut vorübergehend ein geroutetes VLAN auf einer zugewiesenen entbehrlichen Kopie auf und stellt danach den Ausgangszustand wieder her. Die Kursleitung bereitet dafür einen [privaten Checkpoint mit Wiederherstellung](lab-practical.md) vor. Ein historischer Snapshot im Explorer zeigt gesammelte Netzwerkdaten; er stellt keinen Appliance-Zustand wieder her.
+Übungen 1–6 verwenden den flachen Ausgangszustand deines eigenen Labs. Übung 7 baut darin vorübergehend ein geroutetes VLAN auf und stellt danach den Ausgangszustand wieder her. Die Kursleitung bereitet dafür einen [privaten Checkpoint mit Wiederherstellung](lab-practical.md) vor. Ein historischer Snapshot im Explorer zeigt gesammelte Netzwerkdaten; er stellt keinen Appliance-Zustand wieder her.
 
 ## Was dieses Lab vermittelt
 
@@ -80,6 +80,6 @@ Virtuelle Verbindungen transportieren echte Ethernet-Frames und Protokollnachric
 
 - [Docker: Was ist ein Container?](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/): Vergleiche einen Prozess-Container mit einer VM.
 - [Docker-Volumes](https://docs.docker.com/engine/storage/volumes/): Erkläre, warum persistente Dateien einen Container überleben können.
-- [Containerlab-Topologiedefinition](https://containerlab.dev/manual/topo-def-file/): Finde die Abschnitte `nodes` und `links`. Weitere Topologien gehören in eine separate, von der Kursleitung bereitgestellte entbehrliche Spielumgebung.
+- [Containerlab-Topologiedefinition](https://containerlab.dev/manual/topo-def-file/): Finde die Abschnitte `nodes` und `links`, die Geräte und Verbindungen eines Labs beschreiben.
 
 Weiter mit der [Laboranleitung](lab.md) oder [Übung 1](exercises/ex1-vlan-discovery.md).

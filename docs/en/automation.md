@@ -1,162 +1,35 @@
-# Network Automation
+# Automation outlook: detect configuration drift
 
-## Why Automate?
+A replacement PLC was connected to the wrong VLAN after maintenance. Automation should compare what the port is meant to do with its actual state, then make a proposed correction reviewable. A successful automation job alone does not prove that the PLC works.
 
-Network automation reduces manual errors, saves time, and ensures consistency across your infrastructure. After exploring this lab environment manually, you can start automating common tasks like:
+**Optional, 15 minutes after the main exercises.** Reuse Exercise 1's switch-port evidence. No software installation or device changes are needed.
 
-- Running diagnostic commands across multiple devices
-- Backing up configurations regularly
-- Collecting system information for analysis
-- Managing firmware updates
+## Define the intended result
 
-This guide shows you an example on how to get started using the fully open source tool [networka](https://narrowin.github.io/networka/), a multi-vendor network automation CLI toolkit.
+For sw-acc1 ether2, write the desired facts separately from your observations:
 
-## Step 1: Install networka
+| Intended fact | Evidence to compare |
+| --- | --- |
+| The port serves WAGO A | Port description, topology and endpoint identity |
+| Untagged endpoint traffic enters VLAN 10 | PVID and actual untagged membership |
+| The path carries VLAN 10 to the gateway | Uplink membership and tagged ping capture |
+| The application is available | A successful, approved application request |
 
-Install networka using uv or pipx:
+On **sw-acc1's configured terminal**, collect the first two configuration observations:
 
-```bash
-uv tool install git+https://github.com/narrowin/networka.git
+```routeros
+/interface bridge port print detail where interface=ether2
+/interface bridge vlan print detail
 ```
 
-Verify the installation:
+A matching baseline is a valid outcome: report “no change needed”. On paper, suppose the first output instead showed PVID 20. Describe which fact would differ, which traffic could be affected and why a blanket reset of all switch ports would be a poor correction.
 
-```bash
-nw --version
-```
+## Write a reviewable change proposal
 
-## Step 2: Initialize Configuration
+Record the exact target, observed old value, intended value, reason, owner, expected impact, application check and rollback. Require the automation to refuse the change if the observed old value has changed since review. Separate reading state, previewing a diff, applying an approved change and verifying its outcome.
 
-Run the initialization command:
+**Checkpoint:** Your proposal manages only the intended field, preserves unrelated settings and includes application evidence after the change. Repeating an already-correct operation should make no further change; this is **idempotence**.
 
-```bash
-nw config init
-```
+The handout's automation cycle is collect actual configuration → compare intended configuration → validate → apply. This exercise prepares that specification; it does not deploy an automation tool or claim to have executed an automated correction. Keep credentials and configuration backups in the instructor's designated private storage, outside course notes and Git.
 
-This creates a configuration directory at `~/.config/networka` (Linux/macOS) with:
-
-- `devices/` - Device definitions
-- `groups/` - Device groups and tags  
-- `sequences/` - Reusable command sequences
-- `.env` - Credentials
-
-Follow the prompts to install shell completions and optional vendor sequences.
-
-## Step 3: Define Your Lab Devices
-
-Edit `~/.config/networka/devices/devices.yml` to add the lab devices:
-
-```yaml
-devices:
-  router1:
-    host: 192.168.100.11
-    device_type: mikrotik_routeros
-    platform: x86
-    description: "Gateway router"
-    tags:
-      - gateway
-      - critical
-
-  switch1:
-    host: 192.168.100.12
-    device_type: mikrotik_routeros
-    platform: x86
-    description: "Access switch"
-    tags:
-      - switch
-      - access
-```
-
-Verify your devices are loaded:
-
-```bash
-nw list devices
-```
-
-You should see both devices with their IP addresses and descriptions.
-
-## Step 4: Run Your First Command
-
-Check interface status on the router using a predefined sequence:
-
-```bash
-nw run router1 interface_status
-```
-
-This connects to the device and runs multiple commands to show:
-
-- All interfaces with their status and configuration
-- Traffic statistics (packets, bytes, errors, drops)
-- Ethernet port details and speeds
-- Current throughput for each interface
-
-The output is formatted and easy to read, with clear sections for each command result.
-
-## Step 5: Explore More Sequences
-
-Networka includes many built-in sequences for common operations. View available sequences:
-
-```bash
-nw run router1 <TAB>
-```
-
-Try these useful sequences:
-
-```bash
-# Quick device overview
-nw run router1 quick_status
-
-# Detailed system information
-nw run router1 system_info
-
-# Check routing table
-nw run router1 routing_info
-
-# Full health check
-nw run router1 health_check
-```
-
-## Step 6: Back Up Configurations
-
-Create configuration backups with vendor-aware handling:
-
-```bash
-# Configuration export
-nw backup config router1
-
-# Comprehensive backup (config + system data)
-nw backup comprehensive router1
-```
-
-The backups are saved to your results directory with timestamps.
-
-## Step 7: Work with Multiple Devices
-
-Run commands on multiple devices at once:
-
-```bash
-# Comma-separated list
-nw run router1,switch1 quick_status
-
-# Run a command across devices
-nw run router1,switch1 "/system/resource/print"
-```
-
-For production use, create device groups and run commands across entire groups efficiently.
-
-## What's Next?
-
-Once comfortable with these basics:
-
-1. **Create custom sequences** - Define your own command workflows in YAML
-2. **Set up device groups** - Organize devices by role, location, or function
-3. **Schedule backups** - Use cron or systemd timers for automated backups
-4. **Explore multi-vendor** - networka supports MikroTik, Cisco, Arista, Juniper, and more
-
-Read the [full documentation](https://narrowin.github.io/networka/) for advanced features like:
-
-- Custom command sequences
-- Tag-based device filtering
-- Results storage and analysis
-- CI/CD integration
-- Multi-vendor workflows
+Continue with the [exercise overview](exercises/index.md).

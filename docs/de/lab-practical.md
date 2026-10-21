@@ -1,13 +1,13 @@
 # Das VLAN-Praktikum vorbereiten
 
-Übung 7 ändert einen Endpunkt, zwei Switches und das Gateway. Jede Person oder reservierte Gruppe braucht eine entbehrliche Appliance mit eigener Zugriffs-URL. Übungen 1–6 und andere Studierende behalten ihren flachen Ausgangszustand.
+Übung 7 ändert einen Endpunkt, zwei Switches und das Gateway im eigenen Lab jeder Person. Bereite einen Checkpoint seines flachen Ausgangszustands für die Wiederherstellung vor. Eine zusätzliche Appliance ist für diese Übung nicht erforderlich.
 
 ## Vor dem Start
 
-1. Verwende die geprüfte `ot-sec-flat`-Installation. Trenne ihr Datennetz von Produktion und anderen Lab-Kopien. Entferne bei einem Appliance-Klon vor dem ersten Start die geerbte externe Netzverbindung und richte einen eindeutigen Management-Zugang ein. Zugangsdaten und privaten Checkpoint bleiben bei dieser Kopie.
-2. Öffne den Exercises-Reader der Kopie und wähle ihr Live-Netzwerk. Prüfe unabhängige Terminals zu `hirschmann-edge1-vlan50`, `wago-plc2a-vlan10`, `sw-acc1`, `sw-dist` und `gw-firewall`. Hirschmann muss Management auf `eth0` und `10.50.0.12/8` auf `eth1` haben.
+1. Verwende die vorhandene `ot-sec-flat`-Installation der jeweiligen Person und deren zugewiesene Zugriffs-URL. Zugangsdaten und privater Checkpoint bleiben bei dieser Appliance.
+2. Öffne den Exercises-Reader des Labs und wähle sein Live-Netzwerk. Prüfe unabhängige Terminals zu `hirschmann-edge1-vlan50`, `wago-plc2a-vlan10`, `sw-acc1`, `sw-dist` und `gw-firewall`. Hirschmann muss Management auf `eth0` und `10.50.0.12/8` auf `eth1` haben.
 3. Prüfe Adressen, VLAN-Mitgliedschaften und Regelanker aus Aufgabe 1 der Übung 7. VLAN 70 und `172.30.70.0/24` müssen ungenutzt sein. Von Hirschmann müssen WAGO A TCP 22 und 8080 offen sein und `/webvisu.htm` HTTP 200 liefern. Von WAGO A muss Hirschmann TCP 22 offen sein. Behebe fehlgeschlagene Ausgangsprüfungen vor Beginn.
-4. Schliesse Mitschnitt- und Terminal-Tabs. Erstelle auf der **Appliance-Konsole der Kopie** einen privaten Checkpoint mit dem installierten Lebenszyklus-Befehl:
+4. Schliesse Mitschnitt- und Terminal-Tabs. Erstelle auf der **Appliance-Konsole des studentischen Labs** einen privaten Checkpoint mit dem installierten Lebenszyklus-Befehl:
 
     ```bash
     sudo nwos-ot-student checkpoint ex7-flat
@@ -16,13 +16,13 @@
     ```
 
     Checkpoint stoppt das zugehörige Lab; `start` startet es wieder. Verwende einen neuen Namen, falls `ex7-flat` schon existiert, notiere ihn und ersetze `ex7-flat` im Restore-Befehl unten durch denselben Namen. Warte auf gesunde Dienste und funktionierende Knotenterminals sowie Ausgangsprüfungen.
-5. Gib den Studierenden URL, Anmeldung und Checkpoint-Namen ihrer Kopie. Halte während der Arbeit einen Konsolenzugang für die Kursleitung bereit.
+5. Notiere den Checkpoint-Namen für das Lab der jeweiligen Person. Halte für die Wiederherstellung einen Konsolenzugang der Kursleitung bereit.
 
 ## Abschliessen und zurücksetzen
 
 Studierende führen nach den zwei optionalen Extras die manuelle Bereinigung aus und wiederholen die Ausgangsprüfungen in beiden Richtungen. Die Linux-Adressänderungen sind vorübergehend; RouterOS-Änderungen bleiben gespeichert. Ein Neustart während der Übung kann deshalb einen gemischten Zustand erzeugen. Stelle bei einem Fehler oder Geräteneustart den ganzen Checkpoint wieder her.
 
-Auf der **Appliance-Konsole derselben Kopie**:
+Auf der **Appliance-Konsole desselben studentischen Labs**:
 
 ```bash
 sudo nwos-ot-student restore ex7-flat

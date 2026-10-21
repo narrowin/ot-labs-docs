@@ -1,10 +1,18 @@
 # Exercise 4: Follow flows through an LACP bond
 
-**Time:** 25–35 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Intermediate.
+**Time:** 30–40 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Guided practice.
 
-Prove that two physical links form one active LACP bond, then find which member carries a particular flow. The current flat lab has LACP; no separate segmented topology is needed. Keep member ports enabled throughout this shared-lab exercise.
+Prove that two physical links form one active LACP bond, then find which member carries a particular flow. Use the LACP bond in your own flat lab. Compare the traffic while both members are active.
 
 **Learning objectives:** Verify LACP negotiation, observe flow distribution, explain the transmit hash, and evaluate redundancy and the evidence needed for a bounded failover test.
+
+## Your monitoring task
+
+A cell has two uplink cables. A capture on one cable shows only part of the expected traffic, although both cables are healthy. Decide whether communication is missing or your observation point sees only one member of the connection.
+
+A **bond** combines physical links into one logical connection. **LACP** (Link Aggregation Control Protocol) checks which members can work together. A **flow** is a related stream of packets; the **hash policy** selects a member using address fields. It does not normally send alternating packets down alternating cables.
+
+**Predict:** Does “two active members” mean that a capture on either member sees every packet?
 
 ## Before you start
 
@@ -88,9 +96,13 @@ Compare the instantaneous rates with your filtered test traffic. Explain why bac
 
 **Checkpoint:** The bond forwards as one bridge port. Multiple flows can share aggregate capacity, but these pings do not measure throughput. One flow is not guaranteed twice one link's bandwidth. Active members alone also do not measure failover time; this lesson makes no subsecond or zero-loss claim.
 
-Read `link-monitoring`, `mii-interval` and `lacp-rate` in the bond configuration. Explain the expected response to losing one member versus both. A surviving member can keep the logical bond forwarding without an RSTP topology change. Losing the whole bond can require an alternate RSTP path. For an instructor-approved isolated failover trial, specify a bounded ping, before/during/after active-member evidence, observed loss and recovery to both active members. Do not infer a measured outage time from configured timers alone or disable links on this shared lab.
+Read `link-monitoring`, `mii-interval` and `lacp-rate` in the bond configuration. Explain the expected response to losing one member versus both. A surviving member can keep the logical bond forwarding without an RSTP topology change. Losing the whole bond can require an alternate RSTP path. To measure failover in your lab, a trial needs bounded traffic, before/during/after active-member evidence, observed loss and restoration of both active members. The captures above establish stable flow distribution; they do not measure failover time.
 
 Close the capture and terminals unless continuing with an extra section.
+
+## Your monitoring handover
+
+Record both active members and where each test source's requests appeared. Specify a capture point that can see the gateway-bound exchange without relying on one bond member. Explain why neither uneven traffic nor four successful pings establish a capacity or failover problem.
 
 ## Solution
 
@@ -99,31 +111,33 @@ Close the capture and terminals unless continuing with an extra section.
 
     In the walkthrough, CtrlX requests used sw-dist ether9 and WAGO A requests used ether10. Record your measured result rather than treating this assignment as permanent. RSTP operates on the logical bond; LACP operates on its physical members.
 
-## Extra 1: Does a larger packet change the chosen member?
+## Extra 1: Find the capture blind spot
 
-**Optional, 10 minutes.** Predict the effect of payload size under `layer-2-and-3` hashing.
+**Optional, 10 minutes.** An analyst captured only sw-dist ether9 and concluded that a missing PLC flow had stopped.
 
-1. Capture ether9 and, on **WAGO A**, run:
+1. Use your request counts from Task 3. For each source, state whether ether9 alone saw its requests. A hash collision can put both test sources on one member; that does not prove complete coverage.
+2. [Capture the gateway uplink](/network/capture?node=sw-dist&interface=ether12), start it and repeat the four gateway pings from WAGO A and CtrlX. Apply Task 3's request filter.
+3. Compare source coverage with the single-member capture. Mark this observation point on your path notes.
 
-    ```bash
-    ping -c 2 -s 32 10.10.0.1
-    ping -c 2 -s 128 10.10.0.1
-    ```
+**Checkpoint:** Both gateway-bound test sources are visible on ether12. This point is suitable for these flows, but does not see all same-VLAN PLC-to-PLC communication. Monitoring coverage follows the traffic path. A real bond observation needs both relevant members/directions or a verified aggregate observation point; this lab does not configure a physical TAP or switch mirroring.
 
-2. Close that capture, repeat on ether10 and use `icmp.type == 8 && ip.src == 10.10.0.11`.
-3. Compare the member and frame lengths for both sizes.
+Close the capture before continuing.
 
-**Checkpoint:** Packet size changes frame length, while this policy's source/destination MAC and IP inputs remain the same. Both sizes should use the same request member in a stable bond. A topology or member-state change invalidates that comparison. For the same payload, compare with Exercise 1's access frame to find the four-byte VLAN tag.
+## Extra 2: Decide what the redundancy actually covers
 
-## Extra 2: Audit both ends without trusting a green status
+**Optional, 10 minutes.** A work order proposes powering down sw-dist because “there are two uplink cables.” Use Netmap and the bond/root-port outputs to challenge or support that claim.
 
-**Optional, 10 minutes.** Use the two monitor outputs and one LACP packet from each member.
+Complete this table as a **prediction**, using Netmap and your observed bond state:
 
-1. Make a table of local system ID, partner system ID, member name, actor key and partner key.
-2. Confirm reciprocal system IDs across switches. On a given switch, members in the same aggregate should advertise a consistent actor key. The remote side has its own key; local and remote key numbers need not generally be equal.
-3. Check synchronization, collecting and distributing flags. Explain how one incorrect partner ID could reveal a wrongly connected cable even while Ethernet reports link-up.
+| Proposed loss | What could remain? | What still needs checking? |
+| --- | --- | --- |
+| One bond member | The other member between the same switches | Member detection and actual application loss |
+| Both bond members | The RSTP route through sw-acc2 | Alternate path readiness and application recovery |
+| sw-dist itself | Access switches may still connect to each other | The gateway is attached to sw-dist: its path is lost |
 
-**Checkpoint:** You can distinguish physical link-up, LACP agreement and actual data forwarding using three separate observations. No interface changes are needed. Close captures and terminals. Continue with [Exercise 5](ex5-reconnaissance.md).
+**Checkpoint:** Two cables between the same switches do not provide independent switches, power or gateway paths. Explain the expected interruption before approving the proposed production maintenance. Specify an application-level success criterion and recovery steps; use measured lab results, rather than configured timers, if you state a recovery time.
+
+Close terminals. Continue with [Exercise 5](ex5-reconnaissance.md).
 
 ## Explore the topic
 

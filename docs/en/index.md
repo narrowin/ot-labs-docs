@@ -55,12 +55,12 @@ By the end of this workshop, you will be able to:
 
 ## Course Requirements
 
-**Level:** Intermediate, hands-on workshop
+**Level:** OT professionals; introductory networking with guided practical work
 
 **What You Need to Know:**
 
-* Networking fundamentals (IP addressing, VLANs, basic routing)
-* Command line basics (ssh, ping, basic file operations)
+* Familiarity with your OT process, PLCs and maintenance work; IP addressing, VLANs and routing are introduced in the exercises
+* Ability to use a browser and copy a command; the exercises explain where commands and filters go
 * Container concepts helpful but not required (we explain what you need)
 
 **Lab Environment:**

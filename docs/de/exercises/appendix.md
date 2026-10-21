@@ -43,7 +43,7 @@ Füge jeweils einen Ausdruck in die **Anzeigefilter**-Leiste ein und drücke Ent
 | HTTP liefert 404 | Antwortender Dienst und fehlender Pfad sind verschieden. `/webvisu.htm` und Port 8080 prüfen. |
 | GUI-Wert bleibt gleich | Stabile Prozesswerte sind möglich. Fortlaufenden Anwendungsaustausch prüfen; keine Bedienung nur zur erzwungenen Änderung. |
 | Zugriff trotz abschliessendem Firewall-Drop | Frühere Accepts und tatsächlichen Weg prüfen. Verkehr im selben VLAN kann das Gateway vollständig umgehen. |
-| Ergebnis weicht vom Durchgang ab | Tatsächliche Ausgabe festhalten und Lab-Änderungen erfragen. Keine Knoten zurücksetzen oder geteilten Entwürfe ersetzen. |
+| Ergebnis weicht vom Durchgang ab | Tatsächliche Ausgabe festhalten und dein Lab mit dem Ausgangszustand der Übung vergleichen. Frühere Bereinigung abschliessen; bei nötiger Konfigurationswiederherstellung den gespeicherten Checkpoint verwenden. |
 
 ## Weitere Quellen
 

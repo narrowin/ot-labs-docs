@@ -1,32 +1,21 @@
-# Workshop 2 Agenda (ISC-CPH – Wednesday)
+# Two-day course lab sequence
 
-Track: Workshop 2
+Use the **OT Network Security – Design and Defend** handout for the teaching sessions and these exercises for the practical work. Allow about 5–6½ hours for main lab work and discussion across both days; breaks and lecture time are additional. Optional extensions can be completed later.
 
-Technical Level: Intermediate
+## Day 1: connections, boundaries and availability
 
-Speakers: Martin Scheu (Switch) & Mischa Diehm ([Narrowin](https://narrowin.ch))
+1. Introduce the water-treatment plant, consequences of loss of control, and the difference between the physical process and the network diagram. Complete the [lab access check](lab.md#first-five-minutes).
+2. Teach Ethernet, IP addressing and VLANs, then [Exercise 1](exercises/ex1-vlan-discovery.md): establish a PLC's actual network connection.
+3. Teach ARP and Layer 2 trust, then complete [Exercise 2](exercises/ex2-arp-spoofing.md) in each student's lab. Verify cleanup before the next activity.
+4. Introduce link aggregation and RSTP, then [Exercise 3](exercises/ex3-spanning-tree.md) and [Exercise 4](exercises/ex4-link-aggregation.md). Discuss standby links, capture coverage and shared failure points without creating an outage.
 
----
+## Day 2: remote access, evidence and zone design
 
-## 11:10–11:50 — Part 1: Understanding OT Networks
-- Title (conference): Understanding OT Networks & Unfold the OT Network Jungle
-- What we’ll cover: OT protocols and characteristics, tools overview, basic discovery and packet capture
-- Hands-on: [Lab access checks](lab.md#first-five-minutes), then [Exercise 1: tagged and untagged traffic](exercises/ex1-vlan-discovery.md)
+1. Teach the remote-access lifecycle, then [Exercise 5](exercises/ex5-reconnaissance.md): compare supplier requirements with actual DMZ exposure.
+2. Discuss monitoring placement and protocol evidence, then [Exercise 6](exercises/ex6-protocol-discovery.md): record observed plant communication and one controlled read.
+3. Use [Exercise 7](exercises/ex7-segmentation-firewall.md) for the water-treatment zone design, individually or with discussion. Check the mixed controller responsibilities before drawing zone boundaries. Each student implements and verifies one small conduit in their own lab, then restores the baseline.
+4. Relate results to the handout's logging, roadmap and [automation outlook](automation.md). Each student selects one improvement, an owner, a dependency and an acceptance check.
 
-## 12:50–13:30 — Part 2: OT Network Security Monitoring
-- Title (conference): OT Network Security Monitoring (second part of the workshop)
-- What we’ll cover: Monitoring points and visibility strategy; inter-zone traffic; IT/OT bridge; validating monitoring and spotting blind spots
-- Hands-on: Selected tasks from [Exercise 3: spanning tree](exercises/ex3-spanning-tree.md) and [Exercise 4: LACP](exercises/ex4-link-aggregation.md)
+## Short workshop selection
 
-## 13:55–14:30 — Part 3: Getting started with OT Network Security Monitoring
-- Title (conference): Getting started with OT Network Security Monitoring (third part of the workshop)
-- What we’ll cover: Detection cycle (use cases → detection → alerting → playbook → tuning); techniques to discover assets and communication patterns; testing and validating
-- Hands-on: Selected tasks from [Exercise 6: protocol evidence](exercises/ex6-protocol-discovery.md) and [Exercise 7: segmentation policy](exercises/ex7-segmentation-firewall.md)
-
----
-
-Notes:
-- Breaks and room logistics follow the conference program (Lunch at 11:50, Refreshments at 13:30, Short Break at 14:30)
-- Advanced tasks are optional and marked as such in the lab guide
-- These short conference sessions use selected tasks; the complete seven-lesson course needs the time shown in the [exercise overview](exercises/index.md).
-- Aim to stay within timeboxes; instructors will call checkpoints
+For a shorter event, choose a complete outcome rather than rushing through all seven lessons: Exercise 1's paired captures, Exercise 4's monitoring blind spot, or Exercise 6's single Modbus transaction. Exercise 7's group design can stand alone; do not start its configuration build without time and access for verification and cleanup.

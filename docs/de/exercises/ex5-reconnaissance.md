@@ -1,10 +1,18 @@
 # Übung 5: Zugriff aus der DMZ beurteilen
 
-**Zeit:** 30–40 Minuten. **Lab:** aktuelles studentisches `ot-sec-flat`. **Niveau:** Fortgeschritten.
+**Zeit:** 35–45 Minuten. **Lab:** aktuelles studentisches `ot-sec-flat`. **Niveau:** Geführte Praxis.
 
 Ermittle die Erreichbarkeit aus der DMZ und schreibe einen belegbaren Befund. Begrenze die Erkennung auf die vier genannten Lab-IPs und die Dienstprüfung auf WAGO A. Breite Subnetz-Scans, Passwortversuche und Softwareinstallation sind nicht nötig.
 
 **Lernziele:** Den Ausgangspunkt des Fernzugriffs bestimmen, begrenzte Lab-Ziele erkennen, erreichbare Dienste identifizieren, Beobachtungen von Schwachstellen unterscheiden und einen reproduzierbaren Befund mit Empfehlungen schreiben.
+
+## Dein Auftrag zum Fernzugriff
+
+Ein Lieferant braucht für eine vereinbarte Diagnose Zugang zu WAGO A's WebVisu. Der Anlagenverantwortliche möchte wissen, ob der bestehende DMZ-Jumphost auch Engineering- oder Steuerungsdienste erreicht, die dafür nicht nötig sind. Prüfe die tatsächliche Erreichbarkeit und formuliere eine eng begrenzte Zugriffsempfehlung.
+
+Eine **DMZ** ist eine Netzwerkzone zwischen Vertrauensbereichen. Ein **Jumphost** ist ein zwischengeschalteter Zugriffshost; sein Name begrenzt keine Verbindungen. Ein TCP-**Port** bezeichnet einen Dienst-Endpunkt. Eine offene Verbindung belegt Erreichbarkeit, nicht die Berechtigung zur Anmeldung oder Prozessänderung.
+
+Dieses Szenario umfasst ausschliesslich die genannten Simulatorziele. Stimme bei realen OT-Geräten Erkennungsmethoden und Zeitpunkt zuerst mit Betrieb und Geräteverantwortlichen ab; selbst Verbindungsprüfungen können empfindliche Dienste beeinträchtigen. Beginne, wo verfügbar, mit Inventar und passiven Beobachtungen.
 
 ## Vorbereitung
 
@@ -92,6 +100,10 @@ Ergänze in deinen eigenen Notizen:
 | Nachprüfung | Genaue Quelle, Ziel, Befehl und Soll-Ergebnis nach einer späteren Regeländerung |
 
 **Kontrollpunkt:** Eine andere Person kann die Beobachtung ohne Raten reproduzieren. Schreibe «aus der DMZ erreichbar», wenn du genau das gemessen hast. Behaupte keine erfolgreichen Standardpasswörter; diese Übung probiert keine aus. Schliesse anschliessend das Terminal.
+
+## Deine Zugriffsentscheidung
+
+Unterscheide für diesen Diagnoseauftrag WebVisu TCP 8080 von SSH 22, Modbus 502 und OPC UA 4840. Notiere, was erreichbar ist und was der Auftrag tatsächlich benötigt. Empfiehl Einschränkungen nach Quelle, Ziel und Dienst sowie Verantwortlichen und Ablaufdatum für temporären Zugriff. Anwendungsberechtigungen, Identitätsprüfung und MFA des Fernzugangs brauchen eigene Belege; dieser Scan prüft sie nicht.
 
 ## Lösung
 
