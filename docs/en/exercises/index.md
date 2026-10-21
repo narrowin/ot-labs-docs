@@ -41,7 +41,7 @@ Tool links are designed for the Network Explorer reader. In this published docum
 
 ## Connect the work to the course
 
-The course plant is a water-treatment example. ABB provides supervision; WAGO controls treatment functions; CtrlX controls pumps; Schneider also spans process and disposal functions. Treat these as the handout's teaching roles. Verify a network flow before calling it a proven control dependency.
+The course plant is a water-treatment example. `abb-800xa-vlan40` provides supervision; `wago-plc2a-vlan10` and `wago-plc2b-vlan10` control treatment functions; `ctrlx-plc3-vlan20` controls pumps; `schneider-plc4-vlan30` also spans process and disposal functions. Treat these as the handout's teaching roles. Verify a network flow before calling it a proven control dependency.
 
 | Course handout topic | Lab result |
 | --- | --- |

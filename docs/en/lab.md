@@ -15,13 +15,13 @@ The appliance is already deployed. Use the configured terminal action rather tha
 
 | Action in the reader | Observable checkpoint |
 | --- | --- |
-| [Find WAGO A](/network/?search=wago-plc2a-vlan10) | Netmap highlights the endpoint; follow its path through sw-acc1 and sw-dist to gw |
-| [Open WAGO A terminal](/network/terminal?node=wago-plc2a-vlan10) | Status becomes Connected; the commands below show the data address and four gateway replies |
+| [Find `wago-plc2a-vlan10`](/network/?search=wago-plc2a-vlan10) | Netmap highlights the endpoint; follow its path through sw-acc1 and sw-dist to `gw-firewall` |
+| [Open terminal on `wago-plc2a-vlan10`](/network/terminal?node=wago-plc2a-vlan10) | Status becomes Connected; the commands below show the data address and four gateway replies |
 | [Inspect VLAN 10](/network/?viewMode=vlan&vlanIds=10) | Netmap is in VLAN view with VLAN 10 selected |
-| [Open WAGO A WebVisu](/network/webvisu?node=wago-plc2a-vlan10) | A separate tab renders the native CODESYS visualization; steady values are possible |
+| [Open `wago-plc2a-vlan10` WebVisu](/network/webvisu?node=wago-plc2a-vlan10) | A separate tab renders the native CODESYS visualization; steady values are possible |
 | [Open the gateway-uplink capture](/network/capture?node=sw-dist&interface=ether12) | sw-dist ether12 is selected; choose Start Capture, repeat the ping and filter `icmp` |
 
-Run on **WAGO A**:
+Run on **`wago-plc2a-vlan10`**:
 
 ```bash
 ip -br addr show eth1
@@ -47,8 +47,8 @@ Names ending in `vlan20`, `vlan30`, `vlan40` or `vlan50` describe intended roles
 
 | Stable node name | Data address / role |
 | --- | --- |
-| `wago-plc2a-vlan10` | `10.10.0.11/8`, WAGO A PLC |
-| `wago-plc2b-vlan10` | `10.10.0.12/8`, WAGO B PLC |
+| `wago-plc2a-vlan10` | `10.10.0.11/8`, PLC2A |
+| `wago-plc2b-vlan10` | `10.10.0.12/8`, PLC2B |
 | `ctrlx-plc3-vlan20` | `10.20.0.11/8`, process PLC |
 | `schneider-plc4-vlan30` | `10.30.0.11/8`, disposal PLC |
 | `abb-800xa-vlan40` | `10.40.0.11/8`, control-room application |
@@ -77,7 +77,7 @@ Observe controls without operating them during the networking tasks. A steady va
 | Toolbox | Draft zones and directional policies; saving does not configure network devices |
 | Assistant | Help with the active lesson, command output and packet evidence |
 
-Toolbox is opened from the product launcher. Its saved network workspace holds your design; saving does not enforce it. [Exercise 7](exercises/ex7-segmentation-firewall.md) builds VLAN 70 through device terminals in your own lab. The [practical setup](lab-practical.md) prepares a recovery checkpoint. Exercises 1–6 use the flat baseline; Exercise 7 temporarily moves only Hirschmann and restores it before finishing.
+Toolbox is opened from the product launcher. Its saved network workspace holds your design; saving does not enforce it. [Exercise 7](exercises/ex7-segmentation-firewall.md) builds VLAN 70 through device terminals in your own lab. The [practical setup](lab-practical.md) prepares a recovery checkpoint. Exercises 1–6 use the flat baseline; Exercise 7 temporarily moves only `hirschmann-edge1-vlan50` and restores it before finishing.
 
 ## If a checkpoint fails
 

@@ -16,12 +16,12 @@ Ein **Protokoll** definiert Nachrichten zwischen Anwendungen. Ein Modbus-**Regis
 
 ## Vorbereitung
 
-Öffne [das Terminal von WAGO B](/network/terminal?node=wago-plc2b-vlan10) für Client-Befehle und [das Terminal von WAGO A](/network/terminal?node=wago-plc2a-vlan10) für lokale Socket-Prüfungen. Ziel ist A `10.10.0.11`, Client B `10.10.0.12`.
+Öffne [das Terminal von `wago-plc2b-vlan10`](/network/terminal?node=wago-plc2b-vlan10) für Client-Befehle und [das Terminal von `wago-plc2a-vlan10`](/network/terminal?node=wago-plc2a-vlan10) für lokale Socket-Prüfungen. Ziel ist `wago-plc2a-vlan10` `10.10.0.11`, Client `wago-plc2b-vlan10` `10.10.0.12`.
 
-[Öffne den Mitschnitt am Datenport von WAGO A](/network/capture?node=wago-plc2a-vlan10&interface=eth1) und wähle **Start Capture**. Lass ihn für die Hauptaufgaben laufen. Der Übungstitel öffnet diese Anleitung neben dem Mitschnitt.
+[Öffne den Mitschnitt am Datenport von `wago-plc2a-vlan10`](/network/capture?node=wago-plc2a-vlan10&interface=eth1) und wähle **Start Capture**. Lass ihn für die Hauptaufgaben laufen. Der Übungstitel öffnet diese Anleitung neben dem Mitschnitt.
 
 ??? info "Du verwendest die eigenständige Dokumentation?"
-    Öffne **Netmap** deines zugewiesenen Live-Labs und suche die stabilen WAGO-Knotennamen oben. Wähle **Open terminal** für Client-/Server-Prüfungen. Wähle auf WAGO A **Capture packets**, Interface **eth1**, oder **Open WebVisu** für die Visualisierung. Links in der Übungsansicht wählen diese Ziele vor und behalten Netzwerk/Snapshot bei. WebVisu ist nur für genehmigte, antwortende Runtimes in der Live-Ansicht verfügbar.
+    Öffne **Netmap** deines zugewiesenen Live-Labs und suche `wago-plc2a-vlan10` und `wago-plc2b-vlan10`. Wähle **Open terminal** für Client-/Server-Prüfungen. Wähle auf `wago-plc2a-vlan10` **Capture packets**, Interface **eth1**, oder **Open WebVisu** für die Visualisierung. Links in der Übungsansicht wählen diese Ziele vor und behalten Netzwerk/Snapshot bei. WebVisu ist nur für genehmigte, antwortende Runtimes in der Live-Ansicht verfügbar.
 
 ## Aufgabe 1: Vor dem Prüfen beobachten
 
@@ -31,11 +31,11 @@ Probiere `modbus` und `pn_dcp` einzeln aus. Notiere für eine Nachricht Quelle, 
 
 **Kontrollpunkt:** Im Ausgangszustand gibt es Modbus-Hintergrundverkehr und vom Lab erzeugte PROFINET-DCP-Identify-Nachrichten. Andere Lab-Anwendungen können Modbus lesen und schreiben; ihre Beobachtung bedeutet nicht, dass du sie ausgelöst hast. Fehlt ein Protokoll im Zeitfenster, notiere «nicht beobachtet», nicht «nicht installiert».
 
-Suche vor deinem eigenen Test eine Hintergrundanfrage mit Antwort, sofern vorhanden. Notiere Client, Server und Funktion. In der Kursanlage ist ABB das Leitsystem; WAGO steuert Aufbereitungsfunktionen. Prüfe die tatsächliche Quelle anhand von Netmap; nicht jeder Modbus-Client ist automatisch ABB. Dein B → A-Lesezugriff unten ist eine Diagnosetransaktion und kein Beweis für die normale Steuerungsbeziehung. Kläre bei einem unerwarteten Schreibzugriff zuerst, wer ihn veranlasst hat und welchem Zweck er dient. Blockiere ihn nicht allein aufgrund dieser Beobachtung.
+Suche vor deinem eigenen Test eine Hintergrundanfrage mit Antwort, sofern vorhanden. Notiere Client, Server und Funktion. In der Kursanlage ist `abb-800xa-vlan40` das Leitsystem; `wago-plc2a-vlan10` und `wago-plc2b-vlan10` sind die Endpunkte der Aufbereitungssteuerungen. Prüfe die tatsächliche Quelle anhand von Netmap; nicht jeder Modbus-Client ist automatisch `abb-800xa-vlan40`. Dein Lesezugriff von `wago-plc2b-vlan10` auf `wago-plc2a-vlan10` unten ist eine Diagnosetransaktion und kein Beweis für die normale Steuerungsbeziehung. Kläre bei einem unerwarteten Schreibzugriff zuerst, wer ihn veranlasst hat und welchem Zweck er dient. Blockiere ihn nicht allein aufgrund dieser Beobachtung.
 
 ## Aufgabe 2: Einen Modbus-Lesezugriff verfolgen
 
-Prüfe auf **WAGO B** das vorhandene Werkzeug und führe genau diesen Befehl aus:
+Prüfe auf **`wago-plc2b-vlan10`** das vorhandene Werkzeug und führe genau diesen Befehl aus:
 
 ```bash
 command -v mbpoll
@@ -53,7 +53,7 @@ Filtere in Wireshark `modbus && ip.addr == 10.10.0.12`, um deinen Zugriff vom Hi
 
 ## Aufgabe 3: HTTP bestätigen und die Anwendung ansehen
 
-Auf **WAGO B**:
+Auf **`wago-plc2b-vlan10`**:
 
 ```bash
 curl -sS --max-time 5 -D - -o /dev/null http://10.10.0.11:8080/webvisu.htm
@@ -61,13 +61,13 @@ curl -sS --max-time 5 -D - -o /dev/null http://10.10.0.11:8080/webvisu.htm
 
 Filtere `http.request && ip.src == 10.10.0.12`. Finde den GET-Pfad und untersuche mit `http && ip.addr == 10.10.0.12` die Antwort.
 
-[Die WebVisu von WAGO A öffnen](/network/webvisu?node=wago-plc2a-vlan10). Notiere zweimal im Abstand einiger Sekunden einen angezeigten Wert oder Zustand, ohne Bedienelemente zu betätigen. Ein stabiler Prozesswert ist gültig. Schliesse danach die Visualisierung.
+[Die WebVisu von `wago-plc2a-vlan10` öffnen](/network/webvisu?node=wago-plc2a-vlan10). Notiere zweimal im Abstand einiger Sekunden einen angezeigten Wert oder Zustand, ohne Bedienelemente zu betätigen. Ein stabiler Prozesswert ist gültig. Schliesse danach die Visualisierung.
 
-**Kontrollpunkt:** Die direkte Anfrage liefert HTTP 200; der Mitschnitt enthält GET `/webvisu.htm`. Die Visualisierung zeigt Prozesszustände und Bedienelemente an und tauscht fortlaufend Anwendungsdaten aus. Stabile Werte allein beweisen keine eingefrorene Seite. Der Browser greift über einen Proxy zu; die Anfrage von B geht direkt an WAGO A. Erwarte für die Browser-Anfrage nicht B als Quelle.
+**Kontrollpunkt:** Die direkte Anfrage liefert HTTP 200; der Mitschnitt enthält GET `/webvisu.htm`. Die Visualisierung zeigt Prozesszustände und Bedienelemente an und tauscht fortlaufend Anwendungsdaten aus. Stabile Werte allein beweisen keine eingefrorene Seite. Der Browser greift über einen Proxy zu; die Anfrage von `wago-plc2b-vlan10` geht direkt an `wago-plc2a-vlan10`. Erwarte für die Browser-Anfrage nicht `wago-plc2b-vlan10` als Quelle.
 
 ## Aufgabe 4: Listener, Protokoll und Sicherheit unterscheiden
 
-Auf **WAGO A**:
+Auf **`wago-plc2a-vlan10`**:
 
 ```bash
 ss -lnt
@@ -76,7 +76,7 @@ ss -lnu
 
 Notiere, auf welchen Adressen und Ports Dienste auf Verbindungen oder Daten warten. Solche Dienste werden als Listener bezeichnet. Im Ausgangszustand gehören TCP 502, 4840, 8080 und 11740 sowie CODESYS UDP 1740 dazu.
 
-Prüfe auf **WAGO B** die TCP-Verbindung zu Port 4840:
+Prüfe auf **`wago-plc2b-vlan10`** die TCP-Verbindung zu Port 4840:
 
 ```bash
 nc -vz -w 3 10.10.0.11 4840
@@ -87,7 +87,7 @@ Filtere den Mitschnitt mit `ip.addr == 10.10.0.12 && tcp.port == 4840`. Finde SY
 | Prüfung | Was das Ergebnis belegt |
 | --- | --- |
 | Lokaler Listener auf TCP 4840 | Ein Dienst wartet auf dieser Adresse und diesem Port auf Verbindungen |
-| TCP-Verbindung von B erfolgreich | Der Listener ist von B erreichbar |
+| TCP-Verbindung von `wago-plc2b-vlan10` erfolgreich | Der Listener ist von `wago-plc2b-vlan10` erreichbar |
 | Dekodierte Modbus-Anfrage mit Antwort | Der angeforderte Modbus-Lesezugriff wurde verarbeitet |
 | HTTP-Anfrage und Antwort sowie Live-WebVisu | Die Webanwendung antwortet; laufende Übertragungen zeigen die Aktualisierung |
 | OPC-UA-Authentifizierung oder Verschlüsselung | Mit dieser TCP-Verbindung nicht geprüft |
@@ -109,7 +109,7 @@ Notiere für Modbus, HTTP und OPC UA jeweils Quelle und Ziel, Dienst, beobachtet
 
 ## Extra 1: Eine HMI-Registerzuordnung prüfen
 
-**Optional, 10 Minuten.** Ein Ersatzbediengerät (HMI) bezeichnet das erste Register mit «0», die Wartungsnotiz mit «1». Kläre, ob dies allein einen falschen Prozesswert bedeutet. Starte gegebenenfalls einen neuen Mitschnitt am Datenport von A. Auf **WAGO B**:
+**Optional, 10 Minuten.** Ein Ersatzbediengerät (HMI) bezeichnet das erste Register mit «0», die Wartungsnotiz mit «1». Kläre, ob dies allein einen falschen Prozesswert bedeutet. Starte gegebenenfalls einen neuen Mitschnitt am Datenport von `wago-plc2a-vlan10`. Auf **`wago-plc2b-vlan10`**:
 
 ```bash
 mbpoll -m tcp -a 1 -t 4 -r 1 -c 2 -1 -o 2 10.10.0.11
@@ -122,7 +122,7 @@ Filtere `modbus && ip.addr == 10.10.0.12`. Vergleiche die Startadresse und die A
 
 ## Extra 2: Fehlende Geräteerkennung beim Fernzugriff erklären
 
-**Optional, 10 Minuten.** Ein Fernwartungstechniker erreicht eine SPS per IP, findet sie aber nicht über lokale PROFINET-Geräteerkennung. Würde ein weiterer offener TCP-Port helfen? Filtere den Mitschnitt von A mit `pn_dcp`. Wähle eine Identify-Nachricht und untersuche Ethernet-Ziel, EtherType und DCP-Service-Felder. Suche in der [DCP-Feldreferenz](https://www.wireshark.org/docs/dfref/p/pn_dcp.html) `pn_dcp.service_id` und den Stationsnamen.
+**Optional, 10 Minuten.** Ein Fernwartungstechniker erreicht eine SPS per IP, findet sie aber nicht über lokale PROFINET-Geräteerkennung. Würde ein weiterer offener TCP-Port helfen? Filtere den Mitschnitt von `wago-plc2a-vlan10` mit `pn_dcp`. Wähle eine Identify-Nachricht und untersuche Ethernet-Ziel, EtherType und DCP-Service-Felder. Suche in der [DCP-Feldreferenz](https://www.wireshark.org/docs/dfref/p/pn_dcp.html) `pn_dcp.service_id` und den Stationsnamen.
 
 Vergleiche nun `pn_dcp && ip` mit `pn_dcp` allein.
 

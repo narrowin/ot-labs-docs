@@ -5,8 +5,8 @@
 ## Vor dem Start
 
 1. Verwende die vorhandene `ot-sec-flat`-Installation der jeweiligen Person und deren zugewiesene Zugriffs-URL. Zugangsdaten und privater Checkpoint bleiben bei dieser Appliance.
-2. Öffne den Exercises-Reader des Labs und wähle sein Live-Netzwerk. Prüfe unabhängige Terminals zu `hirschmann-edge1-vlan50`, `wago-plc2a-vlan10`, `sw-acc1`, `sw-dist` und `gw-firewall`. Hirschmann muss Management auf `eth0` und `10.50.0.12/8` auf `eth1` haben.
-3. Prüfe Adressen, VLAN-Mitgliedschaften und Regelanker aus Aufgabe 1 der Übung 7. VLAN 70 und `172.30.70.0/24` müssen ungenutzt sein. Von Hirschmann müssen WAGO A TCP 22 und 8080 offen sein und `/webvisu.htm` HTTP 200 liefern. Von WAGO A muss Hirschmann TCP 22 offen sein. Behebe fehlgeschlagene Ausgangsprüfungen vor Beginn.
+2. Öffne den Exercises-Reader des Labs und wähle sein Live-Netzwerk. Prüfe unabhängige Terminals zu `hirschmann-edge1-vlan50`, `wago-plc2a-vlan10`, `sw-acc1`, `sw-dist` und `gw-firewall`. `hirschmann-edge1-vlan50` muss Management auf `eth0` und `10.50.0.12/8` auf `eth1` haben.
+3. Prüfe Adressen, VLAN-Mitgliedschaften und Regelanker aus Aufgabe 1 der Übung 7. VLAN 70 und `172.30.70.0/24` müssen ungenutzt sein. Von `hirschmann-edge1-vlan50` müssen `wago-plc2a-vlan10` TCP 22 und 8080 offen sein und `/webvisu.htm` HTTP 200 liefern. Von `wago-plc2a-vlan10` muss `hirschmann-edge1-vlan50` TCP 22 offen sein. Behebe fehlgeschlagene Ausgangsprüfungen vor Beginn.
 4. Schliesse Mitschnitt- und Terminal-Tabs. Erstelle auf der **Appliance-Konsole des studentischen Labs** einen privaten Checkpoint mit dem installierten Lebenszyklus-Befehl:
 
     ```bash
@@ -29,7 +29,7 @@ sudo nwos-ot-student restore ex7-flat
 sudo nwos-ot-student status
 ```
 
-Restore stoppt und ersetzt den zugehörigen Installationszustand und startet das Lab. Warte auf gesunde Dienste, öffne den Reader erneut und wiederhole Aufgabe 1. Hirschmann muss wieder `10.50.0.12/8` haben, VLAN 70 und `ex7-`-Regeln müssen fehlen, HTTP muss 200 liefern und beide ursprünglichen SSH-Proben müssen offen sein. RAM-Logs werden nicht zurückgesetzt; ordne Belege über die Zeit zu, statt das Verschwinden alter Logeinträge vorauszusetzen.
+Restore stoppt und ersetzt den zugehörigen Installationszustand und startet das Lab. Warte auf gesunde Dienste, öffne den Reader erneut und wiederhole Aufgabe 1. `hirschmann-edge1-vlan50` muss wieder `10.50.0.12/8` haben, VLAN 70 und `ex7-`-Regeln müssen fehlen, HTTP muss 200 liefern und beide ursprünglichen SSH-Proben müssen offen sein. RAM-Logs werden nicht zurückgesetzt; ordne Belege über die Zeit zu, statt das Verschwinden alter Logeinträge vorauszusetzen.
 
 Bewahre Checkpoints als root mit Modus `0600` ausserhalb von Git und Verteilungsartefakten auf: Sie enthalten private Installationsdaten. Der Lebenszyklus-Befehl benötigt das passende installierte Release und dessen festgelegte Images. Bei fehlgeschlagenem Restore prüft die Kursleitung zuerst die Konsole.
 

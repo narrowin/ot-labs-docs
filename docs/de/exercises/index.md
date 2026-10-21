@@ -41,7 +41,7 @@ Werkzeug-Links sind für die Übungsansicht in Network Explorer gedacht. Öffne 
 
 ## Verbindung zum Kurs
 
-Die Kursanlage ist ein Beispiel zur Wasseraufbereitung. ABB übernimmt die Leitfunktion, WAGO Aufbereitungsfunktionen und CtrlX die Pumpen. Schneider umfasst auch Prozess- und Entsorgungsfunktionen. Dies sind die Lehrrollen des Handouts. Prüfe einen Netzwerkfluss, bevor du ihn als belegte Steuerungsabhängigkeit bezeichnest.
+Die Kursanlage ist ein Beispiel zur Wasseraufbereitung. `abb-800xa-vlan40` übernimmt die Leitfunktion, `wago-plc2a-vlan10` und `wago-plc2b-vlan10` die Aufbereitungsfunktionen und `ctrlx-plc3-vlan20` die Pumpen. `schneider-plc4-vlan30` umfasst auch Prozess- und Entsorgungsfunktionen. Dies sind die Lehrrollen des Handouts. Prüfe einen Netzwerkfluss, bevor du ihn als belegte Steuerungsabhängigkeit bezeichnest.
 
 | Thema im Kurshandout | Lab-Ergebnis |
 | --- | --- |

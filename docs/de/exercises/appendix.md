@@ -6,7 +6,7 @@ Füge jeweils einen Ausdruck in die **Anzeigefilter**-Leiste ein und drücke Ent
 
 | Filter | Verwendung |
 | --- | --- |
-| `icmp && ip.addr == 10.10.0.11` | ICMP-Verkehr von WAGO A |
+| `icmp && ip.addr == 10.10.0.11` | ICMP-Verkehr von `wago-plc2a-vlan10` |
 | `icmp.type == 8 && ip.src == 10.10.0.11` | Nur Anfragen für richtungsbezogene LACP-Prüfungen |
 | `vlan` | Frames mit 802.1Q-Header |
 | `vlan.id == 10 && icmp` | Getaggtes VLAN-10-ICMP |
@@ -15,9 +15,9 @@ Füge jeweils einen Ausdruck in die **Anzeigefilter**-Leiste ein und drücke Ent
 | `stp` | Spanning-Tree-BPDUs einschliesslich RSTP |
 | `stp.version == 2` | RSTP-BPDUs |
 | `lacp` | LACP-Aushandlung |
-| `modbus && ip.addr == 10.10.0.12` | Begrenzter Modbus-Lesezugriff von B mit Antwort |
+| `modbus && ip.addr == 10.10.0.12` | Begrenzter Modbus-Lesezugriff von `wago-plc2b-vlan10` mit Antwort |
 | `modbus.func_code == 3` | Read-Holding-Registers-Nachrichten |
-| `http.request && ip.src == 10.10.0.12` | Direkte HTTP-Anfragen von B |
+| `http.request && ip.src == 10.10.0.12` | Direkte HTTP-Anfragen von `wago-plc2b-vlan10` |
 | `tcp.port == 2323 && tcp.len > 0` | Klartext-Marker-Daten |
 | `tcp.flags.syn == 1` | SYN und SYN/ACK; zusätzlich ACK-Flag prüfen |
 | `tcp.flags.reset == 1` | TCP-Resets |

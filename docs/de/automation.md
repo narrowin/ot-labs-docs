@@ -10,7 +10,7 @@ Trenne für sw-acc1 ether2 Soll-Aussagen von Beobachtungen:
 
 | Soll-Aussage | Zu vergleichender Beleg |
 | --- | --- |
-| Der Port bedient WAGO A | Portbeschreibung, Topologie und Endgeräteidentität |
+| Der Port bedient `wago-plc2a-vlan10` | Portbeschreibung, Topologie und Endgeräteidentität |
 | Ungetaggter Endgeräteverkehr erhält VLAN 10 | PVID und tatsächliche ungetaggte Mitgliedschaft |
 | Der Pfad transportiert VLAN 10 zum Gateway | Uplink-Mitgliedschaft und getaggter Ping-Mitschnitt |
 | Die Anwendung ist verfügbar | Erfolgreiche, freigegebene Anwendungsanfrage |

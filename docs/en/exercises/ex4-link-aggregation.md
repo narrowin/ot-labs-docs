@@ -16,7 +16,7 @@ A **bond** combines physical links into one logical connection. **LACP** (Link A
 
 ## Before you start
 
-Complete [Exercise 3](ex3-spanning-tree.md). Open [sw-dist](/network/terminal?node=sw-dist) and [sw-acc1](/network/terminal?node=sw-acc1) terminals. For traffic generation, use [WAGO A](/network/terminal?node=wago-plc2a-vlan10) and [CtrlX](/network/terminal?node=ctrlx-plc3-vlan20). Both attach to sw-acc1; WAGO B attaches to sw-acc2 and is not a suitable second source for this bond test.
+Complete [Exercise 3](ex3-spanning-tree.md). Open [sw-dist](/network/terminal?node=sw-dist) and [sw-acc1](/network/terminal?node=sw-acc1) terminals. For traffic generation, use [`wago-plc2a-vlan10`](/network/terminal?node=wago-plc2a-vlan10) and [`ctrlx-plc3-vlan20`](/network/terminal?node=ctrlx-plc3-vlan20). Both attach to sw-acc1; `wago-plc2b-vlan10` attaches to sw-acc2 and is not a suitable second source for this bond test.
 
 | End | Logical bond | Physical members |
 | --- | --- | --- |
@@ -61,13 +61,13 @@ Expand **Link Aggregation Control Protocol**. Compare **Actor** and **Partner** 
 
 ## Task 3: Locate two small flows
 
-Keep the first capture running. On **WAGO A**:
+Keep the first capture running. On **`wago-plc2a-vlan10`**:
 
 ```bash
 ping -c 4 10.10.0.1
 ```
 
-On **CtrlX**:
+On **`ctrlx-plc3-vlan20`**:
 
 ```bash
 ping -c 4 10.10.0.1
@@ -106,14 +106,14 @@ Record both active members and where each test source's requests appeared. Speci
 ??? success "Compare your evidence"
     The bond is active at both ends and the reciprocal system IDs agree. LACP exchanges describe member eligibility; the transmit hash chooses a member for data. The current policy uses MAC and IP information. With an unchanged bond, repeated requests for the same endpoint pair remain on a member; adding another source may change that selection, but does not guarantee even distribution.
 
-    In the walkthrough, CtrlX requests used sw-dist ether9 and WAGO A requests used ether10. Record your measured result rather than treating this assignment as permanent. RSTP operates on the logical bond; LACP operates on its physical members.
+    In the walkthrough, `ctrlx-plc3-vlan20` requests used sw-dist ether9 and `wago-plc2a-vlan10` requests used ether10. Record your measured result rather than treating this assignment as permanent. RSTP operates on the logical bond; LACP operates on its physical members.
 
 ## Extra 1: Find the capture blind spot
 
 **Optional, 10 minutes.** An analyst captured only sw-dist ether9 and concluded that a missing PLC flow had stopped.
 
 1. Use your request counts from Task 3. For each source, state whether ether9 alone saw its requests. A hash collision can put both test sources on one member; that does not prove complete coverage.
-2. [Capture the gateway uplink](/network/capture?node=sw-dist&interface=ether12), start it and repeat the four gateway pings from WAGO A and CtrlX. Apply Task 3's request filter.
+2. [Capture the gateway uplink](/network/capture?node=sw-dist&interface=ether12), start it and repeat the four gateway pings from `wago-plc2a-vlan10` and `ctrlx-plc3-vlan20`. Apply Task 3's request filter.
 3. Compare source coverage with the single-member capture. Mark this observation point on your path notes.
 
 **Checkpoint:** Both gateway-bound test sources are visible on ether12. This point is suitable for these flows, but does not see all same-VLAN PLC-to-PLC communication. Monitoring coverage follows the traffic path. A real bond observation needs both relevant members/directions or a verified aggregate observation point; this lab does not configure a physical TAP or switch mirroring.

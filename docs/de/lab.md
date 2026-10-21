@@ -15,13 +15,13 @@ Die Appliance ist bereits bereitgestellt. Verwende konfigurierte Terminal-Aktion
 
 | Aktion im Reader | Beobachtbarer Kontrollpunkt |
 | --- | --- |
-| [WAGO A finden](/network/?search=wago-plc2a-vlan10) | Netmap hebt den Endpunkt hervor; verfolge den Weg über sw-acc1 und sw-dist zu gw |
-| [WAGO-A-Terminal öffnen](/network/terminal?node=wago-plc2a-vlan10) | Status Connected; die Befehle unten zeigen Datenadresse und vier Gateway-Antworten |
+| [`wago-plc2a-vlan10` finden](/network/?search=wago-plc2a-vlan10) | Netmap hebt den Endpunkt hervor; verfolge den Weg über sw-acc1 und sw-dist zu `gw-firewall` |
+| [Terminal von `wago-plc2a-vlan10` öffnen](/network/terminal?node=wago-plc2a-vlan10) | Status Connected; die Befehle unten zeigen Datenadresse und vier Gateway-Antworten |
 | [VLAN 10 untersuchen](/network/?viewMode=vlan&vlanIds=10) | Netmap zeigt die VLAN-Ansicht mit VLAN 10 |
-| [WAGO A WebVisu öffnen](/network/webvisu?node=wago-plc2a-vlan10) | Ein separater Tab zeigt die native CODESYS-Visualisierung; konstante Werte sind möglich |
+| [`wago-plc2a-vlan10` WebVisu öffnen](/network/webvisu?node=wago-plc2a-vlan10) | Ein separater Tab zeigt die native CODESYS-Visualisierung; konstante Werte sind möglich |
 | [Gateway-Uplink mitschneiden](/network/capture?node=sw-dist&interface=ether12) | sw-dist ether12 ist gewählt; Start Capture starten, Ping wiederholen und `icmp` filtern |
 
-Auf **WAGO A** ausführen:
+Auf **`wago-plc2a-vlan10`** ausführen:
 
 ```bash
 ip -br addr show eth1
@@ -47,8 +47,8 @@ Namen mit `vlan20`, `vlan30`, `vlan40` oder `vlan50` beschreiben vorgesehene Rol
 
 | Stabiler Knotenname | Datenadresse / Rolle |
 | --- | --- |
-| `wago-plc2a-vlan10` | `10.10.0.11/8`, WAGO-A-PLC |
-| `wago-plc2b-vlan10` | `10.10.0.12/8`, WAGO-B-PLC |
+| `wago-plc2a-vlan10` | `10.10.0.11/8`, PLC2A |
+| `wago-plc2b-vlan10` | `10.10.0.12/8`, PLC2B |
 | `ctrlx-plc3-vlan20` | `10.20.0.11/8`, Prozess-PLC |
 | `schneider-plc4-vlan30` | `10.30.0.11/8`, Entsorgungs-PLC |
 | `abb-800xa-vlan40` | `10.40.0.11/8`, Leitstand-Anwendung |
@@ -77,7 +77,7 @@ Beobachte die Bedienelemente, ohne sie während der Netzwerkaufgaben zu betätig
 | Toolbox | Zonen und gerichtete Policies entwerfen; Speichern konfiguriert keine Geräte |
 | Assistent | Hilfe mit aktiver Übung, Befehlsausgabe und Paketbelegen |
 
-Toolbox wird im Produktmenü geöffnet. Der gespeicherte Netzwerk-Workspace enthält deinen Entwurf; Speichern setzt keine Regeln durch. [Übung 7](exercises/ex7-segmentation-firewall.md) baut VLAN 70 über Geräteterminals in deinem eigenen Lab auf. Die [praktische Vorbereitung](lab-practical.md) richtet einen Checkpoint für die Wiederherstellung ein. Übungen 1–6 nutzen den flachen Ausgangszustand. Übung 7 verschiebt vorübergehend nur Hirschmann und stellt ihn vor Abschluss wieder her.
+Toolbox wird im Produktmenü geöffnet. Der gespeicherte Netzwerk-Workspace enthält deinen Entwurf; Speichern setzt keine Regeln durch. [Übung 7](exercises/ex7-segmentation-firewall.md) baut VLAN 70 über Geräteterminals in deinem eigenen Lab auf. Die [praktische Vorbereitung](lab-practical.md) richtet einen Checkpoint für die Wiederherstellung ein. Übungen 1–6 nutzen den flachen Ausgangszustand. Übung 7 verschiebt vorübergehend nur `hirschmann-edge1-vlan50` und stellt ihn vor Abschluss wieder her.
 
 ## Wenn ein Kontrollpunkt fehlschlägt
 

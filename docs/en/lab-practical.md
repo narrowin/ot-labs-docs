@@ -5,8 +5,8 @@ Exercise 7 changes one endpoint, two switches and the gateway in each student's 
 ## Before students begin
 
 1. Use the student's existing `ot-sec-flat` installation and its assigned access URL. Keep its credentials and private checkpoint with that appliance.
-2. Open the lab's Exercises reader and select its live network. Verify independent terminals to `hirschmann-edge1-vlan50`, `wago-plc2a-vlan10`, `sw-acc1`, `sw-dist` and `gw-firewall`. Hirschmann must have management on `eth0` and `10.50.0.12/8` on `eth1`.
-3. Verify the starting addresses, VLAN membership and rule anchors in Exercise 7 Task 1. VLAN 70 and `172.30.70.0/24` must be unused. From Hirschmann, WAGO A TCP 22 and 8080 must be open and `/webvisu.htm` must return HTTP 200. From WAGO A, Hirschmann TCP 22 must be open. Resolve a failed baseline check before proceeding.
+2. Open the lab's Exercises reader and select its live network. Verify independent terminals to `hirschmann-edge1-vlan50`, `wago-plc2a-vlan10`, `sw-acc1`, `sw-dist` and `gw-firewall`. `hirschmann-edge1-vlan50` must have management on `eth0` and `10.50.0.12/8` on `eth1`.
+3. Verify the starting addresses, VLAN membership and rule anchors in Exercise 7 Task 1. VLAN 70 and `172.30.70.0/24` must be unused. From `hirschmann-edge1-vlan50`, `wago-plc2a-vlan10` TCP 22 and 8080 must be open and `/webvisu.htm` must return HTTP 200. From `wago-plc2a-vlan10`, `hirschmann-edge1-vlan50` TCP 22 must be open. Resolve a failed baseline check before proceeding.
 4. Close captures and terminal tabs. On the **student lab's appliance console**, create a private checkpoint with the installed lifecycle command:
 
     ```bash
@@ -29,7 +29,7 @@ sudo nwos-ot-student restore ex7-flat
 sudo nwos-ot-student status
 ```
 
-Restore stops and replaces the owned installation state and starts the lab. Wait for healthy services, reopen the reader and repeat Task 1. Confirm Hirschmann is back at `10.50.0.12/8`, VLAN 70 and `ex7-` rules are absent, HTTP returns 200 and both baseline SSH probes are open. RAM logs are not rolled back; match test evidence by time rather than assuming old log entries disappear.
+Restore stops and replaces the owned installation state and starts the lab. Wait for healthy services, reopen the reader and repeat Task 1. Confirm `hirschmann-edge1-vlan50` is back at `10.50.0.12/8`, VLAN 70 and `ex7-` rules are absent, HTTP returns 200 and both baseline SSH probes are open. RAM logs are not rolled back; match test evidence by time rather than assuming old log entries disappear.
 
 Keep checkpoints root-owned, mode `0600`, outside Git and distribution artifacts: they include private installation data. The lifecycle command needs the matching installed release and its locked images. A failed restore needs instructor console diagnostics before more student changes.
 

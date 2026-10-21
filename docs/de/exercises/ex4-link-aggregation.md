@@ -16,7 +16,7 @@ Ein **Bond** verbindet physische Links zu einer logischen Verbindung. **LACP** (
 
 ## Vorbereitung
 
-Schliesse [Übung 3](ex3-spanning-tree.md) ab. Öffne die Terminals von [sw-dist](/network/terminal?node=sw-dist) und [sw-acc1](/network/terminal?node=sw-acc1). Erzeuge Verkehr auf [WAGO A](/network/terminal?node=wago-plc2a-vlan10) und [CtrlX](/network/terminal?node=ctrlx-plc3-vlan20). Beide hängen an sw-acc1. WAGO B hängt an sw-acc2 und eignet sich deshalb nicht als zweite Quelle für diesen Bond-Test.
+Schliesse [Übung 3](ex3-spanning-tree.md) ab. Öffne die Terminals von [sw-dist](/network/terminal?node=sw-dist) und [sw-acc1](/network/terminal?node=sw-acc1). Erzeuge Verkehr auf [`wago-plc2a-vlan10`](/network/terminal?node=wago-plc2a-vlan10) und [`ctrlx-plc3-vlan20`](/network/terminal?node=ctrlx-plc3-vlan20). Beide hängen an sw-acc1. `wago-plc2b-vlan10` hängt an sw-acc2 und eignet sich deshalb nicht als zweite Quelle für diesen Bond-Test.
 
 | Ende | Logischer Bond | Physische Mitglieder |
 | --- | --- | --- |
@@ -61,13 +61,13 @@ Klappe **Link Aggregation Control Protocol** auf. Vergleiche die **Actor**- und 
 
 ## Aufgabe 3: Zwei kleine Datenströme zuordnen
 
-Lass den ersten Mitschnitt laufen. Auf **WAGO A**:
+Lass den ersten Mitschnitt laufen. Auf **`wago-plc2a-vlan10`**:
 
 ```bash
 ping -c 4 10.10.0.1
 ```
 
-Auf **CtrlX**:
+Auf **`ctrlx-plc3-vlan20`**:
 
 ```bash
 ping -c 4 10.10.0.1
@@ -106,14 +106,14 @@ Notiere beide aktiven Mitglieder und wo die Anfragen jeder Testquelle erschienen
 ??? success "Vergleiche deine Belege"
     Der Bond ist an beiden Enden aktiv; die gegenseitigen System-IDs stimmen überein. LACP prüft, welche Mitglieder im Bond zusammenarbeiten können. Das Hash-Verfahren bestimmt, über welches Mitglied ein Datenstrom gesendet wird. Die aktuelle Einstellung verwendet MAC- und IP-Informationen. Bei unverändertem Bond bleiben Anfragen desselben Endpunktpaars auf einem Mitglied. Eine zusätzliche Quelle kann anders zugeordnet werden, garantiert aber keine gleichmässige Verteilung.
 
-    Beim Durchgang liefen CtrlX-Anfragen über sw-dist ether9 und WAGO-A-Anfragen über ether10. Notiere dein Ergebnis; diese Zuordnung ist nicht dauerhaft garantiert. RSTP betrachtet den logischen Bond, LACP dessen physische Mitglieder.
+    Beim Durchgang liefen `ctrlx-plc3-vlan20`-Anfragen über sw-dist ether9 und `wago-plc2a-vlan10`-Anfragen über ether10. Notiere dein Ergebnis; diese Zuordnung ist nicht dauerhaft garantiert. RSTP betrachtet den logischen Bond, LACP dessen physische Mitglieder.
 
 ## Extra 1: Den blinden Fleck im Mitschnitt finden
 
 **Optional, 10 Minuten.** Ein Analyst zeichnet nur sw-dist ether9 auf und folgert, dass ein dort fehlender SPS-Datenfluss gestoppt sei.
 
 1. Nutze die Anzahl der aufgezeichneten Anfragen aus Aufgabe 3. Hat ether9 allein die Anfragen jeder Quelle gesehen? Das Hash-Verfahren kann die Datenströme beider Testquellen demselben Mitglied zuordnen; das beweist keine vollständige Abdeckung.
-2. [Zeichne den Gateway-Uplink auf](/network/capture?node=sw-dist&interface=ether12). Starte den Mitschnitt und wiederhole die vier Gateway-Pings von WAGO A und CtrlX. Verwende den Anfragefilter aus Aufgabe 3.
+2. [Zeichne den Gateway-Uplink auf](/network/capture?node=sw-dist&interface=ether12). Starte den Mitschnitt und wiederhole die vier Gateway-Pings von `wago-plc2a-vlan10` und `ctrlx-plc3-vlan20`. Verwende den Anfragefilter aus Aufgabe 3.
 3. Vergleiche die sichtbaren Quellen mit dem Mitschnitt eines einzelnen Bond-Mitglieds. Markiere den Beobachtungspunkt in deinen Pfadnotizen.
 
 **Kontrollpunkt:** Auf ether12 sind die Gateway-Anfragen beider Testquellen sichtbar. Dieser Mitschnittpunkt eignet sich für diese Datenflüsse, erfasst aber nicht jede direkte SPS-zu-SPS-Kommunikation im selben VLAN. Welche Pakete du erfassen kannst, hängt vom Verkehrspfad ab. Für die Überwachung eines realen Bonds musst du alle relevanten Mitglieder und Richtungen erfassen oder einen geeigneten gemeinsamen Mitschnittpunkt verwenden. Einen physischen Netzwerk-TAP oder eine Port-Spiegelung richtest du in diesem Lab nicht ein.

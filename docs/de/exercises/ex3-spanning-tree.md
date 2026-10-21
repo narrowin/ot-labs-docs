@@ -16,7 +16,7 @@ Ein Techniker meldet: «Das redundante Kabel steckt, aber ein Port leitet nicht 
 
 ## Vorbereitung
 
-Beende die ARP-Wiederherstellung aus [Übung 2](ex2-arp-spoofing.md). Öffne [Netmap mit hervorgehobenen Switches](/network/?search=sw-) und bei Bedarf die konfigurierten Terminals für [sw-dist](/network/terminal?node=sw-dist), [sw-acc1](/network/terminal?node=sw-acc1), [sw-acc2](/network/terminal?node=sw-acc2) und [gw](/network/terminal?node=gw-firewall). Dort läuft RouterOS, nicht Linux.
+Beende die ARP-Wiederherstellung aus [Übung 2](ex2-arp-spoofing.md). Öffne [Netmap mit hervorgehobenen Switches](/network/?search=sw-) und bei Bedarf die konfigurierten Terminals für [sw-dist](/network/terminal?node=sw-dist), [sw-acc1](/network/terminal?node=sw-acc1), [sw-acc2](/network/terminal?node=sw-acc2) und [`gw-firewall`](/network/terminal?node=gw-firewall). Dort läuft RouterOS, nicht Linux.
 
 [Spanning-Tree-Instanz 0 öffnen](/network/?viewMode=spanning-tree&stpInstanceId=0&dataType=All). Vergleiche angezeigte Root und Portrollen mit den Betriebsbefehlen unten.
 
@@ -35,11 +35,11 @@ Auf **sw-dist**:
 
 Notiere `protocol-mode`, `vlan-filtering`, Bridge-Namen und Bridge-Ports. Ordne die Kabel in Netmap den logischen Ports zu.
 
-**Kontrollpunkt:** Die Bridge heisst `bridge`; RSTP und VLAN-Filtering sind aktiv. `bond-sw-acc1` ist ein Bridge-Port. Dessen physische Mitglieder `ether9` und `ether10` bilden eine logische Verbindung, keine zwei unabhängigen Bridge-Ports. `ether12` führt zu gw, `ether8` zu sw-acc2.
+**Kontrollpunkt:** Die Bridge heisst `bridge`; RSTP und VLAN-Filtering sind aktiv. `bond-sw-acc1` ist ein Bridge-Port. Dessen physische Mitglieder `ether9` und `ether10` bilden eine logische Verbindung, keine zwei unabhängigen Bridge-Ports. `ether12` führt zu `gw-firewall`, `ether8` zu sw-acc2.
 
 ## Aufgabe 2: Die gewählte Root Bridge bestimmen
 
-Auf **jedem Switch** und anschliessend auf **gw**:
+Auf **jedem Switch** und anschliessend auf **`gw-firewall`**:
 
 ```routeros
 /interface bridge monitor bridge once
@@ -47,7 +47,7 @@ Auf **jedem Switch** und anschliessend auf **gw**:
 
 Notiere für alle vier Geräte `bridge-id`, `root-bridge`, `root-bridge-id`, `root-port` und `root-path-cost`.
 
-**Kontrollpunkt:** Alle Geräte melden dieselbe Root-ID. Die Root selbst meldet `root-bridge: yes`, Kosten 0 und keinen Root-Port. Im unveränderten Lab ist **gw** die Root, nicht sw-dist. Prüfe deine Ausgabe und entscheide nicht nach der Position im Diagramm.
+**Kontrollpunkt:** Alle Geräte melden dieselbe Root-ID. Die Root selbst meldet `root-bridge: yes`, Kosten 0 und keinen Root-Port. Im unveränderten Lab ist **`gw-firewall`** die Root, nicht sw-dist. Prüfe deine Ausgabe und entscheide nicht nach der Position im Diagramm.
 
 ??? info "Hinweis: Gleiche Prioritäten"
     Die Bridge-ID besteht aus Priorität und MAC. Die niedrigere Priorität gewinnt; bei Gleichstand die niedrigere MAC. `print detail` zeigt die Konfiguration, `monitor` das Ergebnis der Wahl.
@@ -91,9 +91,9 @@ Entscheide für sw-acc2 ether11 zwischen «wie vorgesehen belassen» und «unter
 ## Lösung
 
 ??? success "Vergleiche deine Belege"
-    gw meldet die Bridge-ID, mit der es die Root-Wahl gewinnt. Bei der gemeinsamen Priorität `0x8000` gewinnt seine administrative MAC mit Endung `09:11` gegen sw-dist `09:12`, sw-acc1 `09:13` und sw-acc2 `09:14`. Der Live-Monitor muss dies bestätigen; Änderungen können eine andere Root ergeben.
+    `gw-firewall` meldet die Bridge-ID, mit der es die Root-Wahl gewinnt. Bei der gemeinsamen Priorität `0x8000` gewinnt seine administrative MAC mit Endung `09:11` gegen sw-dist `09:12`, sw-acc1 `09:13` und sw-acc2 `09:14`. Der Live-Monitor muss dies bestätigen; Änderungen können eine andere Root ergeben.
 
-    sw-dist erreicht gw über `ether12`. Die Access-Switches erreichen sw-dist über ihre jeweiligen Root-Ports. Der zusätzliche Link sw-acc1–sw-acc2 würde eine Schleife schliessen. Deshalb leitet der Alternate-Port von sw-acc2 keine normalen Anwendungsdaten weiter. RSTP behandelt den LACP-Bond als einen logischen Port. Eine redundante Verbindung kann physisch intakt sein, während RSTP die Datenweiterleitung an einem Ende verhindert.
+    sw-dist erreicht `gw-firewall` über `ether12`. Die Access-Switches erreichen sw-dist über ihre jeweiligen Root-Ports. Der zusätzliche Link sw-acc1–sw-acc2 würde eine Schleife schliessen. Deshalb leitet der Alternate-Port von sw-acc2 keine normalen Anwendungsdaten weiter. RSTP behandelt den LACP-Bond als einen logischen Port. Eine redundante Verbindung kann physisch intakt sein, während RSTP die Datenweiterleitung an einem Ende verhindert.
 
 ## Extra 1: Einen Switch-Tausch vor dem Ausfall prüfen
 
@@ -108,9 +108,9 @@ Entscheide für sw-acc2 ether11 zwischen «wie vorgesehen belassen» und «unter
 
 ## Extra 2: Wiederherstellung nach einem Uplink-Ausfall prüfen
 
-**Optional, 15–20 Minuten.** Prüfe, ob WAGO B Gateway und PLC2A weiterhin erreicht, wenn sw-acc2 seinen direkten Uplink verliert. Verwende nur dein eigenes Lab. Lies zuerst alle vier Schritte und halte beide Terminals bereit. Öffne das [Management-Terminal von sw-acc2](/network/terminal?node=sw-acc2) und lasse es für die Wiederherstellung geöffnet.
+**Optional, 15–20 Minuten.** Prüfe, ob `wago-plc2b-vlan10` `gw-firewall` und `wago-plc2a-vlan10` weiterhin erreicht, wenn sw-acc2 seinen direkten Uplink verliert. Verwende nur dein eigenes Lab. Lies zuerst alle vier Schritte und halte beide Terminals bereit. Öffne das [Management-Terminal von sw-acc2](/network/terminal?node=sw-acc2) und lasse es für die Wiederherstellung geöffnet.
 
-1. Bestätige auf **sw-acc2** die Ausgangsrollen aus Aufgabe 4: ether12 ist Root/Forwarding, ether11 Alternate/Non-Forwarding. Starte auf [WAGO B](/network/terminal?node=wago-plc2b-vlan10):
+1. Bestätige auf **sw-acc2** die Ausgangsrollen aus Aufgabe 4: ether12 ist Root/Forwarding, ether11 Alternate/Non-Forwarding. Starte auf [`wago-plc2b-vlan10`](/network/terminal?node=wago-plc2b-vlan10):
 
     ```bash
     ping -D -i 0.5 -c 120 10.10.0.1
@@ -125,9 +125,9 @@ Entscheide für sw-acc2 ether11 zwischen «wie vorgesehen belassen» und «unter
     /interface bridge port monitor [find interface=ether11] once
     ```
 
-    Wiederhole den Monitor-Befehl nach einigen Sekunden. Ether11 soll Root/Forwarding werden. Der Ersatzpfad führt über sw-acc2 → sw-acc1 → sw-dist → gw.
+    Wiederhole den Monitor-Befehl nach einigen Sekunden. Ether11 soll Root/Forwarding werden. Der Ersatzpfad führt über sw-acc2 → sw-acc1 → sw-dist → `gw-firewall`.
 
-3. Warte bei weiterhin deaktiviertem ether12 auf das Ende des begrenzten Pings. Notiere fehlende Sequenznummern und die Verluststatistik. Prüfe auf **WAGO B** zusätzlich die SPS-Anwendung:
+3. Warte bei weiterhin deaktiviertem ether12 auf das Ende des begrenzten Pings. Notiere fehlende Sequenznummern und die Verluststatistik. Prüfe auf **`wago-plc2b-vlan10`** zusätzlich die SPS-Anwendung:
 
     ```bash
     curl -sS --max-time 5 -o /dev/null -w 'HTTP %{http_code}\n' http://10.10.0.11:8080/webvisu.htm
@@ -142,7 +142,7 @@ Entscheide für sw-acc2 ether11 zwischen «wie vorgesehen belassen» und «unter
     /interface bridge port monitor [find interface=ether12] once
     ```
 
-    Nach der Umschaltung muss ether12 wieder Running/Root/Forwarding und ether11 Alternate/Non-Forwarding sein. Wiederhole auf **WAGO B** `ping -c 4 10.10.0.1` und die HTTP-Anfrage; beides muss funktionieren. Kehren Rollen oder Kommunikation nicht zurück, lasse das Terminal offen und hole die Kursleitung für die Wiederherstellung dazu.
+    Nach der Umschaltung muss ether12 wieder Running/Root/Forwarding und ether11 Alternate/Non-Forwarding sein. Wiederhole auf **`wago-plc2b-vlan10`** `ping -c 4 10.10.0.1` und die HTTP-Anfrage; beides muss funktionieren. Kehren Rollen oder Kommunikation nicht zurück, lasse das Terminal offen und hole die Kursleitung für die Wiederherstellung dazu.
 
 **Kontrollpunkt:** Während des Uplink-Ausfalls wurde der Reservepfad aktiv und die HTTP-Anfrage lieferte 200. Notiere die beobachteten Ping-Verluste. Null beobachtete Verluste bedeuten nur, dass diese Testpakete beantwortet wurden; sie belegen keine unterbrechungsfreie Funktion jeder Anwendung. Nach der Wiederherstellung kehren ursprüngliche Portrollen und Kommunikation zurück. Schliesse die Terminals. Weiter mit [Übung 4](ex4-link-aggregation.md).
 

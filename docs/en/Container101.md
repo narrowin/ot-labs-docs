@@ -16,7 +16,7 @@ The instructor has already deployed the appliance and its lab network. Your lapt
 | Object | Meaning | Lab example |
 | --- | --- | --- |
 | Image | Packaged application files and defaults used to create a container | Software for a PLC simulator |
-| Container | A running instance with its own processes, filesystem view and network interfaces | The WAGO A lab node |
+| Container | A running instance with its own processes, filesystem view and network interfaces | The `wago-plc2a-vlan10` lab node |
 | Persistent data | Files kept in a volume or mounted host directory, outside the container's writable layer | Saved device or application state |
 
 An image is a starting point. A running container also has current processes, connections and configuration. Restarting it does not automatically restore the exercise's starting state. Persistent data can survive even when a container is recreated. [Docker explains volume persistence](https://docs.docker.com/engine/storage/volumes/).
@@ -43,7 +43,7 @@ Use the [Lab Guide's network table](lab.md#understand-the-two-network-planes) to
 
 | Terminal | Where commands run |
 | --- | --- |
-| A node's **Open terminal** action | Inside that named device: Linux on a WAGO endpoint, RouterOS on a switch or gateway |
+| A node's **Open terminal** action | Inside that named device: Linux on `wago-plc2a-vlan10`, RouterOS on a switch or gateway |
 | Instructor's appliance console | On the host that runs Docker, the lab nodes and platform services |
 
 The exercise commands name their target above each block. Keep that node name visible while working. If a terminal disconnects, record the node and error before restarting anything: a restart can erase diagnostic evidence and temporary configuration in your lab.
@@ -58,13 +58,13 @@ List running lab containers:
 docker ps --filter label=containerlab=ot-sec-flat --format 'table {{.Names}}\t{{.Status}}'
 ```
 
-Find `clab-ot-sec-flat-wago-plc2a-vlan10` and match it to WAGO A on Netmap. Then inspect only its name and image:
+Find `clab-ot-sec-flat-wago-plc2a-vlan10` and match it to `wago-plc2a-vlan10` on Netmap. Then inspect only its name and image:
 
 ```bash
 docker inspect --format '{{.Name}} {{.Config.Image}}' clab-ot-sec-flat-wago-plc2a-vlan10
 ```
 
-**Checkpoint:** You can distinguish the container's running status, its packaged image and the application's behavior. A successful WAGO ping or WebVisu response provides different evidence from Docker's `Up` status.
+**Checkpoint:** You can distinguish the container's running status, its packaged image and the application's behavior. A successful ping from `wago-plc2a-vlan10` or WebVisu response provides different evidence from Docker's `Up` status.
 
 ## What happens to state?
 

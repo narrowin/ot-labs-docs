@@ -6,11 +6,11 @@ Use your assigned, already-running student LNE. Select the live network. Tool li
 
 | Action | Destination |
 | --- | --- |
-| [WAGO A terminal](/network/terminal?node=wago-plc2a-vlan10) | Main observation source, `10.10.0.11/8` |
-| [WAGO B terminal](/network/terminal?node=wago-plc2b-vlan10) | Second source, `10.10.0.12/8` |
-| [DMZ jumphost terminal](/network/terminal?node=proxmox-jumphost) | Routed source, `2.2.2.2/24` |
+| [terminal on `wago-plc2a-vlan10`](/network/terminal?node=wago-plc2a-vlan10) | Main observation source, `10.10.0.11/8` |
+| [terminal on `wago-plc2b-vlan10`](/network/terminal?node=wago-plc2b-vlan10) | Second source, `10.10.0.12/8` |
+| [`proxmox-jumphost` terminal](/network/terminal?node=proxmox-jumphost) | Routed source, `2.2.2.2/24` |
 | [Gateway-uplink capture](/network/capture?node=sw-dist&interface=ether12) | Tagged VLAN 10 traffic |
-| [WAGO access capture](/network/capture?node=sw-acc1&interface=ether2) | Untagged endpoint traffic |
+| [access-port capture for `wago-plc2a-vlan10`](/network/capture?node=sw-acc1&interface=ether2) | Untagged endpoint traffic |
 | [VLAN view](/network/?viewMode=vlan&vlanIds=10) | VLAN 10 in the selected network/snapshot |
 | [Spanning-tree view](/network/?viewMode=spanning-tree&stpInstanceId=0&dataType=All) | Instance 0, all data |
 
@@ -20,11 +20,11 @@ Wait for **Connected** in the terminal. Start a capture before generating traffi
 
 | Runtime | Reader link |
 | --- | --- |
-| WAGO A | [WebVisu](/network/webvisu?node=wago-plc2a-vlan10) |
-| WAGO B | Not currently offered by the lab's approved browser actions; use WAGO A for the visualization task |
-| CtrlX | [WebVisu](/network/webvisu?node=ctrlx-plc3-vlan20) |
-| Schneider | [WebVisu](/network/webvisu?node=schneider-plc4-vlan30) |
-| ABB | [WebVisu](/network/webvisu?node=abb-800xa-vlan40) |
+| `wago-plc2a-vlan10` | [WebVisu](/network/webvisu?node=wago-plc2a-vlan10) |
+| `wago-plc2b-vlan10` | Not currently offered by the lab's approved browser actions; use `wago-plc2a-vlan10` for the visualization task |
+| `ctrlx-plc3-vlan20` | [WebVisu](/network/webvisu?node=ctrlx-plc3-vlan20) |
+| `schneider-plc4-vlan30` | [WebVisu](/network/webvisu?node=schneider-plc4-vlan30) |
+| `abb-800xa-vlan40` | [WebVisu](/network/webvisu?node=abb-800xa-vlan40) |
 
 Only approved, responding runtimes in the live network are offered. In standalone documentation open the PLC's WebVisu action in LNE. Direct `http://<data-IP>:8080/webvisu.htm` is an inside-lab address; it is not a laptop port-forwarding instruction.
 
@@ -39,7 +39,7 @@ ip neigh show dev eth1
 ping -c 4 10.10.0.1
 ```
 
-From the **DMZ jumphost**, the scoped service check is:
+From the **`proxmox-jumphost`**, the scoped service check is:
 
 ```bash
 nmap -n -sT -Pn -p22,502,4840,8080 --max-retries 1 --host-timeout 20s --scan-delay 100ms 10.10.0.11
