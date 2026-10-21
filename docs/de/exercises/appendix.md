@@ -31,8 +31,7 @@ Füge jeweils einen Ausdruck in die **Anzeigefilter**-Leiste ein und drücke Ent
 | Symptom | Nächste sinnvolle Prüfung |
 | --- | --- |
 | Werkzeug-Link nicht verfügbar | Zugewiesenes **Live**-Netzwerk wählen; Kursleitung soll die Zuordnung zum Lab-Gerät und die Berechtigungen prüfen. |
-| SSH verbindet nicht | Konfigurierte **Open terminal**-Aktion verwenden; keine alten Standardpasswörter probieren oder SSH-Server ändern. |
-| Terminal zeigt root; ein älteres Bild zeigt admin | Verwaltete Linux-Knoten verwenden root; RouterOS verwendet das konfigurierte Admin-Konto. Der aktuellen Anleitung folgen. |
+| SSH verbindet nicht | Konfigurierte **Open terminal**-Aktion verwenden; bei einem Fehler Knoten und Meldung für die Kursleitung notieren. |
 | Kein Ping im Mitschnitt | Zuerst Capture starten, begrenzten Ping wiederholen, Knoten und Port-Nachbar prüfen, Filter leeren und einige Sekunden warten. |
 | Viewer zeigt ERF/LEGACY und unsinnige Zeiten statt Ethernet | Auf der Seite **Restart Capture** wählen, gültige Ethernet/IP-Dekodierung abwarten und Proben wiederholen. Bleibt der Fehler, Knoten/Interface und Screenshot an die Kursleitung melden. |
 | Datenstrom nur auf einem LACP-Mitglied | Bei unverändertem Bond ist dies zu erwarten. Denselben begrenzten Testverkehr erneut erzeugen und dabei am anderen Mitglied aufzeichnen; Anfragen und Antworten getrennt betrachten. |

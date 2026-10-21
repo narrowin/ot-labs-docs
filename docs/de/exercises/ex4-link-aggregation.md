@@ -83,20 +83,17 @@ Notiere die Zahl der Anfragen pro Quelle und das aufgezeichnete Mitglied. Schlie
 
 **Kontrollpunkt:** Bei stabilem Bond bleiben die Anfragen einer Quelle normalerweise auf einem Mitglied. Die Datenströme der beiden Quellen können über unterschiedliche Mitglieder oder über dasselbe Mitglied laufen. Erwarte keine gleiche Verteilung und keinen Wechsel nach jedem Paket. Trenne Anfragen und Antworten: Jeder sendende Switch trifft seine eigene Auswahl.
 
-## Aufgabe 4: Raten richtig einordnen
+## Aufgabe 4: Den Bond im Spanning Tree finden
 
 Auf **sw-dist**:
 
 ```routeros
-/interface monitor-traffic ether9,ether10 once
 /interface bridge port monitor [find interface=bond-sw-acc1] once
 ```
 
-Vergleiche die momentanen Übertragungsraten mit deinem gefilterten Testverkehr. Warum kann auf beiden Mitgliedern Datenverkehr angezeigt werden, obwohl dein Datenstrom nur eines nutzt?
+Vergleiche diesen logischen Port mit den beiden aktiven Mitgliedern aus Aufgabe 1. Sieht RSTP eine Bridge-Verbindung oder zwei unabhängige Verbindungen?
 
-**Kontrollpunkt:** Der Bond leitet als ein Bridge-Port weiter. Mehrere Datenströme können die Gesamtkapazität nutzen; diese Pings messen aber keinen Durchsatz. Ein einzelner Datenstrom erhält nicht garantiert die doppelte Link-Bandbreite. Zwei aktive Mitglieder sagen auch nichts über die Umschaltzeit aus. Ob die Umschaltung ohne Unterbrechung oder in weniger als einer Sekunde erfolgt, wird in dieser Übung nicht gemessen.
-
-Lies `link-monitoring`, `mii-interval` und `lacp-rate` in der Bond-Konfiguration. Erkläre den erwarteten Unterschied beim Verlust eines Mitglieds beziehungsweise beider. Bleibt ein Mitglied aktiv, kann der Bond Daten weiterleiten, ohne dass sich die RSTP-Topologie ändert. Der Verlust des ganzen Bonds kann einen alternativen RSTP-Weg erfordern. Für einen Umschalttest in deinem Lab müsstest du begrenzten Testverkehr erzeugen, die aktiven Mitglieder vor, während und nach dem Ausfall erfassen, Paketverluste messen und anschliessend beide Mitglieder wiederherstellen. Die Mitschnitte oben zeigen die Verteilung bei stabilem Bond; sie messen keine Umschaltzeit.
+**Kontrollpunkt:** Der logische Bond ist ein weiterleitender Bridge-Port. Seine zwei aktiven physischen Mitglieder transportieren die beobachteten Datenströme, während RSTP den Bond als eine Verbindung behandelt. Ein gleichbleibender Datenstrom nutzt normalerweise ein Mitglied; mehrere Datenströme können beide Mitglieder nutzen. Die wenigen Ping-Pakete zeigen die Zuordnung, nicht den verfügbaren Durchsatz.
 
 Schliesse den Mitschnitt und die Terminals, sofern du kein Extra bearbeitest.
 
@@ -125,7 +122,7 @@ Schliesse den Mitschnitt vor der nächsten Aufgabe.
 
 ## Extra 2: Entscheiden, welchen Ausfall die Redundanz abdeckt
 
-**Optional, 10 Minuten.** Ein Arbeitsauftrag schlägt vor, sw-dist abzuschalten, denn «es gibt zwei Uplink-Kabel». Prüfe diese Annahme mit Netmap und den Bond-/Root-Port-Ausgaben.
+**Optional, 10 Minuten.** Bei einer Wartung soll zuerst ein Uplink-Kabel ersetzt und danach sw-dist gewartet werden. Bestimme mit Netmap und den Bond-/Root-Port-Ausgaben, welche Kommunikation während jedes Schritts weiterlaufen kann.
 
 Ergänze diese Tabelle als **Vorhersage** anhand von Netmap und deinem beobachteten Bond-Zustand:
 

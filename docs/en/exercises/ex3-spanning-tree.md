@@ -2,7 +2,7 @@
 
 **Time:** 30–40 minutes. **Lab:** current student `ot-sec-flat`. **Difficulty:** Guided practice.
 
-Find the elected root from operational evidence, then explain how RSTP prevents a loop in the triangle of switches. This is an observation exercise: leave priorities, ports and cables unchanged.
+Find the elected root from operational evidence, then explain how RSTP prevents a loop in the triangle of switches. The main tasks observe the running network. Optional Extra 2 temporarily disables one uplink in your own lab and restores it.
 
 **Learning objectives:** Identify bridge membership, elected root and port roles; interpret BPDUs; explain how RSTP and LACP provide complementary redundancy.
 
@@ -75,13 +75,14 @@ On **sw-acc1**:
 On **sw-acc2**:
 
 ```routeros
+/interface ethernet monitor ether11 once
 /interface bridge port monitor [find interface=ether11] once
 /interface bridge port monitor [find interface=ether12] once
 ```
 
 **Checkpoint:** In the baseline, sw-acc1's bond is its root port; sw-acc2 `ether12` is its root port. sw-acc2 `ether11`, facing sw-acc1, is an **alternate port** with `forwarding: no`. The other end of that cable can be designated and forwarding. Record both ends instead of saying the cable is down.
 
-Explain why the LACP bond and RSTP solve different problems. Close terminals when finished.
+Wait ten seconds and repeat the ether11 bridge-port command. Its physical link stays up and its `tx-rx-bpdu` counters increase, while its RSTP role remains alternate/non-forwarding. Control messages still pass on this standby link. Explain why LACP and RSTP solve different problems. Close terminals when finished.
 
 ## Your maintenance handover
 
@@ -105,20 +106,45 @@ Write “leave as designed” or “investigate” for sw-acc2 ether11. Support 
 
 **Checkpoint:** Equal priorities leave the choice to MAC addresses; replacement hardware can change that choice. Agree the intended root/backup with the network owner and manage priorities deliberately before a real change. Choosing a root requires topology and availability requirements, not simply picking the middle of the drawing. This lab's fixed MACs make the current result reproducible; real replacements need their own check.
 
-## Extra 2: Diagnose a healthy link that does not forward
+## Extra 2: Test recovery after one uplink fails
 
-**Optional, 10 minutes.** On **sw-acc2**:
+**Optional, 15–20 minutes.** Verify that WAGO B can still reach the gateway and PLC2A when sw-acc2 loses its direct uplink. Use only your own lab. Read all four steps first and keep both terminals ready. Open the [sw-acc2 management terminal](/network/terminal?node=sw-acc2) and keep it open for restoration.
 
-```routeros
-/interface ethernet monitor ether11 once
-/interface bridge port monitor [find interface=ether11] once
-```
+1. Confirm Task 4's starting roles on **sw-acc2**: ether12 is root/forwarding; ether11 is alternate/non-forwarding. On [WAGO B](/network/terminal?node=wago-plc2b-vlan10), start:
 
-Wait ten seconds and repeat the bridge-port command. Compare `role`, `forwarding` and `tx-rx-bpdu`.
+    ```bash
+    ping -D -i 0.5 -c 120 10.10.0.1
+    ```
 
-**Checkpoint:** The Ethernet link is running while RSTP reports alternate/non-forwarding, and BPDU counters increase. Control traffic still supports loop prevention. This is different from a disconnected cable. A wire capture may even contain data arriving at a discarding port; arrival does not prove that the bridge forwarded it.
+    This sends probes for about one minute. Leave it running while using the switch terminal.
 
-Write a two-sentence diagnosis containing physical state, RSTP role and one counter observation. Close terminals. Continue with [Exercise 4](ex4-link-aggregation.md).
+2. On **sw-acc2**, disable only the uplink to sw-dist:
+
+    ```routeros
+    /interface disable ether12
+    /interface bridge port monitor [find interface=ether11] once
+    ```
+
+    Repeat the monitor command after a few seconds. Ether11 should become root/forwarding, providing the path sw-acc2 → sw-acc1 → sw-dist → gw.
+
+3. While ether12 remains disabled, wait for the bounded ping to finish. Record any missing sequence numbers and its loss summary. On **WAGO B**, also check the PLC application:
+
+    ```bash
+    curl -sS --max-time 5 -o /dev/null -w 'HTTP %{http_code}\n' http://10.10.0.11:8080/webvisu.htm
+    ```
+
+4. **Restore ether12 before leaving this extra, even if a check failed.** On **sw-acc2**:
+
+    ```routeros
+    /interface enable ether12
+    /interface ethernet monitor ether12 once
+    /interface bridge port monitor [find interface=ether11] once
+    /interface bridge port monitor [find interface=ether12] once
+    ```
+
+    After convergence, ether12 must be running/root/forwarding again and ether11 alternate/non-forwarding. On **WAGO B**, repeat `ping -c 4 10.10.0.1` and the HTTP command; both must succeed. If the roles or communication do not recover, keep the terminal open and ask the instructor to restore the baseline.
+
+**Checkpoint:** During the uplink loss, the alternate path became active and the HTTP request returned 200. Record observed ping loss; zero observed loss means only that these probes missed no replies, not that every application experienced zero interruption. After restoration, the original roles and communication return. Close terminals. Continue with [Exercise 4](ex4-link-aggregation.md).
 
 ## Explore the topic
 

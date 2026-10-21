@@ -44,7 +44,7 @@ This exercise uses the unchanged flat lab: WAGO `10.10.0.11`, gateway `10.10.0.1
 
 Locate `wago-plc2a-vlan10`, its access switch `sw-acc1`, the distribution switch `sw-dist`, and gateway `gw`. Follow their connections.
 
-[Inspect VLAN 10 on Netmap](/network/?viewMode=vlan&vlanIds=10). Compare the discovered membership with the historical names. Return to the WAGO Netmap link above for the port checks; the packet tasks will verify tagging on the wire.
+[Inspect VLAN 10 on Netmap](/network/?viewMode=vlan&vlanIds=10). Find PLC2A (`wago-plc2a-vlan10`) and check that its connection to sw-acc1 belongs to VLAN 10. Return to the WAGO Netmap link above to identify the ports. You will check for VLAN tags in Tasks 3–4.
 
 Select `sw-acc1`, then open **Ports** in its details panel. Find the port facing WAGO by its description. Select `sw-dist` and open **Neighbors** to find the port facing `gw`.
 
@@ -53,8 +53,8 @@ Select `sw-acc1`, then open **Ports** in its details panel. Find the port facing
 ??? info "Hint: identify the ports"
     In **Ports**, look for `wago-plc2a` in the description. Scroll the table sideways if that column is out of view. In **Neighbors**, find `gw` and read the local interface.
 
-??? success "Explanation: a name is not configuration"
-    In the unchanged lab, sw-acc1 `ether2` faces WAGO and sw-dist `ether12` faces `gw`. Hostnames are labels, not proof of VLAN membership: the captures will show whether a frame carries a tag.
+??? success "Explanation: expected path"
+    In the unchanged lab, sw-acc1 `ether2` faces WAGO and sw-dist `ether12` faces `gw`. PLC2A belongs to VLAN 10. The captures will show how that VLAN is carried on its access link and the uplink.
 
 ## Task 2: Generate traffic
 
@@ -74,7 +74,7 @@ This sends four ping requests to the gateway.
     If the terminal does not connect, check the selected host and credentials. If ping gets no replies, confirm the lab is running and inspect the path in Netmap before continuing.
 
 ??? success "Explanation: what ping establishes"
-    Replies demonstrate IP reachability. They do not prove VLAN isolation or firewall enforcement. Different IP subnets or hostname suffixes do not establish different VLANs.
+    Replies demonstrate IP reachability to the gateway. Tasks 3–4 show how those packets travel through VLAN 10.
 
 ## Task 3: Inspect the tagged uplink
 
@@ -137,7 +137,7 @@ Record the PLC address, endpoint-facing port, uplink port and one frame from eac
 ??? success "Compare your evidence"
     The WAGO access port is sw-acc1 `ether2`; the gateway uplink is sw-dist `ether12`. Four successful pings produce four requests and four replies. On the gateway uplink, those packets carry VLAN ID 10. On the access link they have no 802.1Q header. A display filter hides packets without changing the recording.
 
-    Keep one frame number from each capture and record the interface, filter and VLAN ID (or absence of a tag). For the same default ping, the tagged frame is four bytes longer. Neither reachability nor a hostname proves isolation.
+    Keep one frame number from each capture and record the interface, filter and VLAN ID (or absence of a tag). For the same default ping, the tagged frame is four bytes longer. These captures establish tagging on the two selected links; testing isolation would require a separate permitted/blocked-path check.
 
 ## Extra 1: Check a replacement PLC connection
 
@@ -159,7 +159,7 @@ Record the PLC address, endpoint-facing port, uplink port and one frame from eac
 
 3. Record switch/port, **PVID** (the VLAN assigned to incoming untagged traffic), untagged VLAN membership, PLC IP/prefix and whether the PLC sends tags. Compare the configuration with Task 4's packet evidence.
 
-**Checkpoint:** In this baseline ether2 assigns untagged traffic to VLAN 10, and WAGO uses `10.10.0.11/8` on eth1. The replacement connection needs both the intended switch-port configuration and compatible endpoint addressing. A link light or the suffix in a hostname is insufficient. The `/8` means addresses beginning `10.` are on the same IP subnet here; it is deliberately broad lab addressing, not a plant design recommendation.
+**Checkpoint:** In this baseline ether2 assigns untagged traffic to VLAN 10, and WAGO uses `10.10.0.11/8` on eth1. The replacement connection needs both the intended switch-port configuration and compatible endpoint addressing. A link light alone does not establish that these settings match. The `/8` means addresses beginning `10.` are on the same IP subnet here; it is deliberately broad lab addressing, not a plant design recommendation.
 
 Close the switch terminal. Keep your record as a commissioning checklist.
 

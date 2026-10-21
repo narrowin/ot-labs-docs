@@ -4,7 +4,7 @@
 
 Identify actual protocol messages, make one bounded Modbus read, and separate observed application behavior from assumptions based on a port number. Do not change PLC values, download programs or operate process controls.
 
-**Learning objectives:** Discover Modbus, WebVisu/HTTP, CODESYS and OPC UA evidence; distinguish local Ethernet discovery from routed protocols; compare authentication/encryption claims with observed traffic and settings.
+**Learning objectives:** Identify Modbus and HTTP messages, inspect CODESYS/OPC UA listeners, distinguish local Ethernet discovery from routed protocols, and explain which security questions these checks leave open.
 
 ## Your commissioning task
 
@@ -74,45 +74,31 @@ ss -lnt
 ss -lnu
 ```
 
-Record the listening addresses and ports for the evidence comparison below.
+Record the listening addresses and ports. This baseline includes TCP 502, 4840, 8080 and 11740, plus CODESYS UDP 1740.
 
-Compare these listeners with your captured messages. If no OPC UA transaction is present, record “listener found; application/session security unverified”. That is a complete main-task result. You do not need to write Python or establish an OPC UA session.
+On **WAGO B**, check the TCP connection to port 4840:
 
-??? info "Optional: inspect OPC UA transport"
-    On **WAGO B**, use its installed `uv` and Python standard library for one bounded OPC UA transport greeting:
+```bash
+nc -vz -w 3 10.10.0.11 4840
+```
 
-    ```bash
-    uv run --offline --no-project python - <<'PY'
-    import socket, struct
-    url = b'opc.tcp://10.10.0.11:4840'
-    hello = b'HELF' + struct.pack('<7I', 32 + len(url), 0, 65536, 65536, 0, 0, len(url)) + url
-    with socket.create_connection(('10.10.0.11', 4840), timeout=3) as connection:
-        connection.sendall(hello)
-        reply = connection.recv(8, socket.MSG_WAITALL)
-        if len(reply) != 8:
-            raise SystemExit('Incomplete OPC UA transport header; record the capture and stop.')
-        print('OPC UA transport response:', reply[:4].decode('ascii', errors='replace'))
-        print('Message bytes:', struct.unpack('<I', reply[4:8])[0])
-    PY
-    ```
+Filter the capture with `ip.addr == 10.10.0.12 && tcp.port == 4840`. Find the SYN and SYN/ACK. This command opens and closes a TCP connection; it sends no OPC UA application message.
 
-    Apply `opcua && ip.addr == 10.10.0.12`. Find **Hello** and **Acknowledge** messages. The walkthrough returned `ACKF`, message size 28. This greeting negotiates transport limits and closes before an application session; it sends no PLC read/write operation. Compare the evidence levels below:
-
-| Claim | Evidence needed |
+| Check | What the result establishes |
 | --- | --- |
-| TCP 4840 is listening | Local socket or successful TCP connection |
-| OPC UA was exchanged | Decoded OPC UA messages, not just TCP 4840 |
-| An OPC UA session encrypts its data | Negotiated security mode/policy and appropriate session evidence |
-| WebVisu is functioning | Live page plus successful ongoing application exchanges |
-| Modbus read succeeded | Request and matching response, function and register data |
+| Local listener on TCP 4840 | A service is listening on that address and port |
+| B's TCP connection succeeds | That listener is reachable from B |
+| Decoded Modbus request and response | The requested Modbus read was processed |
+| HTTP request and response, plus live WebVisu | The web application responds; inspect ongoing exchanges for live updates |
+| OPC UA authentication or encryption | Not checked by this TCP connection |
 
-**Checkpoint:** This release listens on TCP 502, 4840, 8080 and 11740, with CODESYS UDP 1740 also visible locally. Do not copy the old assumption that all CODESYS traffic uses 1217/2455. If performed, the greeting establishes OPC UA transport behavior; session security remains **unverified**. OPC UA supports `None`, `Sign` and `SignAndEncrypt`; an open port or a Hello/Acknowledge exchange cannot tell you which session mode was negotiated.
+**Checkpoint:** Keep port availability separate from application behavior. Record OPC UA session security as **unverified**. Checking it would require an OPC UA client session and its negotiated security settings.
 
 Close the capture and terminals, or keep them for an extra section.
 
 ## Your commissioning record
 
-For Modbus, HTTP and OPC UA, record source → target, service, actual message/result and what remains unknown. For Modbus include the request function, address and matching response; leave units unknown without a register map. For HTTP distinguish the direct client test from the browser proxy. For OPC UA, a listener or optional transport greeting does not prove session security. This is the start of a communication matrix you can use in Exercise 7.
+For Modbus, HTTP and OPC UA, record source → target, service, actual message/result and what remains unknown. For Modbus include the request function, address and matching response; leave units unknown without a register map. For HTTP distinguish the direct client test from the browser proxy. For OPC UA, the listener and TCP connection check leave session security unverified. This is the start of a communication matrix you can use in Exercise 7.
 
 ## Solution
 
@@ -149,5 +135,4 @@ Explain why a routed VLAN boundary and an IP firewall have different effects on 
 - [Modbus specifications](https://www.modbus.org/modbus-specifications): locate function 03; distinguish classic Modbus TCP from Modbus Security over TLS.
 - [mbpoll reference](https://github.com/epsilonrt/mbpoll): compare `-0`, `-1` and the optional write values.
 - [OPC Foundation security modes](https://reference.opcfoundation.org/specs/OPC-10000-2/4.8): compare integrity with confidentiality.
-- [OPC UA Hello message](https://reference.opcfoundation.org/specs/OPC-10000-6/7.1.2.3): identify the endpoint URL and buffer limits in your greeting.
 - [CODESYS WebVisu execution](https://content.helpme-codesys.com/en/CODESYS%20Visualization/_visu_execute_webvisu.html): distinguish a web visualization from an engineering connection.

@@ -2,7 +2,7 @@
 
 Review draft, 21 October 2026. The intended students are OT professionals who understand their process but have limited network experience. This records the changes already made locally, why they were made, what was kept, and the tradeoffs to review together. These choices are proposals for the course owner, not proof that the exercises are pedagogically optimal.
 
-**Current status:** This snapshot includes revisions to all seven lessons and their fourteen optional extras in English and German, along with the overview, agenda, lab guidance and automation outlook. Publication to the deployed student reader is pending. Joint review has reached Exercise 2. The course owner confirmed that every student has their own lab and requested removal of the draft's shared-lab assumptions across the course. That correction is applied; remaining exercise choices are still open for joint review.
+**Current status:** These are the earlier review notes. The exercises were published in both languages; see the [publication record](2026-10-21-live-reader-publication.md). The subsequent wording audit and accepted corrections are recorded in [the student clarity report](2026-10-21-student-clarity-fixes.md), which supersedes the affected proposals below.
 
 ## What “read-only validation” meant
 

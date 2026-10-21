@@ -83,20 +83,17 @@ Record the request count for each source and the captured member. Close the firs
 
 **Checkpoint:** Each source's requests normally stay on one member while the bond is stable. The two sources can select different members, or collide on the same one. Do not expect equal counts or packet-by-packet alternation. Keep requests and replies separate: each sending switch selects its own transmit member.
 
-## Task 4: Interpret rates without claiming a speed test
+## Task 4: Find the bond in the spanning tree
 
 On **sw-dist**:
 
 ```routeros
-/interface monitor-traffic ether9,ether10 once
 /interface bridge port monitor [find interface=bond-sw-acc1] once
 ```
 
-Compare the instantaneous rates with your filtered test traffic. Explain why background traffic can make both counters increase even if a test flow used one member.
+Compare this logical port with the two active members from Task 1. Does RSTP see one bridge connection or two independent ones?
 
-**Checkpoint:** The bond forwards as one bridge port. Multiple flows can share aggregate capacity, but these pings do not measure throughput. One flow is not guaranteed twice one link's bandwidth. Active members alone also do not measure failover time; this lesson makes no subsecond or zero-loss claim.
-
-Read `link-monitoring`, `mii-interval` and `lacp-rate` in the bond configuration. Explain the expected response to losing one member versus both. A surviving member can keep the logical bond forwarding without an RSTP topology change. Losing the whole bond can require an alternate RSTP path. To measure failover in your lab, a trial needs bounded traffic, before/during/after active-member evidence, observed loss and restoration of both active members. The captures above establish stable flow distribution; they do not measure failover time.
+**Checkpoint:** The logical bond is a forwarding bridge port. Its two active physical members carry the flows you observed, while RSTP handles the bond as one connection. A stable flow normally stays on one member; multiple flows can use both members. The small ping samples show placement, not available throughput.
 
 Close the capture and terminals unless continuing with an extra section.
 
@@ -125,7 +122,7 @@ Close the capture before continuing.
 
 ## Extra 2: Decide what the redundancy actually covers
 
-**Optional, 10 minutes.** A work order proposes powering down sw-dist because “there are two uplink cables.” Use Netmap and the bond/root-port outputs to challenge or support that claim.
+**Optional, 10 minutes.** Maintenance will replace an uplink cable, then service sw-dist. Use Netmap and the bond/root-port outputs to identify which communication can continue during each step.
 
 Complete this table as a **prediction**, using Netmap and your observed bond state:
 

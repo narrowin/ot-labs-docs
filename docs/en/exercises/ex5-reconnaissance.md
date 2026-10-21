@@ -25,7 +25,7 @@ Open the configured [DMZ jumphost terminal](/network/terminal?node=proxmox-jumph
 | `10.10.0.12` | WAGO B |
 | `10.20.0.11` | CtrlX |
 
-These are lab addresses. Historical `vlan20` names do not establish separate VLANs in the current flat OT network.
+The listed IPs are the targets for this exercise inside your lab.
 
 ??? info "Using standalone documentation?"
     Open your assigned live lab's **Netmap**, search **proxmox-jumphost** and use **Open terminal** in its action menu. For Extra 1 select **wago-plc2b-vlan10**. For Extra 2 select **wago-plc2a-vlan10**, **Capture packets**, interface **eth1**. Reader links retain your network and snapshot and select these targets automatically.
@@ -85,25 +85,20 @@ This retrieves the page, prints headers and discards the body. Read the status a
 ??? info "Hint: connection works but the page fails"
     Retain the HTTP status. A 404 is a responding HTTP service with a missing path; a timeout is a different result. Confirm `/webvisu.htm`, the target and port. A temporarily restarting runtime may require waiting and repeating this one request.
 
-## Task 5: Write a finding someone else can reproduce
+## Task 5: Record the result and access recommendation
 
-In your own notes, complete:
+Record the time, source `2.2.2.2`, target `10.10.0.11` and commands used. Fill in one table:
 
-| Field | Your evidence |
-| --- | --- |
-| Time and source | Timestamp, hostname, selected source IP |
-| Target and scope | Exact IPs and ports checked |
-| Observation | Port states plus HTTP status and banner |
-| Impact | Which DMZ-to-OT access was demonstrated |
-| Limit | What you did not test: login, authorization, encryption or vulnerabilities |
-| Recommendation | One required business flow and one unnecessary exposure to review |
-| Retest | Exact source, target, command and intended result after a future policy change |
+| Service | Observed port state / application result | Needed for the supplier's WebVisu task? |
+| --- | --- | --- |
+| SSH TCP 22 | Your scan result | Your decision and reason |
+| Modbus TCP 502 | Your scan result | Your decision and reason |
+| OPC UA TCP 4840 | Your scan result | Your decision and reason |
+| WebVisu TCP 8080 | Your scan result and HTTP status | Your decision and reason |
 
-**Checkpoint:** Another student can reproduce the observation without guessing the source or scan range. Say “reachable from the DMZ” if that is what you measured. Do not claim default credentials were accepted: this exercise never tries them. Close the terminal when done.
+Recommend the source, target and service to allow for this task, and identify the other reachable services for restriction. Record the role responsible for temporary access and when it should expire.
 
-## Your access decision
-
-For this diagnostic request, distinguish WebVisu TCP 8080 from SSH 22, Modbus 502 and OPC UA 4840. Record which are reachable and which the task actually requires. Recommend source/target/service restrictions with an owner and expiry for temporary access. Application authorization, identity checks and remote-access MFA need separate evidence; this scan does not verify them.
+**Checkpoint:** The requested diagnostic needs WebVisu TCP 8080; it does not request SSH, Modbus or OPC UA. Your recommendation distinguishes that requirement from the broader access observed in the baseline. The scan and HTTP request do not test application permissions or remote-access MFA. Another student should be able to repeat your checks from the recorded source. Close the terminal when done.
 
 ## Solution
 

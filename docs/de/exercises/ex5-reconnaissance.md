@@ -25,7 +25,7 @@ Dieses Szenario umfasst ausschliesslich die genannten Simulatorziele. Stimme bei
 | `10.10.0.12` | WAGO B |
 | `10.20.0.11` | CtrlX |
 
-Das sind Lab-Adressen. Historische Namen wie `vlan20` beweisen keine getrennten VLANs im aktuellen flachen OT-Netz.
+Diese IPs sind die Ziele dieser Übung innerhalb deines Labs.
 
 ??? info "Du verwendest die eigenständige Dokumentation?"
     Öffne **Netmap** deines zugewiesenen Live-Labs, suche **proxmox-jumphost** und wähle im Aktionsmenü **Open terminal**. Wähle für Extra 1 **wago-plc2b-vlan10**. Wähle für Extra 2 **wago-plc2a-vlan10**, **Capture packets**, Interface **eth1**. Links in der Übungsansicht behalten Netzwerk und Snapshot bei und wählen diese Ziele automatisch.
@@ -85,25 +85,20 @@ Die Anfrage lädt die Seite, zeigt Header und verwirft den Inhalt. Lies Status u
 ??? info "Hinweis: Verbindung möglich, Seite fehlerhaft"
     Halte den HTTP-Status fest. 404 bedeutet: HTTP antwortet, aber der Pfad fehlt. Ein Timeout ist ein anderes Ergebnis. Prüfe `/webvisu.htm`, Ziel und Port. Startet die Runtime gerade neu, warte und wiederhole diese eine Anfrage.
 
-## Aufgabe 5: Einen reproduzierbaren Befund schreiben
+## Aufgabe 5: Ergebnis und Zugriffsempfehlung festhalten
 
-Ergänze in deinen eigenen Notizen:
+Notiere Zeitpunkt, Quelle `2.2.2.2`, Ziel `10.10.0.11` und verwendete Befehle. Ergänze eine Tabelle:
 
-| Feld | Dein Beleg |
-| --- | --- |
-| Zeit und Quelle | Zeitstempel, Hostname, gewählte Quell-IP |
-| Ziel und Umfang | Genau geprüfte IPs und Ports |
-| Beobachtung | Portzustände, HTTP-Status und Banner |
-| Auswirkung | Welcher DMZ-zu-OT-Zugriff wurde nachgewiesen? |
-| Grenze | Nicht geprüft: Login, Berechtigungen, Verschlüsselung, Schwachstellen |
-| Empfehlung | Eine für den Diagnoseauftrag benötigte Verbindung und eine unnötige Freigabe, die geprüft werden soll |
-| Nachprüfung | Genaue Angaben zu Quelle, Ziel, Befehl und erwartetem Ergebnis nach einer späteren Regeländerung |
+| Dienst | Beobachteter Portzustand / Anwendungsergebnis | Für den WebVisu-Auftrag des Lieferanten nötig? |
+| --- | --- | --- |
+| SSH TCP 22 | Dein Scan-Ergebnis | Deine Entscheidung mit Begründung |
+| Modbus TCP 502 | Dein Scan-Ergebnis | Deine Entscheidung mit Begründung |
+| OPC UA TCP 4840 | Dein Scan-Ergebnis | Deine Entscheidung mit Begründung |
+| WebVisu TCP 8080 | Dein Scan-Ergebnis und HTTP-Status | Deine Entscheidung mit Begründung |
 
-**Kontrollpunkt:** Eine andere Person kann die Beobachtung ohne Raten reproduzieren. Schreibe «aus der DMZ erreichbar», wenn du genau das gemessen hast. Behaupte keine erfolgreichen Standardpasswörter; diese Übung probiert keine aus. Schliesse anschliessend das Terminal.
+Empfiehl, welche Quelle welches Ziel über welchen Dienst erreichen soll. Benenne die anderen erreichbaren Dienste, deren Zugriff eingeschränkt werden soll. Halte fest, welche Rolle den temporären Zugriff verantwortet und wann er ablaufen soll.
 
-## Deine Zugriffsentscheidung
-
-Unterscheide für diesen Diagnoseauftrag WebVisu TCP 8080 von SSH 22, Modbus 502 und OPC UA 4840. Notiere, was erreichbar ist und was der Auftrag tatsächlich benötigt. Empfiehl Einschränkungen nach Quelle, Ziel und Dienst. Halte fest, wer den temporären Zugriff verantwortet und wann er abläuft. Anwendungsberechtigungen, Identitätsprüfung und MFA des Fernzugangs brauchen eigene Belege; dieser Scan prüft sie nicht.
+**Kontrollpunkt:** Die vereinbarte Diagnose benötigt WebVisu TCP 8080. SSH, Modbus und OPC UA gehören nicht zum Auftrag. Deine Empfehlung unterscheidet diesen Bedarf von den weitergehenden Zugriffsmöglichkeiten im Ausgangszustand. Scan und HTTP-Anfrage prüfen weder Anwendungsberechtigungen noch MFA des Fernzugangs. Eine andere Person soll deine Prüfungen vom notierten Ausgangspunkt wiederholen können. Schliesse danach das Terminal.
 
 ## Lösung
 

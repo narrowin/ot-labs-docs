@@ -2,7 +2,7 @@
 
 **Zeitbedarf:** 30–40 Minuten. **Lab:** dein eigenes `ot-sec-flat`-Lab. **Niveau:** angeleitete praktische Übung.
 
-Bestimme die gewählte Root Bridge aus Betriebsdaten. Erkläre anschliessend, wie RSTP eine Schleife im Switch-Dreieck verhindert. Diese Übung verändert weder Prioritäten noch Ports oder Kabel.
+Bestimme die gewählte Root Bridge aus Betriebsdaten. Erkläre anschliessend, wie RSTP eine Schleife im Switch-Dreieck verhindert. Die Hauptaufgaben beobachten das laufende Netz. Im optionalen Extra 2 deaktivierst du kurz einen Uplink in deinem eigenen Lab und stellst ihn danach wieder her.
 
 **Lernziele:** Bridge-Mitgliedschaft, gewählte Root und Portrollen bestimmen, BPDUs auswerten und das Zusammenspiel von RSTP und LACP für Redundanz erklären.
 
@@ -75,13 +75,14 @@ Auf **sw-acc1**:
 Auf **sw-acc2**:
 
 ```routeros
+/interface ethernet monitor ether11 once
 /interface bridge port monitor [find interface=ether11] once
 /interface bridge port monitor [find interface=ether12] once
 ```
 
 **Kontrollpunkt:** Im Ausgangszustand ist der Bond von sw-acc1 sein Root-Port. sw-acc2 verwendet `ether12` als Root-Port. sw-acc2 `ether11` zu sw-acc1 ist ein **Alternate-Port** mit `forwarding: no`. Das andere Kabelende kann Designated und Forwarding sein. Notiere die Rollen an beiden Kabelenden, statt die Verbindung als ausgefallen zu bezeichnen.
 
-Erkläre, welche unterschiedlichen Probleme LACP und RSTP lösen. Schliesse anschliessend die Terminals.
+Warte zehn Sekunden und wiederhole den Bridge-Port-Befehl für ether11. Der physische Link bleibt aktiv, die Zähler `tx-rx-bpdu` steigen und die RSTP-Rolle bleibt Alternate/Non-Forwarding. Über den Reservepfad werden weiterhin Kontrollnachrichten ausgetauscht. Erkläre, welche unterschiedlichen Probleme LACP und RSTP lösen. Schliesse anschliessend die Terminals.
 
 ## Deine Übergabe zur Wartung
 
@@ -105,20 +106,45 @@ Entscheide für sw-acc2 ether11 zwischen «wie vorgesehen belassen» und «unter
 
 **Kontrollpunkt:** Gleiche Prioritäten überlassen die Wahl den MAC-Adressen; Ersatzhardware kann diese Wahl ändern. Stimme die vorgesehene Root Bridge und die Ersatz-Root mit dem Netzwerkverantwortlichen ab. Lege ihre Prioritäten vor einem realen Umbau gezielt fest. Wähle die vorgesehene Root anhand der Topologie und der Verfügbarkeitsanforderungen; ihre Position in der Zeichnung reicht als Begründung nicht aus. Feste Lab-MACs machen das aktuelle Ergebnis reproduzierbar; reale Ersatzgeräte brauchen eine eigene Prüfung.
 
-## Extra 2: Einen intakten Link ohne Datenweiterleitung diagnostizieren
+## Extra 2: Wiederherstellung nach einem Uplink-Ausfall prüfen
 
-**Optional, 10 Minuten.** Auf **sw-acc2**:
+**Optional, 15–20 Minuten.** Prüfe, ob WAGO B Gateway und PLC2A weiterhin erreicht, wenn sw-acc2 seinen direkten Uplink verliert. Verwende nur dein eigenes Lab. Lies zuerst alle vier Schritte und halte beide Terminals bereit. Öffne das [Management-Terminal von sw-acc2](/network/terminal?node=sw-acc2) und lasse es für die Wiederherstellung geöffnet.
 
-```routeros
-/interface ethernet monitor ether11 once
-/interface bridge port monitor [find interface=ether11] once
-```
+1. Bestätige auf **sw-acc2** die Ausgangsrollen aus Aufgabe 4: ether12 ist Root/Forwarding, ether11 Alternate/Non-Forwarding. Starte auf [WAGO B](/network/terminal?node=wago-plc2b-vlan10):
 
-Warte zehn Sekunden und wiederhole den Bridge-Port-Befehl. Vergleiche `role`, `forwarding` und `tx-rx-bpdu`.
+    ```bash
+    ping -D -i 0.5 -c 120 10.10.0.1
+    ```
 
-**Kontrollpunkt:** Der Ethernet-Link läuft, während RSTP Alternate/Non-Forwarding meldet. Die BPDU-Zähler steigen. Steuerverkehr hält die Schleifenvermeidung aktiv; das ist kein abgezogenes Kabel. Ein Mitschnitt kann ankommende Daten zeigen, obwohl die Bridge sie an diesem Port verwirft. Ihr Empfang beweist keine Weiterleitung.
+    Der Test sendet ungefähr eine Minute lang Pakete. Lasse ihn laufen und wechsle zum Switch-Terminal.
 
-Schreibe zwei Sätze mit physischem Zustand, RSTP-Rolle und der Veränderung eines Zählers. Schliesse die Terminals. Weiter mit [Übung 4](ex4-link-aggregation.md).
+2. Deaktiviere auf **sw-acc2** nur den Uplink zu sw-dist:
+
+    ```routeros
+    /interface disable ether12
+    /interface bridge port monitor [find interface=ether11] once
+    ```
+
+    Wiederhole den Monitor-Befehl nach einigen Sekunden. Ether11 soll Root/Forwarding werden. Der Ersatzpfad führt über sw-acc2 → sw-acc1 → sw-dist → gw.
+
+3. Warte bei weiterhin deaktiviertem ether12 auf das Ende des begrenzten Pings. Notiere fehlende Sequenznummern und die Verluststatistik. Prüfe auf **WAGO B** zusätzlich die SPS-Anwendung:
+
+    ```bash
+    curl -sS --max-time 5 -o /dev/null -w 'HTTP %{http_code}\n' http://10.10.0.11:8080/webvisu.htm
+    ```
+
+4. **Aktiviere ether12 vor dem Verlassen dieses Extras wieder, auch wenn eine Prüfung fehlschlug.** Auf **sw-acc2**:
+
+    ```routeros
+    /interface enable ether12
+    /interface ethernet monitor ether12 once
+    /interface bridge port monitor [find interface=ether11] once
+    /interface bridge port monitor [find interface=ether12] once
+    ```
+
+    Nach der Umschaltung muss ether12 wieder Running/Root/Forwarding und ether11 Alternate/Non-Forwarding sein. Wiederhole auf **WAGO B** `ping -c 4 10.10.0.1` und die HTTP-Anfrage; beides muss funktionieren. Kehren Rollen oder Kommunikation nicht zurück, lasse das Terminal offen und hole die Kursleitung für die Wiederherstellung dazu.
+
+**Kontrollpunkt:** Während des Uplink-Ausfalls wurde der Reservepfad aktiv und die HTTP-Anfrage lieferte 200. Notiere die beobachteten Ping-Verluste. Null beobachtete Verluste bedeuten nur, dass diese Testpakete beantwortet wurden; sie belegen keine unterbrechungsfreie Funktion jeder Anwendung. Nach der Wiederherstellung kehren ursprüngliche Portrollen und Kommunikation zurück. Schliesse die Terminals. Weiter mit [Übung 4](ex4-link-aggregation.md).
 
 ## Weiterforschen
 

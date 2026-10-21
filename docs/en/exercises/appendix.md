@@ -31,8 +31,7 @@ Paste one expression into the **display-filter** bar and press Enter. These are 
 | Symptom | Next useful check |
 | --- | --- |
 | Tool link unavailable | Select the assigned **live** network. Ask the instructor to verify lab bindings and permissions. |
-| SSH does not connect | Use the lesson's configured **Open terminal** action. Do not try old default passwords or change the SSH server. |
-| Terminal says root, old screenshot says admin | Managed Linux endpoints use root; RouterOS uses its configured admin account. Follow the current lesson. |
+| SSH does not connect | Use the lesson's configured **Open terminal** action. If it fails, record the node and error for the instructor. |
 | Capture shows no ping | Start capture first, repeat the bounded ping, check node and neighbor-labelled port, then clear the filter. Allow a few seconds for the viewer to catch up. |
 | Viewer shows ERF/LEGACY and nonsensical timestamps instead of Ethernet | Choose the page's **Restart Capture**, wait for valid Ethernet/IP decoding, then repeat the probes. If it persists, report the node/interface and screenshot to the instructor. |
 | Only one LACP member has your flow | Expected for a stable hash. Repeat the same bounded flow on the other member; separate requests from replies. |

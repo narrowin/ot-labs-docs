@@ -21,7 +21,7 @@ Times are guides. Complete the core checks at your own pace; use the hints when 
 3. Use each lesson's links to open the configured terminal, filtered Netmap, target details or selected capture port. In terminal and capture tabs, the active exercise title reopens the instructions. Keep a terminal open while switching to a capture.
 4. Attempt each observation before revealing its hint or solution. Record the source node, interface, command/filter and actual evidence.
 
-You need a running instructor-provided lab and its configured node credentials. Do not deploy another topology, install extensions or enter old default passwords. If a link says **unavailable**, check the selected live network and ask the instructor to verify access/bindings.
+You need a running instructor-provided lab and its configured node credentials. Use the provided lab and its configured tool actions. If a link says **unavailable**, check the selected live network and ask the instructor to verify access/bindings.
 
 Tool links are designed for the Network Explorer reader. In this published documentation, open the named tool in your assigned lab and select the named node/interface manually. Do not try to reach the simulated data IPs directly from your laptop.
 
@@ -31,7 +31,7 @@ Tool links are designed for the Network Explorer reader. In this published docum
 | --- | --- | --- | --- |
 | 1 | [Compare tagged and untagged traffic](ex1-vlan-discovery.md) | 30–40 min | Replacement PLC checklist; next-hop MAC |
 | 2 | [Trace an ARP interception](ex2-arp-spoofing.md) | 40–50 min | Incident timeline; maintainable ARP protection |
-| 3 | [Explain the live spanning tree](ex3-spanning-tree.md) | 30–40 min | Switch replacement; healthy standby link |
+| 3 | [Explain the live spanning tree](ex3-spanning-tree.md) | 30–40 min | Switch replacement; uplink failover trial |
 | 4 | [Follow flows through LACP](ex4-link-aggregation.md) | 30–40 min | Capture blind spot; shared failure points |
 | 5 | [Assess access from the DMZ](ex5-reconnaissance.md) | 35–45 min | Compare vantage points; prove TCP port states |
 | 6 | [Identify OT protocols](ex6-protocol-discovery.md) | 40–50 min | HMI register mapping; remote discovery limits |
@@ -67,7 +67,7 @@ The practical does not configure MRP, VPN/MFA, 802.1X or industrial DPI, and it 
 
 ## Lab facts that prevent wrong conclusions
 
-- The OT baseline uses **VLAN 10 and `10.0.0.0/8`**. Historical suffixes such as `vlan20` do not prove segmentation.
+- The PLCs and cell workstations start in **VLAN 10 and `10.0.0.0/8`**. Their node labels stay fixed as you change configuration in Exercise 7.
 - The **DMZ is VLAN 60, `2.2.2.0/24`**. Addresses such as `1.1.1.1` and `2.2.2.2` are simulated inside the lab.
 - sw-dist and sw-acc1 have an **active two-member LACP bond**. A stable flow normally uses one member.
 - Operational state, packets and successful application responses are different forms of evidence. A port label, diagram or hostname is not a substitute.
@@ -75,7 +75,7 @@ The practical does not configure MRP, VPN/MFA, 802.1X or industrial DPI, and it 
 
 ## Finish each lesson
 
-Close your capture tabs and terminal tabs. In Exercise 2 also stop the helper/listener and verify the original gateway MAC and forwarding value before moving on. Exercise 7 requires its cleanup even if you skip the extras.
+Close your capture tabs and terminal tabs. If you performed Exercise 3 Extra 2, re-enable sw-acc2 ether12 and verify the restored port roles and communication. In Exercise 2 also stop the helper/listener and verify the original gateway MAC and forwarding value before moving on. Exercise 7 requires its cleanup even if you skip the extras.
 
 The existing assistant knows the selected lesson. Give it the task number, actual command/output and capture filter/frame number. Wait for an answer before asking from another tab. Compare its advice with your recorded evidence and the local lesson.
 

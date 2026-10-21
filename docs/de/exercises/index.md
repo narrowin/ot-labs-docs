@@ -21,7 +21,7 @@ Die Zeiten sind Richtwerte. Bearbeite die Hauptaufgaben in deinem Tempo, nutze b
 3. Die Links öffnen konfigurierte Terminals, eine gefilterte Netmap-Ansicht, Zieldetails oder den ausgewählten Port für den Paketmitschnitt. In Terminal- und Mitschnitt-Tabs öffnet der aktive Übungstitel die Anleitung. Lass das Terminal beim Wechsel zum Mitschnitt offen.
 4. Bearbeite die Aufgabe zuerst selbst, bevor du den Hinweis oder die Lösung öffnest. Notiere das Ausgangsgerät, das Interface, den Befehl oder Filter und die tatsächlichen Ergebnisse.
 
-Du benötigst das von der Kursleitung gestartete Lab und eingerichtete Zugangsdaten für die Lab-Geräte. Starte keine andere Topologie, installiere keine Erweiterungen und verwende keine alten Standardpasswörter. Bei **unavailable** prüfst du das gewählte Live-Netzwerk und lässt die Kursleitung Berechtigungen und die Zuordnung des Werkzeugs zum Lab-Gerät prüfen.
+Du benötigst das von der Kursleitung gestartete Lab und eingerichtete Zugangsdaten für die Lab-Geräte. Verwende das bereitgestellte Lab und seine eingerichteten Werkzeug-Aktionen. Bei **unavailable** prüfst du das gewählte Live-Netzwerk und lässt die Kursleitung Berechtigungen und die Zuordnung des Werkzeugs zum Lab-Gerät prüfen.
 
 Werkzeug-Links sind für die Übungsansicht in Network Explorer gedacht. Öffne bei Nutzung dieser veröffentlichten Dokumentation das genannte Werkzeug im zugewiesenen Lab und wähle Knoten/Interface manuell. Die simulierten Daten-IPs sind keine direkt vom Laptop erreichbaren Ziele.
 
@@ -31,7 +31,7 @@ Werkzeug-Links sind für die Übungsansicht in Network Explorer gedacht. Öffne 
 | --- | --- | --- | --- |
 | 1 | [Getaggten und ungetaggten Verkehr vergleichen](ex1-vlan-discovery.md) | 30–40 Min. | Ersatz-SPS prüfen; Next-Hop-MAC |
 | 2 | [Eine ARP-Umleitung nachweisen](ex2-arp-spoofing.md) | 40–50 Min. | Vorfall-Zeitleiste; ARP-Schutz bei Wartungsarbeiten |
-| 3 | [Den aktiven Spanning Tree erklären](ex3-spanning-tree.md) | 30–40 Min. | Switch-Tausch; intakter Reservepfad |
+| 3 | [Den aktiven Spanning Tree erklären](ex3-spanning-tree.md) | 30–40 Min. | Switch-Tausch; Uplink-Umschaltung prüfen |
 | 4 | [Datenströme durch LACP verfolgen](ex4-link-aggregation.md) | 30–40 Min. | Blinder Fleck im Mitschnitt; gemeinsame Ausfallpunkte |
 | 5 | [Zugriff aus der DMZ beurteilen](ex5-reconnaissance.md) | 35–45 Min. | Ausgangspunkte vergleichen; TCP-Portzustände beweisen |
 | 6 | [OT-Protokolle erkennen](ex6-protocol-discovery.md) | 40–50 Min. | HMI-Registerzuordnung; Grenzen der Fernerkennung |
@@ -67,7 +67,7 @@ In diesem Praktikum konfigurierst du weder MRP, VPN/MFA, 802.1X noch industriell
 
 ## Lab-Fakten gegen falsche Schlüsse
 
-- Das OT-Ausgangsnetz verwendet **VLAN 10 und `10.0.0.0/8`**. Historische Namen wie `vlan20` beweisen keine Segmentierung.
+- Die SPS und Zellenrechner starten in **VLAN 10 und `10.0.0.0/8`**. Ihre Knotennamen bleiben bestehen, wenn du in Übung 7 die Konfiguration änderst.
 - Die **DMZ verwendet VLAN 60, `2.2.2.0/24`**. Adressen wie `1.1.1.1` und `2.2.2.2` sind innerhalb des Labs simuliert.
 - sw-dist und sw-acc1 haben einen **aktiven LACP-Bond mit zwei Mitgliedern**. Ein stabiler Datenstrom nutzt normalerweise ein Mitglied.
 - Betriebszustand, aufgezeichnete Pakete und erfolgreiche Anwendungsantworten belegen unterschiedliche Sachverhalte. Eine Port-Bezeichnung, ein Diagramm oder ein Hostname ersetzt diese Prüfungen nicht.
@@ -75,7 +75,7 @@ In diesem Praktikum konfigurierst du weder MRP, VPN/MFA, 802.1X noch industriell
 
 ## Jede Übung abschliessen
 
-Schliesse deine Capture- und Terminal-Tabs. Stoppe in Übung 2 zusätzlich Hilfsprogramm und Listener. Prüfe vor dem Weitergehen die ursprüngliche Gateway-MAC und den Forwarding-Wert. Die Bereinigung in Übung 7 ist auch ohne Extras zwingend.
+Schliesse deine Capture- und Terminal-Tabs. Nach Übung 3 Extra 2 muss sw-acc2 ether12 wieder aktiv sein; prüfe ursprüngliche Portrollen und Kommunikation. Stoppe in Übung 2 zusätzlich Hilfsprogramm und Listener. Prüfe vor dem Weitergehen die ursprüngliche Gateway-MAC und den Forwarding-Wert. Die Bereinigung in Übung 7 ist auch ohne Extras zwingend.
 
 Der vorhandene Assistent kennt die ausgewählte Übung. Nenne die Aufgabe, den tatsächlich ausgeführten Befehl und dessen Ausgabe. Ergänze bei einem Mitschnitt den Anzeigefilter und die Frame-Nummer. Warte auf die Antwort, bevor du aus einem anderen Tab fragst. Vergleiche den Rat mit deinen Belegen und der lokalen Anleitung.
 

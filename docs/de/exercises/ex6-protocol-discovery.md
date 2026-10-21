@@ -4,7 +4,7 @@
 
 Erkenne tatsächliche Protokollnachrichten, führe einen begrenzten Modbus-Lesezugriff aus und trenne Anwendungsbelege von Vermutungen anhand einer Portnummer. Ändere keine SPS-Werte, lade keine Programme und bediene keine Prozesssteuerung.
 
-**Lernziele:** Belege für Modbus, WebVisu/HTTP, CODESYS und OPC UA finden, lokale Geräteerkennung über Ethernet von gerouteten Protokollen unterscheiden und Aussagen über Authentifizierung und Verschlüsselung anhand von Datenverkehr und Einstellungen prüfen.
+**Lernziele:** Modbus- und HTTP-Nachrichten erkennen, CODESYS-/OPC-UA-Listener prüfen, lokale Geräteerkennung über Ethernet von gerouteten Protokollen unterscheiden und offene Sicherheitsfragen benennen.
 
 ## Dein Inbetriebnahmeauftrag
 
@@ -74,43 +74,31 @@ ss -lnt
 ss -lnu
 ```
 
-Notiere, auf welchen Adressen und Ports Dienste auf Verbindungen oder Daten warten. Solche Dienste werden als Listener bezeichnet. Vergleiche die Listener anschliessend mit den aufgezeichneten Nachrichten. Fehlt eine OPC-UA-Transaktion, notiere «Listener vorhanden; Anwendung/Sitzungssicherheit ungeprüft». Damit ist die Hauptaufgabe erfüllt. Du musst weder Python schreiben noch eine OPC-UA-Sitzung aufbauen.
+Notiere, auf welchen Adressen und Ports Dienste auf Verbindungen oder Daten warten. Solche Dienste werden als Listener bezeichnet. Im Ausgangszustand gehören TCP 502, 4840, 8080 und 11740 sowie CODESYS UDP 1740 dazu.
 
-??? info "Optional: OPC-UA-Transport untersuchen"
-    Verwende auf **WAGO B** das vorhandene `uv` und die Python-Standardbibliothek für den kurzen Austausch von Hello- und Acknowledge-Nachrichten auf der OPC-UA-Transportebene:
+Prüfe auf **WAGO B** die TCP-Verbindung zu Port 4840:
 
-    ```bash
-    uv run --offline --no-project python - <<'PY'
-    import socket, struct
-    url = b'opc.tcp://10.10.0.11:4840'
-    hello = b'HELF' + struct.pack('<7I', 32 + len(url), 0, 65536, 65536, 0, 0, len(url)) + url
-    with socket.create_connection(('10.10.0.11', 4840), timeout=3) as connection:
-        connection.sendall(hello)
-        reply = connection.recv(8, socket.MSG_WAITALL)
-        if len(reply) != 8:
-            raise SystemExit('Incomplete OPC UA transport header; record the capture and stop.')
-        print('OPC UA transport response:', reply[:4].decode('ascii', errors='replace'))
-        print('Message bytes:', struct.unpack('<I', reply[4:8])[0])
-    PY
-    ```
+```bash
+nc -vz -w 3 10.10.0.11 4840
+```
 
-    Filtere `opcua && ip.addr == 10.10.0.12`. Finde **Hello** und **Acknowledge**. Der Durchgang lieferte `ACKF`, Nachrichtengrösse 28. Dieser Austausch handelt Parameter für den Transport aus und endet vor einer Anwendungssitzung. Dabei werden keine SPS-Werte gelesen oder geschrieben. Vergleiche, welche Aussage sich jeweils belegen lässt:
+Filtere den Mitschnitt mit `ip.addr == 10.10.0.12 && tcp.port == 4840`. Finde SYN und SYN/ACK. Dieser Befehl öffnet und schliesst eine TCP-Verbindung; er sendet keine OPC-UA-Anwendungsnachricht.
 
-| Aussage | Nötiger Beleg |
+| Prüfung | Was das Ergebnis belegt |
 | --- | --- |
-| TCP 4840 lauscht | Lokaler Socket oder erfolgreiche TCP-Verbindung |
-| OPC UA wurde ausgetauscht | Dekodierte OPC-UA-Nachrichten statt nur TCP 4840 |
-| Daten einer OPC-UA-Sitzung sind verschlüsselt | Ausgehandelter Modus/Policy und passende Sitzungsbelege |
-| WebVisu funktioniert | Live-Seite und erfolgreiche fortlaufende Anwendungsübertragung |
-| Modbus-Lesen war erfolgreich | Anfrage und passende Antwort mit Funktion und Registerdaten |
+| Lokaler Listener auf TCP 4840 | Ein Dienst wartet auf dieser Adresse und diesem Port auf Verbindungen |
+| TCP-Verbindung von B erfolgreich | Der Listener ist von B erreichbar |
+| Dekodierte Modbus-Anfrage mit Antwort | Der angeforderte Modbus-Lesezugriff wurde verarbeitet |
+| HTTP-Anfrage und Antwort sowie Live-WebVisu | Die Webanwendung antwortet; laufende Übertragungen zeigen die Aktualisierung |
+| OPC-UA-Authentifizierung oder Verschlüsselung | Mit dieser TCP-Verbindung nicht geprüft |
 
-**Kontrollpunkt:** Diese Version lauscht auf TCP 502, 4840, 8080 und 11740; lokal ist auch CODESYS UDP 1740 sichtbar. Übernimm nicht die alte Annahme, sämtlicher CODESYS-Verkehr verwende 1217/2455. Falls du den optionalen Austausch durchgeführt hast, belegt er die Antwort des OPC-UA-Transportprotokolls. Die Sicherheit einer Anwendungssitzung bleibt **ungeprüft**. OPC UA unterstützt `None`, `Sign` und `SignAndEncrypt`; ein offener Port oder Hello/Acknowledge verrät keinen ausgehandelten Sitzungsmodus.
+**Kontrollpunkt:** Unterscheide Port-Erreichbarkeit und Anwendungsverhalten. Notiere die OPC-UA-Sitzungssicherheit als **ungeprüft**. Für diese Prüfung wären eine OPC-UA-Client-Sitzung und deren ausgehandelte Sicherheitseinstellungen nötig.
 
 Schliesse den Mitschnitt und die Terminals oder behalte sie für eine Zusatzaufgabe offen.
 
 ## Dein Inbetriebnahmeprotokoll
 
-Notiere für Modbus, HTTP und OPC UA jeweils Quelle und Ziel, Dienst, beobachtete Nachrichten, Ergebnis und offene Fragen. Ergänze bei Modbus Funktion, Adresse und passende Antwort; lasse die Einheit ohne Registertabelle offen. Unterscheide bei HTTP direkten Client-Test und Browser-Proxy. Bei OPC UA beweisen weder Listener noch optionaler Transport-Handshake die Sitzungssicherheit. Daraus entsteht eine Kommunikationsmatrix für Übung 7.
+Notiere für Modbus, HTTP und OPC UA jeweils Quelle und Ziel, Dienst, beobachtete Nachrichten, Ergebnis und offene Fragen. Ergänze bei Modbus Funktion, Adresse und passende Antwort; lasse die Einheit ohne Registertabelle offen. Unterscheide bei HTTP direkten Client-Test und Browser-Proxy. Bei OPC UA bleibt die Sitzungssicherheit nach der Listener- und TCP-Verbindungsprüfung ungeprüft. Daraus entsteht eine Kommunikationsmatrix für Übung 7.
 
 ## Lösung
 
@@ -147,5 +135,4 @@ Erkläre die unterschiedlichen Auswirkungen einer gerouteten VLAN-Grenze und ein
 - [Modbus-Spezifikationen](https://www.modbus.org/modbus-specifications): Suche Funktion 03; unterscheide klassisches Modbus TCP und Modbus Security mit TLS.
 - [mbpoll-Referenz](https://github.com/epsilonrt/mbpoll): Vergleiche `-0`, `-1` und optionale Schreibwerte.
 - [OPC-Foundation-Sicherheitsmodi](https://reference.opcfoundation.org/specs/OPC-10000-2/4.8): Vergleiche Integrität und Vertraulichkeit.
-- [OPC-UA-Hello-Nachricht](https://reference.opcfoundation.org/specs/OPC-10000-6/7.1.2.3): Finde die Endpoint-URL und die Puffergrössen deiner Hello-Nachricht.
 - [CODESYS WebVisu ausführen](https://content.helpme-codesys.com/en/CODESYS%20Visualization/_visu_execute_webvisu.html): Unterscheide Webvisualisierung und Engineering-Verbindung.

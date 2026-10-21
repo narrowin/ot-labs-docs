@@ -44,7 +44,7 @@ Diese Übung verwendet das unveränderte Flat-Lab: WAGO `10.10.0.11`, Gateway `1
 
 Suche `wago-plc2a-vlan10`, seinen Access-Switch `sw-acc1`, den Distribution-Switch `sw-dist` und das Gateway `gw`. Verfolge ihre Verbindungen.
 
-[VLAN 10 auf Netmap untersuchen](/network/?viewMode=vlan&vlanIds=10). Vergleiche die angezeigte VLAN-Zugehörigkeit mit den historischen Gerätenamen. Kehre für die Port-Prüfung zum WAGO-Netmap-Link oben zurück. In den folgenden Aufgaben prüfst du anhand der Pakete, wo VLAN-Tags vorhanden sind.
+[VLAN 10 auf Netmap untersuchen](/network/?viewMode=vlan&vlanIds=10). Finde PLC2A (`wago-plc2a-vlan10`) und prüfe, ob seine Verbindung zu sw-acc1 VLAN 10 zugeordnet ist. Kehre zum WAGO-Netmap-Link oben zurück, um die Ports zu bestimmen. In Aufgaben 3–4 untersuchst du die VLAN-Tags in den Paketen.
 
 Wähle `sw-acc1` aus und öffne **Ports** in seinem Detailbereich. Finde den Port zu WAGO anhand seiner Beschreibung. Wähle `sw-dist` aus und öffne **Neighbors**, um den Port zu `gw` zu finden.
 
@@ -53,8 +53,8 @@ Wähle `sw-acc1` aus und öffne **Ports** in seinem Detailbereich. Finde den Por
 ??? info "Hinweis: Die Ports zuordnen"
     Suche unter **Ports** nach `wago-plc2a` in der Beschreibung. Scrolle die Tabelle seitwärts, falls diese Spalte nicht sichtbar ist. Suche unter **Neighbors** nach `gw` und lies das lokale Interface ab.
 
-??? success "Erklärung: Ein Name ist keine Konfiguration"
-    Im unveränderten Lab führt Port `ether2` von sw-acc1 zu WAGO und Port `ether12` von sw-dist zu `gw`. Hostnamen sind Bezeichnungen und kein Beweis für eine VLAN-Zugehörigkeit. Die Paketmitschnitte zeigen, ob ein Frame ein Tag trägt.
+??? success "Erklärung: Der erwartete Pfad"
+    Im unveränderten Lab führt Port `ether2` von sw-acc1 zu WAGO und Port `ether12` von sw-dist zu `gw`. PLC2A gehört zu VLAN 10. Die Mitschnitte zeigen, wie dieses VLAN auf der Access-Verbindung und dem Uplink transportiert wird.
 
 ## Aufgabe 2: Datenverkehr erzeugen
 
@@ -74,7 +74,7 @@ Dieser Befehl sendet vier Ping-Anfragen an das Gateway.
     Prüfe den ausgewählten Host und die Zugangsdaten, falls sich das Terminal nicht verbindet. Bleiben Ping-Antworten aus, kontrolliere, ob das Lab läuft, und prüfe den Pfad auf Netmap, bevor du fortfährst.
 
 ??? success "Erklärung: Was Ping nachweist"
-    Antworten belegen die IP-Erreichbarkeit. Sie beweisen weder VLAN-Isolation noch die Durchsetzung von Firewall-Regeln. Unterschiedliche IP-Subnetze oder Endungen im Hostnamen belegen keine unterschiedlichen VLANs.
+    Die Antworten belegen die IP-Erreichbarkeit des Gateways. Aufgaben 3–4 zeigen, wie diese Pakete durch VLAN 10 transportiert werden.
 
 ## Aufgabe 3: Den getaggten Uplink untersuchen
 
@@ -137,7 +137,7 @@ Notiere SPS-Adresse, Anschlussport, Uplink-Port und je einen Frame aus beiden Mi
 ??? success "Vergleiche deine Belege"
     Der WAGO-Access-Port ist sw-acc1 `ether2`, der Gateway-Uplink sw-dist `ether12`. Vier erfolgreiche Pings erzeugen vier Anfragen und vier Antworten. Am Gateway-Uplink tragen diese Pakete VLAN-ID 10; am Access-Port fehlt der 802.1Q-Header. Ein Anzeigefilter verändert die Aufzeichnung nicht.
 
-    Notiere je eine Frame-Nummer mit Interface, Filter und VLAN-ID beziehungsweise fehlendem Tag. Beim gleichen Standard-Ping ist der getaggte Frame vier Bytes länger. Erreichbarkeit und Hostname beweisen keine Isolation.
+    Notiere je eine Frame-Nummer mit Interface, Filter und VLAN-ID beziehungsweise fehlendem Tag. Beim gleichen Standard-Ping ist der getaggte Frame vier Bytes länger. Diese Mitschnitte belegen die Tag-Behandlung auf den beiden gewählten Verbindungen. Für eine Isolationsprüfung wären zusätzlich gezielte erlaubte und gesperrte Verbindungsversuche nötig.
 
 ## Extra 1: Anschluss einer Ersatz-SPS prüfen
 
@@ -159,7 +159,7 @@ Notiere SPS-Adresse, Anschlussport, Uplink-Port und je einen Frame aus beiden Mi
 
 3. Notiere Switch/Port, **PVID** (VLAN-Zuordnung für eingehenden ungetaggten Verkehr), ungetaggte VLAN-Mitgliedschaft, SPS-IP/Präfix und ob die SPS Tags sendet. Vergleiche die Konfiguration mit den Paketen aus Aufgabe 4.
 
-**Kontrollpunkt:** Im Ausgangszustand ordnet ether2 ungetaggten Verkehr VLAN 10 zu. WAGO nutzt `10.10.0.11/8` auf eth1. Beim Austausch müssen sowohl die Konfiguration des Switch-Ports als auch die IP-Einstellungen der SPS passen. Weder eine leuchtende Link-LED noch die Endung des Hostnamens reicht als Nachweis aus. `/8` bedeutet hier, dass Adressen mit `10.` zum selben IP-Subnetz gehören; diese breite Lab-Adressierung ist keine Empfehlung für eine Anlage.
+**Kontrollpunkt:** Im Ausgangszustand ordnet ether2 ungetaggten Verkehr VLAN 10 zu. WAGO nutzt `10.10.0.11/8` auf eth1. Beim Austausch müssen sowohl die Konfiguration des Switch-Ports als auch die IP-Einstellungen der SPS passen. Eine leuchtende Link-LED allein zeigt nicht, ob diese Einstellungen zusammenpassen. `/8` bedeutet hier, dass Adressen mit `10.` zum selben IP-Subnetz gehören; diese breite Lab-Adressierung ist keine Empfehlung für eine Anlage.
 
 Schliesse das Switch-Terminal. Behalte deine Notiz als Inbetriebnahme-Checkliste.
 

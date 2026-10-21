@@ -37,7 +37,7 @@ Startzeit und Ressourcenbedarf hängen von der Komponente ab. Ein laufender Cont
 
 Containerlab liest eine Topologiedefinition mit Knoten, Software-Images und Verbindungen. Es erstellt die Verbindungen des Labs. Damit lässt sich eine Topologie leichter reproduzieren als durch manuelles Verkabeln jedes virtuellen Geräts.
 
-Ein Knotenname identifiziert eine Komponente; er erzwingt keine VLAN- oder Firewall-Regel. Beispielsweise behält `ctrlx-plc3-vlan20` seinen historischen Namen im aktuellen flachen Ausgangszustand. Verwende die [Netzwerktabelle der Laboranleitung](lab.md#die-beiden-netzebenen-verstehen) und die Kontrollpunkte der Übungen, um die tatsächliche Konfiguration festzustellen.
+In der [Netzwerktabelle der Laboranleitung](lab.md#die-beiden-netzebenen-verstehen) findest du Datenadresse und VLAN der Knoten. Die Übungslinks wählen den benötigten Knoten und das Interface aus.
 
 ## Welches Terminal hast du geöffnet?
 

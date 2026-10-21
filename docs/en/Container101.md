@@ -37,7 +37,7 @@ Startup time and resource use depend on the component. A running container alone
 
 Containerlab reads a topology definition describing nodes, their software images and their links. It creates the connections used by the lab. This makes a topology easier to reproduce than manually wiring each virtual device.
 
-A node name identifies a component; it does not enforce a VLAN or firewall policy. For example, `ctrlx-plc3-vlan20` retains its historical name in the current flat baseline. Use the [Lab Guide's network table](lab.md#understand-the-two-network-planes) and the exercise checkpoints to establish the actual configuration.
+Use the [Lab Guide's network table](lab.md#understand-the-two-network-planes) to find each node's data address and VLAN. The exercise links select the required node and interface.
 
 ## Know which terminal you opened
 
