@@ -10,7 +10,7 @@
 
 ![Übersicht der Wasseraufbereitung aus der Lab-Visualisierung](../img/water-treatment-overview.png)
 
-Bearbeite die sieben Übungen in deinem eigenen `ot-sec-flat`-Lab der Reihe nach. Übungen 1–6 beginnen im flachen Ausgangszustand; Übung 7 baut ein geroutetes VLAN auf und stellt danach diesen Zustand wieder her. Plane für Hauptaufgaben, Diskussion und Übergaben etwa 5–6½ Stunden. Jede Übung enthält eine ausklappbare Lösung und danach **zwei optionale Zusatzaufgaben**. Alle Extras zusammen benötigen weitere 2–2½ Stunden.
+Bearbeite die acht Übungen in deinem eigenen `ot-sec-flat`-Lab der Reihe nach. Übungen 1–6 beginnen im flachen Ausgangszustand; Übung 7 baut ein geroutetes VLAN auf und stellt danach diesen Zustand wieder her. Übung 8 schützt einen Endpunkt mit der Diode und beginnt und endet ebenfalls im Ausgangszustand. Plane für Hauptaufgaben, Diskussion und Übergaben etwa 5½–7¼ Stunden. Jede Übung enthält eine ausklappbare Lösung und danach **zwei optionale Zusatzaufgaben**. Alle Extras zusammen benötigen weitere 2½–3 Stunden.
 
 Die Zeiten sind Richtwerte. Bearbeite die Hauptaufgaben in deinem Tempo, nutze bei Bedarf die Hinweise und hebe Extras für später auf. Bewahre Befehle, Filter und Ergebnisse auf, damit du nach dem Kurs in deinem Lab weiterarbeiten kannst. Beende vor einer Pause die Bereinigung der Übung und wiederhole beim Fortsetzen ihre Ausgangsprüfungen.
 
@@ -29,15 +29,16 @@ Werkzeug-Links sind für die Übungsansicht in Network Explorer gedacht. Öffne 
 
 | # | Übung | Hauptzeit | Zusatzaufgaben |
 | --- | --- | --- | --- |
-| 1 | [Getaggten und ungetaggten Verkehr vergleichen](ex1-vlan-discovery.md) | 30–40 Min. | Ersatz-SPS prüfen; Next-Hop-MAC |
+| 1 | [Getaggten und ungetaggten Verkehr vergleichen](ex1-vlan-discovery.md) | 30–40 Min. | SPS-Anschlussnachweis; Next-Hop-MAC |
 | 2 | [Eine ARP-Umleitung nachweisen](ex2-arp-spoofing.md) | 40–50 Min. | Vorfall-Zeitleiste; ARP-Schutz bei Wartungsarbeiten |
 | 3 | [Den aktiven Spanning Tree erklären](ex3-spanning-tree.md) | 30–40 Min. | Switch-Tausch; Uplink-Umschaltung prüfen |
 | 4 | [Datenströme durch LACP verfolgen](ex4-link-aggregation.md) | 30–40 Min. | Blinder Fleck im Mitschnitt; gemeinsame Ausfallpunkte |
 | 5 | [Zugriff aus der DMZ beurteilen](ex5-reconnaissance.md) | 35–45 Min. | Ausgangspunkte vergleichen; TCP-Portzustände beweisen |
 | 6 | [OT-Protokolle erkennen](ex6-protocol-discovery.md) | 40–50 Min. | HMI-Registerzuordnung; Grenzen der Fernerkennung |
 | 7 | [Ein geroutetes VLAN aufbauen und prüfen](ex7-segmentation-firewall.md) | 90–120 Min. | Eine geroutete Anfrage verfolgen; Antworten und neue Verbindungen |
+| 8 | [Ein Altsystem mit der Diode mikrosegmentieren](ex8-diode-microsegmentation.md) | 35–45 Min. | Verbleibendes ARP-Risiko; Isolation und Wiederherstellung |
 
-**Optionale Diode-Zusatzübung, 35–45 Minuten:** Fahre in [Übung 7](ex7-segmentation-firewall.md) mit **Zusatzübung: Ein Altsystem mit der Diode mikrosegmentieren** fort. Verwende die neu ergänzte geroutete Diode, um den Engineering-Zugriff zu erhalten, einen anderen Client zu sperren und neue Verbindungen des Endpunkts zu begrenzen. Die Aufgabe beginnt im flachen Ausgangszustand und enthält eine eigene Bereinigung; der Aufbau von VLAN 70 ist keine Voraussetzung.
+Übung 8 ist eigenständig: Der Aufbau von VLAN 70 in Übung 7 ist keine Voraussetzung. Schliesse zuerst die Bereinigung von Übung 7 ab, falls du sie durchgeführt hast.
 
 ## Verbindung zum Kurs
 
@@ -52,7 +53,7 @@ Die Kursanlage ist ein Beispiel zur Wasseraufbereitung. `abb-800xa` übernimmt d
 | Fernzugriff (S. 100–104) | Übung 5: Den benötigten Lieferantenzugriff begrenzen |
 | Protokollschichten und lokale Erkennung (S. 36–41, 50) | Übung 6: Belege für Netzwerk, Dienst und Prozessfunktion unterscheiden |
 | Anlagenzonen, Steuerungsabhängigkeiten und Logs (S. 128–148, 162–164) | Übung 7: Zonen begründen, einen Conduit umsetzen und den Ausgangszustand wiederherstellen |
-| Mikrosegmentierung eines ungepatchten Entsorgungssystems (S. 149–152) | Diode-Zusatzübung: Zugriff an der Grenze eines Endpunkts begrenzen und beide Richtungen prüfen |
+| Mikrosegmentierung eines ungepatchten Entsorgungssystems (S. 149–152) | Übung 8: Zugriff an der Grenze eines Endpunkts begrenzen und beide Richtungen prüfen |
 
 Die Angaben beziehen sich auf die PDF-Seiten in **OT Network Security – Design and Defend handout**; aufgedruckte Foliennummern weichen später ab. Nutze beim Selbststudium die nummerierte Reihenfolge. Im Präsenzkurs kann die Kursleitung LACP vor RSTP einführen und Übungen 3–4 zusammen bearbeiten, sobald beide Begriffe bekannt sind.
 
@@ -75,7 +76,7 @@ In diesem Praktikum konfigurierst du weder MRP, VPN/MFA, 802.1X noch industriell
 
 ## Jede Übung abschliessen
 
-Schliesse deine Capture- und Terminal-Tabs. Nach Übung 3 Extra 2 muss sw-acc2 ether12 wieder aktiv sein; prüfe ursprüngliche Portrollen und Kommunikation. Stoppe in Übung 2 zusätzlich Hilfsprogramm und Listener. Prüfe vor dem Weitergehen die ursprüngliche Gateway-MAC und den Forwarding-Wert. Die Bereinigung in Übung 7 ist auch ohne Extras zwingend.
+Schliesse deine Capture- und Terminal-Tabs. Nach Übung 3 Extra 2 muss sw-acc2 ether12 wieder aktiv sein; prüfe ursprüngliche Portrollen und Kommunikation. Stoppe in Übung 2 zusätzlich Hilfsprogramm und Listener. Prüfe vor dem Weitergehen die ursprüngliche Gateway-MAC und den Forwarding-Wert. Die Bereinigung in Übungen 7 und 8 ist auch ohne Extras zwingend.
 
 Der vorhandene Assistent kennt die ausgewählte Übung. Nenne die Aufgabe, den tatsächlich ausgeführten Befehl und dessen Ausgabe. Ergänze bei einem Mitschnitt den Anzeigefilter und die Frame-Nummer. Warte auf die Antwort, bevor du aus einem anderen Tab fragst. Vergleiche den Rat mit deinen Belegen und der lokalen Anleitung.
 

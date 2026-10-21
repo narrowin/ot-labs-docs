@@ -65,7 +65,7 @@ Am Ende dieses Workshops werden Sie in der Lage sein:
 
 **Laborumgebung:**
 
-Die Dozierenden stellen eine laufende studentische Appliance mit Browser-Terminals, Paketmitschnitt und PLC-Visualisierungen bereit. Beginnen Sie mit der [Laboranleitung](lab.md#erste-schritte), danach den [sieben Übungen](exercises/index.md).
+Die Dozierenden stellen eine laufende studentische Appliance mit Browser-Terminals, Paketmitschnitt und PLC-Visualisierungen bereit. Beginnen Sie mit der [Laboranleitung](lab.md#erste-schritte), danach den [acht Übungen](exercises/index.md).
 
 ---
 

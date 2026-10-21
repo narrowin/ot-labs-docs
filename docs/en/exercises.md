@@ -1,6 +1,6 @@
 # OT Security Lab Exercises
 
-Start with the [student lab guide](lab.md) and follow the [seven-lesson overview](exercises/index.md). Use your assigned running LNE and its live network. Each lesson has two optional extensions after its solution and manual navigation for separately hosted documentation.
+Start with the [student lab guide](lab.md) and follow the [eight-lesson overview](exercises/index.md). Use your assigned running LNE and its live network. Each lesson has two optional extensions after its solution and manual navigation for separately hosted documentation.
 
 ## Exercise 1: VLAN Discovery and Traffic Analysis
 
@@ -29,6 +29,10 @@ Start with the [student lab guide](lab.md) and follow the [seven-lesson overview
 ## Exercise 7: Network Segmentation and Firewall Design
 
 [Build and verify a routed VLAN](exercises/ex7-segmentation-firewall.md).
+
+## Exercise 8: Endpoint Microsegmentation
+
+[Microsegment a legacy endpoint with the diode](exercises/ex8-diode-microsegmentation.md).
 
 ## Appendix: Wireshark Filters Quick Reference
 

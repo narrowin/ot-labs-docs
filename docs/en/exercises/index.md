@@ -10,7 +10,7 @@
 
 ![Water-treatment process overview from the lab visualization](../img/water-treatment-overview.png)
 
-Work through these seven lessons in your own student `ot-sec-flat` lab. Exercises 1–6 start from its flat baseline; Exercise 7 builds a routed VLAN and then restores that baseline. Allow about 5–6½ hours for the main tasks, discussion and handovers. Each lesson has a collapsed solution followed by **two optional extra sections**; allow another 2–2½ hours if you do all extras.
+Work through these eight lessons in your own student `ot-sec-flat` lab. Exercises 1–6 start from its flat baseline; Exercise 7 builds a routed VLAN and then restores that baseline. Exercise 8 uses the diode to protect one endpoint and also starts and finishes at the baseline. Allow about 5½–7¼ hours for the main tasks, discussion and handovers. Each lesson has a collapsed solution followed by **two optional extra sections**; allow another 2½–3 hours if you do all extras.
 
 Times are guides. Complete the core checks at your own pace; use the hints when needed and save the extras for later if you prefer. Keep your commands, filters and results so you can resume in your lab after the course. Finish each lesson's cleanup before taking a break; repeat its baseline checks when returning.
 
@@ -29,15 +29,16 @@ Tool links are designed for the Network Explorer reader. In this published docum
 
 | # | Lesson | Main time | Extra challenges |
 | --- | --- | --- | --- |
-| 1 | [Compare tagged and untagged traffic](ex1-vlan-discovery.md) | 30–40 min | Replacement PLC checklist; next-hop MAC |
+| 1 | [Compare tagged and untagged traffic](ex1-vlan-discovery.md) | 30–40 min | PLC connection record; next-hop MAC |
 | 2 | [Trace an ARP interception](ex2-arp-spoofing.md) | 40–50 min | Incident timeline; maintainable ARP protection |
 | 3 | [Explain the live spanning tree](ex3-spanning-tree.md) | 30–40 min | Switch replacement; uplink failover trial |
 | 4 | [Follow flows through LACP](ex4-link-aggregation.md) | 30–40 min | Capture blind spot; shared failure points |
 | 5 | [Assess access from the DMZ](ex5-reconnaissance.md) | 35–45 min | Compare vantage points; prove TCP port states |
 | 6 | [Identify OT protocols](ex6-protocol-discovery.md) | 40–50 min | HMI register mapping; remote discovery limits |
 | 7 | [Build and verify a routed VLAN](ex7-segmentation-firewall.md) | 90–120 min | Follow a routed request; replies versus fresh connections |
+| 8 | [Microsegment a legacy endpoint with the diode](ex8-diode-microsegmentation.md) | 35–45 min | Remaining ARP exposure; isolation and recovery |
 
-**Optional diode addon, 35–45 minutes:** In [Exercise 7](ex7-segmentation-firewall.md), continue to **Addon: Microsegment a legacy endpoint with the diode**. Use the newly added routed diode to preserve engineering access, block another client and contain new endpoint-initiated connections. It starts from the flat baseline and has its own cleanup; the VLAN 70 build is not a prerequisite.
+Exercise 8 is standalone: the VLAN 70 build in Exercise 7 is not a prerequisite. Complete Exercise 7's cleanup first if you performed it.
 
 ## Connect the work to the course
 
@@ -52,7 +53,7 @@ The course plant is a water-treatment example. `abb-800xa` provides supervision;
 | Remote access (pp. 100–104) | Exercise 5: bound a supplier's required access |
 | Protocol layers and local discovery (pp. 36–41, 50) | Exercise 6: separate network, service and process evidence |
 | Plant zones, controller dependencies and logs (pp. 128–148, 162–164) | Exercise 7: justify a zone design, enforce one conduit and prove cleanup |
-| Microsegmentation of an unpatched disposal system (pp. 149–152) | Diode addon: restrict access at one endpoint's boundary and test both directions |
+| Microsegmentation of an unpatched disposal system (pp. 149–152) | Exercise 8: restrict access at one endpoint's boundary and test both directions |
 
 Page numbers count PDF pages in **OT Network Security – Design and Defend handout**; printed slide numbers later differ. Keep the numbered lab order for independent study. In the taught course, the instructor can introduce the LACP concept before RSTP, then use Exercises 3–4 together once both terms are known.
 
@@ -75,7 +76,7 @@ The practical does not configure MRP, VPN/MFA, 802.1X or industrial DPI, and it 
 
 ## Finish each lesson
 
-Close your capture tabs and terminal tabs. If you performed Exercise 3 Extra 2, re-enable sw-acc2 ether12 and verify the restored port roles and communication. In Exercise 2 also stop the helper/listener and verify the original gateway MAC and forwarding value before moving on. Exercise 7 requires its cleanup even if you skip the extras.
+Close your capture tabs and terminal tabs. If you performed Exercise 3 Extra 2, re-enable sw-acc2 ether12 and verify the restored port roles and communication. In Exercise 2 also stop the helper/listener and verify the original gateway MAC and forwarding value before moving on. Exercises 7 and 8 require their cleanup even if you skip the extras.
 
 The existing assistant knows the selected lesson. Give it the task number, actual command/output and capture filter/frame number. Wait for an answer before asking from another tab. Compare its advice with your recorded evidence and the local lesson.
 

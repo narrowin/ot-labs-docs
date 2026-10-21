@@ -65,7 +65,7 @@ By the end of this workshop, you will be able to:
 
 **Lab Environment:**
 
-The instructor provides a running student appliance with browser terminals, packet capture and PLC visualizations. Follow the [Lab Guide](lab.md#getting-started), then the [seven exercises](exercises/index.md).
+The instructor provides a running student appliance with browser terminals, packet capture and PLC visualizations. Follow the [Lab Guide](lab.md#getting-started), then the [eight exercises](exercises/index.md).
 
 ---
 

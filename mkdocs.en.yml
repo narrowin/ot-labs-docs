@@ -39,6 +39,7 @@ nav:
     - "5. Access from the DMZ": "exercises/ex5-reconnaissance.md"
     - "6. Identify OT protocols": "exercises/ex6-protocol-discovery.md"
     - "7. Build a routed VLAN": "exercises/ex7-segmentation-firewall.md"
+    - "8. Microsegment a legacy endpoint": "exercises/ex8-diode-microsegmentation.md"
     - Appendix: "exercises/appendix.md"
   - Cheatsheet: "cheatsheet.md"
   - Container101: "Container101.md"

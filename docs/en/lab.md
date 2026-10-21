@@ -1,13 +1,13 @@
 # Student lab guide
 
-Each student has their own lab appliance. Open yours in your browser. It contains the running `ot-sec-flat` network, configured terminals, packet capture, PLC visualizations and the seven exercises. You need your assigned LNE URL and login; no local tool installation is required.
+Each student has their own lab appliance. Open yours in your browser. It contains the running `ot-sec-flat` network, configured terminals, packet capture, PLC visualizations and the eight exercises. You need your assigned LNE URL and login; no local tool installation is required.
 
 ## Getting started
 
 1. Sign in to your assigned LNE. Select the student network and the **live** snapshot.
 2. Open **Exercises** in the product launcher and choose Exercise 1. Select **English / Deutsch** for the instructions.
 3. Open Explorer from the lesson. Its links carry your selected network and snapshot. In terminal and capture tabs, choose the **Active exercise** title to reopen the instructions beside your work.
-4. Use the checks below, then work through the [seven exercises](exercises/index.md) in order.
+4. Use the checks below, then work through the [eight exercises](exercises/index.md) in order.
 
 The appliance is already deployed. Use the configured terminal action rather than assuming a device password.
 
@@ -77,7 +77,7 @@ Observe controls without operating them during the networking tasks. A steady va
 | Toolbox | Draft zones and directional policies; saving does not configure network devices |
 | Assistant | Help with the active lesson, command output and packet evidence |
 
-Toolbox is opened from the product launcher. Its saved network workspace holds your design; saving does not enforce it. [Exercise 7](exercises/ex7-segmentation-firewall.md) builds VLAN 70 through device terminals in your own lab. The [practical setup](lab-practical.md) prepares a recovery checkpoint. Exercises 1–6 use the flat baseline; Exercise 7 temporarily moves only `hirschmann-edge1` and restores it before finishing.
+Toolbox is opened from the product launcher. Its saved network workspace holds your design; saving does not enforce it. [Exercise 7](exercises/ex7-segmentation-firewall.md) builds VLAN 70 through device terminals in your own lab. The [practical setup](lab-practical.md) prepares a recovery checkpoint. Exercises 1–6 use the flat baseline; Exercise 7 temporarily moves only `hirschmann-edge1` and restores it before finishing. [Exercise 8](exercises/ex8-diode-microsegmentation.md) changes the diode policy and restores its baseline before finishing.
 
 ## If a checkpoint fails
 
