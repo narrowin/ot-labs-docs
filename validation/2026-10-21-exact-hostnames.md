@@ -1,6 +1,6 @@
 # Clear device names and a concrete connection record
 
-21 October 2026. Follow-up to the student's naming complaint in Exercise 1. The preceding clarity review missed device abbreviations spread across the course. The course owner subsequently requested the device names without VLAN suffixes, for example `wago-plc2a` instead of either “WAGO A” or the longer `wago-plc2a-vlan10`.
+21 October 2026. Follow-up to the course owner's naming complaint in Exercise 1. The preceding clarity review missed device abbreviations spread across the course. The course owner subsequently requested the device names without VLAN suffixes, for example `wago-plc2a` instead of either “WAGO A” or the longer `wago-plc2a-vlan10`.
 
 ## Decision
 
@@ -27,7 +27,7 @@
 | 4 | Named `wago-plc2a`, `ctrlx-plc3` and `wago-plc2b` in source selection, flow results and capture checks. | Source selection determines whether a flow traverses the tested bond. |
 | 5 | Named `proxmox-jumphost` as the remote source and the exact PLC hostnames in target lists and the two-vantage-point extra. | The route and exposure result depend on the source and target. |
 | 6 | Named the exact client, server, supervisory host, capture target and WebVisu target throughout. | A client read, a server listener and a browser-proxied visualization are different observations and must identify their hosts. |
-| 7 | Named `hirschmann-edge1`, `wago-plc2a`, `gw-firewall`, `dell-ews1` and `protected-linux` in actions and communication tables. Kept PLC2A and PLC2B separate alongside their full hostnames. | Address moves, policy changes, allow/deny results and ARP-cache claims must identify the actual endpoints. |
+| 7 | Named `hirschmann-edge1`, `wago-plc2a`, `gw-firewall`, `dell-ews1` and `protected-linux` in actions and communication tables. Kept PLC2A and PLC2B separate alongside their unambiguous device names. | Address moves, policy changes, allow/deny results and ARP-cache claims must identify the actual endpoints. |
 
 The lab guide, practical preparation, cheatsheet, exercise appendix, overview, Container101 and automation page use the same hostnames. The five-entry PLC mapping and supplied process image are retained.
 
@@ -55,4 +55,24 @@ The expected baseline identifies `wago-plc2a`, `eth1`, `10.10.0.11/8`, `sw-acc1`
 
 All existing command blocks and existing link destinations are unchanged from `cc0557c`; the added terminal link selects the already used `wago-plc2a-vlan10`. English/German command blocks still match. Every lesson retains two extras, all lesson files fit the reader limit, and both strict MkDocs builds pass. The installed theme's existing deprecation notice remains unrelated to these content edits.
 
-Publication details and live reader checks will be recorded after activation. No networking practical is rerun for this prose-only correction.
+### Published release
+
+- Course source: `35142c9b4a75a006c0e7cd98d19e4c9d401001b3`.
+- Live reader: [Exercise 1](https://ot-student-lab.int.narrowin.com/network/exercises/ex1-vlan-discovery?network=1&snapshot=1), with English and German language controls.
+- Package: 33 source files, including both languages and the supplied process image; 511,565 bytes. SHA-256: `bf8f04f27a5aaf2a90ef6b054a846b11e02975a85573b3dbe3adf02f47d065e7`.
+- Persistent course directory: `/nw/data/ot-student/course-releases/35142c9/docs`, mounted read-only at `/opt/ot-labs-docs` in the controller and assistant-agent.
+- Both services are healthy and independently pass all 33 file checksums. Their deployed image identities are unchanged. Other service containers and all 16 lab-node container IDs are unchanged.
+- Active Compose overlay SHA-256: `cf94c3138851f86bd446aa72bda4f8c1e00786c70fa461a53389ca58e1bdf347`. The preceding overlay is preserved at `/nw/data/ot-student/course-releases/35142c9/backup/compose.ot-student-release.before.yml`.
+
+### Student-view verification
+
+All 14 live lesson views passed through the established Chrome/UI driver: seven exercises in English and seven in German. Each displayed the correct language and title, two extras, and the revised device names without brand-letter aliases or VLAN suffixes in the exercise text. The PLC list still separates PLC2A and PLC2B. The corrected diode extra remains present in Exercise 7.
+
+The German Exercise 1 connection worksheet and expanded expected answer were also inspected visually. The worksheet has seven requested fields, an observation source for each, a completion criterion and a readable answer. Its terminal links resolve to the actual `sw-acc1` device and `wago-plc2a-vlan10` host.
+
+The four commands in this extra were executed through the normal student terminals against the running lab:
+
+- `sw-acc1`: `ether2` reports `pvid=10`. The dynamic VLAN 10 row contains `ether2` in `current-untagged`, matching the worksheet's lookup instruction.
+- `wago-plc2a`: `eth1` reports `10.10.0.11/8`. The route lookup returns `10.10.0.1 dev eth1 src 10.10.0.11`, matching the expected direct route.
+
+These were read-only observations. No device configuration, VLAN assignment, addressing or attack/failover procedure was changed or rerun during this naming correction. The other practical steps retain their previous validation; the 14-view check verifies publication and rendered content, not a fresh execution of every practical.
